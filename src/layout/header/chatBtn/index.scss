@@ -1,0 +1,19 @@
+.chat-btn {
+  position: fixed;
+  bottom: 0;
+  right: 3px;
+  z-index: 998;
+  .chat-btn-img {
+    cursor: pointer;
+    font-size: 36px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #005bd6 linear-gradient(180deg, #2674dc, #005bd6) repeat-x;
+    transition: all 0.2s cubic-bezier(0.32, 0.99, 0.03, 1.55);
+    &:hover {
+      transform: scale3d(1.05, 1.05, 1);
+      background: #005bd6;
+    }
+  }
+}

@@ -1,0 +1,13 @@
+.breadcrumb {
+  font-size: 16px;
+  a.ant-breadcrumb-link {
+    color: #a1a8b7;
+    background-color: transparent;
+    &:hover {
+      color: #006bfc;
+    }
+  }
+  span.ant-breadcrumb-link {
+    color: #006bfc;
+  }
+}

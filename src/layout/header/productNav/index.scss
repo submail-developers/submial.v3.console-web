@@ -1,0 +1,92 @@
+.product-nav {
+  position: absolute;
+  top: -7px;
+  left: 0;
+  width: 0;
+  height: 0;
+  padding: 0;
+  z-index: 10;
+  transition: 0.2s cubic-bezier(0.935, 0.01, 0.27, 1) all;
+  overflow: hidden;
+  line-height: 1.56;
+  opacity: 0;
+  &.show {
+    opacity: 1;
+    width: 540px;
+    height: 520px;
+    padding: 90px 32px 32px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    backdrop-filter: saturate(180%) blur(16px);
+    &.mob {
+      width: 100vw;
+      height: 100vh;
+    }
+  }
+  .prod-item {
+    .prod-icon {
+      transition: all 0.3s;
+    }
+    .prod-name {
+      margin-top: 8px;
+      color: #393e49;
+      font-size: 16px;
+    }
+    &:hover {
+      .prod-icon {
+        transform: scale3d(1.05, 1.05, 1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.075);
+      }
+      .prod-name {
+        color: inherit;
+      }
+    }
+    &.disabled {
+      opacity: 0.5;
+      .prod-name {
+        color: #393e49;
+      }
+    }
+    .sms-icon {
+      background: linear-gradient(to bottom, #00ff80 0%, #27d600 100%);
+    }
+
+    .intersms-icon {
+      background: linear-gradient(to bottom, #6dd8b8 0%, #56bad9 100%);
+    }
+    .mms-icon {
+      background: linear-gradient(to bottom, #fc7a7a 0%, #f35a5a 100%);
+    }
+    .mail-icon {
+      background: linear-gradient(to bottom, #569cfe 0%, #007efc 100%);
+    }
+    .voice-icon {
+      background: linear-gradient(45deg, #ffaf4b 0%, #ff8b4c 100%);
+    }
+    .shorturl-icon {
+      background: linear-gradient(to bottom, #34e084 0%, #00c85d 100%);
+    }
+    .onepass-icon {
+      background: linear-gradient(to bottom, #f078b4 0%, #f032aa 100%);
+    }
+    .identification-icon {
+      background: linear-gradient(45deg, #8570ff 0%, #007afc 100%);
+    }
+    .vfmobile-icon {
+      background: linear-gradient(45deg, #8570ff 0%, #007afc 100%);
+    }
+    .rcs-icon {
+      background: linear-gradient(to bottom, #9f8cff 0%, #8d50ff 100%);
+    }
+    .mdetect-icon {
+      background: #4040ff;
+    }
+    .console-icon {
+      background: linear-gradient(to bottom, #fd8346 0%, #ffd900 100%);
+    }
+    .logo-icon {
+      background: #fff;
+    }
+  }
+}

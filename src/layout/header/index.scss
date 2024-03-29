@@ -1,0 +1,111 @@
+.header-content {
+  .product-btn {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    &.active {
+      .line-box {
+        transform: rotate(90deg);
+        .line-1 {
+          transition: transform 0.25s 0.2s cubic-bezier(0.4, 0.01, 0.165, 0.99);
+          transform: rotate(45deg);
+          .line-icon {
+            transition: transform 0.2s;
+            transform: translateY(0);
+          }
+        }
+        .line-2 {
+          .line-icon {
+            opacity: 0;
+          }
+        }
+        .line-3 {
+          transition: transform 0.25s 0.2s cubic-bezier(0.4, 0.01, 0.165, 0.99);
+          transform: rotate(-45deg);
+          .line-icon {
+            transition: transform 0.2s;
+            transform: translateY(0);
+          }
+        }
+      }
+    }
+    .line-box {
+      display: block;
+      position: absolute;
+      top: 0;
+      width: 51px;
+      height: 51px;
+      z-index: 11;
+      cursor: pointer;
+      transition: opacity 0.2s cubic-bezier(0.645, 0.045, 0.355, 1),
+        transform 0.4s cubic-bezier(0.4, 0.01, 0.165, 0.99);
+      .line {
+        width: 51px;
+        height: 51px;
+        display: block;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        transition: transform 0.25s cubic-bezier(0.4, 0.01, 0.165, 0.99);
+        transform: rotate(0);
+      }
+      .line-icon {
+        width: 23px;
+        height: 1px;
+        background: #49505f;
+        top: 25px;
+        left: 14px;
+        position: absolute;
+      }
+      .line-1 .line-icon {
+        transition: transform 0.2s 0.2s;
+        transform: translateY(-5px);
+      }
+      .line-2 .line-icon {
+        transition: 0.2s cubic-bezier(0.935, 0.01, 0.27, 1) opacity;
+      }
+      .line-3 .line-icon {
+        transition: transform 0.2s 0.2s;
+        transform: translateY(5px);
+      }
+    }
+  }
+
+  .header-logo {
+    width: 160px;
+    z-index: 11;
+    position: relative;
+    &.mob {
+      width: 116px;
+    }
+  }
+
+  .right-menu {
+    line-height: 1.5;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  .account-mini-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+  }
+}
+.drop-right {
+  .ant-dropdown-menu {
+    width: 130px;
+    padding: 8px 0 !important;
+    text-align: center;
+
+    .ant-dropdown-menu-item {
+      height: 40px;
+      line-height: 40px;
+      border-radius: 0;
+      font-size: 16px;
+    }
+    .ant-dropdown-menu-item-active {
+      color: #006bfc;
+    }
+  }
+}

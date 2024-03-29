@@ -1,0 +1,79 @@
+{
+  "id": "4361585",
+  "name": "5g消息",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "39736542",
+      "name": "叉号",
+      "font_class": "chahao",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    },
+    {
+      "icon_id": "39733951",
+      "name": "jiantou",
+      "font_class": "xiangxia",
+      "unicode": "e61b",
+      "unicode_decimal": 58907
+    },
+    {
+      "icon_id": "39733930",
+      "name": "ren",
+      "font_class": "user",
+      "unicode": "e61a",
+      "unicode_decimal": 58906
+    },
+    {
+      "icon_id": "38460911",
+      "name": "fasong",
+      "font_class": "fasong",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
+      "icon_id": "38458904",
+      "name": "shuju",
+      "font_class": "shuju",
+      "unicode": "e617",
+      "unicode_decimal": 58903
+    },
+    {
+      "icon_id": "38458783",
+      "name": "xiaoxi",
+      "font_class": "xiaoxi",
+      "unicode": "e616",
+      "unicode_decimal": 58902
+    },
+    {
+      "icon_id": "38458485",
+      "name": "shezhi",
+      "font_class": "shezhi",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    },
+    {
+      "icon_id": "38458480",
+      "name": "home",
+      "font_class": "home",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "38458465",
+      "name": "qianbao",
+      "font_class": "qianbao",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "38458458",
+      "name": "jiqiren",
+      "font_class": "jiqiren",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    }
+  ]
+}
