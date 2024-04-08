@@ -1,0 +1,59 @@
+.account-detail {
+  padding: 48px 12px;
+  height: auto;
+  .line {
+    margin: 16px 0 24px;
+  }
+  .info-title {
+    font-size: 16px;
+    font-weight: 500;
+    position: relative;
+    display: flex;
+    align-items: center;
+    &::before {
+      content: '';
+      width: 4px;
+      height: 20px;
+      border-radius: 2px;
+      background: linear-gradient(to bottom, #d971f0, #3c64f5);
+      margin-right: 8px;
+    }
+  }
+
+  .base-info {
+    border: 1px solid #d7dae1;
+    border-radius: 8px;
+    .info-header {
+      padding: 16px 16px;
+      border-bottom: 1px solid #d7dae1;
+      .jiqiren {
+        color: #d6dce1;
+        font-size: 40px;
+      }
+      .status {
+        height: 20px;
+        line-height: 20px;
+        padding: 0 8px;
+        border-radius: 10px;
+        background-color: #4ea987;
+        color: #fff;
+        font-size: 12px;
+      }
+    }
+    .info-content {
+      padding: 16px 20px;
+      .info-item {
+        margin-top: 24px;
+        .info-label {
+          color: #555;
+        }
+        .info-value {
+          margin-top: 8px;
+          font-weight: 500;
+          min-height: 22px;
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}

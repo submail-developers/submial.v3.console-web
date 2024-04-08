@@ -6,6 +6,62 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "39813908",
+      "name": "shezhi",
+      "font_class": "shezhi",
+      "unicode": "e625",
+      "unicode_decimal": 58917
+    },
+    {
+      "icon_id": "39813890",
+      "name": "qianbao",
+      "font_class": "qianbao",
+      "unicode": "e624",
+      "unicode_decimal": 58916
+    },
+    {
+      "icon_id": "39813755",
+      "name": "xiaoxi",
+      "font_class": "xiaoxi",
+      "unicode": "e61d",
+      "unicode_decimal": 58909
+    },
+    {
+      "icon_id": "39813780",
+      "name": "fangzi",
+      "font_class": "home",
+      "unicode": "e621",
+      "unicode_decimal": 58913
+    },
+    {
+      "icon_id": "39813776",
+      "name": "jiqiren ",
+      "font_class": "jiqiren",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
+    {
+      "icon_id": "39813772",
+      "name": "fasong",
+      "font_class": "fasong",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "39813751",
+      "name": "jiaohu",
+      "font_class": "jiaohu",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
+    },
+    {
+      "icon_id": "39806378",
+      "name": "机器人",
+      "font_class": "jiqiren1",
+      "unicode": "e62e",
+      "unicode_decimal": 58926
+    },
+    {
       "icon_id": "39736542",
       "name": "叉号",
       "font_class": "chahao",
@@ -27,53 +83,11 @@
       "unicode_decimal": 58906
     },
     {
-      "icon_id": "38460911",
-      "name": "fasong",
-      "font_class": "fasong",
-      "unicode": "e619",
-      "unicode_decimal": 58905
-    },
-    {
       "icon_id": "38458904",
       "name": "shuju",
       "font_class": "shuju",
       "unicode": "e617",
       "unicode_decimal": 58903
-    },
-    {
-      "icon_id": "38458783",
-      "name": "xiaoxi",
-      "font_class": "xiaoxi",
-      "unicode": "e616",
-      "unicode_decimal": 58902
-    },
-    {
-      "icon_id": "38458485",
-      "name": "shezhi",
-      "font_class": "shezhi",
-      "unicode": "e614",
-      "unicode_decimal": 58900
-    },
-    {
-      "icon_id": "38458480",
-      "name": "home",
-      "font_class": "home",
-      "unicode": "e613",
-      "unicode_decimal": 58899
-    },
-    {
-      "icon_id": "38458465",
-      "name": "qianbao",
-      "font_class": "qianbao",
-      "unicode": "e611",
-      "unicode_decimal": 58897
-    },
-    {
-      "icon_id": "38458458",
-      "name": "jiqiren",
-      "font_class": "jiqiren",
-      "unicode": "e60f",
-      "unicode_decimal": 58895
     }
   ]
 }

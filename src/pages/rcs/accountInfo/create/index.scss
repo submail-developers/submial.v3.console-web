@@ -1,0 +1,31 @@
+.create-chatbot-page {
+  padding-bottom: 48px;
+  height: auto;
+
+  .create-chatbot-form {
+    margin: 24px;
+    width: calc(100% - 48px);
+    .form-header {
+      padding: 12px 0;
+      border-bottom: 1px solid #e7e7e7;
+    }
+    .form-group {
+      padding: 24px 0 0;
+      .form-group-title {
+        font-size: 18px;
+        font-weight: 500;
+        position: relative;
+        display: flex;
+        align-items: center;
+        &::before {
+          content: '';
+          width: 4px;
+          height: 20px;
+          border-radius: 2px;
+          background: linear-gradient(to bottom, #d971f0, #3c64f5);
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+}

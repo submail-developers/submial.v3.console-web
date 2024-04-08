@@ -68,5 +68,9 @@ declare module 'apis' {
       page: number
       status: string
     }
+
+    interface GetChatbotListItem {
+      name: string
+    }
   }
 }

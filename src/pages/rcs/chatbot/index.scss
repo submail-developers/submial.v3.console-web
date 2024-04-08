@@ -1,0 +1,16 @@
+.chatbot-list {
+  padding: 48px 12px;
+  .line {
+    margin: 16px 0;
+  }
+  .chatbot-list-form {
+    width: 100%;
+    .ant-form-item-label {
+      padding: 0;
+      label {
+        color: #666;
+        height: 32px;
+      }
+    }
+  }
+}
