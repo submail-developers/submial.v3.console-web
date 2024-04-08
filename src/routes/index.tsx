@@ -16,7 +16,7 @@ import LazyImportComponent from './lazyConfig'
  * @example https://reactrouter.com/en/6.10.0/hooks/use-matches
  */
 export interface RouteExtParams {
-  groupName?: string // 侧边栏组的名称
+  groupName?: string // 侧边栏组的名称。如果为空则不在侧边栏显示
   groupIcon?: string // 侧边栏组的icon-name
   breadName?: string // 面包屑展示的名字
   menuName?: string // 侧边栏的名称
@@ -41,12 +41,13 @@ const handleFn = (params?: RouteExtParams) => {
 export const menus: RouteObject[] = [
   {
     path: 'rcs',
-    loader: loaderFn({ breadName: '(5G)RCS 消息' }),
+    loader: loaderFn({ breadName: '5G消息' }),
     children: [
       {
         path: 'welcome',
         loader: loaderFn({
           groupName: 'WELCOME',
+          groupIcon: 'icon-home',
           breadName: '',
           menuName: '控制台',
         }),
@@ -58,30 +59,292 @@ export const menus: RouteObject[] = [
         ),
       },
       {
+        path: 'account',
+        loader: loaderFn({
+          groupName: 'WELCOME',
+          groupIcon: 'icon-home',
+          breadName: '客户资料管理',
+          menuName: '客户资料管理',
+        }),
+        errorElement: <Error />,
+        children: [
+          {
+            path: 'index',
+            loader: loaderFn({}),
+            errorElement: <Error />,
+            element: (
+              <LazyImportComponent
+                lazyChildren={lazy(() => import('@/pages/rcs/accountInfo'))}
+              />
+            ),
+          },
+          {
+            path: 'create/:id',
+            loader: loaderFn({}),
+            errorElement: <Error />,
+            element: (
+              <LazyImportComponent
+                lazyChildren={lazy(
+                  () => import('@/pages/rcs/accountInfo/create'),
+                )}
+              />
+            ),
+          },
+        ],
+      },
+      {
         path: 'chatbot',
         loader: loaderFn({
           groupName: 'Chatbot 管理',
-          breadName: '申请管理chatbot',
-          menuName: '申请管理chatbot',
+          groupIcon: 'icon-jiqiren',
+          breadName: '管理Chatbot',
+          menuName: '申请/管理 Chatbot',
+        }),
+        errorElement: <Error />,
+        children: [
+          {
+            path: 'index',
+            loader: loaderFn({}),
+            errorElement: <Error />,
+            element: (
+              <LazyImportComponent
+                lazyChildren={lazy(() => import('@/pages/rcs/chatbot'))}
+              />
+            ),
+          },
+          {
+            path: 'create/:chatbotId', // 0为创建，否则为修改
+            loader: loaderFn({
+              breadName: '申请Chatbot',
+            }),
+            errorElement: <Error />,
+            element: (
+              <LazyImportComponent
+                lazyChildren={lazy(() => import('@/pages/rcs/chatbot/create'))}
+              />
+            ),
+          },
+          {
+            path: 'detail',
+            loader: loaderFn({
+              breadName: 'Chatbot详情',
+            }),
+            errorElement: <Error />,
+            element: (
+              <LazyImportComponent
+                lazyChildren={lazy(() => import('@/pages/rcs/chatbot/detail'))}
+              />
+            ),
+          },
+        ],
+      },
+      {
+        path: 'material',
+        loader: loaderFn({
+          groupName: '5G 消息管理',
+          groupIcon: 'icon-xiaoxi',
+          breadName: '5G 消息资源库',
+          menuName: '5G 消息资源库',
         }),
         errorElement: <Error />,
         element: (
           <LazyImportComponent
-            lazyChildren={lazy(() => import('@/pages/rcs/chatbot'))}
+            lazyChildren={lazy(() => import('@/pages/rcs/welcome'))}
           />
         ),
       },
       {
-        path: 'templates',
+        path: 'template',
         loader: loaderFn({
-          groupName: 'Chatbot 管理',
-          breadName: '创建 / 管理 RCS消息模板',
-          menuName: '创建 / 管理 RCS消息模板',
+          groupName: '5G 消息管理',
+          groupIcon: 'icon-xiaoxi',
+          breadName: '创建/管理 5G消息模版',
+          menuName: '创建/管理 5G消息模版',
         }),
         errorElement: <Error />,
         element: (
           <LazyImportComponent
-            lazyChildren={lazy(() => import('@/pages/rcs/chatbot'))}
+            lazyChildren={lazy(() => import('@/pages/rcs/welcome'))}
+          />
+        ),
+      },
+      {
+        path: 'send',
+        loader: loaderFn({
+          groupName: '发送管理',
+          groupIcon: 'icon-fasong',
+          breadName: '创建在线发送任务',
+          menuName: '创建在线发送任务',
+        }),
+        errorElement: <Error />,
+        element: (
+          <LazyImportComponent
+            lazyChildren={lazy(() => import('@/pages/rcs/welcome'))}
+          />
+        ),
+      },
+      {
+        path: 'batchreport',
+        loader: loaderFn({
+          groupName: '发送管理',
+          groupIcon: 'icon-fasong',
+          breadName: '批量任务发送报告',
+          menuName: '批量任务发送报告',
+        }),
+        errorElement: <Error />,
+        element: (
+          <LazyImportComponent
+            lazyChildren={lazy(() => import('@/pages/rcs/welcome'))}
+          />
+        ),
+      },
+      {
+        path: 'analysis',
+        loader: loaderFn({
+          groupName: '发送管理',
+          groupIcon: 'icon-fasong',
+          breadName: 'API 分析报告',
+          menuName: 'API 分析报告',
+        }),
+        errorElement: <Error />,
+        element: (
+          <LazyImportComponent
+            lazyChildren={lazy(() => import('@/pages/rcs/welcome'))}
+          />
+        ),
+      },
+      {
+        path: 'history',
+        loader: loaderFn({
+          groupName: '发送管理',
+          groupIcon: 'icon-fasong',
+          breadName: 'API 历史明细',
+          menuName: 'API 历史明细',
+        }),
+        errorElement: <Error />,
+        element: (
+          <LazyImportComponent
+            lazyChildren={lazy(() => import('@/pages/rcs/welcome'))}
+          />
+        ),
+      },
+      {
+        path: 'subhook',
+        loader: loaderFn({
+          groupName: '发送管理',
+          groupIcon: 'icon-fasong',
+          breadName: 'SUBHOOK 状态推送',
+          menuName: 'SUBHOOK 状态推送',
+        }),
+        errorElement: <Error />,
+        element: (
+          <LazyImportComponent
+            lazyChildren={lazy(() => import('@/pages/rcs/welcome'))}
+          />
+        ),
+      },
+      {
+        path: 'errors',
+        loader: loaderFn({
+          groupName: '发送管理',
+          groupIcon: 'icon-fasong',
+          breadName: 'API 错误日志',
+          menuName: 'API 错误日志',
+        }),
+        errorElement: <Error />,
+        element: (
+          <LazyImportComponent
+            lazyChildren={lazy(() => import('@/pages/rcs/welcome'))}
+          />
+        ),
+      },
+      {
+        path: 'address',
+        loader: loaderFn({
+          groupName: '发送管理',
+          groupIcon: 'icon-fasong',
+          breadName: '地址簿管理',
+          menuName: '地址簿管理',
+        }),
+        errorElement: <Error />,
+        element: (
+          <LazyImportComponent
+            lazyChildren={lazy(() => import('@/pages/rcs/welcome'))}
+          />
+        ),
+      },
+      {
+        path: 'interactive',
+        loader: loaderFn({
+          groupName: '智能交互',
+          groupIcon: 'icon-qianbao',
+          breadName: 'Chatbot 交互',
+          menuName: 'Chatbot 交互',
+        }),
+        errorElement: <Error />,
+        element: (
+          <LazyImportComponent
+            lazyChildren={lazy(() => import('@/pages/rcs/interactive'))}
+          />
+        ),
+      },
+      {
+        path: 'sandbox',
+        loader: loaderFn({
+          groupName: '智能交互',
+          groupIcon: 'icon-qianbao',
+          breadName: 'Chatbot 沙盒环境',
+          menuName: 'Chatbot 沙盒环境',
+        }),
+        errorElement: <Error />,
+        element: (
+          <LazyImportComponent
+            lazyChildren={lazy(() => import('@/pages/rcs/sandbox'))}
+          />
+        ),
+      },
+      {
+        path: 'interactivelogs',
+        loader: loaderFn({
+          groupName: '智能交互',
+          groupIcon: 'icon-qianbao',
+          breadName: 'Chatbot 交互日志',
+          menuName: 'Chatbot 交互日志',
+        }),
+        errorElement: <Error />,
+        element: (
+          <LazyImportComponent
+            lazyChildren={lazy(() => import('@/pages/rcs/interactivelogs'))}
+          />
+        ),
+      },
+      {
+        path: 'fee',
+        loader: loaderFn({
+          groupName: '计费',
+          groupIcon: 'icon-qianbao',
+          breadName: '地址簿管理',
+          menuName: '地址簿管理',
+        }),
+        errorElement: <Error />,
+        element: (
+          <LazyImportComponent
+            lazyChildren={lazy(() => import('@/pages/rcs/welcome'))}
+          />
+        ),
+      },
+      {
+        path: 'settings',
+        loader: loaderFn({
+          groupName: '偏好设置',
+          groupIcon: 'icon-shezhi',
+          breadName: '偏好设置',
+          menuName: '偏好设置',
+        }),
+        errorElement: <Error />,
+        element: (
+          <LazyImportComponent
+            lazyChildren={lazy(() => import('@/pages/rcs/welcome'))}
           />
         ),
       },
@@ -114,11 +377,19 @@ export const baseRouter: RouteObject[] = [
   },
   {
     path: '/console/rcs',
-    element: <Navigate to={'/console/rcs/welcome'} />,
+    element: <Navigate to={'/console/rcs/welcome'} replace />,
+  },
+  {
+    path: '/console/rcs/chatbot',
+    element: <Navigate to={'/console/rcs/chatbot/index'} replace />,
+  },
+  {
+    path: '/console/rcs/account',
+    element: <Navigate to={'/console/rcs/account/index'} replace />,
   },
   {
     path: '/console/aim',
-    element: <Navigate to={'/console/aim/welcome'} />,
+    element: <Navigate to={'/console/aim/welcome'} replace />,
   },
   {
     path: '/console',
