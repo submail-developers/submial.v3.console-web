@@ -100,7 +100,7 @@ export default function Fn() {
   }, [form])
 
   return (
-    <PageContent xxl={970} xl={920} extClass='create-chatbot-page'>
+    <PageContent xxl={970} extClass='create-chatbot-page'>
       <Form
         form={form}
         className='create-chatbot-form'

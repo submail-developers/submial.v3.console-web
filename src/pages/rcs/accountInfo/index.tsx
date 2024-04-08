@@ -51,7 +51,7 @@ export default function Fn() {
   ]
 
   return (
-    <PageContent extClass='account-detail' xxl={1200} xl={960}>
+    <PageContent extClass='account-detail'>
       <Image src={jiqirenImg} preview={false} width={48}></Image>
       <Flex justify='space-between' align='center' style={{ marginTop: '4px' }}>
         <div className='fn22'>客户资料管理</div>

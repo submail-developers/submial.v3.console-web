@@ -138,7 +138,7 @@ export default function Fn() {
   }, [form])
 
   return (
-    <PageContent xxl={970} xl={920} extClass='create-account-page'>
+    <PageContent xxl={970} extClass='create-account-page'>
       <Form
         form={form}
         className='create-account-form'

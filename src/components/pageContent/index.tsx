@@ -18,9 +18,9 @@ const defaultPoints: PageContentPoints = {
   xs: '100%',
   sm: '100%',
   md: '100%',
-  lg: '700px',
-  xl: '900px',
-  xxl: '900px',
+  lg: 700,
+  xl: 920,
+  xxl: 1200,
 }
 
 const pointList: Points[] = ['xxl', 'xl', 'lg', 'md', 'sm', 'xs']

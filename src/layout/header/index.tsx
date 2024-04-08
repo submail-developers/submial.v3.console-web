@@ -114,7 +114,7 @@ export default function MyHeader(props: Props) {
           align='center'
           style={{ flexGrow: '1', padding: '0 16px', height: '100%' }}>
           {points.sm && <MyBreadcrumb></MyBreadcrumb>}
-          <Button onClick={loginEvent}>登陆</Button>
+          {/* <Button onClick={loginEvent}>登陆</Button> */}
 
           <Space align='center' size={points.lg ? 16 : 0}>
             <Dropdown

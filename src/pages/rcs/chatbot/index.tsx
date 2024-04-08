@@ -10,9 +10,9 @@ import {
   Col,
   Table,
   Image,
+  Grid,
 } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import { ConfigProvider, App as AntdApp } from 'antd'
 import { NavLink, useNavigate } from 'react-router-dom'
 import PageContent from '@/components/pageContent'
 import { PlusOutlined } from '@ant-design/icons'
@@ -20,12 +20,11 @@ import codeImg from '@/assets/rcs/code.png'
 
 import { API } from 'apis'
 import './index.scss'
-import { usePoint } from '@/hooks'
 
 interface DataType extends API.GetChatbotListItem {}
 
 export default function Fn() {
-  const point = usePoint('lg')
+  const points = Grid.useBreakpoint()
   const nav = useNavigate()
   const [form] = Form.useForm()
   const [tableData, settableData] = useState([
@@ -91,13 +90,13 @@ export default function Fn() {
   }
 
   return (
-    <PageContent extClass='chatbot-list' xxl={1200} xl={960}>
+    <PageContent extClass='chatbot-list'>
       <Image src={codeImg} preview={false} width={60}></Image>
       <Flex justify='space-between' align='center'>
         <div className='fn24'>申请/管理 Chatbot</div>
         <Button
           type='primary'
-          size={point ? 'large' : 'middle'}
+          size={points.lg ? 'large' : 'middle'}
           onClick={toCreate}
           icon={<PlusOutlined rev={null} className='fn14' />}>
           申请 Chatbot
@@ -110,7 +109,7 @@ export default function Fn() {
         className='chatbot-list-form'
         form={form}
         layout='vertical'
-        size={point ? 'large' : 'middle'}
+        size={points.lg ? 'large' : 'middle'}
         autoComplete='off'>
         <Row gutter={16}>
           <Col span={10} md={10} lg={8} xl={6}>

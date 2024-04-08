@@ -61,7 +61,7 @@ export default function Fn() {
   ]
 
   return (
-    <PageContent extClass='chatbot-detail' xxl={1200} xl={960}>
+    <PageContent extClass='chatbot-detail'>
       <Image src={jiqirenImg} preview={false} width={48}></Image>
       <Flex justify='space-between' align='center' style={{ marginTop: '4px' }}>
         <div className='fn22'>申请/管理 Chatbot</div>
