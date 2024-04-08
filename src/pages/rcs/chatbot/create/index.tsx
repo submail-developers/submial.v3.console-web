@@ -100,7 +100,7 @@ export default function Fn() {
   }, [form])
 
   return (
-    <PageContent xxl={970} xl={970} extClass='create-chatbot-page'>
+    <PageContent xxl={970} xl={920} extClass='create-chatbot-page'>
       <Form
         form={form}
         className='create-chatbot-form'
@@ -309,9 +309,9 @@ export default function Fn() {
                 <Input placeholder='不能录入中英文中括号(【】[])' />
               </Form.Item>
             </Col>
-            <Col span={24} xl={14}>
+            <Col span={24} xl={12}>
               <Form.Item
-                label='经度/纬度（经纬度若填写需同时填写，最多支持小数点后3个数字）'
+                label='经度/纬度（经纬度需同时填写，最多支持小数点后3个数字）'
                 style={{ marginBottom: 0 }}>
                 <Row gutter={24}>
                   <Col span={12} xl={9}>
@@ -346,7 +346,7 @@ export default function Fn() {
                 </Row>
               </Form.Item>
             </Col>
-            <Col span={24} xl={10}>
+            <Col span={24} xl={12}>
               <Form.Item name='colour' label='主题颜色'>
                 <ColorPicker disabledAlpha showText={showText} />
               </Form.Item>

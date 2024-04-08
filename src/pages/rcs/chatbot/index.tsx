@@ -53,7 +53,7 @@ export default function Fn() {
       render: (_, record) => <span>010294912841</span>,
     },
     {
-      title: '归厲CSP',
+      title: '归属CSP',
       width: 220,
       render: (_, record) => <span>上海赛邮云技术有限公司</span>,
     },

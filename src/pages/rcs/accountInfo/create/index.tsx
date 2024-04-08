@@ -138,11 +138,11 @@ export default function Fn() {
   }, [form])
 
   return (
-    <PageContent xxl={970} xl={970} extClass='create-chatbot-page'>
+    <PageContent xxl={970} xl={920} extClass='create-account-page'>
       <Form
         form={form}
-        className='create-chatbot-form'
-        name='craete-chatbot'
+        className='create-account-form'
+        name='craete-account'
         layout='vertical'
         autoComplete='off'>
         <div className='form-header'>
