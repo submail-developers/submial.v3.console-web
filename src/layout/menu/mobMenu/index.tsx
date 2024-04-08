@@ -1,18 +1,31 @@
 import { Flex, Drawer } from 'antd'
 import MyBreadcrumb from '@/layout/header/breadcrumb'
+import { useLocation } from 'react-router-dom'
+import MenuList from '../index'
 
 import './index.scss'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export default function MobMenu() {
   const [open, setOpen] = useState(false)
+  const location = useLocation()
+  const pathRef = useRef('')
+
+  useEffect(() => {
+    if (location.pathname != pathRef.current) {
+      setOpen(false)
+    }
+    pathRef.current = location.pathname
+  }, [location])
 
   return (
     <>
       <Flex className='mob-menu' justify='space-between' align='center'>
         <MyBreadcrumb></MyBreadcrumb>
-        <div className='mob-menu-btn' onClick={() => setOpen(!open)}>
-          1
+        <div
+          className={`mob-menu-btn ${open ? 'active' : ''}`}
+          onClick={() => setOpen(!open)}>
+          <span className='icon iconfont icon-xiangxia fn14'></span>
         </div>
       </Flex>
       <Drawer
@@ -25,9 +38,7 @@ export default function MobMenu() {
         mask={false}
         zIndex={99}
         open={open}>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        <MenuList />
       </Drawer>
     </>
   )

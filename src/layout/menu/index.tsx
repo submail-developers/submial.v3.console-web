@@ -1,6 +1,14 @@
-import { NavLink, RouteObject, useMatches, useLocation } from 'react-router-dom'
+import {
+  NavLink,
+  RouteObject,
+  useMatches,
+  useMatch,
+  useLocation,
+} from 'react-router-dom'
 import { menus, RouteExtParams } from '@/routes'
 import { useEffect, useState } from 'react'
+
+import './index.scss'
 
 type MenuItem = RouteObject & {
   menuName?: string
@@ -12,7 +20,32 @@ type GroupItem = {
   children: MenuItem[]
 }
 
+type MenuItemProps = {
+  menu: MenuItem
+  basePath: string
+}
+
+const MenuItem = (props: MenuItemProps) => {
+  const [isActive, setIsActive] = useState(false)
+  const match = useMatch(`${props.basePath}${props.menu.path}`)
+  useEffect(() => {
+    if (match) {
+      setIsActive(true)
+    } else {
+      setIsActive(false)
+    }
+  }, [match])
+  return (
+    <NavLink
+      to={`${props.basePath}/${props.menu.path}`}
+      className={`menu-item fn16 fx-y-center ${isActive ? 'active' : ''}`}>
+      <div className='w-100 g-ellipsis'>{props.menu.menuName}</div>
+    </NavLink>
+  )
+}
+
 export default function Menu() {
+  const [basePath, setBasePath] = useState('')
   const [menuList, setMenuList] = useState<GroupItem[]>([])
 
   const location = useLocation()
@@ -24,6 +57,7 @@ export default function Menu() {
       match.id.includes('-'),
     )
     if (currentMatchBaseRouteObj) {
+      setBasePath(currentMatchBaseRouteObj.pathname)
       let groupedArray: GroupItem[] = []
       menus.forEach((item) => {
         // 匹配对应产品的路由
@@ -34,21 +68,22 @@ export default function Menu() {
               groupIcon = '',
               menuName = '',
             }: RouteExtParams = obj.loader(null) as RouteExtParams
-
-            // // 查找是否已存在该组的对象
-            const existingGroup = groupedArray.find(
-              (item) => item.groupName === groupName,
-            )
-            if (existingGroup) {
-              // 如果已存在该组的对象，则将当前对象推入该组的children数组中
-              existingGroup.children.push({ ...obj, menuName })
-            } else {
-              // 如果不存在该组的对象，则创建一个新的组对象，并将当前对象推入其中
-              groupedArray.push({
-                groupName,
-                groupIcon,
-                children: [{ ...obj, menuName }],
-              })
+            if (groupName) {
+              // 查找是否已存在该组的对象
+              const existingGroup = groupedArray.find(
+                (item) => item.groupName === groupName,
+              )
+              if (existingGroup) {
+                // 如果已存在该组的对象，则将当前对象推入该组的children数组中
+                existingGroup.children.push({ ...obj, menuName })
+              } else {
+                // 如果不存在该组的对象，则创建一个新的组对象，并将当前对象推入其中
+                groupedArray.push({
+                  groupName,
+                  groupIcon,
+                  children: [{ ...obj, menuName }],
+                })
+              }
             }
           })
         }
@@ -61,12 +96,15 @@ export default function Menu() {
     <div className='menu-group-list'>
       {menuList.map((item) => (
         <div className='group-item' key={item.groupName}>
-          <div className='group-name'>{item.groupName}</div>
-          <div className='menu-list'>
+          <div className='group-name fx-y-center'>
+            <div className='group-icon'>
+              <span className={`icon iconfont fn22 ${item.groupIcon}`}></span>
+            </div>
+            <div className='group-text'>{item.groupName}</div>
+          </div>
+          <div className='menu-list fx-col'>
             {item.children.map((menu) => (
-              <div className='menu-item' key={menu.path}>
-                {menu.menuName}
-              </div>
+              <MenuItem key={menu.path} menu={menu} basePath={basePath} />
             ))}
           </div>
         </div>

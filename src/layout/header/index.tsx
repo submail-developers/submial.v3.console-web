@@ -87,7 +87,7 @@ export default function MyHeader(props: Props) {
   return (
     <>
       <Flex className='header-content' justify='space-between' align='center'>
-        <Space size={0} style={{ width: '230px' }}>
+        <Space size={0} style={{ width: '280px' }}>
           <div className={`product-btn ${showProd ? 'active' : ''}`}>
             <div className='line-box' onClick={() => setshowProd(!showProd)}>
               <div className='line line-1'>

@@ -58,3 +58,26 @@ export const usePoint = (point: Points) => {
 
   return pointFlag
 }
+
+/**
+ * 自定义 hook 用于从 localStorage 中获取值
+ * @param key string
+ * @param initialValue any 初始值
+ */
+export const useLocalStorage = (key, initialValue) => {
+  // 使用 useState 来创建状态
+  const [storedValue, setStoredValue] = useState(() => {
+    // 从 localStorage 中获取值，如果不存在则使用初始值
+    const item = window.localStorage.getItem(key)
+    return item ? JSON.parse(item) : initialValue
+  })
+
+  // 定义一个函数用于更新 localStorage 中的值
+  const setValue = (value) => {
+    // 保存新值到 localStorage
+    setStoredValue(value)
+    window.localStorage.setItem(key, JSON.stringify(value))
+  }
+
+  return [storedValue, setValue]
+}

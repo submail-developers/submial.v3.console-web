@@ -1,3 +1,108 @@
 .ant-form-item label {
   margin-bottom: 0;
 }
+
+.ant-table-wrapper.theme-cell {
+  .paddingL30 {
+    padding-left: 30px !important;
+  }
+  .paddingL20 {
+    padding-left: 20px !important;
+  }
+  .paddingR30 {
+    padding-right: 30px !important;
+  }
+  .paddingL50 {
+    padding-left: 50px !important;
+  }
+  .paddingL70 {
+    padding-left: 70px !important;
+  }
+  // 顶部th
+  .ant-table-header table,
+  .ant-table-thead {
+    border-spacing: 0;
+
+    th {
+      border-bottom: none;
+      background-color: #f1f2f4;
+      color: #505a63;
+      font-weight: 500;
+      padding: 14px 2px;
+
+      &::before {
+        display: none;
+      }
+    }
+  }
+
+  .ant-table-ping-left .ant-table-cell-fix-left-last::after {
+    box-shadow: inset 10px 0 8px -8px rgba(5, 5, 5, 0.06);
+  }
+  // 默认背景色为白色
+  table {
+    border-spacing: 0 0;
+    tbody.ant-table-tbody {
+      tr {
+        &.ant-table-measure-row {
+          visibility: collapse;
+        }
+
+        & > td {
+          padding: 10px 0;
+          transition: background-color 0.3s, border-color 0.3s;
+          background-color: #fff;
+          border-bottom: 1px solid #f0f0f0;
+          &.account-wrap {
+            padding-right: 10px;
+            color: #687279;
+          }
+        }
+
+        &:hover > td {
+          background-color: #f4f6f8 !important;
+          border-color: #f4f6f8 !important;
+        }
+
+        &.active > td {
+          background-color: #f4f6f8 !important;
+          border-color: #f4f6f8 !important;
+          color: inherit;
+        }
+      }
+    }
+  }
+}
+
+.ant-select {
+  .ant-select-selector {
+    border: none !important;
+    box-shadow: none !important;
+  }
+  .ant-select-selection-placeholder,
+  .ant-select-arrow,
+  .ant-select-selection-item {
+    color: #006bfc !important;
+  }
+  &:hover {
+    .ant-select-selector {
+      box-shadow: 0 0 3px #efefef !important;
+    }
+  }
+  &.ant-select-disabled {
+    .ant-select-selector {
+      border: none !important;
+      box-shadow: none !important;
+    }
+    .ant-select-selection-item,
+    .ant-select-selection-placeholder,
+    .ant-select-arrow {
+      color: rgba(0, 0, 0, 0.25) !important;
+    }
+    &.ant-select-status-success {
+      .ant-select-arrow {
+        color: rgba(0, 0, 0, 0.25) !important;
+      }
+    }
+  }
+}

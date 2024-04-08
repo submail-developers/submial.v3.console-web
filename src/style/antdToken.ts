@@ -18,3 +18,10 @@ export default {
   // fontSizeLG: 14, // 大号字体大小
   // fontSizeSM: 12, // 大号字体大小
 }
+
+export const components = {
+  Select: {
+    selectorBg: '#ECEFF2',
+    optionSelectedColor: '#3062F5',
+  },
+}
