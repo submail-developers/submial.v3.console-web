@@ -13,18 +13,21 @@ import {
   Radio,
   Divider,
   InputNumber,
+  App,
 } from 'antd'
 import type { GetProp, UploadFile, UploadProps } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 
 import { useState, useRef, useEffect } from 'react'
-import { useParams, NavLink } from 'react-router-dom'
+import { useParams, NavLink, useNavigate } from 'react-router-dom'
 import { changeBreadcrumbItem } from '@/store/reducers/breadcrumb'
 import { useAppDispatch } from '@/store/hook'
 import utils from '@/utils/formRules'
 
 import PageContent from '@/components/pageContent'
-import UpDoadLogo from './logo'
+import UploadLogo from './logo'
+import UploadBg from './bg'
+import UploadAttachment from './attachment'
 
 import jiqiren from '@/assets/rcs/jiqiren.png'
 
@@ -39,16 +42,23 @@ const Extra = (props) => {
 const showText = (color) => <>{color.metaColor.toHexString()}</>
 
 export default function Fn() {
+  const nav = useNavigate()
+  const { message } = App.useApp()
   const dispatch = useAppDispatch()
   const [form] = Form.useForm()
   const [fileList, setFileList] = useState<UploadFile[]>([])
   const { chatbotId } = useParams()
-
-  console.log(chatbotId)
+  const [logoFile, setLogoFile] = useState<UploadFile>(null)
+  const [logoSrc, setLogoSrc] = useState<string>('')
+  const [bgFile, setBgFile] = useState<UploadFile>(null)
+  const [bgSrc, setBgSrc] = useState<string>('')
+  const [attachmentFile, setAttachmentFile] = useState<UploadFile>(null)
+  const [attachmentSrc, setAttachmentSrc] = useState<string>('')
 
   const submit = async () => {
     const values = await form.getFieldsValue()
-    console.log(values)
+    message.success('创建成功', 4)
+    nav('/console/rcs/chatbot/index', { replace: true })
   }
 
   const handleUpload = () => {}
@@ -68,8 +78,34 @@ export default function Fn() {
     fileList,
   }
 
-  const onSetLogo = (src: string) => {
-    form.setFieldValue('logo', src)
+  // 修改logo文件
+  const onChangeLogoFile = (file: UploadFile, src: string) => {
+    setLogoFile(file)
+    setLogoSrc(src)
+  }
+  const onDelLogoFile = () => {
+    setLogoFile(null)
+    setLogoSrc('')
+  }
+
+  // 修改证明材料文件
+  const onChangeAttachmentFile = (file: UploadFile, src: string) => {
+    setAttachmentFile(file)
+    setAttachmentSrc(src)
+  }
+  const onDelAttachmentFile = () => {
+    setAttachmentFile(null)
+    setAttachmentSrc('')
+  }
+
+  // 修改背景文件
+  const onChangeBgFile = (file: UploadFile, src: string) => {
+    setBgFile(file)
+    setBgSrc(src)
+  }
+  const onDelBgFile = () => {
+    setBgFile(null)
+    setBgSrc('')
   }
 
   useEffect(() => {
@@ -147,8 +183,14 @@ export default function Fn() {
                 <Input placeholder='不超过 20 个字符' max={20} />
               </Form.Item>
             </Col>
+            {/* 头像Logo */}
             <Col span={24} xl={12}>
-              <UpDoadLogo onSetLogo={onSetLogo} />
+              <UploadLogo
+                logoFile={logoFile}
+                logoSrc={logoSrc}
+                onChangeFile={onChangeLogoFile}
+                onDelFile={onDelLogoFile}
+              />
             </Col>
             <Col span={24} xl={12}>
               <Form.Item label='服务代码' required name='serviceCode'>
@@ -216,19 +258,14 @@ export default function Fn() {
                 <Input placeholder='' disabled />
               </Form.Item>
             </Col>
+            {/* 证明材料 */}
             <Col span={24}>
-              <Form.Item
-                label='证明材料'
-                name='attachment'
-                extra={
-                  <Extra>
-                    支持的文件类型：pdf、doc、jpg、jpeg、gif、docx、rar、zip，大小限5M
-                  </Extra>
-                }>
-                <Upload {...props}>
-                  <Button icon={<UploadOutlined rev={null} />}>上传</Button>
-                </Upload>
-              </Form.Item>
+              <UploadAttachment
+                attachmentFile={attachmentFile}
+                attachmentSrc={attachmentSrc}
+                onChangeFile={onChangeAttachmentFile}
+                onDelFile={onDelAttachmentFile}
+              />
             </Col>
             <Col span={24}>
               <Form.Item
@@ -255,9 +292,7 @@ export default function Fn() {
             </Col>
           </Row>
         </div>
-        <div style={{ padding: '0 24px' }}>
-          <Divider style={{ margin: '0' }} />
-        </div>
+        <Divider style={{ margin: '0' }} />
 
         <div className='form-group'>
           <div className='form-group-title'>更多信息</div>
@@ -347,12 +382,12 @@ export default function Fn() {
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
-              <Form.Item name='colour' label='主题颜色'>
-                <ColorPicker disabledAlpha showText={showText} />
+              <Form.Item name='colour' label='气泡颜色'>
+                <ColorPicker disabledAlpha={true} showText={showText} />
               </Form.Item>
             </Col>
             <Col span={24}>
-              <Form.Item
+              {/* <Form.Item
                 label='背景图'
                 name='backgroundImage'
                 extra={
@@ -361,7 +396,14 @@ export default function Fn() {
                 <Upload {...props}>
                   <Button icon={<UploadOutlined rev={null} />}>上传</Button>
                 </Upload>
-              </Form.Item>
+              </Form.Item> */}
+
+              <UploadBg
+                bgFile={bgFile}
+                bgSrc={bgSrc}
+                onChangeFile={onChangeBgFile}
+                onDelFile={onDelBgFile}
+              />
             </Col>
             <Col span={24} xl={12}>
               <Form.Item label='短信端口号' required name='sms'>

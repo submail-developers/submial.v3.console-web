@@ -1,0 +1,50 @@
+.upload-attachment {
+  .upload-btn {
+    position: relative;
+    cursor: pointer;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+    .jiqiren {
+      font-size: 34px;
+      color: #d6dce1;
+    }
+    .loading {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.25);
+      color: #007dff;
+    }
+    .image-wrap-icon {
+      display: none;
+    }
+    .attachment-model {
+      display: none;
+    }
+    &:hover {
+      .image-wrap-icon {
+        display: block;
+        color: #fff;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 2;
+        transform: translate(-50%, -50%);
+        font-size: 20px;
+      }
+      .attachment-model {
+        display: block;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+    }
+  }
+}

@@ -1,33 +1,30 @@
 import { useState } from 'react'
-import { LoadingOutlined } from '@ant-design/icons'
-import { Input, Upload, Form, App, Image as AImage, Flex, Space } from 'antd'
+import { Input, Upload, Form, App, Flex, Space, Button } from 'antd'
 import type { UploadFile, UploadProps } from 'antd'
-
+import { UploadOutlined } from '@ant-design/icons'
 import ADel from '@/components/aDel'
 
 import './index.scss'
 
 type Props = {
-  logoSrc: string
-  logoFile: UploadFile
+  attachmentSrc: string
+  attachmentFile: UploadFile
   onChangeFile: (file: UploadFile, fileSrc: string) => void
   onDelFile: () => void
 }
 
-// 限制图片的宽高和大小
-const logoWidth = 400
-const logoHeight = 400
-const maxFileSize = 50 // 50k
-const accept = '.png,.jpg,.jpeg'
+// 文件限制
+const maxFileSize = 1024 * 5 // 5M
+const accept = '.pdf,.doc,.jpg,.jpeg,.gif,.docx,.rar,.zip'
 
-// logo上传
+// 证明材料上传
 export default function Fn(props: Props) {
   const { message } = App.useApp()
   const [uploading, setUploading] = useState(false)
   const [delLoading, setDelLoading] = useState(false)
 
   // 删除
-  const delLogoEvent = () => {
+  const delEvent = () => {
     setDelLoading(true)
     let timer = setTimeout(() => {
       props.onDelFile()
@@ -51,9 +48,9 @@ export default function Fn(props: Props) {
           img.onload = async () => {
             img_w = img.width
             img_h = img.height
-            if (img_w != logoWidth || img_h != logoHeight || !isLt50k) {
+            if (!isLt50k) {
               setUploading(false)
-              message.error('请上传400 * 400，最大50k的图片', 4)
+              message.error('上传文件最大5M', 4)
               return false
             }
             props.onChangeFile(file, e.target.result as string)
@@ -71,37 +68,29 @@ export default function Fn(props: Props) {
   }
 
   return (
-    <div className='upload-logo'>
-      <Form.Item hidden name='logo'>
+    <div className='upload-attachment'>
+      <Form.Item hidden name='backgroundImage'>
         <Input type='text' />
       </Form.Item>
       <Form.Item
-        label='Chatbot 头像'
-        required
+        label='证明材料'
         extra={
           <div style={{ marginTop: '8px' }}>
-            支持的文件类型：png、jpg、jpeg，尺寸400*400，大小限50K
+            支持的文件类型：pdf、doc、jpg、jpeg、gif、docx、rar、zip，大小限5M
           </div>
         }>
         <Flex align='center' gap={12}>
           <Upload {...uploadProps}>
             <div className='upload-btn fx-center-center'>
-              {props.logoSrc ? (
-                <AImage src={props.logoSrc} preview={false} alt='' />
-              ) : (
-                <span className='icon iconfont icon-jiqiren-filled jiqiren'></span>
-              )}
-              {uploading ? (
-                <div className='loading fx-center-center'>
-                  <LoadingOutlined className='fn22' rev={null} />
-                </div>
-              ) : null}
+              <Button loading={uploading} icon={<UploadOutlined rev={null} />}>
+                上传
+              </Button>
             </div>
           </Upload>
-          <Space style={{ color: '#999' }}>
-            <span>{props.logoFile ? props.logoFile.name : ''}</span>
-            {props.logoSrc && (
-              <ADel onDel={delLogoEvent} loading={delLoading} />
+          <Space style={{ color: '#999' }} align='center'>
+            <span>{props.attachmentFile ? props.attachmentFile.name : ''}</span>
+            {props.attachmentSrc && (
+              <ADel onDel={delEvent} loading={delLoading} />
             )}
           </Space>
         </Flex>
