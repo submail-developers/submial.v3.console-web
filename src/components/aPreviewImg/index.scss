@@ -1,0 +1,12 @@
+.a-preview-img-btn {
+  width: 24px;
+  height: 24px;
+  color: #555;
+  border-radius: 2px;
+  cursor: pointer;
+  background-color: transparent;
+  transition: all 0.3s ease-out;
+  &:hover {
+    background-color: #eee;
+  }
+}
