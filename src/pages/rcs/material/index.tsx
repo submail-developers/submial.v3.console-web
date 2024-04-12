@@ -15,6 +15,7 @@ import {
 import type { ColumnsType } from 'antd/es/table'
 import { NavLink, useNavigate } from 'react-router-dom'
 import PageContent from '@/components/pageContent'
+import UploadModal from './uploadModal'
 import {
   UploadOutlined,
   RedoOutlined,
@@ -162,24 +163,23 @@ export default function Fn() {
 
   // 审核状态
   const [status, setStatus] = useState(0)
+  // 上传文件弹框
+  const [showUpload, setShowUpload] = useState(false)
 
-  const toCreate = () => {
-    nav('/console/rcs/chatbot/create/0')
-  }
   return (
     <PageContent extClass='material-list'>
       <Image src={codeImg} preview={false} width={60}></Image>
-      <Flex justify='space-between' align='center' wrap='wrap' gap={12}>
-        <Space align='baseline' size={[24, 0]} wrap>
+      <Flex justify='space-between' wrap='wrap' gap={12}>
+        <Space align='baseline'>
           <div className='fn24'>5G 消息资源库</div>
           <div className='fn14'>
-            素材通过后单次有效期7天，单个上传素材不超过10M。
+            <div>素材通过后单次有效期7天。</div>
           </div>
         </Space>
         <Button
           type='primary'
           size={point ? 'large' : 'middle'}
-          onClick={toCreate}
+          onClick={() => setShowUpload(true)}
           icon={<UploadOutlined rev={null} className='fn18' />}>
           上传素材
         </Button>
@@ -192,21 +192,28 @@ export default function Fn() {
         form={form}
         layout='vertical'
         size={point ? 'large' : 'middle'}
+        initialValues={{ type: 'all' }}
         autoComplete='off'>
         <Row gutter={16}>
           <Col span={10} md={10} lg={8} xl={6}>
-            <Form.Item name='key' label='素材名称'>
+            <Form.Item name='keyword' label='素材名称'>
               <Input placeholder='请输入' />
             </Form.Item>
           </Col>
           <Col span={8} md={8} lg={6} xl={4}>
-            <Form.Item name='status' label='素材类型'>
+            <Form.Item name='type' label='素材类型'>
               <Select
                 placeholder='请选择'
                 options={[
-                  { value: 'jack', label: 'Jack' },
-                  { value: 'lucy', label: 'Lucy' },
-                  { value: 'Yiminghe', label: 'yiminghe' },
+                  { value: 'all', label: '全部' },
+                  { value: '1', label: '图片' },
+                  { value: '3', label: '视频' },
+                  { value: '2', label: '音频' },
+                  { value: '4', label: '文档' },
+                  { value: '5', label: '表格' },
+                  { value: '6', label: '演示文件' },
+                  { value: '7', label: '压缩文件' },
+                  { value: '8', label: '其他' },
                 ]}
               />
             </Form.Item>
@@ -256,6 +263,11 @@ export default function Fn() {
           </Col>
         ))}
       </Row>
+      <UploadModal
+        show={showUpload}
+        onOk={() => {}}
+        onCancel={() => setShowUpload(false)}
+      />
     </PageContent>
   )
 }

@@ -123,6 +123,19 @@ export const delCustomerFile = (data: API.DeleteCustomerFileParams) => {
   )
 }
 
+// 上传素材
+export const uploadRcsMeteialFile = (data: { file: any }) => {
+  return request.post<any, any, { file: any }>(
+    '/console/api/rcs/submit_lib',
+    data,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    },
+  )
+}
+
 // 获取chatbot
 export const getChatbot = (data: API.GetChatbotParams) => {
   return request.post<any, API.GetChatbotRes, API.GetChatbotParams>(
