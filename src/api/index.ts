@@ -44,10 +44,10 @@ export const login = () => {
   return request.post<any, API.Response<any>, any>(
     'console/api/account/login',
     {
-      // account: 'duanlangjd@126.com',
-      // password: 'yanzhi2010',
-      account: '18616200024@163.com',
-      password: 'sumeng',
+      account: 'duanlangjd@126.com',
+      password: 'yanzhi2010',
+      // account: '18616200024@163.com',
+      // password: 'sumeng',
     },
   )
 }
@@ -85,4 +85,50 @@ export const delAllNotice = () => {
   return request.post<any, any, { tim: string }>(url, {
     tim,
   })
+}
+
+// 获取行业一级、二级编码信息
+export const getIndustry = () => {
+  return request.post<any, API.GetIndustryRes, any>(
+    '/console/api/rcs/get_industry_list',
+    {},
+  )
+}
+
+// 获取大区，省市相关信息
+export const getRegionRes = () => {
+  return request.post<any, API.GetRegionRes, any>(
+    '/console/api/rcs/get_district_list',
+    {},
+  )
+}
+
+// 上传文件  合同、logo等  单个文件上传
+export const uploadCustomerFile = (data: API.UploadCustomerFileParams) => {
+  return request.post<
+    any,
+    API.UploadCustomerFileRes,
+    API.UploadCustomerFileParams
+  >('/console/api/rcs/upload_customer_file', data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
+}
+// 删除文件 合同、logo等
+export const delCustomerFile = (data: API.DeleteCustomerFileParams) => {
+  return request.post<any, any, API.DeleteCustomerFileParams>(
+    '/console/api/rcs/delete_customer_file',
+    data,
+  )
+}
+
+// 获取chatbot
+export const getChatbot = (data: API.GetChatbotParams) => {
+  return request.post<any, API.GetChatbotRes, API.GetChatbotParams>(
+    '/console/api/rcs/get_chatbot',
+    {
+      ...data,
+    },
+  )
 }

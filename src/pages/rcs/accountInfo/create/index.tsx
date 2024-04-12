@@ -236,7 +236,7 @@ export default function Fn() {
                 name='backgroundImage'
                 extra={
                   <Extra>
-                    您可上传的文件类型：pdf、doc、docx、jpg、jpeg、git、rar、zip，单个附件大小限10M，限上传1个文件
+                    您可上传的文件类型：pdf、doc、docx、jpg、jpeg、gif、rar、zip，单个附件大小限10M，限上传1个文件
                   </Extra>
                 }>
                 <Upload {...props}>

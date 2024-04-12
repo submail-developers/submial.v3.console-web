@@ -125,7 +125,7 @@ export const menus: RouteObject[] = [
             ),
           },
           {
-            path: 'detail',
+            path: 'detail/:id',
             loader: loaderFn({
               breadName: 'Chatbot详情',
             }),
@@ -149,7 +149,7 @@ export const menus: RouteObject[] = [
         errorElement: <Error />,
         element: (
           <LazyImportComponent
-            lazyChildren={lazy(() => import('@/pages/rcs/welcome'))}
+            lazyChildren={lazy(() => import('@/pages/rcs/material'))}
           />
         ),
       },
@@ -277,7 +277,7 @@ export const menus: RouteObject[] = [
         path: 'interactive',
         loader: loaderFn({
           groupName: '智能交互',
-          groupIcon: 'icon-qianbao',
+          groupIcon: 'icon-jiaohu',
           breadName: 'Chatbot 交互',
           menuName: 'Chatbot 交互',
         }),

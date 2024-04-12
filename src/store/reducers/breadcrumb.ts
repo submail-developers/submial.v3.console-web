@@ -34,7 +34,6 @@ export const breadcrumbSlice = createSlice({
       state,
       actions: PayloadAction<ChangeBreadcrumbPayload>,
     ) => {
-      console.log(state.list.length, actions.payload.index + 1)
       if (state.list.length <= actions.payload.index + 1) {
         state.list[actions.payload.index].title = actions.payload.title
       }

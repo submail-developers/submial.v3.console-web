@@ -17,7 +17,7 @@ export const useSize = () => {
     const debouncedHandleChange = debounce(() => {
       // 根据屏幕大小更新状态值
       if (Object.keys(screens).length > 0) {
-        if (screens.md) {
+        if (screens.lg) {
           localStorage.setItem('size', 'middle')
           setSize('middle')
         } else {
@@ -43,7 +43,7 @@ export const usePoint = (point: Points) => {
   const { useBreakpoint } = Grid
   const screens = useBreakpoint()
   const [pointFlag, setPointFlag] = useState<boolean>(
-    localScreen[point] || true,
+    Boolean(localScreen[point]),
   )
   useEffect(() => {
     const debouncedHandleChange = debounce(() => {

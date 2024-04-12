@@ -6,6 +6,139 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "39893526",
+      "name": "wifi",
+      "font_class": "wifi",
+      "unicode": "e643",
+      "unicode_decimal": 58947
+    },
+    {
+      "icon_id": "39893525",
+      "name": "xinhao",
+      "font_class": "xinhao",
+      "unicode": "e642",
+      "unicode_decimal": 58946
+    },
+    {
+      "icon_id": "39893530",
+      "name": "dianliang",
+      "font_class": "dianliang",
+      "unicode": "e644",
+      "unicode_decimal": 58948
+    },
+    {
+      "icon_id": "39886939",
+      "name": "jianpan",
+      "font_class": "jianpan",
+      "unicode": "e63e",
+      "unicode_decimal": 58942
+    },
+    {
+      "icon_id": "39886714",
+      "name": "lianjie",
+      "font_class": "lianjie",
+      "unicode": "e63d",
+      "unicode_decimal": 58941
+    },
+    {
+      "icon_id": "39886704",
+      "name": "ID",
+      "font_class": "id",
+      "unicode": "e63c",
+      "unicode_decimal": 58940
+    },
+    {
+      "icon_id": "39886633",
+      "name": "caidan",
+      "font_class": "caidan",
+      "unicode": "e63a",
+      "unicode_decimal": 58938
+    },
+    {
+      "icon_id": "39885114",
+      "name": "chazhao",
+      "font_class": "search",
+      "unicode": "e639",
+      "unicode_decimal": 58937
+    },
+    {
+      "icon_id": "39884976",
+      "name": "多卡片1",
+      "font_class": "cards",
+      "unicode": "e630",
+      "unicode_decimal": 58928
+    },
+    {
+      "icon_id": "39882881",
+      "name": "dilixiaoxi",
+      "font_class": "pos",
+      "unicode": "e637",
+      "unicode_decimal": 58935
+    },
+    {
+      "icon_id": "39882033",
+      "name": "chunwenben",
+      "font_class": "text",
+      "unicode": "e635",
+      "unicode_decimal": 58933
+    },
+    {
+      "icon_id": "39881916",
+      "name": "bohui",
+      "font_class": "no",
+      "unicode": "e634",
+      "unicode_decimal": 58932
+    },
+    {
+      "icon_id": "39881773",
+      "name": "shenhezhong",
+      "font_class": "time",
+      "unicode": "e631",
+      "unicode_decimal": 58929
+    },
+    {
+      "icon_id": "39881495",
+      "name": "dankapian",
+      "font_class": "card",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    },
+    {
+      "icon_id": "39878311",
+      "name": "tongguo",
+      "font_class": "yes",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
+      "icon_id": "39878346",
+      "name": "shuaxin",
+      "font_class": "shuaxin",
+      "unicode": "e62c",
+      "unicode_decimal": 58924
+    },
+    {
+      "icon_id": "39878308",
+      "name": "shangchuan",
+      "font_class": "upload",
+      "unicode": "e62a",
+      "unicode_decimal": 58922
+    },
+    {
+      "icon_id": "39878208",
+      "name": "shanchu",
+      "font_class": "shanchu",
+      "unicode": "e629",
+      "unicode_decimal": 58921
+    },
+    {
+      "icon_id": "39876204",
+      "name": "bianji",
+      "font_class": "bianji",
+      "unicode": "e626",
+      "unicode_decimal": 58918
+    },
+    {
       "icon_id": "39813908",
       "name": "shezhi",
       "font_class": "shezhi",
@@ -57,7 +190,7 @@
     {
       "icon_id": "39806378",
       "name": "机器人",
-      "font_class": "jiqiren1",
+      "font_class": "jiqiren-filled",
       "unicode": "e62e",
       "unicode_decimal": 58926
     },
