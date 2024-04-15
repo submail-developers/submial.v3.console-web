@@ -171,5 +171,34 @@ declare module 'apis' {
     interface DeleteCustomerFileParams {
       path: string // 文件路径
     }
+
+    // 获取rcs素材列表
+    interface GetRcsMeteialListParams {
+      id?: stirng
+      page: stirng
+      limit: stirng
+      keyword?: stirng
+      type: '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | 'all'
+    }
+    interface GetRcsMeteialListRes {
+      status: string
+      message: string
+      total: number
+      libs: RcsMeteialItem[]
+    }
+    interface RcsMeteialItem {
+      id: string
+      sign: string
+      account: string
+      //  1 图片,2 音频,3 视频,4 文档,5 表格,6 演示文件,7 压缩文件,8 其他
+      type: '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8'
+      storeAt: string
+      filePath: string
+      fileSize: string
+      expireAt: string
+      status: string
+      datetime: string
+      name: string
+    }
   }
 }

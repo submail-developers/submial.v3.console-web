@@ -11,6 +11,9 @@ import {
   Table,
   Image,
   Space,
+  Pagination,
+  Popconfirm,
+  App,
 } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { NavLink, useNavigate } from 'react-router-dom'
@@ -25,16 +28,22 @@ import {
 } from '@ant-design/icons'
 import codeImg from '@/assets/rcs/code.png'
 import { usePoint } from '@/hooks'
+import { getRcsMeteialList, delRcsMeteial } from '@/api'
+
+import audioTypeImg from '@/assets/rcs/fileType/audio.png'
+import imgTypeImg from '@/assets/rcs/fileType/img.png'
+import pptTypeImg from '@/assets/rcs/fileType/ppt.png'
+import unknowTypeImg from '@/assets/rcs/fileType/unknow.png'
+import wordTypeImg from '@/assets/rcs/fileType/word.png'
+import xlsTypeImg from '@/assets/rcs/fileType/xls.png'
+import zipTypeImg from '@/assets/rcs/fileType/zip.png'
 
 import { API } from 'apis'
 import './index.scss'
 
-type Item = {
-  id: string | number
-  type: string
-}
 type MaterialItemProps = {
-  item: Item
+  item: API.RcsMeteialItem
+  onDel: (id: string) => void
 }
 
 const MaterialItem = (props: MaterialItemProps) => {
@@ -44,7 +53,7 @@ const MaterialItem = (props: MaterialItemProps) => {
 
   const previewEvent = () => {
     setVisible(true)
-    if (props.item.type == 'video') {
+    if (props.item.type == '1') {
       setvideoRender(
         <video
           className='source-video'
@@ -63,10 +72,12 @@ const MaterialItem = (props: MaterialItemProps) => {
     <div className='material-item fx-col fx-x-center'>
       <div className='source-item'>
         <div className='source-info'>
-          {props.item.type == 'image' && (
+          {props.item.type == '1' && (
             <Image
               className='source-img'
-              src={codeImg}
+              // src={codeImg}
+              src={props.item.filePath}
+              fallback={imgTypeImg}
               preview={{
                 visible: visible,
                 onVisibleChange: (visible: boolean, prevVisible: boolean) => {
@@ -75,7 +86,10 @@ const MaterialItem = (props: MaterialItemProps) => {
               }}
             />
           )}
-          {props.item.type == 'video' && (
+          {props.item.type == '2' && (
+            <Image className='source-img' src={audioTypeImg} preview={false} />
+          )}
+          {props.item.type == '3' && (
             <>
               <video
                 className='source-video'
@@ -98,6 +112,22 @@ const MaterialItem = (props: MaterialItemProps) => {
               />
             </>
           )}
+
+          {props.item.type == '4' && (
+            <Image className='source-img' src={wordTypeImg} preview={false} />
+          )}
+          {props.item.type == '5' && (
+            <Image className='source-img' src={xlsTypeImg} preview={false} />
+          )}
+          {props.item.type == '6' && (
+            <Image className='source-img' src={pptTypeImg} preview={false} />
+          )}
+          {props.item.type == '7' && (
+            <Image className='source-img' src={zipTypeImg} preview={false} />
+          )}
+          {props.item.type == '8' && (
+            <Image className='source-img' src={unknowTypeImg} preview={false} />
+          )}
         </div>
         <div className='modal'>
           <Space className='status fx-y-center' size={4}>
@@ -107,24 +137,32 @@ const MaterialItem = (props: MaterialItemProps) => {
           <div className='time fx-center-center fn13'>期限：7天</div>
           <Space className='handle'>
             <div className='handle-item'>
-              <RedoOutlined rev={null} />
+              <span className='icon iconfont icon-shuaxin fn16'></span>
             </div>
-            <div className='handle-item'>
-              <DeleteOutlined rev={null} />
-            </div>
+            <Popconfirm
+              title='删除素材'
+              description='确定删除该素材？'
+              onConfirm={() => props.onDel(props.item.id)}
+              placement='bottom'
+              okText='确定'
+              cancelText='取消'>
+              <div className='handle-item'>
+                <span className='icon iconfont icon-shanchu fn16'></span>
+              </div>
+            </Popconfirm>
           </Space>
           <div className='preview-btn' onClick={previewEvent}>
-            {props.item.type == 'image' && (
+            {props.item.type == '1' && (
               <EyeOutlined rev={null} className='fn24' title='预览' />
             )}
 
-            {props.item.type == 'video' && (
+            {props.item.type == '3' && (
               <PlayCircleOutlined rev={null} className='fn24' title='播放' />
             )}
           </div>
         </div>
       </div>
-      <div className='source-name fn16'>xxx.img</div>
+      <div className='source-name fn16'>{props.item.name}</div>
     </div>
   )
 }
@@ -134,37 +172,54 @@ export default function Fn() {
   const nav = useNavigate()
   const [form] = Form.useForm()
 
-  const [list, setList] = useState<Item[]>([
-    {
-      id: 1,
-      type: 'image',
-    },
-    {
-      id: 2,
-      type: 'video',
-    },
-    {
-      id: 3,
-      type: 'txt',
-    },
-    {
-      id: 4,
-      type: 'image',
-    },
-    {
-      id: 5,
-      type: 'image',
-    },
-    {
-      id: 6,
-      type: 'image',
-    },
-  ])
+  const [currentPage, setcurrentPage] = useState<number>(1)
+  const [pageSize, setpageSize] = useState<number>(12)
+  const [total, setTotal] = useState<number>(0)
+  const [list, setList] = useState<API.RcsMeteialItem[]>([])
+  const [loading, setLoading] = useState(false)
 
   // 审核状态
   const [status, setStatus] = useState(0)
   // 上传文件弹框
   const [showUpload, setShowUpload] = useState(false)
+
+  const getList = async () => {
+    try {
+      const formValues = await form.getFieldsValue()
+      const res = await getRcsMeteialList({
+        ...formValues,
+        page: currentPage,
+        limit: pageSize,
+      })
+      setList(res.libs)
+      setTotal(res.total)
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+    }
+  }
+
+  // 切换页码
+  const onChangeCurrentPage = (page: number, pageSize: number) => {
+    setcurrentPage(page)
+    setpageSize(pageSize)
+  }
+
+  const handleSearch = () => {
+    setLoading(true)
+    getList()
+  }
+
+  const delEvent = async (id) => {
+    const res = await delRcsMeteial({ id })
+    if (res.status == 'success') {
+      getList()
+    }
+  }
+
+  useEffect(() => {
+    getList()
+  }, [currentPage, pageSize])
 
   return (
     <PageContent extClass='material-list'>
@@ -220,7 +275,12 @@ export default function Fn() {
           </Col>
           <Col span={6} md={4} xl={3}>
             <Form.Item label=' '>
-              <Button type='primary' className='w-100'>
+              <Button
+                type='primary'
+                className='w-100'
+                htmlType='submit'
+                loading={loading}
+                onClick={handleSearch}>
                 查询
               </Button>
             </Form.Item>
@@ -250,22 +310,42 @@ export default function Fn() {
             审核中
           </div>
         </Space>
-        {status == 2 && (
-          <Button type='primary' danger>
-            删除全部驳回素材
-          </Button>
+        {status == 2 && list.length > 0 && (
+          <Popconfirm
+            title='删除素材'
+            description='确定删除全部驳回素材？'
+            onConfirm={() => {}}
+            placement='bottom'
+            okText='确定'
+            cancelText='取消'>
+            <Button type='primary' danger>
+              删除全部驳回素材
+            </Button>
+          </Popconfirm>
         )}
       </Flex>
       <Row gutter={[16, 16]} wrap style={{ marginTop: '24px' }}>
         {list.map((item, index) => (
-          <Col span={12} lg={8} xl={6} key={index}>
-            <MaterialItem item={item} />
+          <Col span={12} lg={8} xl={6} key={item.id}>
+            <MaterialItem item={item} onDel={delEvent} />
           </Col>
         ))}
       </Row>
+      <Flex justify='flex-end' align='center' style={{ marginTop: '32px' }}>
+        <Pagination
+          defaultCurrent={1}
+          current={currentPage}
+          defaultPageSize={pageSize}
+          pageSizeOptions={[]}
+          total={total}
+          showQuickJumper
+          onChange={onChangeCurrentPage}
+          showTotal={(total) => `共 ${total} 条`}
+        />
+      </Flex>
       <UploadModal
         show={showUpload}
-        onOk={() => {}}
+        onOk={() => getList()}
         onCancel={() => setShowUpload(false)}
       />
     </PageContent>

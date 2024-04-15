@@ -45,18 +45,18 @@ const faq: FaqItem[] = [
     img: imgFileImg,
   },
   {
-    title: '视频',
-    size: videoSize,
-    suffix: ['mp4', '3gp'],
-    types: videoTypes,
-    img: videoFileImg,
-  },
-  {
     title: '音频',
     size: defaultSize,
     suffix: ['mp3', 'midi', 'wav'],
     types: ['audio/mpeg', 'audio/midi', 'audio/wav'],
     img: audioFileImg,
+  },
+  {
+    title: '视频',
+    size: videoSize,
+    suffix: ['mp4', '3gp'],
+    types: videoTypes,
+    img: videoFileImg,
   },
   {
     title: '文档',

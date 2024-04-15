@@ -135,6 +135,22 @@ export const uploadRcsMeteialFile = (data: { file: any }) => {
     },
   )
 }
+// 获取素材列表
+export const getRcsMeteialList = (data: API.GetRcsMeteialListParams) => {
+  return request.post<
+    any,
+    API.GetRcsMeteialListRes,
+    API.GetRcsMeteialListParams
+  >('/console/api/rcs/get_libs', data)
+}
+
+// 删除素材列表
+export const delRcsMeteial = (data: { id: string }) => {
+  return request.post<any, any, { id: string }>(
+    '/console/api/rcs/delete_libs',
+    data,
+  )
+}
 
 // 获取chatbot
 export const getChatbot = (data: API.GetChatbotParams) => {
