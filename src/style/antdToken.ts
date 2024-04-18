@@ -6,7 +6,7 @@ export default {
   colorPrimary: '#007DFF',
   // colorPrimaryBg: '#ebf2fe',
   colorText: '#1a1c1f',
-  colorLink: '#006bfc', // 控制超链接的颜色。
+  colorLink: '#007dff', // 控制超链接的颜色。
   colorError: '#D53A3D',
   // colorLinkActive: '#006db6', // 控制超链接被点击时的颜色。
   // colorLinkHover: '#006db6', // 控制超链接悬浮时的颜色。
