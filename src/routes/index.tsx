@@ -162,11 +162,30 @@ export const menus: RouteObject[] = [
           menuName: '创建/管理 5G消息模版',
         }),
         errorElement: <Error />,
-        element: (
-          <LazyImportComponent
-            lazyChildren={lazy(() => import('@/pages/rcs/welcome'))}
-          />
-        ),
+        children: [
+          {
+            path: 'index',
+            loader: loaderFn({}),
+            errorElement: <Error />,
+            element: (
+              <LazyImportComponent
+                lazyChildren={lazy(() => import('@/pages/rcs/template/list'))}
+              />
+            ),
+          },
+          {
+            path: 'create/:id', // 0为创建，否则为修改
+            loader: loaderFn({
+              breadName: '创建模版',
+            }),
+            errorElement: <Error />,
+            element: (
+              <LazyImportComponent
+                lazyChildren={lazy(() => import('@/pages/rcs/template/create'))}
+              />
+            ),
+          },
+        ],
       },
       {
         path: 'send',
@@ -380,12 +399,16 @@ export const baseRouter: RouteObject[] = [
     element: <Navigate to={'/console/rcs/welcome'} replace />,
   },
   {
+    path: '/console/rcs/account',
+    element: <Navigate to={'/console/rcs/account/index'} replace />,
+  },
+  {
     path: '/console/rcs/chatbot',
     element: <Navigate to={'/console/rcs/chatbot/index'} replace />,
   },
   {
-    path: '/console/rcs/account',
-    element: <Navigate to={'/console/rcs/account/index'} replace />,
+    path: '/console/rcs/template',
+    element: <Navigate to={'/console/rcs/template/index'} replace />,
   },
   {
     path: '/console/aim',
