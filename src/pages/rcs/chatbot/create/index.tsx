@@ -435,14 +435,34 @@ export default function Fn() {
         </div>
 
         <div className='form-group' style={{ paddingBottom: '24px' }}>
-          <Flex justify='flex-end'>
-            <Button
-              type='primary'
-              size='large'
-              style={{ width: 120 }}
-              onClick={submit}>
-              提交
-            </Button>
+          <Flex className='fx-x-between'>
+            <div>
+              <Button
+                type='primary'
+                size='large'
+                style={{ width: 120 }}
+                onClick={submit}
+                className='save'>
+                保存
+              </Button>
+            </div>
+            <div>
+              <Button
+                className='cancle'
+                type='primary'
+                size='large'
+                style={{ width: 120, marginRight: '12px' }}
+                onClick={submit}>
+                取消
+              </Button>
+              <Button
+                type='primary'
+                size='large'
+                style={{ width: 120 }}
+                onClick={submit}>
+                提交
+              </Button>
+            </div>
           </Flex>
         </div>
       </Form>

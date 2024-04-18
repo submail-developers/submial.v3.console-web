@@ -27,5 +27,28 @@
         }
       }
     }
+    .ant-input {
+      font-size: 15px;
+      padding: 9px 11px;
+    }
+    .ant-select-single {
+      height: 42px;
+    }
+    .cancle {
+      color: #1764ff;
+      background-color: #eceff3;
+    }
+    .upload-btn button {
+      width: 120px;
+      height: 40px;
+      font-size: 15px;
+    }
+    .save {
+      color: #fff;
+      background-color: #f58c37;
+      &:hover {
+        background-color: #f7a867;
+      }
+    }
   }
 }
