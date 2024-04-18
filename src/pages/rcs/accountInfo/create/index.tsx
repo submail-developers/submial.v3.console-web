@@ -25,7 +25,7 @@ import utils from '@/utils/formRules'
 
 import PageContent from '@/components/pageContent'
 
-import jiqiren from '@/assets/rcs/jiqiren.png'
+import jiqiren from '@/assets/rcs/aco1.png'
 
 import './index.scss'
 
@@ -75,6 +75,8 @@ const options: Option[] = [
     ],
   },
 ]
+
+const IdOptions: Option[] = [{ value: 'ids', label: '身份证' }]
 
 export default function Fn() {
   const dispatch = useAppDispatch()
@@ -146,9 +148,12 @@ export default function Fn() {
         layout='vertical'
         autoComplete='off'>
         <div className='form-header'>
-          <Image src={jiqiren} width={32} height={32} preview={false}></Image>
-          <div className='fn20 fw-500' style={{ marginTop: '8px' }}>
+          <Image src={jiqiren} preview={false}></Image>
+          <div className='fn22 fw-500 form-con'>
             客户资料{id == '0' ? '填写' : '修改'}
+            <div className='fn14 title-desc'>
+              请尽快完善客户信息，以便使用完整的5g消息功能
+            </div>
           </div>
         </div>
         <div className='form-group'>
@@ -173,8 +178,9 @@ export default function Fn() {
                 <Cascader options={options} placeholder='请选择' />
               </Form.Item>
             </Col>
+
             <Col span={24}>
-              <Form.Item label='客户详细地址' name='actualIssueIndustry'>
+              <Form.Item label='客户详细地址' name='acoDetailAdress'>
                 <Input placeholder='请输入' />
               </Form.Item>
             </Col>
@@ -188,12 +194,15 @@ export default function Fn() {
             </Col>
             <Col span={24} xl={12}>
               <Form.Item label='企业责任人姓名' required name='serviceCode'>
-                <Input placeholder='' />
+                <Input placeholder='不超过20个字符' />
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
-              <Form.Item label='企业责任人证件类型' required name='serviceCode'>
+              {/* <Form.Item label='企业责任人证件类型' required name='serviceCode'>
                 <Input placeholder='' />
+              </Form.Item> */}
+              <Form.Item label='企业责任人证件类型' name='serviceCode' required>
+                <Cascader options={IdOptions} placeholder='请选择' />
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
@@ -212,7 +221,11 @@ export default function Fn() {
                   </Extra>
                 }>
                 <Upload {...props}>
-                  <Button icon={<UploadOutlined rev={null} />}>上传</Button>
+                  <Button
+                    icon={<UploadOutlined rev={null} />}
+                    className='upload'>
+                    上传
+                  </Button>
                 </Upload>
               </Form.Item>
             </Col>
@@ -222,9 +235,6 @@ export default function Fn() {
               </Form.Item>
             </Col>
           </Row>
-        </div>
-        <div style={{ padding: '0 24px' }}>
-          <Divider style={{ margin: '0' }} />
         </div>
 
         <div className='form-group'>
@@ -240,7 +250,11 @@ export default function Fn() {
                   </Extra>
                 }>
                 <Upload {...props}>
-                  <Button icon={<UploadOutlined rev={null} />}>上传</Button>
+                  <Button
+                    icon={<UploadOutlined rev={null} />}
+                    className='upload'>
+                    上传
+                  </Button>
                 </Upload>
               </Form.Item>
             </Col>
@@ -248,13 +262,21 @@ export default function Fn() {
         </div>
 
         <div className='form-group' style={{ paddingBottom: '24px' }}>
-          <Flex justify='flex-end'>
+          <Flex justify='flex-left'>
             <Button
               type='primary'
               size='large'
               style={{ width: 120 }}
               onClick={submit}>
-              提交
+              提交审核
+            </Button>
+            <Button
+              className='cancle'
+              type='primary'
+              size='large'
+              style={{ width: 120, marginLeft: '12px' }}
+              onClick={submit}>
+              取消
             </Button>
           </Flex>
         </div>
