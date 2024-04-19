@@ -28,6 +28,8 @@
     "normalize.css": "^8.0.1",
     "react": "^18.2.0",
     "react-cropper": "^2.3.3",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.5",
     "react-router": "^6.18.0",

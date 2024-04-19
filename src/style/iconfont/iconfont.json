@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "39989401",
+      "name": "新增",
+      "font_class": "jia",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "39945659",
+      "name": "显示",
+      "font_class": "xianshi",
+      "unicode": "e647",
+      "unicode_decimal": 58951
+    },
+    {
+      "icon_id": "39945648",
+      "name": "重置",
+      "font_class": "zhongzhi",
+      "unicode": "e646",
+      "unicode_decimal": 58950
+    },
+    {
+      "icon_id": "39896040",
+      "name": "添加",
+      "font_class": "tianjia",
+      "unicode": "e645",
+      "unicode_decimal": 58949
+    },
+    {
       "icon_id": "39893526",
       "name": "wifi",
       "font_class": "wifi",
@@ -14,28 +42,28 @@
     },
     {
       "icon_id": "39893525",
-      "name": "xinhao",
+      "name": "信号",
       "font_class": "xinhao",
       "unicode": "e642",
       "unicode_decimal": 58946
     },
     {
       "icon_id": "39893530",
-      "name": "dianliang",
+      "name": "电量",
       "font_class": "dianliang",
       "unicode": "e644",
       "unicode_decimal": 58948
     },
     {
       "icon_id": "39886939",
-      "name": "jianpan",
+      "name": "键盘",
       "font_class": "jianpan",
       "unicode": "e63e",
       "unicode_decimal": 58942
     },
     {
       "icon_id": "39886714",
-      "name": "lianjie",
+      "name": "链接",
       "font_class": "lianjie",
       "unicode": "e63d",
       "unicode_decimal": 58941
@@ -49,140 +77,140 @@
     },
     {
       "icon_id": "39886633",
-      "name": "caidan",
+      "name": "菜单",
       "font_class": "caidan",
       "unicode": "e63a",
       "unicode_decimal": 58938
     },
     {
       "icon_id": "39885114",
-      "name": "chazhao",
+      "name": "搜索",
       "font_class": "search",
       "unicode": "e639",
       "unicode_decimal": 58937
     },
     {
       "icon_id": "39884976",
-      "name": "多卡片1",
+      "name": "多卡片",
       "font_class": "cards",
       "unicode": "e630",
       "unicode_decimal": 58928
     },
     {
       "icon_id": "39882881",
-      "name": "dilixiaoxi",
+      "name": "位置",
       "font_class": "pos",
       "unicode": "e637",
       "unicode_decimal": 58935
     },
     {
       "icon_id": "39882033",
-      "name": "chunwenben",
+      "name": "文本",
       "font_class": "text",
       "unicode": "e635",
       "unicode_decimal": 58933
     },
     {
       "icon_id": "39881916",
-      "name": "bohui",
+      "name": "禁止",
       "font_class": "no",
       "unicode": "e634",
       "unicode_decimal": 58932
     },
     {
       "icon_id": "39881773",
-      "name": "shenhezhong",
+      "name": "时间",
       "font_class": "time",
       "unicode": "e631",
       "unicode_decimal": 58929
     },
     {
       "icon_id": "39881495",
-      "name": "dankapian",
+      "name": "单卡片",
       "font_class": "card",
       "unicode": "e62f",
       "unicode_decimal": 58927
     },
     {
       "icon_id": "39878311",
-      "name": "tongguo",
+      "name": "对号",
       "font_class": "yes",
       "unicode": "e62b",
       "unicode_decimal": 58923
     },
     {
       "icon_id": "39878346",
-      "name": "shuaxin",
+      "name": "刷新",
       "font_class": "shuaxin",
       "unicode": "e62c",
       "unicode_decimal": 58924
     },
     {
       "icon_id": "39878308",
-      "name": "shangchuan",
+      "name": "上传",
       "font_class": "upload",
       "unicode": "e62a",
       "unicode_decimal": 58922
     },
     {
       "icon_id": "39878208",
-      "name": "shanchu",
+      "name": "删除",
       "font_class": "shanchu",
       "unicode": "e629",
       "unicode_decimal": 58921
     },
     {
       "icon_id": "39876204",
-      "name": "bianji",
+      "name": "编辑",
       "font_class": "bianji",
       "unicode": "e626",
       "unicode_decimal": 58918
     },
     {
       "icon_id": "39813908",
-      "name": "shezhi",
+      "name": "设置",
       "font_class": "shezhi",
       "unicode": "e625",
       "unicode_decimal": 58917
     },
     {
       "icon_id": "39813890",
-      "name": "qianbao",
+      "name": "钱包",
       "font_class": "qianbao",
       "unicode": "e624",
       "unicode_decimal": 58916
     },
     {
       "icon_id": "39813755",
-      "name": "xiaoxi",
+      "name": "消息",
       "font_class": "xiaoxi",
       "unicode": "e61d",
       "unicode_decimal": 58909
     },
     {
       "icon_id": "39813780",
-      "name": "fangzi",
+      "name": "房子",
       "font_class": "home",
       "unicode": "e621",
       "unicode_decimal": 58913
     },
     {
       "icon_id": "39813776",
-      "name": "jiqiren ",
+      "name": "机器人",
       "font_class": "jiqiren",
       "unicode": "e61f",
       "unicode_decimal": 58911
     },
     {
       "icon_id": "39813772",
-      "name": "fasong",
+      "name": "发送",
       "font_class": "fasong",
       "unicode": "e61e",
       "unicode_decimal": 58910
     },
     {
       "icon_id": "39813751",
-      "name": "jiaohu",
+      "name": "交互",
       "font_class": "jiaohu",
       "unicode": "e61c",
       "unicode_decimal": 58908
@@ -203,21 +231,21 @@
     },
     {
       "icon_id": "39733951",
-      "name": "jiantou",
+      "name": "下箭头",
       "font_class": "xiangxia",
       "unicode": "e61b",
       "unicode_decimal": 58907
     },
     {
       "icon_id": "39733930",
-      "name": "ren",
+      "name": "人",
       "font_class": "user",
       "unicode": "e61a",
       "unicode_decimal": 58906
     },
     {
       "icon_id": "38458904",
-      "name": "shuju",
+      "name": "数据",
       "font_class": "shuju",
       "unicode": "e617",
       "unicode_decimal": 58903
