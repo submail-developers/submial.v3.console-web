@@ -141,9 +141,9 @@ export default function Fn() {
 
   return (
     <PageContent extClass='chatbot-list'>
-      <Image src={codeImg} preview={false} width={60}></Image>
+      <Image src={codeImg} preview={false} width={72}></Image>
       <Flex justify='space-between' align='center'>
-        <div className='fn24'>申请/管理 Chatbot</div>
+        <div className='fn22 fw-500'>申请/管理 Chatbot</div>
         <Button
           type='primary'
           size={point ? 'large' : 'middle'}
