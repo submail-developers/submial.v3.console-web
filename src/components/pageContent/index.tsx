@@ -40,11 +40,12 @@ export default function PageContent(props: Props) {
     setcurrentPoint(current || 'xl')
   }, [points])
   return (
-    <div
-      data-class='page-content'
-      className={`${props.extClass || ''}`}
-      style={{ width: style[currentPoint] }}>
-      {props.children}
+    <div className='page-container'>
+      <div
+        className={`page-content ${props.extClass || ''}`}
+        style={{ width: style[currentPoint] }}>
+        {props.children}
+      </div>
     </div>
   )
 }

@@ -9,6 +9,7 @@ import {
 import Layout from '@/layout/index'
 import Error from '@/pages/error'
 import LazyImportComponent from './lazyConfig'
+import TestDnd from '@/pages/test-dnd'
 
 /**
  * handle中拿到的参数
@@ -20,6 +21,8 @@ export interface RouteExtParams {
   groupIcon?: string // 侧边栏组的icon-name
   breadName?: string // 面包屑展示的名字
   menuName?: string // 侧边栏的名称
+  hideMenu?: boolean // 是否展示侧边栏
+  hideHeaderRight?: boolean // 是否隐藏顶部右侧导航
 }
 const loaderFn = (props?: RouteExtParams, cb?: () => void) => {
   return () => {
@@ -174,9 +177,14 @@ export const menus: RouteObject[] = [
             ),
           },
           {
-            path: 'create/:id', // 0为创建，否则为修改
+            // type = 'text' | 'generalPurposeCard' | 'generalPurposeCardCarousel' 纯文本/单卡片/多卡片
+            // id = 0 为创建，否则为修改
+            // ?name=xxx 模版名称
+            path: 'create',
             loader: loaderFn({
               breadName: '创建模版',
+              hideMenu: true,
+              hideHeaderRight: true,
             }),
             errorElement: <Error />,
             element: (
@@ -184,6 +192,47 @@ export const menus: RouteObject[] = [
                 lazyChildren={lazy(() => import('@/pages/rcs/template/create'))}
               />
             ),
+            children: [
+              // 纯文本
+              {
+                path: 'text/:id',
+                loader: loaderFn({}),
+                errorElement: <Error />,
+                element: (
+                  <LazyImportComponent
+                    lazyChildren={lazy(
+                      () => import('@/pages/rcs/template/create/text'),
+                    )}
+                  />
+                ),
+              },
+              // 单卡片
+              {
+                path: 'card/:id',
+                loader: loaderFn({}),
+                errorElement: <Error />,
+                element: (
+                  <LazyImportComponent
+                    lazyChildren={lazy(
+                      () => import('@/pages/rcs/template/create/card'),
+                    )}
+                  />
+                ),
+              },
+              // 多卡片
+              {
+                path: 'cards/:id',
+                loader: loaderFn({}),
+                errorElement: <Error />,
+                element: (
+                  <LazyImportComponent
+                    lazyChildren={lazy(
+                      () => import('@/pages/rcs/template/create/cards'),
+                    )}
+                  />
+                ),
+              },
+            ],
           },
         ],
       },
@@ -198,7 +247,7 @@ export const menus: RouteObject[] = [
         errorElement: <Error />,
         element: (
           <LazyImportComponent
-            lazyChildren={lazy(() => import('@/pages/rcs/welcome'))}
+            lazyChildren={lazy(() => import('@/pages/test-dnd'))}
           />
         ),
       },

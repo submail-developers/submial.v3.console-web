@@ -1,0 +1,21 @@
+.rcs-temp-meteial {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  .top-search {
+    height: 64px;
+    .type {
+      height: 24px;
+      line-height: 24px;
+      cursor: pointer;
+      &.active {
+        color: #111;
+        font-weight: 500;
+      }
+    }
+  }
+  .meteial-list {
+    height: calc(100% - 64px);
+    overflow-y: scroll;
+  }
+}

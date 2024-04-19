@@ -12,10 +12,29 @@
     border-bottom: 1px solid #ddd;
   }
   .modal-body {
-    padding: 16px 24px 32px;
+    padding: 16px 24px 0;
     overflow-x: scroll;
     .modal-content {
-      min-width: 650px;
+      // min-width: 650px;
+    }
+  }
+  .type-item {
+    height: 40px;
+    background-color: transparent;
+    transition: all 0.3s;
+    padding: 0 12px;
+    border-radius: 4px;
+    box-sizing: border-box;
+    cursor: pointer;
+    &.active {
+      color: #3163f6;
+      background-color: #eceff2;
+    }
+    &:hover {
+      background-color: #f3f6f8;
+    }
+    .des {
+      color: rgba(0, 0, 0, 0.45);
     }
   }
 }

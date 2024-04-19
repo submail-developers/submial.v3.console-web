@@ -18,6 +18,7 @@ import './index.scss'
 import { useState } from 'react'
 type Props = {
   broken: boolean
+  hideRight: boolean
 }
 
 const countItems: MenuProps['items'] = [
@@ -115,51 +116,51 @@ export default function MyHeader(props: Props) {
           style={{ flexGrow: '1', padding: '0 16px 0 0', height: '100%' }}>
           {points.sm && <MyBreadcrumb></MyBreadcrumb>}
           <Button onClick={loginEvent}>登陆</Button>
+          {!props.hideRight && (
+            <Space align='center' size={points.lg ? 16 : 0}>
+              <Dropdown
+                trigger={['click']}
+                menu={{ items: countItems }}
+                arrow
+                placement={points.lg ? 'bottom' : 'bottomRight'}
+                overlayClassName='drop-right'>
+                {points.md ? (
+                  <div className='right-menu account-btn'>我的账户</div>
+                ) : (
+                  <div className='account-mini-btn'>
+                    <UserOutlined
+                      style={{ color: '#393e49', fontSize: '16px' }}
+                    />
+                  </div>
+                )}
+              </Dropdown>
 
-          <Space align='center' size={points.lg ? 16 : 0}>
-            <Dropdown
-              trigger={['click']}
-              menu={{ items: countItems }}
-              arrow
-              placement={points.lg ? 'bottom' : 'bottomRight'}
-              overlayClassName='drop-right'>
-              {points.md ? (
-                <div className='right-menu account-btn'>我的账户</div>
-              ) : (
-                <div className='account-mini-btn'>
-                  <UserOutlined
-                    rev={null}
-                    style={{ color: '#393e49', fontSize: '16px' }}
-                  />
-                </div>
+              {points.lg && (
+                <>
+                  <Dropdown
+                    trigger={['click']}
+                    arrow
+                    overlayClassName='drop-right'
+                    onOpenChange={(open) => setshowNoticeList(open)}
+                    dropdownRender={() => (
+                      <Notice show={showNoticeList} total={info.notification} />
+                    )}>
+                    <Flex className='right-menu' align='center' gap={2}>
+                      通知
+                      <Badge count={(info && info.notification) || ''} />
+                    </Flex>
+                  </Dropdown>
+                  <Dropdown
+                    trigger={['click']}
+                    menu={{ items: docItems }}
+                    arrow
+                    overlayClassName='drop-right'>
+                    <div className='right-menu'>文档中心</div>
+                  </Dropdown>
+                </>
               )}
-            </Dropdown>
-
-            {points.lg && (
-              <>
-                <Dropdown
-                  trigger={['click']}
-                  arrow
-                  overlayClassName='drop-right'
-                  onOpenChange={(open) => setshowNoticeList(open)}
-                  dropdownRender={() => (
-                    <Notice show={showNoticeList} total={info.notification} />
-                  )}>
-                  <Flex className='right-menu' align='center' gap={2}>
-                    通知
-                    <Badge count={(info && info.notification) || ''} />
-                  </Flex>
-                </Dropdown>
-                <Dropdown
-                  trigger={['click']}
-                  menu={{ items: docItems }}
-                  arrow
-                  overlayClassName='drop-right'>
-                  <div className='right-menu'>文档中心</div>
-                </Dropdown>
-              </>
-            )}
-          </Space>
+            </Space>
+          )}
         </Flex>
         <ChatBtn />
       </Flex>

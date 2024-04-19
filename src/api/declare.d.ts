@@ -175,8 +175,8 @@ declare module 'apis' {
     // 获取rcs素材列表
     interface GetRcsMeteialListParams {
       id?: stirng
-      page: stirng
-      limit: stirng
+      page: number
+      limit: number
       keyword?: stirng
       type: '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | 'all'
     }

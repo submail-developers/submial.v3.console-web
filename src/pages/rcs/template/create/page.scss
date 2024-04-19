@@ -1,0 +1,64 @@
+.rcs-template {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  // position: relative;
+  .handle-buttons {
+    position: absolute;
+    right: 0;
+    top: -65px;
+    z-index: 10100;
+    height: 65px;
+    width: fit-content;
+  }
+  .left {
+    flex-shrink: 0;
+    width: 260px;
+    height: 100%;
+    padding: 16px;
+    box-sizing: border-box;
+    border-right: 1px solid #e7e7e7;
+  }
+  .center {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .mobile {
+      width: 360px;
+      height: 735px;
+      background-image: url('@/assets/rcs/mobile.png');
+      background-position: top left;
+      background-repeat: no-repeat;
+      background-size: 100%;
+      position: relative;
+      transform: scale(0.8);
+      margin-bottom: 80px;
+      .mobile-content {
+        width: 326px;
+        height: 570px;
+        position: relative;
+        left: 50%;
+        top: calc(50%);
+        transform: translate(-50%, -50%);
+        border: 1px solid #ccc;
+        .title {
+          position: absolute;
+          top: -30px;
+          left: 0;
+          width: 100%;
+          height: 30px;
+          line-height: 30px;
+          text-align: center;
+          border-bottom: 1px solid #e7e7e7;
+        }
+      }
+    }
+  }
+  .right {
+    width: 320px;
+    flex-shrink: 0;
+    border-left: 1px solid #e7e7e7;
+  }
+}

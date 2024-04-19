@@ -102,16 +102,16 @@ export default function Fn(props: Props) {
                     height={32}
                     preview={false}
                   />
-                  <UploadOutlined rev={null} className='image-wrap-icon' />
+                  <UploadOutlined className='image-wrap-icon' />
                   <div className='bg-model'></div>
                 </>
               ) : (
-                <Button icon={<UploadOutlined rev={null} />}>上传</Button>
+                <Button icon={<UploadOutlined />}>上传</Button>
               )}
 
               {uploading ? (
                 <div className='loading fx-center-center'>
-                  <LoadingOutlined className='fn22' rev={null} />
+                  <LoadingOutlined className='fn22' />
                 </div>
               ) : null}
             </div>

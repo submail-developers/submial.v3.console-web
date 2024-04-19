@@ -1,5 +1,10 @@
-[data-class='page-content'] {
-  margin: 0 auto;
+.page-container {
+  width: 100%;
   height: 100%;
-  transition: width 0.3s ease-out;
+  overflow-y: scroll;
+  .page-content {
+    margin: 0 auto;
+    height: 100%;
+    transition: width 0.3s ease-out;
+  }
 }

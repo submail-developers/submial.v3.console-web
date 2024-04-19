@@ -82,7 +82,7 @@ export default function Fn(props: Props) {
         <Flex align='center' gap={12}>
           <Upload {...uploadProps}>
             <div className='upload-btn fx-center-center'>
-              <Button loading={uploading} icon={<UploadOutlined rev={null} />}>
+              <Button loading={uploading} icon={<UploadOutlined />}>
                 上传
               </Button>
             </div>

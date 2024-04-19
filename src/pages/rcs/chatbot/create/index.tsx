@@ -394,7 +394,7 @@ export default function Fn() {
                   <Extra>支持的文件类型：png、jpg、jpeg，附件大小限20K</Extra>
                 }>
                 <Upload {...props}>
-                  <Button icon={<UploadOutlined rev={null} />}>上传</Button>
+                  <Button icon={<UploadOutlined />}>上传</Button>
                 </Upload>
               </Form.Item> */}
 

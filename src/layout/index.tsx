@@ -1,7 +1,7 @@
-import { CSSProperties, useState } from 'react'
+import { CSSProperties, useEffect, useRef, useState } from 'react'
 import MyHeader from './header'
 import { Layout } from 'antd'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useMatches } from 'react-router-dom'
 import Menu from './menu'
 import { useLocalStorage } from '@/hooks'
 
@@ -16,15 +16,47 @@ const sideStyle: React.CSSProperties = {
 
 export default function Fn() {
   const [collapsed, setcollapsed] = useLocalStorage('siderClosed', true) // 是否收起侧边栏
+  // 顶部导航的高度
+  const [headerH, setHeaderH] = useState(65)
+  const [hideRight, setHideRight] = useState(false)
+  // 路由中配置是否展示侧边栏
+  const hideRef = useRef(false)
+  const match = useMatches()
   const onBreakpoint = (broken) => {
-    setcollapsed(broken)
+    if (!hideRef.current) {
+      setcollapsed(broken)
+    }
+    setHeaderH(broken ? 104 : 65)
   }
+
+  // 路由中配置是否展示侧边栏
+  useEffect(() => {
+    let hideMenu = false
+    let hideHeaderRight = false
+    match.forEach((item) => {
+      let { data } = item
+      // @ts-ignore
+      if (data && data.hideMenu) {
+        hideMenu = Boolean(
+          (data as { hideMenu?: boolean; hideHeaderRight?: boolean }).hideMenu,
+        )
+      }
+      // @ts-ignore
+      if (data && data.hideHeaderRight) {
+        hideHeaderRight = Boolean(
+          (data as { hideMenu?: boolean; hideHeaderRight?: boolean })
+            .hideHeaderRight,
+        )
+      }
+    })
+    setcollapsed(hideMenu)
+    hideRef.current = hideMenu
+    setHideRight(hideHeaderRight)
+  }, [match])
   return (
     <Layout className='layout-container'>
-      <Header
-        className='layout-header'
-        style={{ height: collapsed ? 104 : 65 }}>
-        <MyHeader broken={collapsed} />
+      <Header className='layout-header' style={{ height: headerH }}>
+        <MyHeader broken={collapsed} hideRight={hideRight} />
       </Header>
       <Layout
         className='layout-content'

@@ -221,9 +221,7 @@ export default function Fn() {
                   </Extra>
                 }>
                 <Upload {...props}>
-                  <Button
-                    icon={<UploadOutlined rev={null} />}
-                    className='upload'>
+                  <Button icon={<UploadOutlined />} className='upload'>
                     上传
                   </Button>
                 </Upload>
@@ -250,9 +248,7 @@ export default function Fn() {
                   </Extra>
                 }>
                 <Upload {...props}>
-                  <Button
-                    icon={<UploadOutlined rev={null} />}
-                    className='upload'>
+                  <Button icon={<UploadOutlined />} className='upload'>
                     上传
                   </Button>
                 </Upload>

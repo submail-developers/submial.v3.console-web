@@ -93,7 +93,7 @@ export default function Fn(props: Props) {
               )}
               {uploading ? (
                 <div className='loading fx-center-center'>
-                  <LoadingOutlined className='fn22' rev={null} />
+                  <LoadingOutlined className='fn22' />
                 </div>
               ) : null}
             </div>

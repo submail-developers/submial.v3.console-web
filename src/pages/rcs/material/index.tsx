@@ -153,11 +153,11 @@ const MaterialItem = (props: MaterialItemProps) => {
           </Space>
           <div className='preview-btn' onClick={previewEvent}>
             {props.item.type == '1' && (
-              <EyeOutlined rev={null} className='fn24' title='预览' />
+              <EyeOutlined className='fn24' title='预览' />
             )}
 
             {props.item.type == '3' && (
-              <PlayCircleOutlined rev={null} className='fn24' title='播放' />
+              <PlayCircleOutlined className='fn24' title='播放' />
             )}
           </div>
         </div>
@@ -235,7 +235,7 @@ export default function Fn() {
           type='primary'
           size={point ? 'large' : 'middle'}
           onClick={() => setShowUpload(true)}
-          icon={<UploadOutlined rev={null} className='fn18' />}>
+          icon={<UploadOutlined className='fn18' />}>
           上传素材
         </Button>
       </Flex>
