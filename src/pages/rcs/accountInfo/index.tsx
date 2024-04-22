@@ -147,10 +147,14 @@ export default function Fn() {
             <td>18226187949</td>
           </tr>
           <tr>
-            <td>归属区域</td>
-            <td>华东/上海/上海</td>
+            <td>客户邮箱</td>
+            <td>2123123@qq.com</td>
             <td>归属运营商</td>
             <td>上海赛邮云计算有限公司</td>
+          </tr>
+          <tr>
+            <td>归属区域</td>
+            <td colSpan={3}>华东/上海/上海</td>
           </tr>
           <tr>
             <td>客户详细地址</td>
@@ -182,21 +186,6 @@ export default function Fn() {
           </tr>
         </tbody>
       </table>
-
-      <div
-        className='info-title'
-        style={{ marginTop: '40px', marginBottom: '20px' }}>
-        操作日志
-      </div>
-      <Table
-        className='theme-cell bg-white'
-        columns={columns}
-        dataSource={list}
-        sticky
-        pagination={false}
-        rowKey={'id'}
-        scroll={{ x: 'max-content' }}
-      />
     </PageContent>
   )
 }

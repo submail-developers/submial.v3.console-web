@@ -26,6 +26,7 @@ const Dialog = ({}: Props, ref: any) => {
 
   const { message } = App.useApp()
   const [avatar, setAvatar] = useState(1)
+  const [imgSrc, setimgSrc] = useState(ava1)
 
   useImperativeHandle(ref, () => {
     return {
@@ -45,6 +46,7 @@ const Dialog = ({}: Props, ref: any) => {
   const handleOk = async () => {}
 
   const handleCancel = () => {
+    setAvatar(1)
     setIsModalOpen(false)
   }
 
@@ -75,8 +77,9 @@ const Dialog = ({}: Props, ref: any) => {
     },
   ]
   //头像切换
-  const handelImg = (id) => {
-    setAvatar(id)
+  const handelImg = (item) => {
+    setAvatar(item.id)
+    setimgSrc(item.imgSrc)
   }
 
   return (
@@ -88,7 +91,9 @@ const Dialog = ({}: Props, ref: any) => {
       closable={false}
       onCancel={handleCancel}
       wrapClassName='modal-reset'
-      footer={<ModelFooter onOk={handleOk} onCancel={handleCancel} />}
+      footer={
+        <ModelFooter onOk={handleOk} onCancel={handleCancel} imgSrc={imgSrc} />
+      }
       open={isModalOpen}>
       <Form
         name='form-0'
@@ -106,7 +111,7 @@ const Dialog = ({}: Props, ref: any) => {
               <div
                 className={`avatar-img ${avatar === item.id && 'active'}`}
                 key={item.id}
-                onClick={() => handelImg(item.id)}>
+                onClick={() => handelImg(item)}>
                 <img src={item.imgSrc} alt='' />
               </div>
             ))}
@@ -128,6 +133,22 @@ const Dialog = ({}: Props, ref: any) => {
               </p>
             </Upload>
           </div>
+          {/* <div>
+            <Button type='primary' onClick={() => setVisible(true)}>
+              预览
+            </Button>
+            <Image
+              width={200}
+              style={{ display: 'none' }}
+              preview={{
+                visible,
+                src: imgSrc,
+                onVisibleChange: (value) => {
+                  setVisible(value)
+                },
+              }}
+            />
+          </div> */}
         </Form.Item>
       </Form>
     </Modal>
