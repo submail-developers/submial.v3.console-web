@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useState, useRef, MutableRefObject } from 'react'
 import { LoadingOutlined } from '@ant-design/icons'
-import { Input, Upload, Form, App, Image as AImage, Flex, Space } from 'antd'
+import { Input, Upload, Form, App, Image as AImage, Flex, Button } from 'antd'
 import type { UploadFile, UploadProps } from 'antd'
 
 import ADel from '@/components/aDel'
-
+import AddDialog from '../addAvatarDialog/addDialog'
 import './index.scss'
 
 type Props = {
@@ -25,6 +25,7 @@ export default function Fn(props: Props) {
   const { message } = App.useApp()
   const [uploading, setUploading] = useState(false)
   const [delLoading, setDelLoading] = useState(false)
+  const addDialogRef: MutableRefObject<any> = useRef(null)
 
   // 删除
   const delLogoEvent = () => {
@@ -70,42 +71,48 @@ export default function Fn(props: Props) {
     maxCount: 1,
   }
 
+  // 展示头像弹框
+  const showDialog = () => {
+    addDialogRef.current.open()
+  }
   return (
     <div className='upload-logo'>
       <Form.Item hidden name='logo'>
         <Input type='text' />
       </Form.Item>
-      <Form.Item
-        label='Chatbot 头像'
-        required
-        extra={
-          <div style={{ marginTop: '8px' }}>
-            支持的文件类型：png、jpg、jpeg，尺寸400*400，大小限50K
-          </div>
-        }>
+      <Form.Item label='Chatbot 头像' required>
         <Flex align='center' gap={12}>
-          <Upload {...uploadProps}>
-            <div className='upload-btn fx-center-center'>
-              {props.logoSrc ? (
-                <AImage src={props.logoSrc} preview={false} alt='' />
-              ) : (
-                <span className='icon iconfont icon-jiqiren-filled jiqiren'></span>
-              )}
-              {uploading ? (
+          {/* <Upload {...uploadProps}> */}
+          <div className='upload-btn fx-center-center'>
+            {/* {props.logoSrc ? (
+              <AImage src={props.logoSrc} preview={false} alt='' />
+            ) : ( */}
+            <span className='icon iconfont icon-jiqiren-filled jiqiren'></span>
+            {/* )}
+           {uploading ? (
                 <div className='loading fx-center-center'>
                   <LoadingOutlined className='fn22' />
                 </div>
-              ) : null}
-            </div>
-          </Upload>
-          <Space style={{ color: '#999' }}>
+              ) : null} */}
+          </div>
+          {/* </Upload> */}
+          {/* <Space style={{ color: '#999' }}>
             <span>{props.logoFile ? props.logoFile.name : ''}</span>
             {props.logoSrc && (
               <ADel onDel={delLogoEvent} loading={delLoading} />
             )}
-          </Space>
+          </Space> */}
+
+          <Button
+            type='primary'
+            size='large'
+            style={{ width: 120 }}
+            onClick={showDialog}>
+            选择头像
+          </Button>
         </Flex>
       </Form.Item>
+      <AddDialog ref={addDialogRef} />
     </div>
   )
 }

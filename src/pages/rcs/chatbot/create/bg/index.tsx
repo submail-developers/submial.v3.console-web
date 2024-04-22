@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, MutableRefObject, useRef } from 'react'
 import {
   Input,
   Upload,
@@ -13,7 +13,7 @@ import type { UploadFile, UploadProps } from 'antd'
 import { LoadingOutlined, UploadOutlined, EyeOutlined } from '@ant-design/icons'
 import ADel from '@/components/aDel'
 import APreviewImg from '@/components/aPreviewImg'
-
+import AddDialog from '../choseBgimg/choseBgimg'
 import './index.scss'
 
 type Props = {
@@ -33,6 +33,7 @@ export default function Fn(props: Props) {
   const [uploading, setUploading] = useState(false)
   const [delLoading, setDelLoading] = useState(false)
   const [visible, setVisible] = useState(false)
+  const addDialogRef: MutableRefObject<any> = useRef(null)
 
   // 删除
   const delEvent = () => {
@@ -77,14 +78,17 @@ export default function Fn(props: Props) {
     fileList: [],
     maxCount: 1,
   }
-
+  // 展示背景弹窗
+  const showDialog = () => {
+    addDialogRef.current.open()
+  }
   return (
     <div className='upload-bg'>
       <Form.Item hidden name='backgroundImage'>
         <Input type='text' />
       </Form.Item>
-      <Form.Item
-        label='背景图'
+      {/* <Form.Item
+        label='背景图12'
         extra={
           <div style={{ marginTop: '8px' }}>
             支持的文件类型：png、jpg、jpeg，附件大小限20K
@@ -126,7 +130,23 @@ export default function Fn(props: Props) {
             )}
           </Space>
         </Flex>
+      </Form.Item> */}
+      <Form.Item label='背景图' required>
+        <Flex align='center' gap={12}>
+          <div className='upload-btn fx-center-center'>
+            <span className='icon iconfont icon-jiqiren-filled jiqiren'></span>
+          </div>
+          <Button
+            className='choseBgimg'
+            type='primary'
+            size='large'
+            style={{ width: 120 }}
+            onClick={showDialog}>
+            选择背景图
+          </Button>
+        </Flex>
       </Form.Item>
+      <AddDialog ref={addDialogRef} />
     </div>
   )
 }
