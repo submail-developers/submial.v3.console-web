@@ -1,4 +1,4 @@
-import { useState, useImperativeHandle, forwardRef } from 'react'
+import { useState, useImperativeHandle, forwardRef, useEffect } from 'react'
 import { Modal, Form, App, Row, Col, Input, Select } from 'antd'
 import type { RadioChangeEvent } from 'antd'
 import { ProFormDependency } from '@ant-design/pro-components'
@@ -10,13 +10,13 @@ interface Props {
   // onSearch: () => void
 }
 interface OpenParams {}
+interface Props {
+  // onSearch: () => void
+}
+interface OpenParams {}
 
 const Dialog = ({}: Props, ref: any) => {
   const [form] = Form.useForm()
-  interface Props {
-    // onSearch: () => void
-  }
-  interface OpenParams {}
 
   const { message } = App.useApp()
 
@@ -41,6 +41,11 @@ const Dialog = ({}: Props, ref: any) => {
     setIsModalOpen(false)
   }
 
+  useEffect(() => {
+    if (open && form) {
+      form.resetFields()
+    }
+  }, [open, form])
   const onFinish = () => {}
   const onFinishFailed = () => {}
 
@@ -77,6 +82,12 @@ const Dialog = ({}: Props, ref: any) => {
     },
   ]
 
+  const changemeanType = (value) => {
+    if (value == 3) {
+      form.setFieldValue('detailEvent', '4')
+    }
+  }
+
   return (
     <Modal
       title='编辑主菜单事件'
@@ -84,16 +95,16 @@ const Dialog = ({}: Props, ref: any) => {
       style={{ top: 240 }}
       data-class='chose-avatar'
       closable={false}
+      destroyOnClose
       onCancel={handleCancel}
       wrapClassName='modal-reset'
       open={isModalOpen}>
       <Form
-        name='form-0'
+        name='form-01'
         form={form}
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 24 }}
         layout='vertical'
-        initialValues={{ enabled: '1', meanType: '1' }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete='off'>
@@ -114,6 +125,7 @@ const Dialog = ({}: Props, ref: any) => {
                     .includes(input.toLowerCase())
                 }
                 options={mainOptions}
+                onChange={changemeanType}
               />
             </Form.Item>
           </Col>
@@ -162,7 +174,7 @@ const Dialog = ({}: Props, ref: any) => {
                         <>
                           <Col span={24}>
                             <Form.Item
-                              hidden={detailEvent != '4'}
+                              hidden={detailEvent != '4' || meanType != '3'}
                               label='链接url'
                               name='url'
                               validateTrigger='onSubmit'>
@@ -170,19 +182,19 @@ const Dialog = ({}: Props, ref: any) => {
                             </Form.Item>
 
                             <Form.Item
-                              hidden={detailEvent != '5'}
+                              hidden={detailEvent != '5' || meanType != '3'}
                               label='被叫号码'
-                              name='huifu'>
+                              name='mob'>
                               <Input placeholder='请输入手机号码' />
                             </Form.Item>
 
                             <Form.Item
-                              hidden={detailEvent != '6'}
+                              hidden={detailEvent != '6' || meanType != '3'}
                               label='地图'
                               validateTrigger='onSubmit'
                               name='map'></Form.Item>
                             <Form.Item
-                              hidden={detailEvent != '7'}
+                              hidden={detailEvent != '7' || meanType != '3'}
                               label='日历名称'
                               validateTrigger='onSubmit'
                               name='date'></Form.Item>
