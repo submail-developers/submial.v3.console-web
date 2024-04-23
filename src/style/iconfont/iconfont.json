@@ -8,21 +8,33 @@
     {
       "icon_id": "40042402",
       "name": "xiahuaxian",
+<<<<<<< HEAD
       "font_class": "u",
+=======
+      "font_class": "xiahuaxian",
+>>>>>>> 1751c0dbd491748c9da55289392cebeaffb5820b
       "unicode": "e64a",
       "unicode_decimal": 58954
     },
     {
       "icon_id": "40042400",
       "name": "xieti",
+<<<<<<< HEAD
       "font_class": "i",
+=======
+      "font_class": "xieti",
+>>>>>>> 1751c0dbd491748c9da55289392cebeaffb5820b
       "unicode": "e649",
       "unicode_decimal": 58953
     },
     {
       "icon_id": "40042398",
       "name": "jiacu",
+<<<<<<< HEAD
       "font_class": "b",
+=======
+      "font_class": "jiacu",
+>>>>>>> 1751c0dbd491748c9da55289392cebeaffb5820b
       "unicode": "e648",
       "unicode_decimal": 58952
     },

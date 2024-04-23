@@ -10,14 +10,19 @@ import {
   Table,
   Image,
   ColorPicker,
+  Tree,
+  Form,
+  Tooltip,
 } from 'antd'
+import type { TreeDataNode, TreeProps } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import { EyeOutlined } from '@ant-design/icons'
+import { EyeOutlined, DownOutlined } from '@ant-design/icons'
 import PageContent from '@/components/pageContent'
 import { API } from 'apis'
-import jiqirenImg from '@/assets/rcs/jiqiren.png'
+import jiqirenImg from '@/assets/rcs/chatbot_1.png'
 import { useParams, NavLink, useNavigate } from 'react-router-dom'
 import { getChatbot } from '@/api'
+import EditMean from '../edit/index'
 import APreviewImg from '@/components/aPreviewImg'
 
 import './index.scss'
@@ -31,7 +36,8 @@ export default function Fn() {
     { name: '123' },
   ])
   const [detail, setDetail] = useState<API.ChatbotItem>()
-  const [visible, setVisible] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+  const [isVisible2, setIsVisible2] = useState(true)
 
   const columns: ColumnsType<DataType> = [
     {
@@ -88,206 +94,197 @@ export default function Fn() {
     }
   }, [id])
 
+  const list = [
+    {
+      id: 1,
+      event: '交互响应事件',
+      secondCont: '二级菜单内容',
+      mean: '回复消息事件',
+      result: '预订成功',
+    },
+    {
+      id: 2,
+
+      event: '交互响应事件',
+      secondCont: '二级菜单内容',
+      mean: '链接事件',
+      result: 'https://www.mysubmail.com/',
+    },
+  ]
+  const columns2 = [
+    {
+      title: (
+        <>
+          <i className='icon iconfont icon-jianpan'></i> 菜单一
+        </>
+      ),
+      width: 160,
+      className: 'paddingL20',
+      dataIndex: 'event',
+      render: (_, recoder) => (
+        <>
+          <li style={{ listStyle: 'disc', color: '#4f4f4f' }}>交互响应事件</li>
+        </>
+      ),
+    },
+    {
+      title: '下挂巧克力',
+      width: 160,
+      className: 'paddingL20',
+      dataIndex: 'secondCont',
+      render: (_, recoder) => (
+        <>
+          {recoder.event == '无事件' ? (
+            <div></div>
+          ) : (
+            <div className='secondCont'>{recoder.secondCont}</div>
+          )}
+        </>
+      ),
+    },
+    {
+      title: '菜单',
+      width: 160,
+      className: 'paddingL20',
+      dataIndex: 'mean',
+    },
+
+    {
+      title: '',
+      width: 200,
+      className: 'paddingL20',
+      dataIndex: 'result',
+    },
+  ]
+
+  const handleVisibility = () => {
+    setIsVisible(true)
+    setIsVisible2(false)
+  }
+
   return (
     <PageContent extClass='chatbot-detail'>
-      <Image src={jiqirenImg} preview={false} width={48}></Image>
+      <Image src={jiqirenImg} preview={false} width={72}></Image>
       <Flex justify='space-between' align='center' style={{ marginTop: '4px' }}>
-        <div className='fn22'>申请/管理 Chatbot</div>
+        <div className='fn22 fw-500'>Chatbot 详情hatbot</div>
         <Space>
-          <Button>编辑</Button>
-          <Button>注销</Button>
+          <NavLink to='/console/rcs/account/create/0'>
+            <Button type='primary'>
+              <i className='icon iconfont icon-bianji'></i>编辑基本信息
+            </Button>
+          </NavLink>
+
+          <Button type='primary' danger>
+            <i className='icon iconfont icon-shanchu'></i>
+            删除
+          </Button>
         </Space>
       </Flex>
       <Divider className='line'></Divider>
-      <div className='base-info'>
-        <Space className='info-header fx-y-center' size={16}>
-          <span className='icon iconfont icon-jiqiren-filled jiqiren'></span>
-          <div className='fn18 fw-500'>{detail && detail.name}</div>
-          <div className='status'>申请成功</div>
-        </Space>
-        <div className='info-content'>
-          <div className='info-title'>基本信息</div>
-          <Row gutter={12}>
-            <Col span={24} md={12} xl={8}>
-              <div className='info-item'>
-                <div className='info-label'>服务代码</div>
-                <div className='info-value'>serviceCode-服务代码？？</div>
-              </div>
-            </Col>
-            <Col span={24} md={12} xl={8}>
-              <div className='info-item'>
-                <div className='info-label'>Chatbot ID</div>
-                <div className='info-value'>{detail && detail.chatbotID}</div>
-              </div>
-            </Col>
-            <Col span={24} md={12} xl={8}>
-              <div className='info-item'>
-                <div className='info-label'>签名</div>
-                <div className='info-value'>{detail && detail.autograph}</div>
-              </div>
-            </Col>
-            <Col span={24} md={12} xl={8}>
-              <div className='info-item'>
-                <div className='info-label'>行业类型</div>
-                <div className='info-value'>
-                  {detail && detail.actualIssueIndustry}
-                </div>
-              </div>
-            </Col>
-            <Col span={24} md={12} xl={8}>
-              <div className='info-item'>
-                <div className='info-label'>关联的CSP</div>
-                <div className='info-value'>cspToken-关联的CSP？？？</div>
-              </div>
-            </Col>
-            <Col span={24} md={12} xl={8}>
-              <div className='info-item'>
-                <div className='info-label'>实际下发的CSP</div>
-                <div className='info-value'>cspId-实际下发的CSP？？？</div>
-              </div>
-            </Col>
+      <div className='info-title' style={{ marginBottom: '20px' }}>
+        Chatbot 信息
+        <div className='auditing-status'>审核状态</div>
+      </div>
+
+      <table className='border'>
+        <tbody>
+          <tr>
+            <td>Chatbot名称</td>
+            <td>赛邮技术部</td>
+            <td>Chatbo头像</td>
+            <td>预览</td>
+          </tr>
+          <tr>
+            <td>应用ID</td>
+            <td>10010</td>
+            <td>Appkey</td>
+            <td>*******************</td>
+          </tr>
+          <tr>
+            <td>行业类型</td>
+            <td>行业/行业</td>
+            <td>消息回落签名</td>
+            <td>【SUBMAIL】</td>
+          </tr>
+          <tr>
+            <td>服务描述</td>
+            <td colSpan={3}>提供短信、邮件购买服务</td>
+          </tr>
+          <tr>
+            <td>服务方名称</td>
+            <td>上海赛邮云计算有限公司</td>
+            <td>服务方电话</td>
+            <td>18226187949</td>
+          </tr>
+          <tr>
+            <td>服务方官网</td>
+            <td>https://www.mysubmail.com/</td>
+            <td>服务条款链接</td>
+            <td>https://www.mysubmail.com/documents</td>
+          </tr>
+          <tr>
+            <td>服务方邮箱</td>
+            <td>zkx@submail.com</td>
+            <td>服务方地址</td>
+            <td>上海/上海/松江区</td>
+          </tr>
+          <tr>
+            <td>服务方详细地址</td>
+            <td colSpan={3}>上海市松江区九亭镇九亭中心路1158号21幢213室-44</td>
+          </tr>
+          <tr>
+            <td>经度/纬度</td>
+            <td>经度：90 </td>
+            <td>主题颜色</td>
+            <td>#1764ff</td>
+          </tr>
+          <tr>
+            <td>背景图</td>
+            <td>预览</td>
+            <td>合同信息</td>
+            <td>上海璟春科技有限公司-20241011.pdf</td>
+          </tr>
+          <tr>
+            <td>Chatbot调试白名单</td>
+            <td colSpan={3}>-</td>
+          </tr>
+        </tbody>
+      </table>
+
+      {isVisible2 && (
+        <>
+          <div className='info-title' style={{ marginTop: '40px' }}>
+            固定菜单
+          </div>
+
+          <Row style={{ marginTop: '16px' }} gutter={24}>
             <Col span={24}>
-              <div className='info-item'>
-                <div className='info-label'>证明材料</div>
-                <div className='info-value'>{detail && detail.attachment}</div>
-              </div>
-            </Col>
-            <Col span={24}>
-              <div className='info-item'>
-                <div className='info-label fx-y-center'>
-                  Chatbot 调试白名单
-                  <div style={{ color: '#888' }}>（0.0.0.0为无限制）</div>
-                </div>
-                <div className='info-value'>
-                  <TextArea
-                    disabled
-                    value={detail && detail.debugWhiteAddress}
-                    style={{ color: '#333' }}
-                    autoSize={{ minRows: 3, maxRows: 5 }}
-                  />
-                </div>
+              <Table
+                className='theme-cell bg-white'
+                columns={columns2}
+                dataSource={list}
+                sticky
+                pagination={false}
+                rowKey={'id'}
+                scroll={{ x: 'max-content' }}
+              />
+              <div className='mean-botm'>
+                <Button
+                  type='primary'
+                  className='auditing-status'
+                  onClick={handleVisibility}>
+                  编辑菜单
+                </Button>
+                <Button type='primary' className='auditing-btn'>
+                  提交审核
+                </Button>
               </div>
             </Col>
           </Row>
-        </div>
-      </div>
-      <div className='base-info' style={{ marginTop: '16px' }}>
-        <div className='info-content'>
-          <div className='info-title'>更多信息</div>
-          <Row gutter={12}>
-            <Col span={24} md={12} xl={8}>
-              <div className='info-item'>
-                <div className='info-label'>服务方电话</div>
-                <div className='info-value'>{detail && detail.callback}</div>
-              </div>
-            </Col>
-            <Col span={24} md={12} xl={8}>
-              <div className='info-item'>
-                <div className='info-label'>服务方官网</div>
-                <div className='info-value'>{detail && detail.website}</div>
-              </div>
-            </Col>
-            <Col span={24} md={12} xl={8}>
-              <div className='info-item'>
-                <div className='info-label'>服务条款链接</div>
-                <div className='info-value'>{detail && detail.tcPage}</div>
-              </div>
-            </Col>
-            <Col span={24} md={12} xl={8}>
-              <div className='info-item'>
-                <div className='info-label'>服务方地址</div>
-                <div className='info-value'>{detail && detail.address}</div>
-              </div>
-            </Col>
-            <Col span={24} md={12} xl={8}>
-              <div className='info-item'>
-                <div className='info-label'>经纬度</div>
-                <div className='info-value'>
-                  {detail && (
-                    <Space>
-                      <span>经度：lon-???</span>
-                      <span>纬度：lat-???</span>
-                    </Space>
-                  )}
-                </div>
-              </div>
-            </Col>
-            <Col span={24} md={12} xl={8}>
-              <div className='info-item'>
-                <div className='info-label'>气泡颜色</div>
-                <div className='info-value'>
-                  {detail && (
-                    <ColorPicker
-                      value={detail.colour}
-                      disabled
-                      showText={(color) => <span>{color.toHexString()}</span>}
-                    />
-                  )}
-                </div>
-              </div>
-            </Col>
-            <Col span={24} md={12} xl={8}>
-              <div className='info-item'>
-                <div className='info-label'>背景图</div>
-                <div className='info-value'>
-                  {detail && (
-                    <Space>
-                      <Image
-                        src={detail.backgroundImage}
-                        width={32}
-                        height={32}
-                        alt=''
-                        preview={false}
-                      />
-                      <APreviewImg src={detail.backgroundImage} />
-                    </Space>
-                  )}
-                </div>
-              </div>
-            </Col>
-            <Col span={24} md={12} xl={8}>
-              <div className='info-item'>
-                <div className='info-label'>短信端口号</div>
-                <div className='info-value'>{detail && detail.name}</div>
-              </div>
-            </Col>
-            <Col span={24} md={12} xl={8}>
-              <div className='info-item'>
-                <div className='info-label'>Chatbot提供者</div>
-                <div className='info-value'>{detail && detail.name}</div>
-              </div>
-            </Col>
-            <Col span={24}>
-              <div className='info-item'>
-                <div className='info-label fx-y-center'>服务描述</div>
-                <div className='info-value'>
-                  <TextArea
-                    disabled
-                    value={detail && detail.description}
-                    style={{ color: '#333' }}
-                    autoSize={{ minRows: 3, maxRows: 5 }}
-                  />
-                </div>
-              </div>
-            </Col>
-          </Row>
-        </div>
-      </div>
-      <div className='base-info' style={{ marginTop: '16px' }}>
-        <div className='info-content'>
-          <div className='info-title'>操作日志</div>
-          <Table
-            className='theme-cell reset-table'
-            columns={columns}
-            dataSource={tableData}
-            rowKey={'name'}
-            sticky
-            pagination={{ position: ['none'] }}
-            scroll={{ x: 'max-content' }}
-            style={{ marginTop: '24px' }}
-          />
-        </div>
-      </div>
+        </>
+      )}
+
+      {isVisible && <EditMean />}
     </PageContent>
   )
 }

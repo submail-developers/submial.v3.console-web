@@ -1,5 +1,4 @@
-.chatbot-detail {
-  padding: 48px 16px;
+.chatbot-edit {
   height: auto;
   .line {
     margin: 16px 0 24px;
@@ -61,75 +60,7 @@
       }
     }
   }
-  .ant-btn {
-    height: 36px;
-  }
-  .border {
-    width: 100%;
-    border: 1px solid #e6e6e6;
-    border-radius: 4px;
-    border-collapse: collapse;
-    border-style: hidden;
-    box-shadow: 0 0 0 1px #e6e6e6;
-    font-size: 15px;
-    tr > td:first-child,
-    tr > td:nth-child(3) {
-      color: #4f4f4f;
-      width: 180px;
-      background-color: #f3f6f9;
-    }
-    tr > td:nth-child(2),
-    tr > td:nth-child(4) {
-      font-weight: 500;
-    }
-    td {
-      height: 56px;
-      padding-left: 20px;
-      border: 1px solid #e6e6e6;
-    }
-  }
-  @media screen and (max-width: 768px) {
-    .border {
-      border: 0;
-      box-shadow: none;
-    }
-    .border tr {
-      display: block;
-      margin-bottom: 10px;
-    }
-    .border td {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      border: 0;
-    }
-    .border tr > td:first-child,
-    .border tr > td:nth-child(3) {
-      width: 100%;
-    }
-  }
-  .tree-cont {
-    background-color: #f6f7f9;
-    border: 1px solid #e6e6e6;
-    border-radius: 4px;
-    padding: 20px;
-  }
 
-  .mean-botm {
-    display: flex;
-    justify-content: end;
-  }
-  button {
-    margin: 6px;
-  }
-
-  .auditing-btn {
-    color: #fff;
-    background-color: #f58c37;
-    &:hover {
-      background-color: #f7a867 !important;
-    }
-  }
   .ant-table-wrapper {
     border: 1px solid #e6e6e6;
     border-radius: 4px;
@@ -144,14 +75,14 @@
       border-bottom: 0 !important;
       background-color: #f6f7f9 !important;
     }
-    .ant-table-tbody tr > td.secondCont {
+    .ant-table-tbody tr > td .secondCont {
       position: relative;
     }
     .ant-table-tbody tr > td .secondCont::after {
       content: '';
       position: absolute;
       top: 50%;
-      left: 86%;
+      left: 70%;
       transform: translate(-50%, -50%);
       width: 1px;
       height: 16px;
@@ -166,5 +97,10 @@
     font-size: 18px;
     position: relative;
     left: -5px;
+  }
+
+  .icon-bianji,
+  .icon-zhongzhi {
+    font-size: 18px;
   }
 }

@@ -29,7 +29,7 @@ import UploadLogo from './logo'
 import UploadBg from './bg'
 import UploadAttachment from './attachment'
 
-import jiqiren from '@/assets/rcs/jiqiren.png'
+import jiqiren from '@/assets/rcs/aco1.png'
 
 import './index.scss'
 
@@ -143,7 +143,7 @@ export default function Fn() {
         name='craete-chatbot'
         layout='vertical'
         autoComplete='off'>
-        <Space size={16} className='form-header fx-y-center'>
+        {/* <Space size={16} className='form-header fx-y-center'>
           <div>
             <Image src={jiqiren} width={32} height={32} preview={false}></Image>
           </div>
@@ -151,9 +151,18 @@ export default function Fn() {
             <div className='fn20 fw-500'>
               {chatbotId == '0' ? '申请' : '编辑'} Chatbot 账户
             </div>
-            <span>请填写下列表单，然后完成申请</span>
+            <span>请填写下列表单，然后完成申请12</span>
           </div>
-        </Space>
+        </Space> */}
+        <div className='form-header'>
+          <Image src={jiqiren} preview={false}></Image>
+          <div className='fn22 fw-500 form-con'>
+            {chatbotId == '0' ? '申请' : '编辑'} Chatbot 账户
+            <div className='fn14 title-desc'>
+              <span>请填写下列表单，然后完成申请</span>
+            </div>
+          </div>
+        </div>
         <div className='form-group'>
           <div className='form-group-title'>基本信息</div>
           <Row style={{ marginTop: '16px' }} gutter={24}>
@@ -174,13 +183,11 @@ export default function Fn() {
                   {
                     validator: utils.validateBackslash,
                   },
-                ]}
-                extra={
-                  <Extra>
-                    不可携带英文双引号、\、emoji，Chatbot名称不能为空
-                  </Extra>
-                }>
-                <Input placeholder='不超过 20 个字符' max={20} />
+                ]}>
+                <Input
+                  placeholder='不可携带英文双引号、\、emoji，不超过20个字符'
+                  max={20}
+                />
               </Form.Item>
             </Col>
             {/* 头像Logo */}
@@ -192,29 +199,21 @@ export default function Fn() {
                 onDelFile={onDelLogoFile}
               />
             </Col>
-            <Col span={24} xl={12}>
-              <Form.Item label='服务代码' required name='serviceCode'>
-                <Select
-                  placeholder='请选择'
-                  options={[
-                    { value: 'jack', label: 'Jack' },
-                    { value: 'lucy', label: 'Lucy' },
-                    { value: 'Yiminghe', label: 'yiminghe' },
-                    { value: 'disabled', label: 'Disabled', disabled: true },
-                  ]}
+            <Col span={24}>
+              <Form.Item
+                label='服务描述'
+                name='debugWhiteAddress'
+                validateTrigger='onBlur'
+                required
+                rules={[
+                  {
+                    validator: utils.validateMobiles,
+                  },
+                ]}>
+                <TextArea
+                  placeholder='用于解释 Chatbot 的用途，不可携带英文双引号、\、emoji，不超过500个字符'
+                  autoSize={{ minRows: 3, maxRows: 3 }}
                 />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={{ xl: 24, sm: 12, xs: 12 }}>
-            <Col span={11} xl={6}>
-              <Form.Item label='Chatbot ID' required name='chatbotId'>
-                <Input placeholder='' disabled />
-              </Form.Item>
-            </Col>
-            <Col span={13} xl={18}>
-              <Form.Item label=' ' name='id2' rules={[{ max: 20 }]}>
-                <Input placeholder='不超过 20 个字符' />
               </Form.Item>
             </Col>
           </Row>
@@ -241,62 +240,17 @@ export default function Fn() {
                 <Input placeholder='不超过 20 个字符' />
               </Form.Item>
             </Col>
-            <Col span={24} xl={12}>
-              <Form.Item
-                label={
-                  <Space>
-                    <span>关联的CSP</span>
-                    <NavLink to={''}> CSP平台功能介绍</NavLink>
-                  </Space>
-                }
-                name='cspToken'>
-                <Input placeholder='' disabled />
-              </Form.Item>
-            </Col>
-            <Col span={24} xl={12}>
-              <Form.Item label='实际下发的CSP' name='cspId'>
-                <Input placeholder='' disabled />
-              </Form.Item>
-            </Col>
-            {/* 证明材料 */}
-            <Col span={24}>
-              <UploadAttachment
-                attachmentFile={attachmentFile}
-                attachmentSrc={attachmentSrc}
-                onChangeFile={onChangeAttachmentFile}
-                onDelFile={onDelAttachmentFile}
-              />
-            </Col>
-            <Col span={24}>
-              <Form.Item
-                label='Chatbot 调试白名单'
-                name='debugWhiteAddress'
-                validateTrigger='onBlur'
-                required
-                rules={[
-                  {
-                    validator: utils.validateMobiles,
-                  },
-                ]}
-                extra={
-                  <Extra>
-                    <div>1、最多录入20个调试手机号码，用英文逗号隔开</div>
-                    <div>2、用于实际测试Chatbot的消息接收和发送</div>
-                  </Extra>
-                }>
-                <TextArea
-                  placeholder=''
-                  autoSize={{ minRows: 3, maxRows: 3 }}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-        </div>
-        <Divider style={{ margin: '0' }} />
 
-        <div className='form-group'>
-          <div className='form-group-title'>更多信息</div>
-          <Row gutter={24} style={{ marginTop: '16px' }}>
+            {/* 证明材料 */}
+            <Col span={24} xl={12}>
+              <Form.Item
+                label='服务方名称'
+                name='autograph'
+                required
+                rules={[{ max: 32 }]}>
+                <Input placeholder='不超过 32 个字符' />
+              </Form.Item>
+            </Col>
             <Col span={24} xl={12}>
               <Form.Item
                 label='服务方电话'
@@ -339,9 +293,31 @@ export default function Fn() {
                 <Input placeholder='https://' />
               </Form.Item>
             </Col>
+            <Col span={24} xl={12}>
+              <Form.Item
+                label='服务方邮箱'
+                name='autograph'
+                required
+                rules={[{ max: 32 }]}>
+                <Input placeholder='' />
+              </Form.Item>
+            </Col>
+            <Col span={24} xl={12}>
+              <Form.Item
+                label='服务方地址'
+                name='autograph'
+                required
+                rules={[{ max: 32 }]}>
+                <Input placeholder='' />
+              </Form.Item>
+            </Col>
             <Col span={24}>
-              <Form.Item label='服务方地址' name='address'>
-                <Input placeholder='不能录入中英文中括号(【】[])' />
+              <Form.Item
+                label='服务方详细地址'
+                name='autograph'
+                required
+                rules={[{ max: 32 }]}>
+                <Input placeholder='' />
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
@@ -382,53 +358,70 @@ export default function Fn() {
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
-              <Form.Item name='colour' label='气泡颜色'>
-                <ColorPicker disabledAlpha={true} showText={showText} />
+              <Form.Item style={{ marginBottom: 0 }}>
+                <Row gutter={24}>
+                  <Col span={24} xl={12}>
+                    <Form.Item name='colour' label='主题颜色'>
+                      <ColorPicker disabledAlpha={true} showText={showText} />
+                    </Form.Item>
+                  </Col>
+                  <Col span={24} xl={12}>
+                    <UploadBg
+                      bgFile={bgFile}
+                      bgSrc={bgSrc}
+                      onChangeFile={onChangeBgFile}
+                      onDelFile={onDelBgFile}
+                    />
+                  </Col>
+                  {/* <Col span={24} xl={12}>
+                    <Form.Item label='背景图' required>
+                      <Flex align='center' gap={12}>
+                        <div className='upload-btn fx-center-center'>
+                          <span className='icon iconfont icon-jiqiren-filled jiqiren'></span>
+                        </div>
+                        <Button
+                          className='choseBgimg'
+                          type='primary'
+                          size='large'
+                          style={{ width: 120 }}
+                          onClick={showDialog}>
+                          选择背景图
+                        </Button>
+                      </Flex>
+                    </Form.Item>
+                  </Col> */}
+                </Row>
               </Form.Item>
             </Col>
             <Col span={24}>
-              {/* <Form.Item
-                label='背景图'
-                name='backgroundImage'
-                extra={
-                  <Extra>支持的文件类型：png、jpg、jpeg，附件大小限20K</Extra>
-                }>
-                <Upload {...props}>
-                  <Button icon={<UploadOutlined />}>上传</Button>
-                </Upload>
-              </Form.Item> */}
-
-              <UploadBg
-                bgFile={bgFile}
-                bgSrc={bgSrc}
-                onChangeFile={onChangeBgFile}
-                onDelFile={onDelBgFile}
+              <UploadAttachment
+                attachmentFile={attachmentFile}
+                attachmentSrc={attachmentSrc}
+                onChangeFile={onChangeAttachmentFile}
+                onDelFile={onDelAttachmentFile}
               />
             </Col>
-            <Col span={24} xl={12}>
-              <Form.Item label='短信端口号' required name='sms'>
-                <Input placeholder='' />
-              </Form.Item>
-            </Col>
-            <Col span={24} xl={12}>
-              <Form.Item
-                label='Chatbot 提供者'
-                required
-                name='providerSwitchCode'>
-                <Radio.Group>
-                  <Radio value={1}>显示</Radio>
-                  <Radio value={2}>不显示</Radio>
-                </Radio.Group>
-              </Form.Item>
-            </Col>
             <Col span={24}>
               <Form.Item
-                label='服务描述'
-                name='description'
+                label='Chatbot 调试白名单'
+                name='debugWhiteAddress'
+                validateTrigger='onBlur'
+                required
+                rules={[
+                  {
+                    validator: utils.validateMobiles,
+                  },
+                ]}
                 extra={
-                  <Extra>不可携带英文双引号、\、emoj，不超过 166 个字符</Extra>
+                  <Extra>
+                    <div>1、最多录入20个调试手机号码，用英文逗号隔开</div>
+                    <div>2、用于实际测试Chatbot的消息接收和发送</div>
+                  </Extra>
                 }>
-                <TextArea autoSize={{ minRows: 4, maxRows: 4 }} />
+                <TextArea
+                  placeholder=''
+                  autoSize={{ minRows: 3, maxRows: 3 }}
+                />
               </Form.Item>
             </Col>
           </Row>

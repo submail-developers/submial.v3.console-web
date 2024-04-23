@@ -73,27 +73,17 @@ export default function Fn(props: Props) {
         <Input type='text' />
       </Form.Item>
       <Form.Item
-        label='证明材料'
+        label='营业执照'
+        name='attachment'
+        required
         extra={
-          <div style={{ marginTop: '8px' }}>
-            支持的文件类型：pdf、doc、jpg、jpeg、gif、docx、rar、zip，大小限5M
-          </div>
+          '您可上传的文件类型包含：pdf;doc;jpg;jpeg;gif;docx;rar;zip,单个附件大小限5M,限上传1个文件。'
         }>
-        <Flex align='center' gap={12}>
-          <Upload {...uploadProps}>
-            <div className='upload-btn fx-center-center'>
-              <Button loading={uploading} icon={<UploadOutlined />}>
-                上传
-              </Button>
-            </div>
-          </Upload>
-          <Space style={{ color: '#999' }} align='center'>
-            <span>{props.attachmentFile ? props.attachmentFile.name : ''}</span>
-            {props.attachmentSrc && (
-              <ADel onDel={delEvent} loading={delLoading} />
-            )}
-          </Space>
-        </Flex>
+        <Upload {...props}>
+          <Button icon={<UploadOutlined rev={null} />} className='upload'>
+            上传
+          </Button>
+        </Upload>
       </Form.Item>
     </div>
   )

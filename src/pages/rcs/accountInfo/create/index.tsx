@@ -178,6 +178,11 @@ export default function Fn() {
                 <Cascader options={options} placeholder='请选择' />
               </Form.Item>
             </Col>
+            <Col span={24} xl={12}>
+              <Form.Item label='客户邮箱' required name='mail'>
+                <Input placeholder='客户邮箱' />
+              </Form.Item>
+            </Col>
 
             <Col span={24}>
               <Form.Item label='客户详细地址' name='acoDetailAdress'>
@@ -221,7 +226,9 @@ export default function Fn() {
                   </Extra>
                 }>
                 <Upload {...props}>
-                  <Button icon={<UploadOutlined />} className='upload'>
+                  <Button
+                    icon={<UploadOutlined rev={null} />}
+                    className='upload'>
                     上传
                   </Button>
                 </Upload>
@@ -248,7 +255,9 @@ export default function Fn() {
                   </Extra>
                 }>
                 <Upload {...props}>
-                  <Button icon={<UploadOutlined />} className='upload'>
+                  <Button
+                    icon={<UploadOutlined rev={null} />}
+                    className='upload'>
                     上传
                   </Button>
                 </Upload>
