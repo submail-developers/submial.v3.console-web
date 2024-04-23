@@ -12,6 +12,7 @@ import {
   ColorPicker,
   Tree,
   Form,
+  Tooltip,
 } from 'antd'
 import type { TreeDataNode, TreeProps } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
@@ -21,6 +22,7 @@ import { API } from 'apis'
 import jiqirenImg from '@/assets/rcs/chatbot_1.png'
 import { useParams, NavLink, useNavigate } from 'react-router-dom'
 import { getChatbot } from '@/api'
+import EditMean from '../edit/index'
 import APreviewImg from '@/components/aPreviewImg'
 
 import './index.scss'
@@ -34,7 +36,8 @@ export default function Fn() {
     { name: '123' },
   ])
   const [detail, setDetail] = useState<API.ChatbotItem>()
-  const [visible, setVisible] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+  const [isVisible2, setIsVisible2] = useState(true)
 
   const columns: ColumnsType<DataType> = [
     {
@@ -85,35 +88,79 @@ export default function Fn() {
     } catch (error) {}
   }
 
-  const treeData: TreeDataNode[] = [
-    {
-      title: 'parent 1',
-      key: '0-0',
-      children: [
-        {
-          title: 'parent 1-0',
-          key: '0-0-0',
-        },
-        {
-          title: 'parent 1-1',
-          key: '0-0-1',
-        },
-        {
-          title: 'parent 1-2',
-          key: '0-0-2',
-        },
-      ],
-    },
-  ]
-  const onSelect: TreeProps['onSelect'] = (selectedKeys, info) => {
-    console.log('selected', selectedKeys, info)
-  }
-
   useEffect(() => {
     if (id) {
       getDetail()
     }
   }, [id])
+
+  const list = [
+    {
+      id: 1,
+      event: '交互响应事件',
+      secondCont: '二级菜单内容',
+      mean: '回复消息事件',
+      result: '预订成功',
+    },
+    {
+      id: 2,
+
+      event: '交互响应事件',
+      secondCont: '二级菜单内容',
+      mean: '链接事件',
+      result: 'https://www.mysubmail.com/',
+    },
+  ]
+  const columns2 = [
+    {
+      title: (
+        <>
+          <i className='icon iconfont icon-jianpan'></i> 菜单一
+        </>
+      ),
+      width: 160,
+      className: 'paddingL20',
+      dataIndex: 'event',
+      render: (_, recoder) => (
+        <>
+          <li style={{ listStyle: 'disc', color: '#4f4f4f' }}>交互响应事件</li>
+        </>
+      ),
+    },
+    {
+      title: '下挂巧克力',
+      width: 160,
+      className: 'paddingL20',
+      dataIndex: 'secondCont',
+      render: (_, recoder) => (
+        <>
+          {recoder.event == '无事件' ? (
+            <div></div>
+          ) : (
+            <div className='secondCont'>{recoder.secondCont}</div>
+          )}
+        </>
+      ),
+    },
+    {
+      title: '菜单',
+      width: 160,
+      className: 'paddingL20',
+      dataIndex: 'mean',
+    },
+
+    {
+      title: '',
+      width: 200,
+      className: 'paddingL20',
+      dataIndex: 'result',
+    },
+  ]
+
+  const handleVisibility = () => {
+    setIsVisible(true)
+    setIsVisible2(false)
+  }
 
   return (
     <PageContent extClass='chatbot-detail'>
@@ -204,26 +251,40 @@ export default function Fn() {
         </tbody>
       </table>
 
-      <div className='info-title' style={{ marginTop: '40px' }}>
-        固定菜单
-        <Button type='primary' className='auditing-status'>
-          <i className='icon iconfont icon-bianji'></i>编辑固定菜单
-        </Button>
-      </div>
+      {isVisible2 && (
+        <>
+          <div className='info-title' style={{ marginTop: '40px' }}>
+            固定菜单
+          </div>
 
-      <Row style={{ marginTop: '16px' }} gutter={24}>
-        <Col span={24} xl={4}>
-          <Form.Item label=''>
-            <Tree
-              showLine
-              switcherIcon={<DownOutlined />}
-              defaultExpandedKeys={['0-0-0']}
-              onSelect={onSelect}
-              treeData={treeData}
-            />
-          </Form.Item>
-        </Col>
-      </Row>
+          <Row style={{ marginTop: '16px' }} gutter={24}>
+            <Col span={24}>
+              <Table
+                className='theme-cell bg-white'
+                columns={columns2}
+                dataSource={list}
+                sticky
+                pagination={false}
+                rowKey={'id'}
+                scroll={{ x: 'max-content' }}
+              />
+              <div className='mean-botm'>
+                <Button
+                  type='primary'
+                  className='auditing-status'
+                  onClick={handleVisibility}>
+                  编辑菜单
+                </Button>
+                <Button type='primary' className='auditing-btn'>
+                  提交审核
+                </Button>
+              </div>
+            </Col>
+          </Row>
+        </>
+      )}
+
+      {isVisible && <EditMean />}
     </PageContent>
   )
 }

@@ -131,3 +131,11 @@
     padding: 8px 30px 16px;
   }
 }
+.ant-select-dropdown .ant-select-item-option-content {
+  font-size: 16px;
+}
+.ant-select-item-option-selected .ant-select-item-option-content {
+  color: #007dff !important;
+  font-weight: normal;
+  font-size: 16px;
+}

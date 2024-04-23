@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "40042402",
+      "name": "xiahuaxian",
+      "font_class": "xiahuaxian",
+      "unicode": "e64a",
+      "unicode_decimal": 58954
+    },
+    {
+      "icon_id": "40042400",
+      "name": "xieti",
+      "font_class": "xieti",
+      "unicode": "e649",
+      "unicode_decimal": 58953
+    },
+    {
+      "icon_id": "40042398",
+      "name": "jiacu",
+      "font_class": "jiacu",
+      "unicode": "e648",
+      "unicode_decimal": 58952
+    },
+    {
+      "icon_id": "39998669",
+      "name": "导入",
+      "font_class": "daoru",
+      "unicode": "e632",
+      "unicode_decimal": 58930
+    },
+    {
       "icon_id": "39989401",
       "name": "新增",
       "font_class": "jia",
