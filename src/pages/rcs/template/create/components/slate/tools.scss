@@ -1,0 +1,17 @@
+.mark-button {
+  min-width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  background-color: #f1f2f4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #ccc;
+  &.active {
+    color: #111;
+  }
+  .icon {
+    font-size: 20px;
+  }
+}

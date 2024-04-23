@@ -17,6 +17,8 @@
     "@ant-design/pro-components": "^2.6.33",
     "@reduxjs/toolkit": "^1.9.5",
     "@types/react-redux": "^7.1.25",
+    "@types/slate": "^0.47.15",
+    "@types/slate-react": "^0.50.1",
     "@types/styled-components": "^5.1.26",
     "ahooks": "^3.7.7",
     "antd": "^5.16.0",
@@ -24,6 +26,7 @@
     "cropperjs": "^1.6.1",
     "dayjs": "^1.11.10",
     "echarts": "^5.5.0",
+    "is-hotkey": "^0.2.0",
     "lodash": "^4.17.21",
     "normalize.css": "^8.0.1",
     "react": "^18.2.0",
@@ -37,6 +40,8 @@
     "redux-devtools-extension": "^2.13.9",
     "rollup-plugin-visualizer": "^5.9.0",
     "sass": "^1.62.0",
+    "slate": "^0.102.0",
+    "slate-react": "^0.102.0",
     "styled-components": "^5.3.10"
   },
   "devDependencies": {

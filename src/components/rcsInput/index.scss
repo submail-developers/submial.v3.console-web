@@ -1,0 +1,39 @@
+.rcs-input {
+  width: 100%;
+  height: 36px;
+  // border: 1px solid #ccc;
+  line-height: 34px;
+  position: relative;
+  .insert-icon {
+    position: absolute;
+    left: 20px;
+    top: 0;
+    transform: translateY(-100%);
+    width: 32px;
+    height: 16px;
+    background-color: #007dff;
+    color: #fff;
+    font-size: 12px;
+    text-align: center;
+    line-height: 16px;
+    border-radius: 4px 4px 0 0;
+    cursor: pointer;
+  }
+}
+.base-input {
+  width: 100%;
+  height: 100%;
+  line-height: inherit;
+  outline: none;
+  border: 1px solid #ccc;
+  padding: 0 4px;
+  &:focus {
+    background-color: #f3f7fa;
+    border: 1px dashed #007dff;
+  }
+}
+
+.ant-popconfirm-inner-content {
+  display: flex;
+  align-items: center;
+}

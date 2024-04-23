@@ -428,7 +428,17 @@ export const menus: RouteObject[] = [
         errorElement: <Error />,
         element: (
           <LazyImportComponent
-            lazyChildren={lazy(() => import('@/pages/rcs/welcome'))}
+            lazyChildren={lazy(() => import('@/pages/test'))}
+          />
+        ),
+      },
+      {
+        path: 'slate',
+        loader: loaderFn({ breadName: '' }),
+        errorElement: <Error />,
+        element: (
+          <LazyImportComponent
+            lazyChildren={lazy(() => import('@/pages/test-slate'))}
           />
         ),
       },

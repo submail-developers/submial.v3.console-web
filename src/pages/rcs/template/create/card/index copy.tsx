@@ -4,21 +4,44 @@ import type { TabsProps } from 'antd'
 import { useParams, useLocation, useSearchParams } from 'react-router-dom'
 import Meteial from '../components/meteial'
 import Page from '../page'
-import { Media, Action, CardLayout } from '../type'
+import {
+  createEditor,
+  Editor,
+  Transforms,
+  Descendant,
+  Node,
+  Text,
+  BaseEditor,
+} from 'slate'
+import { Slate, Editable, withReact, useSlate, ReactEditor } from 'slate-react'
+import RichInput, { withMarks, CustomEditor } from '../components/slate'
+import Tools from '../components/slate/tools'
 import './index.scss'
-
-// const
 
 export default function Fn() {
   const [searchParams] = useSearchParams()
   const name = decodeURIComponent(searchParams.get('name'))
-
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [media, setmedia] = useState<Media>()
-  const [suggestions, setsuggestions] = useState<Action[]>([])
-  const [layout, setlayout] = useState<CardLayout>()
-
+  // 标题
+  const titleEditor = useMemo(() => withMarks(withReact(createEditor())), [])
+  const titleToolRef = useRef(null)
+  const [titleVal, setTitleVal] = useState<Descendant[]>([
+    {
+      type: 'paragraph',
+      children: [{ text: '一段文字文字文字', bold: true }],
+    },
+  ])
+  // 描述
+  const descriptionEditor = useMemo(
+    () => withMarks(withReact(createEditor())),
+    [],
+  )
+  const descriptionToolRef = useRef(null)
+  const [descriptionVal, setDescriptionVal] = useState<Descendant[]>([
+    {
+      type: 'paragraph',
+      children: [{ text: '一段文字文字文字' }],
+    },
+  ])
   const [activeKey, setactiveKey] = useState('1')
   const onChange = (key: string) => {
     setactiveKey(key)
@@ -43,9 +66,9 @@ export default function Fn() {
           </div>
           <Divider />
           <div>正文</div>
-          <div></div>
+          <div ref={titleToolRef}></div>
           <div>文本文字</div>
-          <div></div>
+          <div ref={descriptionToolRef}></div>
           <Divider />
           <div>按钮</div>
           <Divider />
@@ -86,8 +109,22 @@ export default function Fn() {
         <>
           <div className='center-content card-center-content'>
             <div className='banner'></div>
-            <div className='card-title'>title</div>
-            <div className='card-des'>des</div>
+            <div className='card-title'>
+              <RichInput
+                editor={titleEditor}
+                value={titleVal}
+                ref={titleToolRef}
+                onChange={(val) => setTitleVal(val)}
+              />
+            </div>
+            <div className='card-des'>
+              <RichInput
+                editor={descriptionEditor}
+                value={descriptionVal}
+                ref={descriptionToolRef}
+                onChange={(val) => setDescriptionVal(val)}
+              />
+            </div>
             <div className='button'>btn</div>
           </div>
           <Space className='float-content'>

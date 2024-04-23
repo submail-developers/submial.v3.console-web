@@ -7,9 +7,10 @@
     position: absolute;
     right: 0;
     top: -65px;
-    z-index: 10100;
+    z-index: 101;
     height: 65px;
-    width: fit-content;
+    // width: fit-content;
+    padding: 0 12px;
   }
   .left {
     flex-shrink: 0;
@@ -37,12 +38,13 @@
       margin-bottom: 80px;
       .mobile-content {
         width: 326px;
+        // width: 312px;
         height: 570px;
         position: relative;
         left: 50%;
         top: calc(50%);
         transform: translate(-50%, -50%);
-        border: 1px solid #ccc;
+        // border: 1px solid #ccc;
         .title {
           position: absolute;
           top: -30px;
@@ -53,6 +55,35 @@
           text-align: center;
           border-bottom: 1px solid #e7e7e7;
         }
+        .temp-content {
+          width: 100%;
+          height: 100%;
+          position: relative;
+          padding: 16px 10px 36px;
+          overflow-y: scroll;
+          .center-content {
+            position: relative;
+          }
+          .float-content {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
+            padding: 0 12px 8px;
+            .float-item {
+              height: 28px;
+              line-height: 28px;
+              padding: 0 16px;
+              background-color: #fff;
+              border-radius: 14px;
+              font-size: 14px;
+            }
+          }
+        }
       }
     }
   }
@@ -60,5 +91,42 @@
     width: 320px;
     flex-shrink: 0;
     border-left: 1px solid #e7e7e7;
+    .tabs {
+      display: flex;
+      height: 42px;
+      border-bottom: 1px solid #e7e7e7;
+      .tab-item {
+        height: 100%;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border-right: 1px solid #e7e7e7;
+        position: relative;
+        background-color: #f1f2f4;
+        &:last-child {
+          border-right: none;
+        }
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 50%;
+          width: 0;
+          height: 2px;
+          transform: translateX(-50%);
+          background-color: #e7e7e7;
+          transition: all 0.3s;
+        }
+        &.active {
+          background-color: #fff;
+          &::before {
+            width: 100%;
+            background-color: #007dff;
+          }
+        }
+      }
+    }
   }
 }
