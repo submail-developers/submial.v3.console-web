@@ -171,9 +171,8 @@ const Dialog = ({}: Props, ref: any) => {
 
                             <Form.Item
                               hidden={detailEvent != '5'}
-                              label='拨号'
-                              name='huifu'
-                              required>
+                              label='被叫号码'
+                              name='huifu'>
                               <Input placeholder='请输入手机号码' />
                             </Form.Item>
 
@@ -184,7 +183,7 @@ const Dialog = ({}: Props, ref: any) => {
                               name='map'></Form.Item>
                             <Form.Item
                               hidden={detailEvent != '7'}
-                              label='日历'
+                              label='日历名称'
                               validateTrigger='onSubmit'
                               name='date'></Form.Item>
                           </Col>
