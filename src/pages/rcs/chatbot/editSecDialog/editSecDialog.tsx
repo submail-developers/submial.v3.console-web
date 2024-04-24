@@ -16,20 +16,19 @@ import type { TimePickerProps, DatePickerProps } from 'antd'
 import { ProFormDependency } from '@ant-design/pro-components'
 
 import { API } from 'apis'
-import './editDialog.scss'
+import './editSecDialog.scss'
 
 interface Props {
   // onSearch: () => void
 }
 interface OpenParams {}
-interface Props {
-  // onSearch: () => void
+interface InitOpen {
+  isAdd: boolean
 }
-interface OpenParams {}
 
 const Dialog = ({}: Props, ref: any) => {
   const [form] = Form.useForm()
-
+  const [isAdd, setisAdd] = useState<boolean>(true)
   const onChange: DatePickerProps['onChange'] = (date, dateString) => {
     console.log(date, dateString)
   }
@@ -47,15 +46,12 @@ const Dialog = ({}: Props, ref: any) => {
     return <DatePicker picker={type} onChange={onChange} />
   }
 
-  useImperativeHandle(ref, () => {
-    return {
-      open,
-    }
-  })
   const [type, setType] = useState<PickerType>('time')
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const open = (params: OpenParams) => {
+  const open = (initValues: InitOpen) => {
+    const { isAdd } = initValues
+    setisAdd(isAdd)
     setIsModalOpen(true)
   }
 
@@ -65,6 +61,12 @@ const Dialog = ({}: Props, ref: any) => {
     setIsModalOpen(false)
   }
 
+  useImperativeHandle(ref, () => {
+    return {
+      open,
+    }
+  })
+
   useEffect(() => {
     if (open && form) {
       form.resetFields()
@@ -73,35 +75,31 @@ const Dialog = ({}: Props, ref: any) => {
   const onFinish = () => {}
   const onFinishFailed = () => {}
 
-  const mainOptions = [
+  const secOptions = [
     {
       value: '1',
-      label: '菜单',
-    },
-    {
-      value: '2',
       label: '回复事件',
     },
     {
-      value: '3',
+      value: '2',
       label: '交互事件',
     },
   ]
   const detailEventData = [
     {
-      value: '4',
+      value: '3',
       label: '链接事件',
     },
     {
-      value: '5',
+      value: '4',
       label: '拨号事件',
     },
     {
-      value: '6',
+      value: '5',
       label: '地图事件',
     },
     {
-      value: '7',
+      value: '6',
       label: '日历事件',
     },
   ]
@@ -117,17 +115,17 @@ const Dialog = ({}: Props, ref: any) => {
   ]
 
   const changemeanType = (value) => {
-    if (value == 3) {
-      form.setFieldValue('detailEvent', '4')
+    if (value == 2) {
+      form.setFieldValue('detailEvent', '3')
     }
   }
 
   return (
     <Modal
-      title='编辑主菜单事件'
+      title={isAdd ? '新增二级菜单事件' : '编辑二级菜单事件'}
       width={480}
       style={{ top: 240 }}
-      data-class='chose-editDlog'
+      data-class='chose-secEditDialog'
       closable={false}
       destroyOnClose
       onCancel={handleCancel}
@@ -144,8 +142,11 @@ const Dialog = ({}: Props, ref: any) => {
         autoComplete='off'>
         <Row gutter={24}>
           <Col span={24}>
-            <Form.Item label='菜单标题' name='mean-title'>
-              <Input placeholder='请设置该菜单的标题文本' />
+            <Form.Item label='二级菜单标题' name='mean-title'>
+              <Input
+                placeholder='请设置该菜单的标题文本'
+                value='二级菜单标题'
+              />
             </Form.Item>
           </Col>
           <Col span={24}>
@@ -158,7 +159,7 @@ const Dialog = ({}: Props, ref: any) => {
                     .toLowerCase()
                     .includes(input.toLowerCase())
                 }
-                options={mainOptions}
+                options={secOptions}
                 onChange={changemeanType}
               />
             </Form.Item>
@@ -171,12 +172,6 @@ const Dialog = ({}: Props, ref: any) => {
                   <Col span={24}>
                     <Form.Item
                       hidden={meanType != '1'}
-                      label=''
-                      name='account'
-                      validateTrigger='onSubmit'></Form.Item>
-
-                    <Form.Item
-                      hidden={meanType != '2'}
                       label='回复事件'
                       name='huifu'
                       required>
@@ -184,7 +179,7 @@ const Dialog = ({}: Props, ref: any) => {
                     </Form.Item>
 
                     <Form.Item
-                      hidden={meanType != '3'}
+                      hidden={meanType != '2'}
                       label='详细事件'
                       validateTrigger='onSubmit'
                       name='detailEvent'>
@@ -208,7 +203,7 @@ const Dialog = ({}: Props, ref: any) => {
                         <>
                           <Col span={24}>
                             <Form.Item
-                              hidden={detailEvent != '4' || meanType != '3'}
+                              hidden={detailEvent != '3' || meanType != '2'}
                               label='链接url'
                               name='url'
                               validateTrigger='onSubmit'>
@@ -216,7 +211,7 @@ const Dialog = ({}: Props, ref: any) => {
                             </Form.Item>
 
                             <Form.Item
-                              hidden={detailEvent != '5' || meanType != '3'}
+                              hidden={detailEvent != '4' || meanType != '2'}
                               label='被叫号码'
                               name='mob'>
                               <Input placeholder='请输入手机号码' />
@@ -224,7 +219,7 @@ const Dialog = ({}: Props, ref: any) => {
 
                             {/* 地图事件 */}
                             <Form.Item
-                              hidden={detailEvent != '6' || meanType != '3'}
+                              hidden={detailEvent != '5' || meanType != '2'}
                               label='地图方式'
                               validateTrigger='onSubmit'
                               name='mapFa'>
@@ -245,20 +240,20 @@ const Dialog = ({}: Props, ref: any) => {
                               />
                             </Form.Item>
                             <Form.Item
-                              hidden={detailEvent != '6' || meanType != '3'}
+                              hidden={detailEvent != '5' || meanType != '2'}
                               label='地图标签'
                               name='mobTip'>
                               <Input placeholder='请输入地图标签' />
                             </Form.Item>
                             <Form.Item
-                              hidden={detailEvent != '6' || meanType != '3'}
+                              hidden={detailEvent != '5' || meanType != '2'}
                               label='经度'
                               name='jingdu'>
                               <Input placeholder='请输入经度' />
                             </Form.Item>
 
                             <Form.Item
-                              hidden={detailEvent != '6' || meanType != '3'}
+                              hidden={detailEvent != '5' || meanType != '2'}
                               label='纬度'
                               name='weidu'>
                               <Input placeholder='请输入纬度' />
@@ -266,7 +261,7 @@ const Dialog = ({}: Props, ref: any) => {
 
                             {/*日历事件  */}
                             <Form.Item
-                              hidden={detailEvent != '7' || meanType != '3'}
+                              hidden={detailEvent != '6' || meanType != '2'}
                               label='日历名称'
                               validateTrigger='onSubmit'
                               name='date'>

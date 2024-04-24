@@ -104,9 +104,9 @@ export default function Fn(props: Props) {
           </Space> */}
 
           <Button
+            className='chose-avatar'
             type='primary'
             size='large'
-            style={{ width: 120 }}
             onClick={showDialog}>
             选择头像
           </Button>

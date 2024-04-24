@@ -266,22 +266,22 @@ export default function Fn() {
           </Row>
         </div>
 
-        <div className='form-group' style={{ paddingBottom: '24px' }}>
+        <div className='form-group' style={{ paddingBottom: 120 }}>
           <Flex justify='flex-left'>
+            <Button
+              className='cancle'
+              type='primary'
+              size='large'
+              style={{ width: 120, marginRight: '12px' }}
+              onClick={submit}>
+              取消
+            </Button>
             <Button
               type='primary'
               size='large'
               style={{ width: 120 }}
               onClick={submit}>
               提交审核
-            </Button>
-            <Button
-              className='cancle'
-              type='primary'
-              size='large'
-              style={{ width: 120, marginLeft: '12px' }}
-              onClick={submit}>
-              取消
             </Button>
           </Flex>
         </div>

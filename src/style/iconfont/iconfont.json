@@ -6,35 +6,30 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "40078809",
+      "name": "二级菜单 (2)",
+      "font_class": "a-erjicaidan2",
+      "unicode": "e633",
+      "unicode_decimal": 58931
+    },
+    {
       "icon_id": "40042402",
-      "name": "xiahuaxian",
-<<<<<<< HEAD
+      "name": "下划线",
       "font_class": "u",
-=======
-      "font_class": "xiahuaxian",
->>>>>>> 1751c0dbd491748c9da55289392cebeaffb5820b
       "unicode": "e64a",
       "unicode_decimal": 58954
     },
     {
       "icon_id": "40042400",
-      "name": "xieti",
-<<<<<<< HEAD
+      "name": "倾斜",
       "font_class": "i",
-=======
-      "font_class": "xieti",
->>>>>>> 1751c0dbd491748c9da55289392cebeaffb5820b
       "unicode": "e649",
       "unicode_decimal": 58953
     },
     {
       "icon_id": "40042398",
-      "name": "jiacu",
-<<<<<<< HEAD
+      "name": "加粗",
       "font_class": "b",
-=======
-      "font_class": "jiacu",
->>>>>>> 1751c0dbd491748c9da55289392cebeaffb5820b
       "unicode": "e648",
       "unicode_decimal": 58952
     },

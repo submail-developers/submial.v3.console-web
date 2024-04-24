@@ -1,7 +1,7 @@
-[data-class='chose-avatar'] {
+[data-class='chose-editDlog'] {
   #form-0_ {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     .avatar-img {
       width: 62px;
       height: 62px;
@@ -54,11 +54,20 @@
     height: 42px;
   }
 
-  .ant-select-selection-placeholder {
-    font-size: 16px;
-  }
   .ant-select-selection-item {
     color: #007dff;
     font-size: 16px;
+  }
+  .startTimeCont,
+  .endTimeCont {
+    label {
+      margin-right: 10px;
+    }
+    .ant-space {
+      margin-right: 10px;
+    }
+  }
+  .endTimeCont {
+    margin-top: 10px;
   }
 }

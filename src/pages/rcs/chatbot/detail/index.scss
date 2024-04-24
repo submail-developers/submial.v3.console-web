@@ -5,7 +5,7 @@
     margin: 16px 0 24px;
   }
   .info-title {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 500;
     position: relative;
     display: flex;
@@ -61,8 +61,17 @@
       }
     }
   }
-  .ant-btn {
-    height: 36px;
+  .detail-btn {
+    padding: 0 20px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .icon-bianji,
+    .icon-shanchu {
+      font-size: 18px;
+      padding-right: 4px;
+    }
   }
   .border {
     width: 100%;
@@ -74,7 +83,7 @@
     font-size: 15px;
     tr > td:first-child,
     tr > td:nth-child(3) {
-      color: #4f4f4f;
+      color: #4f4f4f !important;
       width: 180px;
       background-color: #f3f6f9;
     }
@@ -118,11 +127,19 @@
   .mean-botm {
     display: flex;
     justify-content: end;
+    margin-top: 18px;
+    margin-bottom: 120px;
   }
   button {
     margin: 6px;
+    height: 40px;
   }
-
+  .submit-audtitng {
+    background-color: #f58c37;
+    &:hover {
+      background-color: #faa662 !important;
+    }
+  }
   .auditing-btn {
     color: #fff;
     background-color: #f58c37;
@@ -133,16 +150,39 @@
   .ant-table-wrapper {
     border: 1px solid #e6e6e6;
     border-radius: 4px;
+    padding-bottom: 12px;
+    background-color: #f6f7f9;
+    .ant-table-thead
+      > tr
+      > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+      background-color: #f6f7f9 !important;
+    }
+    .ant-table-thead th {
+      font-size: 16px;
+    }
     .ant-table-thead th:first-child {
+      font-weight: normal;
       color: #4f4f4f !important;
+    }
+    .ant-table-thead th:nth-child(3) {
+      font-weight: normal;
     }
     .ant-table-thead th:nth-child(2) {
       color: #282b31 !important;
     }
+    .ant-table-tbody tr {
+      font-size: 15px;
+    }
+    .ant-table-tbody tr > td:first-child {
+      color: #4f4f4f;
+    }
+    .ant-table-tbody tr > td:nth-child(2) {
+      font-weight: 500 !important;
+    }
     .ant-table-thead th,
     .ant-table-tbody tr > td {
       border-bottom: 0 !important;
-      background-color: #f6f7f9 !important;
+      background-color: #f6f7f9;
     }
     .ant-table-tbody tr > td.secondCont {
       position: relative;
@@ -151,7 +191,7 @@
       content: '';
       position: absolute;
       top: 50%;
-      left: 86%;
+      left: 78%;
       transform: translate(-50%, -50%);
       width: 1px;
       height: 16px;
@@ -161,10 +201,18 @@
     .ant-table-tbody tr > td:nth-child(3) {
       color: #4869ab;
     }
+    .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
+      background-color: #eceff4;
+    }
+    .ant-table-body .ant-table-row-hover {
+      background: #eceff4;
+    }
+    .ant-table-body .ant-table-row-hover > td {
+      background: #eceff4;
+    }
   }
-  .icon-jianpan {
-    font-size: 18px;
-    position: relative;
-    left: -5px;
+  .icon-bianji,
+  .icon-zhongzhi {
+    font-size: 20px;
   }
 }

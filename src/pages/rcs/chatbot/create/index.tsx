@@ -429,7 +429,7 @@ export default function Fn() {
 
         <div className='form-group' style={{ paddingBottom: '24px' }}>
           <Flex className='fx-x-between'>
-            <div>
+            {/* <div>
               <Button
                 type='primary'
                 size='large'
@@ -438,8 +438,8 @@ export default function Fn() {
                 className='save'>
                 保存
               </Button>
-            </div>
-            <div>
+            </div> */}
+            <div style={{ marginBottom: 120 }}>
               <Button
                 className='cancle'
                 type='primary'
@@ -453,7 +453,7 @@ export default function Fn() {
                 size='large'
                 style={{ width: 120 }}
                 onClick={submit}>
-                提交
+                提交审核
               </Button>
             </div>
           </Flex>
