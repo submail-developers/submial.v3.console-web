@@ -131,22 +131,6 @@ const Dialog = ({}: Props, ref: any) => {
               </p>
             </Upload>
           </div>
-          {/* <div>
-            <Button type='primary' onClick={() => setVisible(true)}>
-              预览
-            </Button>
-            <Image
-              width={200}
-              style={{ display: 'none' }}
-              preview={{
-                visible,
-                src: imgSrc,
-                onVisibleChange: (value) => {
-                  setVisible(value)
-                },
-              }}
-            />
-          </div> */}
         </Form.Item>
       </Form>
     </Modal>

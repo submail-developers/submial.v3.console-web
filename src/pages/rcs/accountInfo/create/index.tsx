@@ -16,11 +16,11 @@ import {
 } from 'antd'
 import type { GetProp, UploadFile, UploadProps } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
-
 import { useState, useRef, useEffect } from 'react'
 import { useParams, NavLink } from 'react-router-dom'
 import { changeBreadcrumbItem } from '@/store/reducers/breadcrumb'
 import { useAppDispatch } from '@/store/hook'
+import { getRegionRes } from '@/api'
 import utils from '@/utils/formRules'
 
 import PageContent from '@/components/pageContent'
@@ -111,6 +111,17 @@ export default function Fn() {
   const onSetLogo = (src: string) => {
     form.setFieldValue('logo', src)
   }
+
+  // 获取省 市
+  const getProvincesCities = async () => {
+    try {
+      const res = await getRegionRes()
+      console.log(res)
+    } catch (error) {}
+  }
+  useEffect(() => {
+    getProvincesCities()
+  }, [])
 
   useEffect(() => {
     if (id == '0') {

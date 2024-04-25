@@ -91,5 +91,9 @@
   .ant-input-number-affix-wrapper,
   .ant-color-picker-trigger {
     height: 40px;
+    .ant-input-number-input-wrap {
+      height: 40px;
+      line-height: 37px;
+    }
   }
 }

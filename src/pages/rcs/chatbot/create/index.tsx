@@ -143,17 +143,6 @@ export default function Fn() {
         name='craete-chatbot'
         layout='vertical'
         autoComplete='off'>
-        {/* <Space size={16} className='form-header fx-y-center'>
-          <div>
-            <Image src={jiqiren} width={32} height={32} preview={false}></Image>
-          </div>
-          <div>
-            <div className='fn20 fw-500'>
-              {chatbotId == '0' ? '申请' : '编辑'} Chatbot 账户
-            </div>
-            <span>请填写下列表单，然后完成申请12</span>
-          </div>
-        </Space> */}
         <div className='form-header'>
           <Image src={jiqiren} preview={false}></Image>
           <div className='fn22 fw-500 form-con'>
@@ -373,23 +362,6 @@ export default function Fn() {
                       onDelFile={onDelBgFile}
                     />
                   </Col>
-                  {/* <Col span={24} xl={12}>
-                    <Form.Item label='背景图' required>
-                      <Flex align='center' gap={12}>
-                        <div className='upload-btn fx-center-center'>
-                          <span className='icon iconfont icon-jiqiren-filled jiqiren'></span>
-                        </div>
-                        <Button
-                          className='choseBgimg'
-                          type='primary'
-                          size='large'
-                          style={{ width: 120 }}
-                          onClick={showDialog}>
-                          选择背景图
-                        </Button>
-                      </Flex>
-                    </Form.Item>
-                  </Col> */}
                 </Row>
               </Form.Item>
             </Col>

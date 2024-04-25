@@ -161,3 +161,12 @@ export const getChatbot = (data: API.GetChatbotParams) => {
     },
   )
 }
+
+// 获取非直签客户信息
+export const getDicConfig = (data: API.GetDicConfigParams) => {
+  return request.post<
+    any,
+    API.Response<API.GetDicConfigItems[]>,
+    API.GetDicConfigParams
+  >('console/api/rcs/dic_config', { ...data })
+}

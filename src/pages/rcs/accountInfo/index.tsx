@@ -1,119 +1,34 @@
 import { useState, useEffect } from 'react'
-import { Flex, Space, Row, Col, Button, Divider, Table, Image } from 'antd'
+import { Flex, Space, Row, Col, Button, Divider, Image } from 'antd'
 import { NavLink } from 'react-router-dom'
-import type { ColumnsType } from 'antd/es/table'
 import PageContent from '@/components/pageContent'
+import { getDicConfig } from '@/api'
 import { API } from 'apis'
 import jiqirenImg from '@/assets/rcs/gunali.png'
-
 import './index.scss'
 
-interface DataType extends API.GetChatbotListItem {}
+interface DataType extends API.GetDicConfigItems {}
+
 export default function Fn() {
-  const [tableData, settableData] = useState([
-    { name: '1223' },
-    { name: '123' },
-  ])
+  const [loading, setloading] = useState(false)
+  const [customerData, setCustomerData] = useState<any>({})
+  const [auditingStatus, setAuditingStatus] = useState()
 
-  // const columns: ColumnsType<DataType> = [
-  //   {
-  //     title: '版本',
-  //     className: 'paddingL30',
-  //     width: 80,
-  //     render: (_, record) => <span>1</span>,
-  //   },
-  //   {
-  //     title: '操作人',
-  //     className: 'paddingL30',
-  //     width: 100,
-  //     render: (_, record) => <span>张涟云</span>,
-  //   },
-  //   {
-  //     title: '操作时间',
-  //     width: 160,
-  //     render: (_, record) => <span>2024-04-09 21:19:08</span>,
-  //   },
-  //   {
-  //     title: '操作类型',
-  //     width: 100,
-  //     render: (_, record) => <span>新增</span>,
-  //   },
-  //   {
-  //     title: '操作结果',
-  //     width: 100,
-  //     render: (_, record) => <span>通过</span>,
-  //   },
-  //   {
-  //     title: '意见',
-  //     width: 160,
-  //     render: (_, record) => <span>全国下Chatbot调试号码审核免审通过</span>,
-  //   },
-  // ]
-  const list = [
-    {
-      id: 1,
-      version: '1',
-      setPerson: '张涟云',
-      time: '2024-04-09 21:19:08',
-      setType: '新增',
-      result: '通过',
-      view: '全国下Chatbot调试号码审核免审通过',
-    },
-    {
-      id: 2,
-      version: '1',
-      setPerson: '张涟云',
-      time: '2024-04-09 21:19:08',
-      setType: '新增',
-      result: '通过',
-      view: '-',
-    },
-  ]
-  const columns = [
-    {
-      title: '版本',
-      dataIndex: 'version',
-      width: 80,
-      className: 'paddingL20',
-    },
-    {
-      title: '操作人',
-      width: 100,
-      className: 'paddingL20',
-      dataIndex: 'setPerson',
-    },
-    {
-      title: '操作时间',
-      width: 120,
-      className: 'paddingL20',
-      dataIndex: 'time',
-    },
-    {
-      title: '操作类型',
-      width: 100,
-      className: 'paddingL20',
-      dataIndex: 'setType',
-    },
-
-    {
-      title: '操作结果',
-      width: 100,
-      className: 'paddingL20',
-      dataIndex: 'result',
-    },
-
-    {
-      title: '意见',
-      width: 180,
-      className: 'paddingL20',
-      dataIndex: 'view',
-      render: (_, record) => (
-        <span className='text g-ellipsis-1 '>
-          全国下Chatbot调试号码审核免审通过
-        </span>
-      ),
-    },
-  ]
+  // 获取客户资料
+  const search = async (ifshowLoading = false) => {
+    try {
+      ifshowLoading && setloading(true)
+      const params = ''
+      const res = await getDicConfig(params)
+      setCustomerData(res.data)
+      setloading(false)
+    } catch (error) {
+      setloading(false)
+    }
+  }
+  useEffect(() => {
+    search(true)
+  }, [])
 
   return (
     <PageContent extClass='account-detail'>
@@ -136,19 +51,31 @@ export default function Fn() {
       <Divider className='line'></Divider>
       <div className='info-title' style={{ marginBottom: '20px' }}>
         客户信息
-        <div className='auditing-status'>审核状态</div>
+        <div className='auditing-status'>
+          审核状态
+          {customerData.status == '0' ? (
+            <span className='atud-nosub'>未提交</span>
+          ) : customerData.status == '1' ? (
+            <span className='atud-success'>审核通过</span>
+          ) : customerData.status == '2' ? (
+            <span className='atud-fail'>未通过</span>
+          ) : (
+            <span className='atud-ing'>待审核</span>
+          )}
+        </div>
       </div>
+
       <table className='border'>
         <tbody>
           <tr>
             <td>客户名称</td>
-            <td>上海赛邮云计算有限公司</td>
+            <td>{customerData.customerName}</td>
             <td>客户电话</td>
-            <td>18226187949</td>
+            <td>{customerData.customerContactMob}</td>
           </tr>
           <tr>
             <td>客户邮箱</td>
-            <td>2123123@qq.com</td>
+            <td>{customerData.customerContactEmail}</td>
             <td>归属运营商</td>
             <td>上海赛邮云计算有限公司</td>
           </tr>
@@ -162,15 +89,21 @@ export default function Fn() {
           </tr>
           <tr>
             <td>企业统一社会代码</td>
-            <td>918247K12Q910230JF</td>
+            <td>{customerData.unifySocialCreditCodes}</td>
             <td>企业责任人姓名</td>
-            <td>张凯旋</td>
+            <td>{customerData.enterpriseOwnerName}</td>
           </tr>
           <tr>
             <td>企业责任人证件类型</td>
-            <td>身份证</td>
+            <td>
+              {customerData.certificateType == 1
+                ? '居民身份证'
+                : customerData.certificateType == 2
+                ? '中国人名'
+                : ''}
+            </td>
             <td>企业责任人证件号码</td>
-            <td>342224199612050432</td>
+            <td>{customerData.certificateCode}</td>
           </tr>
           <tr>
             <td>营业执照</td>
@@ -182,7 +115,10 @@ export default function Fn() {
           </tr>
           <tr>
             <td>合同信息</td>
-            <td colSpan={3}>上海璟春科技有限公司-20241011.pdf</td>
+            <td colSpan={3}>
+              {customerData.contractName}
+              <a href={customerData.contractAccessory}>.pdf</a>
+            </td>
           </tr>
         </tbody>
       </table>
