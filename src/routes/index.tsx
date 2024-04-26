@@ -432,26 +432,6 @@ export const menus: RouteObject[] = [
           />
         ),
       },
-      {
-        path: 'slate',
-        loader: loaderFn({ breadName: '' }),
-        errorElement: <Error />,
-        element: (
-          <LazyImportComponent
-            lazyChildren={lazy(() => import('@/pages/test-slate'))}
-          />
-        ),
-      },
-      {
-        path: 'dnd',
-        loader: loaderFn({ breadName: '' }),
-        errorElement: <Error />,
-        element: (
-          <LazyImportComponent
-            lazyChildren={lazy(() => import('@/pages/test-dnd'))}
-          />
-        ),
-      },
     ],
   },
 ]
