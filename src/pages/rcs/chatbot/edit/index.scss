@@ -1,10 +1,10 @@
-.chatbot-edit {
+[data-class='chatbot-edit'] {
   height: auto;
   .line {
     margin: 16px 0 24px;
   }
   .info-title {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 500;
     position: relative;
     display: flex;
@@ -22,7 +22,6 @@
       right: 0;
     }
   }
-
   .base-info {
     border: 1px solid #d7dae1;
     border-radius: 8px;
@@ -64,16 +63,34 @@
   .ant-table-wrapper {
     border: 1px solid #e6e6e6;
     border-radius: 4px;
+    padding-bottom: 12px;
+    background-color: #f6f7f9;
+    .ant-table-thead th {
+      font-size: 16px;
+    }
     .ant-table-thead th:first-child {
+      font-weight: normal;
       color: #4f4f4f !important;
     }
     .ant-table-thead th:nth-child(2) {
       color: #282b31 !important;
     }
+    .ant-table-thead th:nth-child(3) {
+      font-weight: normal;
+    }
     .ant-table-thead th,
     .ant-table-tbody tr > td {
       border-bottom: 0 !important;
-      background-color: #f6f7f9 !important;
+      background-color: #f6f7f9;
+    }
+    .ant-table-tbody tr {
+      font-size: 15px;
+      td {
+        padding: 4px 16px;
+      }
+    }
+    .ant-table-tbody tr > td:first-child {
+      color: #4f4f4f;
     }
     .ant-table-tbody tr > td .secondCont {
       position: relative;
@@ -92,15 +109,49 @@
     .ant-table-tbody tr > td:nth-child(3) {
       color: #4869ab;
     }
+
+    .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
+      background-color: #eceff4;
+    }
+    .ant-table-body .ant-table-row-hover {
+      background: #eceff4;
+    }
+    .ant-table-body .ant-table-row-hover > td {
+      background: #eceff4;
+    }
   }
   .icon-jianpan {
     font-size: 18px;
-    position: relative;
-    left: -5px;
   }
 
   .icon-bianji,
   .icon-zhongzhi {
-    font-size: 18px;
+    font-size: 20px;
+  }
+  .cancle-edit {
+    color: #282b31;
+    background-color: #eceff4;
+    box-shadow: none;
+    &:hover {
+      color: #282b31 !important;
+      background-color: #f6f7f9 !important;
+    }
+  }
+}
+
+.upload-btn button {
+  width: 120px;
+  height: 40px;
+  font-size: 15px;
+}
+.cancle {
+  color: #1764ff;
+  background-color: #eceff3;
+}
+.save {
+  color: #fff;
+  background-color: #f58c37;
+  &:hover {
+    background-color: #f7a867;
   }
 }

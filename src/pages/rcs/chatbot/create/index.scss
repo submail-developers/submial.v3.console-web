@@ -1,6 +1,5 @@
 .create-chatbot-page {
   height: auto;
-
   .create-chatbot-form {
     // border: 1px solid #e7e7e7;
     margin: 24px;
@@ -33,7 +32,7 @@
           width: 4px;
           height: 20px;
           border-radius: 2px;
-          background: linear-gradient(to bottom, #d971f0, #3c64f5);
+          background: #007dff;
           margin-right: 8px;
         }
       }
@@ -64,13 +63,13 @@
   }
 
   .upload-btn {
-    width: 32px;
-    height: 32px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     overflow: hidden;
     position: relative;
     .jiqiren {
-      font-size: 32px;
+      font-size: 40px;
       color: #d6dce1;
     }
   }
@@ -87,6 +86,14 @@
     }
     .form-con {
       width: 100%;
+    }
+  }
+  .ant-input-number-affix-wrapper,
+  .ant-color-picker-trigger {
+    height: 40px;
+    .ant-input-number-input-wrap {
+      height: 40px;
+      line-height: 37px;
     }
   }
 }

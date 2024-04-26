@@ -305,5 +305,34 @@ declare module 'apis' {
       status: string
       datetime: string
     }
+    // 获取非直签客户信息参数
+    interface GetDicConfigParams {}
+    // 非直签客户信息返回值
+    interface GetDicConfigItems {
+      id: string
+      credits: string
+      datetime: string
+      status: string
+      customerName: string
+      customerContactName: string
+      customerContactMob: string
+      customerContactEmail: string
+      businessType: string
+      industryTypeCode: string
+      companyLogo: string
+      contractNo: string
+      contractName: string
+      contractEffectiveDate: string
+      contractExpiryDate: string
+      contractRenewStatus: string
+      contractRenewDate: string
+      contractAccessory: string
+      subhook_signature: string
+      subhook_url: string
+      unifySocialCreditCodes: string
+      enterpriseOwnerName: string
+      certificateType: string
+      certificateCode: string
+    }
   }
 }

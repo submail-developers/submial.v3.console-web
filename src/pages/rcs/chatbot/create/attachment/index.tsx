@@ -77,7 +77,7 @@ export default function Fn(props: Props) {
         name='attachment'
         required
         extra={
-          '您可上传的文件类型包含：pdf;doc;jpg;jpeg;gif;docx;rar;zip,单个附件大小限5M,限上传1个文件。'
+          '您可上传的文件类型包含：pdf、doc、jpg、jpeg、gif、docx、rar、zip,单个附件大小限5M,限上传1个文件。'
         }>
         <Upload {...props}>
           <Button icon={<UploadOutlined rev={null} />} className='upload'>

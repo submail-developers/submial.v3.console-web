@@ -97,7 +97,7 @@ export default function Fn() {
   const list = [
     {
       id: 1,
-      event: '交互响应事件',
+      event: '二级菜单',
       secondCont: '二级菜单内容',
       mean: '回复消息事件',
       result: '预订成功',
@@ -105,7 +105,7 @@ export default function Fn() {
     {
       id: 2,
 
-      event: '交互响应事件',
+      event: '二级菜单',
       secondCont: '二级菜单内容',
       mean: '链接事件',
       result: 'https://www.mysubmail.com/',
@@ -115,21 +115,21 @@ export default function Fn() {
     {
       title: (
         <>
-          <i className='icon iconfont icon-jianpan'></i> 菜单一
+          <i className='icon iconfont icon-jianpan'></i> 主菜单一
         </>
       ),
-      width: 160,
+      width: 80,
       className: 'paddingL20',
       dataIndex: 'event',
       render: (_, recoder) => (
         <>
-          <li style={{ listStyle: 'disc', color: '#4f4f4f' }}>交互响应事件</li>
+          <i className='icon iconfont icon-a-erjicaidan2'></i> 二级菜单
         </>
       ),
     },
     {
       title: '下挂巧克力',
-      width: 160,
+      width: 120,
       className: 'paddingL20',
       dataIndex: 'secondCont',
       render: (_, recoder) => (
@@ -144,7 +144,7 @@ export default function Fn() {
     },
     {
       title: '菜单',
-      width: 160,
+      width: 100,
       className: 'paddingL20',
       dataIndex: 'mean',
     },
@@ -161,20 +161,27 @@ export default function Fn() {
     setIsVisible(true)
     setIsVisible2(false)
   }
+  const getStatsu = (editStatus) => {
+    if (editStatus == false) {
+      setIsVisible(false)
+      setIsVisible2(true)
+    }
+  }
 
   return (
     <PageContent extClass='chatbot-detail'>
       <Image src={jiqirenImg} preview={false} width={72}></Image>
       <Flex justify='space-between' align='center' style={{ marginTop: '4px' }}>
-        <div className='fn22 fw-500'>Chatbot 详情hatbot</div>
+        <div className='fn22 fw-500'>Chatbot 详情</div>
         <Space>
           <NavLink to='/console/rcs/account/create/0'>
-            <Button type='primary'>
-              <i className='icon iconfont icon-bianji'></i>编辑基本信息
+            <Button type='primary' className='detail-btn'>
+              <i className='icon iconfont icon-bianji'></i>
+              编辑基本信息
             </Button>
           </NavLink>
 
-          <Button type='primary' danger>
+          <Button type='primary' danger className='detail-btn'>
             <i className='icon iconfont icon-shanchu'></i>
             删除
           </Button>
@@ -182,7 +189,7 @@ export default function Fn() {
       </Flex>
       <Divider className='line'></Divider>
       <div className='info-title' style={{ marginBottom: '20px' }}>
-        Chatbot 信息
+        基本信息
         <div className='auditing-status'>审核状态</div>
       </div>
 
@@ -260,7 +267,7 @@ export default function Fn() {
           <Row style={{ marginTop: '16px' }} gutter={24}>
             <Col span={24}>
               <Table
-                className='theme-cell bg-white'
+                // className='theme-cell bg-white'
                 columns={columns2}
                 dataSource={list}
                 sticky
@@ -269,13 +276,10 @@ export default function Fn() {
                 scroll={{ x: 'max-content' }}
               />
               <div className='mean-botm'>
-                <Button
-                  type='primary'
-                  className='auditing-status'
-                  onClick={handleVisibility}>
+                <Button type='primary' onClick={handleVisibility}>
                   编辑菜单
                 </Button>
-                <Button type='primary' className='auditing-btn'>
+                <Button type='primary' className='submit-audtitng'>
                   提交审核
                 </Button>
               </div>
@@ -284,7 +288,7 @@ export default function Fn() {
         </>
       )}
 
-      {isVisible && <EditMean />}
+      {isVisible && <EditMean onGetStatsu={getStatsu} />}
     </PageContent>
   )
 }

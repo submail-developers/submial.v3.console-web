@@ -94,6 +94,7 @@
       border: none !important;
       box-shadow: none !important;
     }
+
     .ant-select-selection-item,
     .ant-select-selection-placeholder,
     .ant-select-arrow {
@@ -131,11 +132,17 @@
     padding: 8px 30px 16px;
   }
 }
+.ant-btn-primary {
+  box-shadow: none !important;
+}
+.ant-select-selection-placeholder {
+  font-size: 15px !important;
+}
 .ant-select-dropdown .ant-select-item-option-content {
-  font-size: 16px;
+  font-size: 15px !important;
 }
 .ant-select-item-option-selected .ant-select-item-option-content {
   color: var(--primary-color) !important;
   font-weight: normal;
-  font-size: 16px;
+  font-size: 15px !important;
 }

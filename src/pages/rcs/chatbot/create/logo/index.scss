@@ -1,7 +1,7 @@
 .upload-logo {
   .upload-btn {
-    width: 52px;
-    height: 52px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     overflow: hidden;
     position: relative;
@@ -10,7 +10,7 @@
       height: 100%;
     }
     .jiqiren {
-      font-size: 52px;
+      font-size: 40px;
       color: #d6dce1;
     }
     .loading {
@@ -22,5 +22,12 @@
       background-color: rgba(0, 0, 0, 0.25);
       color: var(--primary-color);
     }
+  }
+  .chose-avatar {
+    width: 80px;
+    height: 28px;
+    line-height: 28px;
+    padding: 0 !important;
+    font-size: 14px;
   }
 }

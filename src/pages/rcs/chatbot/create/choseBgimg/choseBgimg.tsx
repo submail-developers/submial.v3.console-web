@@ -70,9 +70,9 @@ const Dialog = ({}: Props, ref: any) => {
   return (
     <Modal
       title='选择背景图'
-      width={380}
+      width={480}
       style={{ top: 240 }}
-      data-class='chose-avatar'
+      data-class='chose-bgimg'
       closable={false}
       onCancel={handleCancel}
       wrapClassName='modal-reset'
@@ -101,12 +101,10 @@ const Dialog = ({}: Props, ref: any) => {
             <Upload>
               <Button
                 icon={<UploadOutlined rev={undefined} />}
-                style={{ width: 120 }}>
+                style={{ width: 120, height: 40 }}>
                 上传
               </Button>
-              <p
-                className='color-gray'
-                style={{ fontSize: '12px', marginTop: '8px' }}>
+              <p className='upload-p' style={{ marginTop: '8px' }}>
                 您可上传的文件类型：png、jpg、jpeg,单个附件大小限2M，限上传
                 1个文件。
               </p>

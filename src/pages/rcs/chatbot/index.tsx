@@ -67,7 +67,7 @@ export default function Fn() {
       dataIndex: 'chatbotID',
     },
     {
-      title: '归属CSP',
+      title: '基本信息审核',
       width: 220,
       dataIndex: 'provider',
     },

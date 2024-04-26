@@ -1,13 +1,14 @@
 [data-class='chose-avatar'] {
   #form-0_ {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     .avatar-img {
-      width: 62px;
-      height: 62px;
-      padding: 2px;
+      width: 70px;
+      height: 70px;
+      padding: 6px;
       cursor: pointer;
       position: relative;
+      margin-right: 30px;
       &.active {
         border-radius: 4px;
         border: 1px solid #15962a;
@@ -45,5 +46,9 @@
     .ant-modal-header {
       border-bottom: 1px solid #e7e7e7;
     }
+  }
+  .upload-p {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.45);
   }
 }
