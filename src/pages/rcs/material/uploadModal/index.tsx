@@ -265,7 +265,7 @@ export default function UploadModal(props: Props) {
         <div className='img-layer-canvas'>
           <Dragger {...propsDragger} className='dragger'>
             <p className='ant-upload-drag-icon'>
-              <InboxOutlined />
+              <InboxOutlined rev={undefined} />
             </p>
             <p className='ant-upload-text'>点击选择文件或拖拽文件到此区域</p>
             <p className='ant-upload-hint'>
@@ -275,7 +275,7 @@ export default function UploadModal(props: Props) {
         </div>
         <div className='img-editor-wrap'>
           <div className='' style={{ color: 'rgba(0, 0, 0, 0.45)' }}>
-            <div className='color-default'>上传文件说明：</div>
+            <div className='black-color'>上传文件说明：</div>
             <div className='fn14'>
               5G消息支持任意格式文件上传。可识别文件为以下格式：
             </div>
@@ -284,7 +284,7 @@ export default function UploadModal(props: Props) {
                 <Space key={item.title} style={{ padding: '6px 0' }}>
                   <Image preview={false} src={item.img} width={46} />
                   <div>
-                    <div className='fn13 color-default'>{item.title}</div>
+                    <div className='fn13 black-color'>{item.title}</div>
                     <div className='fn12'>
                       {item.suffix.length > 0
                         ? `支持${item.suffix.join('、')}， 单个素材不超过${

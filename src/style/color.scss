@@ -1,0 +1,75 @@
+// 字体颜色
+:root {
+  --primary-color: #1764ff; // 主题色
+  --text-color: #282b31; // 默认字体颜色
+  --gray-color: #41464f; // 灰色
+  --gray-color-sub: #999; // 浅灰色
+  --success-color: #00a97b; // 成功色
+  --error-color: #f00011; // 错误色
+  --warning-color: #ff4d4f; // 警告色
+  --black-color: #1a1c1f; // 黑色
+  --white-color: #fff; // 白色
+
+  // 背景色
+  --btn-bg: #f0f2f5; // 自定义按钮背景色
+  --select-bg: #eceff2; // 自定义下拉框背景色
+}
+
+// 其他颜色
+
+// 主题色
+.color,
+.primary-color {
+  color: var(--primary-color);
+}
+// 默认黑色
+.text-color {
+  color: var(--text-color);
+}
+// 灰色
+.gray-color {
+  color: var(--gray-color);
+}
+// 浅灰色
+.gray-color-sub {
+  color: var(--gray-color-sub);
+}
+// 成功色
+.success-color {
+  color: var(--success-color);
+}
+// 错误色
+.error-color {
+  color: var(--error-color);
+}
+// 警告色
+.warning-color {
+  color: var(--warning-color);
+}
+// 深黑色
+.black-color {
+  color: var(--black-color);
+}
+// 白色
+.white-color {
+  color: var(--white-color);
+}
+
+/**
+* 背景样式
+*/
+
+/**
+* 功能样式
+*/
+
+// 按钮
+.color-btn {
+  color: var(--text-color);
+  background-color: var(--btn-bg);
+}
+// 按钮active
+.color-btn-active {
+  color: var(--white-color);
+  background-color: var(--primary-color);
+}

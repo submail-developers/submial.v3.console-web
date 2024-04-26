@@ -5,6 +5,8 @@ import { useAppDispatch } from '@/store/hook'
 import { changeBreadcrumbItem } from '@/store/reducers/breadcrumb'
 import { useEffect } from 'react'
 
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 const { Header, Sider, Content } = Layout
 
 export default function Fn() {
@@ -26,5 +28,9 @@ export default function Fn() {
   //   }
   // }, [id])
 
-  return <Outlet />
+  return (
+    <DndProvider backend={HTML5Backend}>
+      <Outlet />
+    </DndProvider>
+  )
 }

@@ -14,10 +14,9 @@ const App = () => {
     <div style={{ margin: '200px auto 0' }}>
       <RcsInput
         text={txt}
-        onBlur={() => {}}
         onChange={onChange}
         style={{
-          fontWeight: blod ? 'bold' : 'initial',
+          fontWeight: 'bold',
           fontStyle: 'italic',
           textDecoration: 'underline',
         }}

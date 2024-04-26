@@ -7,10 +7,10 @@
     color: #a1a8b7;
     background-color: transparent;
     &:hover {
-      color: #007dff;
+      color: var(--primary-color);
     }
   }
   span.ant-breadcrumb-link {
-    color: #007dff;
+    color: var(--primary-color);
   }
 }

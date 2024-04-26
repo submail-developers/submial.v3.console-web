@@ -82,7 +82,7 @@
   .ant-select-selection-placeholder,
   .ant-select-arrow,
   .ant-select-selection-item {
-    color: #007dff !important;
+    color: var(--primary-color) !important;
   }
   &:hover {
     .ant-select-selector {
@@ -135,7 +135,7 @@
   font-size: 16px;
 }
 .ant-select-item-option-selected .ant-select-item-option-content {
-  color: #007dff !important;
+  color: var(--primary-color) !important;
   font-weight: normal;
   font-size: 16px;
 }

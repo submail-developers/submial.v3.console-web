@@ -1,0 +1,25 @@
+.a-number {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  .handle-btn {
+    min-width: 26px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd;
+    background-color: #f0f2f5;
+    transition: all 0.3s;
+    cursor: pointer;
+    &.active {
+      border-color: #4187f2;
+      background-color: #4187f2;
+      color: #fff;
+    }
+    &.disable {
+      cursor: not-allowed;
+    }
+  }
+}

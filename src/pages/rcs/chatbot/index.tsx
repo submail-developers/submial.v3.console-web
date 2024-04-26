@@ -31,10 +31,10 @@ export enum ChatbotStatus {
   '审核中',
 }
 export enum ChatbotColor {
-  'color-gray',
-  'color-default',
-  'color-error',
-  'color-warning',
+  'gray-color-sub',
+  'black-color',
+  'error-color',
+  'warning-color',
 }
 
 export default function Fn() {

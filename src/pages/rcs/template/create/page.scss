@@ -59,8 +59,8 @@
           width: 100%;
           height: 100%;
           position: relative;
-          padding: 16px 10px 36px;
-          overflow-y: scroll;
+          padding: 16px 10px 42px;
+          overflow: hidden;
           .center-content {
             position: relative;
           }
@@ -69,18 +69,32 @@
             left: 0;
             bottom: 0;
             width: 100%;
-            height: 28px;
+            height: 32px;
             display: flex;
             align-items: center;
             flex-wrap: nowrap;
-            padding: 0 12px 8px;
+            padding: 0 12px;
+            overflow-x: scroll;
             .float-item {
-              height: 28px;
-              line-height: 28px;
-              padding: 0 16px;
-              background-color: #fff;
-              border-radius: 14px;
-              font-size: 14px;
+              flex-shrink: 0;
+              height: 32px;
+              line-height: 32px;
+              // border-radius: 16px;
+              // font-size: 14px;
+              // background-color: #fff;
+              // padding: 0 12px;
+              // text-align: center;
+              width: fit-content;
+              min-width: 100px;
+              max-width: 160px;
+            }
+            .float-add-btn {
+              width: 24px;
+              height: 24px;
+              border-radius: 50%;
+              background-color: #1764ff;
+              color: #fff;
+              cursor: pointer;
             }
           }
         }
@@ -89,8 +103,17 @@
   }
   .right {
     width: 320px;
+    height: 100%;
     flex-shrink: 0;
     border-left: 1px solid #e7e7e7;
+    .ant-tabs {
+      height: 100%;
+      .ant-tabs-content-holder {
+        height: calc(100% - 42px);
+        overflow: scroll;
+        padding-bottom: 40px;
+      }
+    }
     .tabs {
       display: flex;
       height: 42px;
@@ -123,10 +146,25 @@
           background-color: #fff;
           &::before {
             width: 100%;
-            background-color: #007dff;
+            background-color: var(--primary-color);
           }
         }
       }
+    }
+    .base-config {
+      padding: 12px;
+      overflow: scroll;
+
+      .rich-style-btn {
+        width: 28px;
+        height: 28px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+    }
+    .message-config {
+      overflow: scroll;
+      padding: 12px;
     }
   }
 }

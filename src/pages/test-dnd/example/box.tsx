@@ -31,7 +31,7 @@ export const Box: FC<BoxProps> = function Box({ name }) {
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult<DropResult>()
       if (item && dropResult) {
-        console.log(dropResult, 'dropResult')
+        console.log(item, dropResult, 'dropResult')
         // alert(`You dropped ${item.name} into ${dropResult.name}!`)
       }
     },
@@ -43,7 +43,7 @@ export const Box: FC<BoxProps> = function Box({ name }) {
 
   const opacity = isDragging ? 0.4 : 1
   return (
-    <div ref={drag} style={{ ...style, opacity }} data-testid={`box`}>
+    <div ref={drag} style={{ ...style, opacity }}>
       {name}
     </div>
   )

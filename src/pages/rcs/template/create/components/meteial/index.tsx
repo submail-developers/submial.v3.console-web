@@ -1,19 +1,53 @@
 import { Input, Image, Space, Row, Col } from 'antd'
 import { useEffect, useState } from 'react'
-import { getRcsMeteialList } from '@/api'
+import { getRcsMeteialList, getRcsOnlineMeteialList } from '@/api'
 import { API } from 'apis'
 import './index.scss'
+import imgTypeImg from '@/assets/rcs/fileType/img.png'
 import audioTypeImg from '@/assets/rcs/fileType/audio.png'
+import videoTypeImg from '@/assets/rcs/fileType/video.png'
+import { config as dndConfig } from '../../dnd'
+import { useDrag } from 'react-dnd'
 
 type T = '1' | '2' | '3' | 'all'
 
 type ItemProps = {
-  type: T
+  item: API.RcsOnlineMeteialItem
 }
-const Item = () => {
+type DropResult = API.RcsOnlineMeteialItem
+const Item = (props: ItemProps) => {
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: dndConfig.accept,
+    item: { ...props.item },
+    end: (item, monitor) => {
+      const dropResult = monitor.getDropResult<DropResult>()
+      if (item && dropResult) {
+        // console.log(item, dropResult, 'dropResult')
+        // alert(`You dropped ${item.name} into ${dropResult.name}!`)
+      }
+    },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+      handlerId: monitor.getHandlerId(),
+    }),
+  }))
+
+  const opacity = isDragging ? 0.4 : 1
   return (
-    <div className='item'>
-      <Image src={audioTypeImg} preview={false} />
+    <div
+      className='item'
+      ref={drag}
+      style={{ opacity }}
+      data-testid={`box`}
+      title={props.item.name}>
+      {props.item.type == '1' && (
+        <Image src={props.item.storeAt} preview={false} fallback={imgTypeImg} />
+      )}
+      {props.item.type == '2' && <Image src={audioTypeImg} preview={false} />}
+      {props.item.type == '3' && (
+        <video src={props.item.storeAt} poster={videoTypeImg}></video>
+      )}
+      <div className='name g-ellipsis'>{props.item.name}</div>
     </div>
   )
 }
@@ -23,15 +57,16 @@ export default function Fn() {
   const [type, setType] = useState<T>('all')
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(false)
-  const [list, setList] = useState<API.RcsMeteialItem[]>([])
+  const [list, setList] = useState<API.RcsOnlineMeteialItem[]>([])
   const getList = async () => {
     try {
-      const res = await getRcsMeteialList({
+      const res = await getRcsOnlineMeteialList({
         id: '',
         page: page,
         limit: 20,
-        keyword: '',
-        type: '1',
+        keyword: keywords,
+        type,
+        status: 'all',
       })
       setList(res.libs)
     } catch (error) {}
@@ -53,6 +88,7 @@ export default function Fn() {
         <Input
           value={keywords}
           onPressEnter={getList}
+          onChange={(e) => setkeywords(e.target.value)}
           suffix={<span className='icon iconfont icon-search'></span>}
         />
         <Space size={20}>
@@ -82,7 +118,7 @@ export default function Fn() {
         <Row wrap gutter={[20, 16]}>
           {list.map((item) => (
             <Col span={12} key={item.id}>
-              <Item />
+              <Item item={item} />
             </Col>
           ))}
         </Row>

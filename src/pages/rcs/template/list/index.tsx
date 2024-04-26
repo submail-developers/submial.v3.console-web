@@ -29,7 +29,7 @@ import {
 } from '@ant-design/icons'
 import codeImg from '@/assets/rcs/code.png'
 import { usePoint } from '@/hooks'
-import { getRcsMeteialList, delRcsMeteial } from '@/api'
+import { getRcsMeteialList, delRcsMeteial, getRcsTempList } from '@/api'
 import { IDIcon } from '@/components/aIcons'
 import ACopy from '@/components/aCopy'
 import SelectTypeModal from './selectTypeModal'
@@ -58,23 +58,24 @@ export default function Fn() {
   const [currentPage, setcurrentPage] = useState<number>(1)
   const [pageSize, setpageSize] = useState<number>(12)
   const [total, setTotal] = useState<number>(0)
-  const [list, setList] = useState<API.RcsMeteialItem[]>([])
+  const [list, setList] = useState<API.RcsTempListItem[]>([])
   const [loading, setLoading] = useState(false)
 
   // 审核状态
-  const [status, setStatus] = useState(0)
+  const [status, setStatus] = useState('all')
 
   const [openTypeModal, setopenTypeModal] = useState(false)
 
   const getList = async () => {
     try {
       const formValues = await form.getFieldsValue()
-      const res = await getRcsMeteialList({
+      const res = await getRcsTempList({
         ...formValues,
         page: currentPage,
         limit: pageSize,
+        status,
       })
-      setList(res.libs)
+      setList(res.list)
       setTotal(res.total)
       setLoading(false)
     } catch (error) {
@@ -102,7 +103,7 @@ export default function Fn() {
 
   useEffect(() => {
     getList()
-  }, [currentPage, pageSize])
+  }, [currentPage, pageSize, status])
 
   return (
     <PageContent extClass='template-list' xxl={1400} xl={980}>
@@ -115,12 +116,12 @@ export default function Fn() {
       <Divider className='line'></Divider>
 
       <Form
-        name='template-list-form'
+        name='rcs-template-list-form'
         className='template-list-form'
         form={form}
         layout='vertical'
         size={point ? 'large' : 'middle'}
-        initialValues={{ type: 'all' }}
+        initialValues={{ type: 'all', keyword: '' }}
         autoComplete='off'>
         <Row gutter={16}>
           <Col span={10} md={10} lg={8} xl={6}>
@@ -134,7 +135,10 @@ export default function Fn() {
                 placeholder='请选择'
                 options={[
                   { value: 'all', label: '全部' },
-                  { value: '1', label: '图片' },
+                  { value: '1', label: '文本' },
+                  { value: '2', label: '单卡片' },
+                  { value: '3', label: '多卡片' },
+                  { value: '4', label: '文件' },
                 ]}
               />
             </Form.Item>
@@ -156,23 +160,23 @@ export default function Fn() {
       <Flex align='center' justify='space-between'>
         <Space wrap>
           <div
-            className={`status-item ${status == 0 ? 'active' : ''}`}
-            onClick={() => setStatus(0)}>
+            className={`status-item ${status == 'all' ? 'active' : ''}`}
+            onClick={() => setStatus('all')}>
             全部模版
           </div>
           <div
-            className={`status-item ${status == 1 ? 'active' : ''}`}
-            onClick={() => setStatus(1)}>
+            className={`status-item ${status == '1' ? 'active' : ''}`}
+            onClick={() => setStatus('1')}>
             审核通过
           </div>
           <div
-            className={`status-item ${status == 2 ? 'active' : ''}`}
-            onClick={() => setStatus(2)}>
+            className={`status-item ${status == '2' ? 'active' : ''}`}
+            onClick={() => setStatus('2')}>
             审核驳回
           </div>
           <div
-            className={`status-item ${status == 3 ? 'active' : ''}`}
-            onClick={() => setStatus(3)}>
+            className={`status-item ${status == '0' ? 'active' : ''}`}
+            onClick={() => setStatus('0')}>
             审核中
           </div>
         </Space>
@@ -194,6 +198,7 @@ export default function Fn() {
               <div className='create-card'>
                 <PlusOutlined
                   style={{ fontSize: '40px', marginBottom: '24px' }}
+                  rev={undefined}
                 />
                 <div>创建模版</div>
               </div>
@@ -213,19 +218,19 @@ export default function Fn() {
             <div className='temp-item'>
               <Tooltip title={'审核备注'} placement='bottom'>
                 <div className='temp-item-content'>
-                  <div className='name g-ellipsis'>{item.name}</div>
-                  <div className='time'>创建时间：2021-12-21</div>
+                  <div className='name g-ellipsis'>{item.title}</div>
+                  <div className='time'>创建时间：{item.createAt}</div>
                   <div
                     className={`status ${
-                      item.status == '0'
+                      item.checked == '0'
                         ? 'fail'
-                        : item.status == '1'
+                        : item.checked == '1'
                         ? 'success'
                         : 'waiting'
                     }`}>
-                    {item.status == '0' && '未通过'}
-                    {item.status == '1' && '通过'}
-                    {(item.status == '8' || item.status == '9') && '审核中'}
+                    {item.checked == '0' && '未通过'}
+                    {item.checked == '1' && '通过'}
+                    {(item.checked == '8' || item.checked == '9') && '审核中'}
                   </div>
                   <div className='preview-model'>
                     <div className='preview-content'>
@@ -251,41 +256,6 @@ export default function Fn() {
                       {item.sign}
                     </Button>
                   </Flex>
-                  <div className='handle-model'>
-                    {item.status == '1' && (
-                      <div className='handle-button' onClick={() => {}}>
-                        短链生成
-                      </div>
-                    )}
-                    <div className='handle-button' onClick={() => {}}>
-                      预览模版
-                    </div>
-                    <div className='handle-button' onClick={() => {}}>
-                      复制模板
-                    </div>
-                    <div className='handle-button'>
-                      复制模板ID
-                      <ACopy text={item.sign} />
-                    </div>
-
-                    {item.status == '0' && (
-                      <Popconfirm
-                        title='删除模版'
-                        description='确定删除该模版吗？'
-                        onConfirm={() => {}}
-                        okText='确定'
-                        getPopupContainer={(triggerNode: HTMLElement) =>
-                          triggerNode.parentNode as HTMLElement
-                        }
-                        placement='bottom'
-                        destroyTooltipOnHide
-                        cancelText='取消'>
-                        <div className='handle-button delete-button'>
-                          删除模版
-                        </div>
-                      </Popconfirm>
-                    )}
-                  </div>
                 </div>
               </Tooltip>
             </div>

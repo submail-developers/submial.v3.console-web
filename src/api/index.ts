@@ -48,6 +48,9 @@ export const login = () => {
       password: 'yanzhi2010',
       // account: '18616200024@163.com',
       // password: 'sumeng',
+      // account: '514030829@qq.com',
+      // password: 'yanzhi2010',
+      //
     },
   )
 }
@@ -143,6 +146,16 @@ export const getRcsMeteialList = (data: API.GetRcsMeteialListParams) => {
     API.GetRcsMeteialListParams
   >('/console/api/rcs/get_libs', data)
 }
+// 获取创建模版时使用的素材列表
+export const getRcsOnlineMeteialList = (
+  data: API.GetRcsOnlineMeteialListParams,
+) => {
+  return request.post<
+    any,
+    API.GetRcsOnlineMeteialListRes,
+    API.GetRcsOnlineMeteialListParams
+  >('/console/api/rcs/get_online_libs', data)
+}
 
 // 删除素材列表
 export const delRcsMeteial = (data: { id: string }) => {
@@ -156,6 +169,33 @@ export const delRcsMeteial = (data: { id: string }) => {
 export const getChatbot = (data: API.GetChatbotParams) => {
   return request.post<any, API.GetChatbotRes, API.GetChatbotParams>(
     '/console/api/rcs/get_chatbot',
+    {
+      ...data,
+    },
+  )
+}
+// 创建/修改RCS模版
+export const createRcsTemp = (data: API.CreateRcsTempParams) => {
+  return request.post<any, any, API.CreateRcsTempParams>(
+    '/console/api/rcs/save_template',
+    {
+      ...data,
+    },
+  )
+}
+// 获取RCS模版列表
+export const getRcsTempList = (data: API.GetRcsTempListParams) => {
+  return request.post<any, API.GetRcsTempListRes, API.GetRcsTempListParams>(
+    '/console/api/rcs/get_templates',
+    {
+      ...data,
+    },
+  )
+}
+// 获取已上报成功的彩信模板
+export const getMmsList = (data: API.GetMmsListParams) => {
+  return request.post<any, API.GetMmsListRes, API.GetMmsListParams>(
+    '/console/api/rcs/get_mms_libs',
     {
       ...data,
     },

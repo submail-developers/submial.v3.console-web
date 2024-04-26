@@ -3,10 +3,12 @@
  * https://ant.design/docs/react/customize-theme-cn#seedtoken
  * */
 export default {
-  colorPrimary: '#007DFF',
+  // colorPrimary: 'var(--primary-color)',
+  colorPrimary: '#1764ff',
   // colorPrimaryBg: '#ebf2fe',
   colorText: '#282b31',
-  colorLink: '#007dff', // 控制超链接的颜色。
+  // colorLink: 'var(--primary-color)', // 控制超链接的颜色。
+  colorLink: '#1764ff', // 控制超链接的颜色。
   colorError: '#D53A3D',
   // colorLinkActive: '#006db6', // 控制超链接被点击时的颜色。
   // colorLinkHover: '#006db6', // 控制超链接悬浮时的颜色。

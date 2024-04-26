@@ -179,6 +179,7 @@ declare module 'apis' {
       limit: number
       keyword?: stirng
       type: '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | 'all'
+      status: '0' | '1' | '9' | 'all' // 审核状态 0通过 1驳回 9审核中
     }
     interface GetRcsMeteialListRes {
       status: string
@@ -195,10 +196,114 @@ declare module 'apis' {
       storeAt: string
       filePath: string
       fileSize: string
+      file_type: string
       expireAt: string
       status: string
       datetime: string
       name: string
+    }
+
+    // 获取创建模版时使用的素材
+    interface GetRcsOnlineMeteialListParams {
+      id?: stirng
+      page: number
+      limit: number
+      keyword?: stirng
+      type: '1' | '2' | '3' | 'all' //   1 图片,2 音频,3 视频
+      status: '0' | '1' | '9' | 'all' // 审核状态 0通过 1驳回 9审核中
+    }
+    interface GetRcsOnlineMeteialListRes {
+      status: string
+      message: string
+      total: number
+      libs: RcsOnlineMeteialItem[]
+    }
+    interface RcsOnlineMeteialItem extends RcsMeteialItem {
+      type: '1' | '2' | '3' //   1 图片,2 音频,3 视频
+    }
+
+    interface CreateRcsTempParams {
+      id?: string
+      type: '1' | '2' | '3' | '4' // 1纯文本  2单卡片  3多卡片  4文件
+      title: string
+      appid: string
+      sms: string // 是否支持短信回落， true：转短信，false：不转短信
+      smsContent: string
+      mms: string // 是否支持彩信回落，true：转彩信，false：不转彩信
+      mmsSubject: string // 彩信标题，最长60个字节
+      // 彩信模板素材ID  （六位短ID，对应素材数据列表的sign字段）。
+      // 彩信模板需要客服报备后才能使用，作为素材回落，彩信正文内容不支持变量。
+      mmsTemplate: string
+      mmsFilePath?: string
+      mmsFileSize?: string
+      mmsFileExpired?: string
+      suggestions: string // 悬浮菜单
+      message: string
+    }
+
+    interface GetRcsTempListParams {
+      id?: string
+      page: number
+      limit: number
+      keyword?: string
+      type?: 'all' | '1' | '2' | '3' | '4' // 默认all  1 文本,2 单卡片,3 多卡片,4 文件
+      status?: 'all' | '0' | '1' | '2' // 默认all    0等待审核，1通过，2驳回
+    }
+    interface GetRcsTempListRes {
+      status: string
+      message: string
+      total: 1
+      list: RcsTempListItem[]
+    }
+    interface RcsTempListItem {
+      id: string
+      account: string
+      sign: string
+      title: string
+      type: string
+      contentType: string
+      message: any
+      suggestions: any
+      sms: string
+      smsContent: string
+      mms: string
+      mmsSubject: string
+      mmsFilePath: string
+      mmsFileSize: string
+      mmsFileExpired: string
+      createAt: string
+      updateAt: string
+      del: string
+      checked: string
+      api: string
+      ipAddress: string
+      rejectReason: string
+      folder: string
+      bcTemplate: null
+    }
+
+    interface GetMmsListParams {
+      id?: string
+      page: number
+      limit: number
+    }
+    interface GetMmsListRes {
+      status: string
+      message: string
+      data: MmsListItem[]
+    }
+    interface MmsListItem {
+      id: string
+      sign: string
+      account: string
+      type: string
+      file_type: string
+      storeAt: string
+      filePath: string
+      fileSize: string
+      expireAt: string
+      status: string
+      datetime: string
     }
   }
 }

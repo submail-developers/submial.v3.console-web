@@ -153,11 +153,15 @@ const MaterialItem = (props: MaterialItemProps) => {
           </Space>
           <div className='preview-btn' onClick={previewEvent}>
             {props.item.type == '1' && (
-              <EyeOutlined className='fn24' title='预览' />
+              <EyeOutlined className='fn24' title='预览' rev={undefined} />
             )}
 
             {props.item.type == '3' && (
-              <PlayCircleOutlined className='fn24' title='播放' />
+              <PlayCircleOutlined
+                className='fn24'
+                title='播放'
+                rev={undefined}
+              />
             )}
           </div>
         </div>
@@ -179,7 +183,7 @@ export default function Fn() {
   const [loading, setLoading] = useState(false)
 
   // 审核状态
-  const [status, setStatus] = useState(0)
+  const [status, setStatus] = useState('all')
   // 上传文件弹框
   const [showUpload, setShowUpload] = useState(false)
 
@@ -190,6 +194,7 @@ export default function Fn() {
         ...formValues,
         page: currentPage,
         limit: pageSize,
+        status,
       })
       setList(res.libs)
       setTotal(res.total)
@@ -219,7 +224,7 @@ export default function Fn() {
 
   useEffect(() => {
     getList()
-  }, [currentPage, pageSize])
+  }, [currentPage, pageSize, status])
 
   return (
     <PageContent extClass='material-list'>
@@ -235,7 +240,7 @@ export default function Fn() {
           type='primary'
           size={point ? 'large' : 'middle'}
           onClick={() => setShowUpload(true)}
-          icon={<UploadOutlined className='fn18' />}>
+          icon={<UploadOutlined className='fn18' rev={undefined} />}>
           上传素材
         </Button>
       </Flex>
@@ -290,27 +295,27 @@ export default function Fn() {
       <Flex align='center' justify='space-between'>
         <Space wrap>
           <div
-            className={`status-item ${status == 0 ? 'active' : ''}`}
-            onClick={() => setStatus(0)}>
+            className={`status-item ${status == 'all' ? 'active' : ''}`}
+            onClick={() => setStatus('all')}>
             全部模版
           </div>
           <div
-            className={`status-item ${status == 1 ? 'active' : ''}`}
-            onClick={() => setStatus(1)}>
+            className={`status-item ${status == '0' ? 'active' : ''}`}
+            onClick={() => setStatus('0')}>
             审核通过
           </div>
           <div
-            className={`status-item ${status == 2 ? 'active' : ''}`}
-            onClick={() => setStatus(2)}>
+            className={`status-item ${status == '1' ? 'active' : ''}`}
+            onClick={() => setStatus('1')}>
             审核驳回
           </div>
           <div
-            className={`status-item ${status == 3 ? 'active' : ''}`}
-            onClick={() => setStatus(3)}>
+            className={`status-item ${status == '9' ? 'active' : ''}`}
+            onClick={() => setStatus('9')}>
             审核中
           </div>
         </Space>
-        {status == 2 && list.length > 0 && (
+        {status == '1' && list.length > 0 && (
           <Popconfirm
             title='删除素材'
             description='确定删除全部驳回素材？'

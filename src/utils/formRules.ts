@@ -62,7 +62,7 @@ const validateNoChinese = (_, value) => {
 const urlReg = /^(https?:\/\/)?([\w.-]+\.[a-zA-Z]{2,})(\/\S*)?$/
 const validateUrl = (_, value) => {
   if (value && !urlReg.test(value)) {
-    return Promise.reject(new Error('请输入正确的电话'))
+    return Promise.reject(new Error('请输入正确的链接地址'))
   }
   return Promise.resolve()
 }
@@ -75,6 +75,34 @@ const validateNoBrackets = (_, value) => {
   return Promise.resolve()
 }
 
+// 限制字节数
+const validateByteLength = (maxBytes) => (rule, value, callback) => {
+  if (value) {
+    const byteLen = byteLength(value)
+    if (byteLen <= maxBytes) {
+      return Promise.resolve()
+    } else {
+      return Promise.reject(
+        new Error(`最多输入${maxBytes}个字节，一个中文占2个字节！`),
+      )
+    }
+  } else {
+    return Promise.resolve()
+  }
+}
+const byteLength = (str) => {
+  let len = 0
+  for (let i = 0; i < str.length; i++) {
+    const code = str.charCodeAt(i)
+    if (code <= 0xff) {
+      len++
+    } else {
+      len += 2 // 中文字符占两个字节
+    }
+  }
+  return len
+}
+
 export default {
   validateEmoji,
   validateDoubleQuotation,
@@ -83,4 +111,6 @@ export default {
   validateNoChinese,
   validateUrl,
   validateNoBrackets,
+  validateByteLength,
+  byteLength,
 }
