@@ -1,0 +1,60 @@
+// 一键生成对应magin-padding的className
+@mixin create-margin-padding($number) {
+  $value: $number + px;
+  .m-#{$number} {
+    margin: $value;
+  }
+  .m-t-#{$number} {
+    margin-top: $value;
+  }
+  .m-r-#{$number} {
+    margin-right: $value;
+  }
+  .m-b-#{$number} {
+    margin-bottom: $value;
+  }
+  .m-l-#{$number} {
+    margin-left: $value;
+  }
+  .p-#{$number} {
+    padding: $value;
+  }
+  .p-t-#{$number} {
+    padding-top: $value;
+  }
+  .p-r-#{$number} {
+    padding-right: $value;
+  }
+  .p-b-#{$number} {
+    padding-bottom: $value;
+  }
+  .p-l-#{$number} {
+    padding-left: $value;
+  }
+}
+@include create-margin-padding(0);
+@include create-margin-padding(2);
+@include create-margin-padding(4);
+@include create-margin-padding(6);
+@include create-margin-padding(8);
+@include create-margin-padding(10);
+@include create-margin-padding(12);
+@include create-margin-padding(14);
+@include create-margin-padding(16);
+@include create-margin-padding(18);
+@include create-margin-padding(20);
+@include create-margin-padding(22);
+@include create-margin-padding(24);
+@include create-margin-padding(26);
+@include create-margin-padding(28);
+@include create-margin-padding(30);
+@include create-margin-padding(32);
+@include create-margin-padding(34);
+@include create-margin-padding(36);
+@include create-margin-padding(38);
+@include create-margin-padding(50);
+@include create-margin-padding(60);
+@include create-margin-padding(70);
+@include create-margin-padding(80);
+@include create-margin-padding(90);
+@include create-margin-padding(100);
