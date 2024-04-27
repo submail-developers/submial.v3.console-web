@@ -11,12 +11,21 @@
   --white-color: #fff; // 白色
 
   // 背景色
-  --btn-bg: #f0f2f5; // 自定义按钮背景色
-  --select-bg: #eceff2; // 自定义下拉框背景色
+  --btn-bg: #f1f2f4; // 自定义按钮背景色
+  --btn-bg-active: #1764ff; // 自定义按钮背景色-active
+  --btn-color: #282b31; // 自定义按钮字体颜色
+  --btn-color-active: #fff; // 自定义按钮字体颜色-active
+  --select-bg: #f1f2f4; // 自定义下拉框背景色
+  --table-bg: #f6f7f9;
+  --table-bg-active: #e7ebf1;
+  --table-color: #282b31;
+  --table-color-active: #282b31;
 }
 
-// 其他颜色
-
+/**
+* 自定义颜色相关的className
+* xxx-color表示字体颜色， color-xxx表示某个功能的样式，如color-btn表示自定义按钮的相关样式
+*/
 // 主题色
 .color,
 .primary-color {
@@ -56,20 +65,25 @@
 }
 
 /**
-* 背景样式
+* 功能样式/背景样式
 */
-
-/**
-* 功能样式
-*/
-
 // 按钮
 .color-btn {
-  color: var(--text-color);
+  color: var(--btn-color);
   background-color: var(--btn-bg);
 }
 // 按钮active
 .color-btn-active {
-  color: var(--white-color);
-  background-color: var(--primary-color);
+  color: var(--btn-color-active);
+  background-color: var(--btn-bg-active);
+}
+// 表格
+.color-tab {
+  color: var(--table-color);
+  background-color: var(--table-bg);
+}
+// 表格-active/hover
+.color-tab-active {
+  color: var(--table-color-active);
+  background-color: var(--table-bg-active);
 }
