@@ -13,100 +13,69 @@
 /**
 * fn(10,30) 字号(10-30)
 */
-@mixin create-fn($number) {
-  $value: $number + px;
-  .fn#{$number} {
-    font-size: $value;
+@mixin create-fn() {
+  @for $i from 10 through 30 {
+    $value: $i + px;
+    .fn#{$i} {
+      font-size: $value;
+    }
   }
 }
-@include create-fn(10);
-@include create-fn(11);
-@include create-fn(12);
-@include create-fn(13);
-@include create-fn(14);
-@include create-fn(15);
-@include create-fn(16);
-@include create-fn(17);
-@include create-fn(18);
-@include create-fn(19);
-@include create-fn(20);
-@include create-fn(21);
-@include create-fn(22);
-@include create-fn(23);
-@include create-fn(24);
-@include create-fn(25);
-@include create-fn(26);
-@include create-fn(27);
-@include create-fn(28);
-@include create-fn(29);
-@include create-fn(30);
+@include create-fn();
 
 /**
 * g-ellipsis-(1,5) 超出几行显示...
+* g-ellipsis == g-ellipsis-1
 */
-@mixin create-ellipsis($number) {
-  @if $number == 1 {
-    .g-ellipsis,
-    .g-ellipsis-1 {
+@mixin create-ellipsis() {
+  @for $i from 1 through 5 {
+    .g-ellipsis {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-  } @else {
-    .g-ellipsis-#{$number} {
+    .g-ellipsis-#{$i} {
       overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
-      -webkit-line-clamp: $number;
-      line-clamp: $number;
+      -webkit-line-clamp: $i;
+      line-clamp: $i;
       -webkit-box-orient: vertical;
       word-break: break-all;
     }
   }
 }
-@include create-ellipsis(1);
-@include create-ellipsis(2);
-@include create-ellipsis(3);
-@include create-ellipsis(4);
-@include create-ellipsis(5);
+@include create-ellipsis();
 
 /**
 * g-radius-(0,20/50) 生成圆角
 */
-@mixin create-radius($number) {
-  @if $number == 50 {
-    .g-radius-#{$number} {
-      border-radius: 50%;
-    }
-  } @else {
-    $value: $number + px;
-    .g-radius-#{$number} {
+@mixin create-radius() {
+  @for $i from 0 through 20 {
+    $value: $i + px;
+    .g-radius-#{$i} {
       border-radius: $value;
     }
   }
+  .g-radius-50 {
+    border-radius: 50%;
+  }
 }
-@include create-radius(0);
-@include create-radius(1);
-@include create-radius(2);
-@include create-radius(3);
-@include create-radius(4);
-@include create-radius(5);
-@include create-radius(6);
-@include create-radius(7);
-@include create-radius(8);
-@include create-radius(9);
-@include create-radius(10);
-@include create-radius(11);
-@include create-radius(12);
-@include create-radius(13);
-@include create-radius(14);
-@include create-radius(15);
-@include create-radius(16);
-@include create-radius(17);
-@include create-radius(18);
-@include create-radius(19);
-@include create-radius(20);
-@include create-radius(50);
+@include create-radius();
+
+/**
+* 旋转 0-360 每个增加15deg
+*/
+@mixin create-rotate() {
+  @for $i from 0 through 24 {
+    $number: $i * 15;
+    $value: $number + deg;
+    .g-rotate-#{$number} {
+      transform: rotate($value);
+    }
+  }
+}
+@include create-rotate();
 
 .fw-500 {
   font-weight: 500;
