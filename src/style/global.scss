@@ -1,124 +1,124 @@
-.fn10 {
-  font-size: 10px;
-}
+/**
+* fn(10,30) 字号
+* g-ellipsis-(1,5) 超出几行显示...
+* g-radius-(0,20/50) 生成圆角
+* fw-500
+* w-100
+* h-100
+* hide-scrollbar 隐藏滚动条
+* 
+* 
+*/
 
-.fn11 {
-  font-size: 11px;
+/**
+* fn(10,30) 字号(10-30)
+*/
+@mixin create-fn($number) {
+  $value: $number + px;
+  .fn#{$number} {
+    font-size: $value;
+  }
 }
+@include create-fn(10);
+@include create-fn(11);
+@include create-fn(12);
+@include create-fn(13);
+@include create-fn(14);
+@include create-fn(15);
+@include create-fn(16);
+@include create-fn(17);
+@include create-fn(18);
+@include create-fn(19);
+@include create-fn(20);
+@include create-fn(21);
+@include create-fn(22);
+@include create-fn(23);
+@include create-fn(24);
+@include create-fn(25);
+@include create-fn(26);
+@include create-fn(27);
+@include create-fn(28);
+@include create-fn(29);
+@include create-fn(30);
 
-.fn12 {
-  font-size: 12px;
+/**
+* g-ellipsis-(1,5) 超出几行显示...
+*/
+@mixin create-ellipsis($number) {
+  @if $number == 1 {
+    .g-ellipsis,
+    .g-ellipsis-1 {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  } @else {
+    .g-ellipsis-#{$number} {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: $number;
+      line-clamp: $number;
+      -webkit-box-orient: vertical;
+      word-break: break-all;
+    }
+  }
 }
+@include create-ellipsis(1);
+@include create-ellipsis(2);
+@include create-ellipsis(3);
+@include create-ellipsis(4);
+@include create-ellipsis(5);
 
-.fn13 {
-  font-size: 13px;
+/**
+* g-radius-(0,20/50) 生成圆角
+*/
+@mixin create-radius($number) {
+  @if $number == 50 {
+    .g-radius-#{$number} {
+      border-radius: 50%;
+    }
+  } @else {
+    $value: $number + px;
+    .g-radius-#{$number} {
+      border-radius: $value;
+    }
+  }
 }
-
-.fn14 {
-  font-size: 14px;
-}
-
-.fn15 {
-  font-size: 15px;
-}
-
-.fn16 {
-  font-size: 16px;
-}
-
-.fn17 {
-  font-size: 17px;
-}
-
-.fn18 {
-  font-size: 18px;
-}
-
-.fn19 {
-  font-size: 19px;
-}
-
-.fn20 {
-  font-size: 20px;
-}
-
-.fn21 {
-  font-size: 21px;
-}
-
-.fn22 {
-  font-size: 22px;
-}
-
-.fn23 {
-  font-size: 23px;
-}
-
-.fn24 {
-  font-size: 24px;
-}
-
-.fn25 {
-  font-size: 25px;
-}
-
-.fn26 {
-  font-size: 26px;
-}
-
-.fn27 {
-  font-size: 27px;
-}
-
-.fn28 {
-  font-size: 28px;
-}
-
-.fn29 {
-  font-size: 29px;
-}
-
-.fn30 {
-  font-size: 30px;
-}
+@include create-radius(0);
+@include create-radius(1);
+@include create-radius(2);
+@include create-radius(3);
+@include create-radius(4);
+@include create-radius(5);
+@include create-radius(6);
+@include create-radius(7);
+@include create-radius(8);
+@include create-radius(9);
+@include create-radius(10);
+@include create-radius(11);
+@include create-radius(12);
+@include create-radius(13);
+@include create-radius(14);
+@include create-radius(15);
+@include create-radius(16);
+@include create-radius(17);
+@include create-radius(18);
+@include create-radius(19);
+@include create-radius(20);
+@include create-radius(50);
 
 .fw-500 {
   font-weight: 500;
 }
-
-.g-ellipsis,
-.g-ellipsis-1 {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.g-ellipsis-2 {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  word-break: break-all;
-}
-.g-ellipsis-3 {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  -webkit-box-orient: vertical;
-  word-break: break-all;
-}
-
 .w-100 {
   width: 100%;
 }
-
 .h-100 {
   height: 100%;
 }
 
+// 隐藏滚动条
 .hide-scrollbar {
   &::-webkit-scrollbar {
     display: none;

@@ -1,4 +1,9 @@
-// 一键生成对应magin-padding的className
+/**
+* 一键生成对应magin-padding的className
+* m: margin, p: padding
+* t: top, r: right, b: bottom, l: left
+* number(0,40) | 50 | 60 | 70 | 80 | 90 | 100
+*/
 @mixin create-margin-padding($number) {
   $value: $number + px;
   .m-#{$number} {
