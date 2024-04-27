@@ -1,4 +1,5 @@
 /**
+* 未被使用的className会被treeShaking,不会被打包,大胆添加样式
 * fn(10,30) 字号
 * g-ellipsis-(1,5) 超出几行显示...
 * g-radius-(0,20|50) 生成圆角；0-20每增加 1 为一个className;50表示50%
