@@ -1,7 +1,11 @@
 /**
 * fn(10,30) 字号
 * g-ellipsis-(1,5) 超出几行显示...
-* g-radius-(0,20/50) 生成圆角
+* g-radius-(0,20|50) 生成圆角；0-20每增加 1 为一个className;50表示50%
+* g-rotate-(0,360) 旋转，每增加 15 为一个className
+* g-scale-(5,200|200,1000) 小于100缩小，大于100放大;5-200每增加 5 为一个className;300-100每增加 100 为一个className
+* g-transition-(50,3000) 开启动画，单位毫秒；每 50 增加一个className
+* 
 * fw-500
 * w-100
 * h-100
@@ -76,6 +80,43 @@
   }
 }
 @include create-rotate();
+
+/**
+* 放大/缩小 g-scale-(0,200|200,1000) 小于100为缩小，大于100为放大
+*/
+@mixin create-scale() {
+  // 倍数(0.05,0.1,...2)
+  @for $i from 1 through 40 {
+    $number: $i * 5;
+    $value: $number * 0.01;
+    .g-scale-#{$number} {
+      transform: scale($value);
+    }
+  }
+  // 倍数(3,4,...10)
+  @for $i from 3 through 10 {
+    $number: $i * 100;
+    .g-scale-#{$number} {
+      transform: scale($i);
+    }
+  }
+}
+@include create-scale();
+
+/**
+* 开启动画 50-3000ms 每个增加50ms
+* g-transition-300
+*/
+@mixin create-transition() {
+  @for $i from 1 through 60 {
+    $number: $i * 50;
+    $value: $number + ms;
+    .g-transition-#{$number} {
+      transition: all $value cubic-bezier(0.645, 0.045, 0.355, 1);
+    }
+  }
+}
+@include create-transition();
 
 .fw-500 {
   font-weight: 500;
