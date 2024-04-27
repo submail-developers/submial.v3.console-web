@@ -1,5 +1,10 @@
-// 字体颜色
+/**
+* 颜色相关定义与样式
+*/
 :root {
+  /**
+  * 字体颜色/主题色
+  */
   --primary-color: #1764ff; // 主题色
   --text-color: #282b31; // 默认字体颜色
   --gray-color: #41464f; // 灰色
@@ -10,23 +15,35 @@
   --black-color: #1a1c1f; // 黑色
   --white-color: #fff; // 白色
 
-  // 背景色
-  --btn-bg: #f1f2f4; // 自定义按钮背景色
-  --btn-bg-active: #1764ff; // 自定义按钮背景色-active
-  --btn-color: #282b31; // 自定义按钮字体颜色
-  --btn-color-active: #fff; // 自定义按钮字体颜色-active
-  --select-bg: #f1f2f4; // 自定义下拉框背景色
+  /**
+  * 功能色
+  */
+  // 自定义下拉框
+  --select-bg: #f1f2f4;
+  // 自定义按钮
+  --btn-color: var(--text-color);
+  --btn-color-active: #fff;
+  --btn-color-hover: #fff;
+  --btn-bg: #f1f2f4;
+  --btn-bg-active: var(--primary-color);
+  --btn-bg-hover: var(--primary-color);
+  // 自定义表格
+  --table-color: var(--text-color);
+  --table-color-active: var(--text-color);
+  --table-color-hover: var(--text-color);
   --table-bg: #f6f7f9;
   --table-bg-active: #e7ebf1;
-  --table-color: #282b31;
-  --table-color-active: #282b31;
+  --table-bg-hover: #e7ebf1;
 }
 
 /**
 * 自定义颜色相关的className
 * xxx-color表示字体颜色， color-xxx表示某个功能的样式，如color-btn表示自定义按钮的相关样式
 */
-// 主题色
+
+/**
+* 字体颜色
+*/
 .color,
 .primary-color {
   color: var(--primary-color);
@@ -65,7 +82,7 @@
 }
 
 /**
-* 功能样式/背景样式
+* 功能样式
 */
 // 按钮
 .color-btn {
@@ -77,10 +94,20 @@
   color: var(--btn-color-active);
   background-color: var(--btn-bg-active);
 }
+// 按钮hover
+.color-btn-hover {
+  color: var(--btn-color-hover);
+  background-color: var(--btn-bg-hover);
+}
 // 表格
 .color-tab {
   color: var(--table-color);
   background-color: var(--table-bg);
+}
+// 表格-hover
+.color-tab-hover {
+  color: var(--table-color-hover);
+  background-color: var(--table-bg-hover);
 }
 // 表格-active/hover
 .color-tab-active {
