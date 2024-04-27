@@ -6,9 +6,16 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "40136359",
+      "name": "灯泡",
+      "font_class": "dengpao",
+      "unicode": "e636",
+      "unicode_decimal": 58934
+    },
+    {
       "icon_id": "40078809",
-      "name": "二级菜单 (2)",
-      "font_class": "a-erjicaidan2",
+      "name": "chatbot二级菜单",
+      "font_class": "dot",
       "unicode": "e633",
       "unicode_decimal": 58931
     },

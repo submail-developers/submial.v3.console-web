@@ -34,6 +34,15 @@
   --table-bg: #f6f7f9;
   --table-bg-active: #e7ebf1;
   --table-bg-hover: #e7ebf1;
+  // 自定义警告-黄色
+  --warning-yellow-color: #856100;
+  --warning-yellow-border: #ffecb8;
+  --warning-yellow-bg: #fff1cc linear-gradient(180deg, #fff3d4, #fff1cc)
+    repeat-x;
+  // 自定义警告-红色
+  --warning-red-color: #852324;
+  --warning-red-border: #ffcbcb;
+  --warning-red-bg: #ffdada linear-gradient(180deg, #ffe0e0, #ffdada) repeat-x;
 }
 
 /**
@@ -89,12 +98,10 @@
   color: var(--btn-color);
   background-color: var(--btn-bg);
 }
-// 按钮active
 .color-btn-active {
   color: var(--btn-color-active);
   background-color: var(--btn-bg-active);
 }
-// 按钮hover
 .color-btn-hover {
   color: var(--btn-color-hover);
   background-color: var(--btn-bg-hover);
@@ -104,13 +111,23 @@
   color: var(--table-color);
   background-color: var(--table-bg);
 }
-// 表格-hover
 .color-tab-hover {
   color: var(--table-color-hover);
   background-color: var(--table-bg-hover);
 }
-// 表格-active/hover
 .color-tab-active {
   color: var(--table-color-active);
   background-color: var(--table-bg-active);
+}
+// 警告-黄色
+.color-warning-yellow {
+  color: var(--warning-yellow-color);
+  border: 1px solid var(--warning-yellow-border);
+  background: var(--warning-yellow-bg);
+}
+// 警告-红色
+.color-warning-red {
+  color: var(--warning-red-color);
+  border: 1px solid var(--warning-red-border);
+  background: var(--warning-red-bg);
 }
