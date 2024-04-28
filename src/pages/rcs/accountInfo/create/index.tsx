@@ -13,6 +13,7 @@ import {
   Radio,
   Divider,
   InputNumber,
+  ConfigProvider,
 } from 'antd'
 import type { GetProp, UploadFile, UploadProps } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
@@ -278,22 +279,40 @@ export default function Fn() {
         </div>
 
         <div className='form-group' style={{ paddingBottom: 120 }}>
-          <Flex justify='flex-left'>
-            <Button
-              className='cancle'
-              type='primary'
-              size='large'
-              style={{ width: 120, marginRight: '12px' }}
-              onClick={submit}>
-              取消
-            </Button>
-            <Button
-              type='primary'
-              size='large'
-              style={{ width: 120 }}
-              onClick={submit}>
-              提交审核
-            </Button>
+          <Flex justify='flex-left' style={{ justifyContent: 'space-between' }}>
+            <ConfigProvider
+              theme={{
+                token: {
+                  colorPrimary: '#f19d25',
+                  colorPrimaryHover: '#e9ae5e',
+                },
+              }}>
+              <Button
+                className='color-status-waiting'
+                type='primary'
+                size='large'
+                style={{ width: 120 }}
+                onClick={submit}>
+                保存
+              </Button>
+            </ConfigProvider>
+            <Space>
+              <Button
+                className='cancle'
+                type='primary'
+                size='large'
+                style={{ width: 120, marginRight: '12px' }}
+                onClick={submit}>
+                取消
+              </Button>
+              <Button
+                type='primary'
+                size='large'
+                style={{ width: 120 }}
+                onClick={submit}>
+                提交审核
+              </Button>
+            </Space>
           </Flex>
         </div>
       </Form>

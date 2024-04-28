@@ -305,6 +305,48 @@ declare module 'apis' {
       status: string
       datetime: string
     }
+    // 获取彩信素材模板参数
+    interface GetMmsMaterialListParams {
+      page: number
+      tag: string
+      status: string
+      order_by: string
+      search_type: string
+      keywords: string
+    }
+
+    // 获取彩信素材模板返回值
+    interface getMmsMaterialItem {
+      category: string
+      checked: string
+      cm_status: string
+      create_at: string
+      ct_status: string
+      cu_status: string
+      edit_at: string
+      fct: string
+      folder: string
+      id: string
+      message: any
+      mms_type: string
+      partofsubject: string
+      reject_reson: string
+      sign: string
+      signature: string
+      status: string
+      subject: string
+      tag: string
+      title: string
+    }
+    interface GetMmsMaterialListRes {
+      rows: number
+      templates: getMmsMaterialItem[]
+    }
+    // 将彩信模板上报至运营商
+    interface UploadMmsLibsParams {
+      mms_template_id: string
+    }
+
     // 获取非直签客户信息参数
     interface GetDicConfigParams {}
     // 非直签客户信息返回值

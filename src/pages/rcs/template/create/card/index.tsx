@@ -697,7 +697,11 @@ export default function Fn() {
               )}
               {media && media.mediaType == '1' && (
                 <Image
-                  style={{ width: '100%', objectFit: 'contain' }}
+                  style={{
+                    width: '120px',
+                    height: '40px',
+                    objectFit: 'contain',
+                  }}
                   src={media.mediaUrl}
                   preview={false}
                   fallback={errorImg}
