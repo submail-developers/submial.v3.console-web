@@ -12,6 +12,7 @@
   --success-color: #00a97b; // 成功色
   --error-color: #f00011; // 错误色
   --warning-color: #ff4d4f; // 警告色
+  --waiting-color: #e09d42; // 审核中
   --black-color: #1a1c1f; // 黑色
   --white-color: #fff; // 白色
 
@@ -85,6 +86,26 @@
   color: var(--warning-red-color);
   border: 1px solid var(--warning-red-border);
   background: var(--warning-red-bg);
+}
+// 状态-成功
+.color-status-success {
+  background-color: var(--success-color);
+  color: #fff;
+}
+// 状态-失败
+.color-status-error {
+  background-color: var(--error-color);
+  color: #fff;
+}
+// 状态-警告
+.color-status-warning {
+  background-color: var(--warning-color);
+  color: #fff;
+}
+// 状态-等待/审核中
+.color-status-waiting {
+  background-color: var(--waiting-color);
+  color: #fff;
 }
 
 /**

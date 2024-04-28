@@ -113,7 +113,7 @@
     $number: $i * 50;
     $value: $number + ms;
     .g-transition-#{$number} {
-      transition: all $value cubic-bezier(0.645, 0.045, 0.355, 1);
+      transition: all $value ease;
     }
   }
 }
@@ -137,6 +137,19 @@
   scrollbar-width: none;
   overflow: -moz-scrollbars-none;
   scrollbar-color: transparent transparent;
+}
+
+//
+.hover-link {
+  .icon {
+    transform: scale(1) rotate(270deg) translateY(0);
+    transition: all 0.3s ease;
+  }
+  &:hover {
+    .icon {
+      transform: scale(1.1) rotate(270deg) translateY(1px);
+    }
+  }
 }
 
 div {
