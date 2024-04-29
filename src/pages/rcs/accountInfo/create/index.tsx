@@ -21,8 +21,9 @@ import { useState, useRef, useEffect } from 'react'
 import { useParams, NavLink } from 'react-router-dom'
 import { changeBreadcrumbItem } from '@/store/reducers/breadcrumb'
 import { useAppDispatch } from '@/store/hook'
-import { getRegionRes } from '@/api'
+import { getRegionRes, getDicConfig, signupForCspAccount } from '@/api'
 import utils from '@/utils/formRules'
+import { API } from 'apis'
 
 import PageContent from '@/components/pageContent'
 
@@ -84,12 +85,44 @@ export default function Fn() {
   const [form] = Form.useForm()
   const [fileList, setFileList] = useState<UploadFile[]>([])
   const { id } = useParams()
+  const [loading, setloading] = useState(false)
 
   console.log(id)
 
   const submit = async () => {
     const values = await form.getFieldsValue()
     console.log(values)
+
+    try {
+      const formvalues = await form.getFieldsValue()
+      let params = {
+        ...formvalues,
+        customerContactName: '朱天文',
+        businessType: 'A',
+        industryTypeCode: '02',
+        contractNo: '1111111',
+        contractName: '合同名称',
+        contractEffectiveDate: '2024-10-10 12:30:00',
+        contractExpiryDate: '2024-12-10 12:30:00',
+        contractRenewDate: '2024-12-10 12:30:00',
+        companyLogo:
+          'rcs/39cdee6050bd28ae89dacd2afd3b3f8f/user/2a2a2228bc3e75c37837b985a0f09a5f.png',
+        contractAccessory:
+          'rcs/39cdee6050bd28ae89dacd2afd3b3f8f/user/2a2a2228bc3e75c37837b985a0f09a5f.pdf',
+        unifySocialCreditCodes: '123123asda23ds',
+        enterpriseOwnerName: '张凯旋',
+        certificateType: '01',
+        certificateCode: '12313123123123121',
+        regionCode: '01',
+        provinceCode: '100',
+        cityCode: '1000',
+      }
+      const res = await signupForCspAccount(params)
+      // setCustomerData(res.data)
+      setloading(false)
+    } catch (error) {
+      setloading(false)
+    }
   }
 
   const handleUpload = () => {}
@@ -117,10 +150,27 @@ export default function Fn() {
   const getProvincesCities = async () => {
     try {
       const res = await getRegionRes()
-      console.log(res)
+      // console.log(res)
     } catch (error) {}
   }
+  // 获取客户资料
+  const search = async (ifshowLoading = false) => {
+    try {
+      ifshowLoading && setloading(true)
+      const params = ''
+      const res = await getDicConfig(params)
+      // setCustomerData(res.data)
+      console.log(res.data)
+      form.resetFields()
+      form.setFieldsValue(res.data)
+      setloading(false)
+    } catch (error) {
+      setloading(false)
+    }
+  }
+
   useEffect(() => {
+    search(true)
     getProvincesCities()
   }, [])
 
@@ -191,7 +241,7 @@ export default function Fn() {
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
-              <Form.Item label='客户邮箱' required name='mail'>
+              <Form.Item label='客户邮箱' required name='customerContactEmail'>
                 <Input placeholder='客户邮箱' />
               </Form.Item>
             </Col>
@@ -205,17 +255,23 @@ export default function Fn() {
               <Form.Item
                 label='企业统一社会信用代码'
                 required
-                name='serviceCode'>
+                name='unifySocialCreditCodes'>
                 <Input placeholder='' />
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
-              <Form.Item label='企业责任人姓名' required name='serviceCode'>
+              <Form.Item
+                label='企业责任人姓名'
+                required
+                name='enterpriseOwnerName'>
                 <Input placeholder='不超过20个字符' />
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
-              <Form.Item label='企业责任人证件类型' name='serviceCode' required>
+              <Form.Item
+                label='企业责任人证件类型'
+                name='certificateType'
+                required>
                 <Select
                   options={[
                     {
@@ -234,7 +290,10 @@ export default function Fn() {
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
-              <Form.Item label='企业责任人证件号码' required name='serviceCode'>
+              <Form.Item
+                label='企业责任人证件号码'
+                required
+                name='certificateCode'>
                 <Input placeholder='' />
               </Form.Item>
             </Col>
@@ -303,7 +362,8 @@ export default function Fn() {
                 type='primary'
                 size='large'
                 style={{ width: 120 }}
-                onClick={submit}>
+                // onClick={submit}
+              >
                 保存
               </Button>
             </ConfigProvider>
@@ -312,8 +372,7 @@ export default function Fn() {
                 className='cancle'
                 type='primary'
                 size='large'
-                style={{ width: 120, marginRight: '12px' }}
-                onClick={submit}>
+                style={{ width: 120, marginRight: '12px' }}>
                 取消
               </Button>
               <Button

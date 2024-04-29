@@ -228,3 +228,12 @@ export const getDicConfig = (data: API.GetDicConfigParams) => {
     API.GetDicConfigParams
   >('console/api/rcs/dic_config', { ...data })
 }
+
+// 注册非直签客户信息
+export const signupForCspAccount = (data: API.signupForCspAccountParams) => {
+  return request.post<
+    any,
+    API.Response<API.signupForCspAccountItems>,
+    API.signupForCspAccountParams
+  >('console/api/rcs/signup_for_csp_account', { ...data })
+}
