@@ -175,13 +175,13 @@ export default function Fn() {
               <Form.Item
                 label='客户名称'
                 required
-                name='name'
+                name='customerName'
                 rules={[{ required: true }, { max: 20 }]}>
                 <Input placeholder='不超过 20 个字符' max={20} />
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
-              <Form.Item label='客户电话' required name='serviceCode'>
+              <Form.Item label='客户电话' required name='customerContactMob'>
                 <Input placeholder='客户电话信息' />
               </Form.Item>
             </Col>
@@ -215,11 +215,22 @@ export default function Fn() {
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
-              {/* <Form.Item label='企业责任人证件类型' required name='serviceCode'>
-                <Input placeholder='' />
-              </Form.Item> */}
               <Form.Item label='企业责任人证件类型' name='serviceCode' required>
-                <Cascader options={IdOptions} placeholder='请选择' />
+                <Select
+                  options={[
+                    {
+                      label: '居民身份证',
+                      value: '01',
+                    },
+                    {
+                      label: '中国人民解放军军人身份证件',
+                      value: '02',
+                    },
+                    {
+                      label: '中国人民武装警察身份证件',
+                      value: '03',
+                    },
+                  ]}></Select>
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>

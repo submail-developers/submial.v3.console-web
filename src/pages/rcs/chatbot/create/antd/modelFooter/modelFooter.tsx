@@ -2,9 +2,9 @@ import './modelFooter.scss'
 import React, { useState } from 'react'
 import { Button, InputNumber, Image } from 'antd'
 interface Props {
+  imgSrc?: string
   onOk: () => void
   onCancel: () => void
-  imgSrc: string
 }
 //
 // 自定义弹框地步按钮
@@ -23,7 +23,7 @@ export default (props: Props) => {
         style={{ display: 'none' }}
         preview={{
           visible,
-          src: props.imgSrc,
+          src: props.imgSrc || '',
           onVisibleChange: (value) => {
             setVisible(value)
           },

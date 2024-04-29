@@ -24,6 +24,16 @@ import './index.scss'
 
 interface DataType extends API.ChatbotItem {}
 
+enum EnmuMenuStatusText {
+  '通过' = '1',
+  '不通过' = '2',
+  '审核中' = '3',
+}
+enum EnmuMenuStatusColor {
+  'success-color' = '1',
+  'error-color' = '2',
+  'waiting-color' = '3',
+}
 export enum ChatbotStatus {
   '未提交',
   '我方通过',
@@ -70,8 +80,11 @@ export default function Fn() {
     {
       title: '固定菜单审核状态',
       width: 140,
-      dataIndex: 'status',
-      render: (_, record) => <span className='error-color'>审核驳回</span>,
+      render: (_, record) => (
+        <span className={EnmuMenuStatusColor[record.menu_status]}>
+          {EnmuMenuStatusText[record.menu_status] || '-'}
+        </span>
+      ),
     },
     {
       title: '上架状态',

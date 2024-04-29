@@ -16,6 +16,7 @@ import {
   Input,
   Form,
   Select,
+  App,
 } from 'antd'
 import type { TabsProps, SelectProps } from 'antd'
 import { useParams, useLocation, useSearchParams } from 'react-router-dom'
@@ -105,6 +106,7 @@ const SearchInput = (props) => {
 }
 
 export default function Fn() {
+  const { message: messageApi } = App.useApp()
   const [searchParams] = useSearchParams()
   const name = decodeURIComponent(searchParams.get('name'))
 
@@ -411,15 +413,17 @@ export default function Fn() {
     }
 
     console.log(titleFontStyle, descriptionFontStyle, message)
-
+    // if (!mmsInfo) {
+    //   messageApi.warning('请选择彩信回落')
+    // }
     let params: API.CreateRcsTempParams = {
       type: '2',
       title: name,
-      appid: '1024251',
-      sms: 'true',
+      appid: '1024252',
+      sms: Boolean(richMsg) ? 'true' : 'false',
       smsContent: richMsg,
-      mms: 'true',
-      mmsTemplate: mmsInfo.sign,
+      mms: Boolean(mmsInfo) ? 'true' : 'false',
+      mmsTemplate: '',
       mmsSubject: '这里是彩信标题',
       suggestions: JSON.stringify(_suggestions),
       message: JSON.stringify({ message }),
@@ -609,15 +613,14 @@ export default function Fn() {
         <div className='message-config hide-scrollbar'>
           <div className='fn16 fw-500'>回落配置</div>
           <Form.Item
-            label='短信回落信息'
-            required
+            label='短信回落信息（选填）'
             colon={false}
             style={{ margin: '4px 0 0' }}></Form.Item>
           <RcsInput
             text={richMsg}
             onChange={(val) => setRichMsg(val)}
             onBlur={() => setactionsIndex(-1)}
-            min={1}
+            min={0}
             chineseLen={2}
             label={'短信消息回落'}
             showInsertParams
@@ -646,8 +649,7 @@ export default function Fn() {
             多媒体彩信消息回落
           </div> */}
           <Form.Item
-            label='多媒体彩信回落'
-            required
+            label='多媒体彩信回落（选填）'
             colon={false}
             style={{ margin: '4px 0 0' }}></Form.Item>
 
