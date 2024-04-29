@@ -201,6 +201,24 @@ export const getMmsList = (data: API.GetMmsListParams) => {
     },
   )
 }
+// 获取彩信素材模板
+export const getMmsMaterialList = (data: API.GetMmsMaterialListParams) => {
+  return request.post<
+    any,
+    API.GetMmsMaterialListRes,
+    API.GetMmsMaterialListParams
+  >('/console/api/mms/get_templates', {
+    ...data,
+  })
+}
+
+// 将彩信模板上报至运营商
+export const uploadMmsLibs = (data: API.UploadMmsLibsParams) => {
+  return request.post<any, API.Response<any>, API.UploadMmsLibsParams>(
+    'console/api/rcs/upload_mms_libs',
+    { ...data },
+  )
+}
 
 // 获取非直签客户信息
 export const getDicConfig = (data: API.GetDicConfigParams) => {

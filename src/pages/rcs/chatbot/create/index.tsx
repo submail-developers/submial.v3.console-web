@@ -14,6 +14,7 @@ import {
   Divider,
   InputNumber,
   App,
+  ConfigProvider,
 } from 'antd'
 import type { GetProp, UploadFile, UploadProps } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
@@ -400,18 +401,24 @@ export default function Fn() {
         </div>
 
         <div className='form-group' style={{ paddingBottom: '24px' }}>
-          <Flex className='fx-x-between'>
-            {/* <div>
+          <Flex justify='flex-left' style={{ justifyContent: 'space-between' }}>
+            <ConfigProvider
+              theme={{
+                token: {
+                  colorPrimary: '#f19d25',
+                  colorPrimaryHover: '#e9ae5e',
+                },
+              }}>
               <Button
+                className='color-status-waiting'
                 type='primary'
                 size='large'
                 style={{ width: 120 }}
-                onClick={submit}
-                className='save'>
+                onClick={submit}>
                 保存
               </Button>
-            </div> */}
-            <div style={{ marginBottom: 120 }}>
+            </ConfigProvider>
+            <Space>
               <Button
                 className='cancle'
                 type='primary'
@@ -427,7 +434,7 @@ export default function Fn() {
                 onClick={submit}>
                 提交审核
               </Button>
-            </div>
+            </Space>
           </Flex>
         </div>
       </Form>

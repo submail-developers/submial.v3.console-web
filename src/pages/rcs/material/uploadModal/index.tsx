@@ -298,11 +298,13 @@ export default function UploadModal(props: Props) {
             })}
           </div>
           <Flex justify='space-between' style={{ marginTop: '0' }}>
-            <Button style={{ width: '140px' }} onClick={props.onCancel}>
+            <Button
+              style={{ width: '140px', height: 38 }}
+              onClick={props.onCancel}>
               取消
             </Button>
             <Button
-              style={{ width: '140px' }}
+              style={{ width: '140px', height: 38 }}
               type='primary'
               onClick={onOk}
               loading={status == 1}>

@@ -14,11 +14,13 @@ import {
   Pagination,
   Popconfirm,
   App,
+  ConfigProvider,
 } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { NavLink, useNavigate } from 'react-router-dom'
 import PageContent from '@/components/pageContent'
 import UploadModal from './uploadModal'
+import UploadMmsModal from './uploadMmsModal'
 import {
   UploadOutlined,
   RedoOutlined,
@@ -26,7 +28,6 @@ import {
   PlayCircleOutlined,
   EyeOutlined,
 } from '@ant-design/icons'
-import codeImg from '@/assets/rcs/code.png'
 import { usePoint } from '@/hooks'
 import { getRcsMeteialList, delRcsMeteial } from '@/api'
 
@@ -37,6 +38,8 @@ import unknowTypeImg from '@/assets/rcs/fileType/unknow.png'
 import wordTypeImg from '@/assets/rcs/fileType/word.png'
 import xlsTypeImg from '@/assets/rcs/fileType/xls.png'
 import zipTypeImg from '@/assets/rcs/fileType/zip.png'
+import mmsTypeImg from '@/assets/rcs/fileType/mms.png'
+import codeImg from '@/assets/rcs/5g1.png'
 
 import { API } from 'apis'
 import './index.scss'
@@ -50,6 +53,7 @@ const MaterialItem = (props: MaterialItemProps) => {
   const [visible, setVisible] = useState(false)
   const [videoRender, setvideoRender] = useState<React.ReactNode>()
   const point = usePoint('lg')
+  const [hover, setHover] = useState(false)
 
   const previewEvent = () => {
     setVisible(true)
@@ -66,6 +70,14 @@ const MaterialItem = (props: MaterialItemProps) => {
         />,
       )
     }
+  }
+  // 鼠标移入移出事件
+  const handleMouseEnter = () => {
+    setHover(true)
+  }
+
+  const handleMouseLeave = () => {
+    setHover(false)
   }
 
   return (
@@ -126,18 +138,49 @@ const MaterialItem = (props: MaterialItemProps) => {
             <Image className='source-img' src={zipTypeImg} preview={false} />
           )}
           {props.item.type == '8' && (
-            <Image className='source-img' src={unknowTypeImg} preview={false} />
+            <Image className='source-img' src={mmsTypeImg} preview={false} />
           )}
+          {/* {props.item.type == '9' && (
+            <Image className='source-img' src={unknowTypeImg} preview={false} />
+          )} */}
         </div>
-        <div className='modal'>
-          <Space className='status fx-y-center' size={4}>
-            <span className='icon iconfont icon-shezhi fn12'></span>
-            <span className='fn12'>通过</span>
-          </Space>
-          <div className='time fx-center-center fn13'>期限：7天</div>
+        <div
+          className='modal'
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}>
+          {/* <span className='fn12'>通过</span> */}
+          {props.item.status == '0' ? (
+            <Space className='status fx-y-center' size={4}>
+              <span className='atud-status fn12'>
+                <span className='icon iconfont icon-shezhi fn16'></span>未提交
+              </span>
+            </Space>
+          ) : props.item.status == '1' ? (
+            <Space className='status color-status-success fx-y-center' size={4}>
+              <span className='atud-status fn12'>
+                <span className='icon iconfont icon-yes fn16'></span>通过
+              </span>
+            </Space>
+          ) : props.item.status == '2' ? (
+            <Space className='status color-status-error fx-y-center' size={4}>
+              <span className='atud-status fn12'>
+                <span className='icon iconfont icon-no fn16'></span>未通过
+              </span>
+            </Space>
+          ) : (
+            <Space className='status color-status-waiting fx-y-center' size={4}>
+              <span className='atud-status fn12'>
+                <span className='icon iconfont icon-time fn16'></span> 待审核
+              </span>
+            </Space>
+          )}
+
+          <div className='time fx-center-center fn13'>期限:7天</div>
+
+          {/* {hover && ( */}
           <Space className='handle'>
             <div className='handle-item'>
-              <span className='icon iconfont icon-shuaxin fn16'></span>
+              <span className='icon iconfont icon-shuaxin fn18'></span>
             </div>
             <Popconfirm
               title='删除素材'
@@ -147,10 +190,11 @@ const MaterialItem = (props: MaterialItemProps) => {
               okText='确定'
               cancelText='取消'>
               <div className='handle-item'>
-                <span className='icon iconfont icon-shanchu fn16'></span>
+                <span className='icon iconfont icon-shanchu fn18'></span>
               </div>
             </Popconfirm>
           </Space>
+          {/* )} */}
           <div className='preview-btn' onClick={previewEvent}>
             {props.item.type == '1' && (
               <EyeOutlined className='fn24' title='预览' rev={undefined} />
@@ -166,7 +210,7 @@ const MaterialItem = (props: MaterialItemProps) => {
           </div>
         </div>
       </div>
-      <div className='source-name fn16'>{props.item.name}</div>
+      <div className='source-name fn14'>{props.item.name}</div>
     </div>
   )
 }
@@ -186,6 +230,7 @@ export default function Fn() {
   const [status, setStatus] = useState('all')
   // 上传文件弹框
   const [showUpload, setShowUpload] = useState(false)
+  const [showMmsUpload, setShowMmsUpload] = useState(false)
 
   const getList = async () => {
     try {
@@ -228,21 +273,37 @@ export default function Fn() {
 
   return (
     <PageContent extClass='material-list'>
-      <Image src={codeImg} preview={false} width={60}></Image>
+      <Image src={codeImg} preview={false} width={72}></Image>
       <Flex justify='space-between' wrap='wrap' gap={12}>
         <Space align='baseline'>
-          <div className='fn24'>5G 消息资源库</div>
-          <div className='fn14'>
-            <div>素材通过后单次有效期7天。</div>
-          </div>
+          <div className='fn22 fw-500'>5G 消息资源库</div>
         </Space>
-        <Button
-          type='primary'
-          size={point ? 'large' : 'middle'}
-          onClick={() => setShowUpload(true)}
-          icon={<UploadOutlined className='fn18' rev={undefined} />}>
-          上传素材
-        </Button>
+
+        <Space>
+          <ConfigProvider
+            theme={{
+              token: {
+                colorPrimary: '#ECEFF2',
+                colorPrimaryHover: '#fafafa',
+              },
+            }}>
+            <Button
+              style={{ color: '#282b31' }}
+              type='primary'
+              size={point ? 'large' : 'middle'}
+              onClick={() => setShowMmsUpload(true)}
+              icon={<UploadOutlined className='fn18' rev={undefined} />}>
+              上传彩信回落素材
+            </Button>
+          </ConfigProvider>
+          <Button
+            type='primary'
+            size={point ? 'large' : 'middle'}
+            onClick={() => setShowUpload(true)}
+            icon={<UploadOutlined className='fn18' rev={undefined} />}>
+            上传素材
+          </Button>
+        </Space>
       </Flex>
       <Divider className='line'></Divider>
 
@@ -323,10 +384,32 @@ export default function Fn() {
             placement='bottom'
             okText='确定'
             cancelText='取消'>
-            <Button type='primary' danger>
+            <Button type='primary' danger style={{ height: 40 }}>
               删除全部驳回素材
             </Button>
           </Popconfirm>
+        )}
+        {status == 'all' && list.length > 0 && (
+          <Space>
+            <div className='error-color'>
+              87 个素材即将到期，请及时刷新新素材剩余期限。
+            </div>
+            <ConfigProvider
+              theme={{
+                token: {
+                  colorPrimary: '#eceff2',
+                  colorPrimaryHover: '#fafafa',
+                },
+              }}>
+              <Button
+                className='status-item fn14'
+                style={{ color: '#282b31' }}
+                type='primary'
+                size={point ? 'large' : 'middle'}>
+                刷新临期素材
+              </Button>
+            </ConfigProvider>
+          </Space>
         )}
       </Flex>
       <Row gutter={[16, 16]} wrap style={{ marginTop: '24px' }}>
@@ -352,6 +435,10 @@ export default function Fn() {
         show={showUpload}
         onOk={() => getList()}
         onCancel={() => setShowUpload(false)}
+      />
+      <UploadMmsModal
+        show={showMmsUpload}
+        onCancel={() => setShowMmsUpload(false)}
       />
     </PageContent>
   )
