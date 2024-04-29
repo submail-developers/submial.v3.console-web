@@ -280,7 +280,7 @@ export default function CreateSend() {
                         initialValue={true}>
                         <Switch size='small' />
                       </Form.Item>
-                      <span>短息回落</span>
+                      <span>短信回落</span>
                     </Space>
                   </Col>
                   <Col span={24}>

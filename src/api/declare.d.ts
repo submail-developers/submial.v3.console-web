@@ -144,18 +144,9 @@ declare module 'apis' {
       data: RegionItem[]
     }
     interface RegionItem {
-      regionCode: string
-      region: string
-      province: ProvinceItem[]
-    }
-    interface ProvinceItem {
-      provinceCode: string
-      province: string
-      city: CityItem[]
-    }
-    interface CityItem {
-      cityCode: string
-      city: string
+      label: string
+      value: string
+      children: RegionItem[]
     }
     // 上传文件  合同、logo等  单个文件上传
     interface UploadCustomerFileParams {
@@ -199,7 +190,8 @@ declare module 'apis' {
       fileSize: string
       file_type: string
       expireAt: string
-      status: string
+      // 素材审核状态  9=我方审核，0=通过，1=驳回，8=我方通过
+      status: '0' | '1' | '8' | '9'
       datetime: string
       name: string
     }

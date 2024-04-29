@@ -31,6 +31,13 @@ import {
 import { usePoint } from '@/hooks'
 import { getRcsMeteialList, delRcsMeteial } from '@/api'
 
+import {
+  EnumMediaStatusText,
+  EnumMediaStatusColor,
+  EnumMediaStatusBadge,
+  EnumMediaStatusIcon,
+} from '@/pages/rcs/material/type'
+
 import audioTypeImg from '@/assets/rcs/fileType/audio.png'
 import imgTypeImg from '@/assets/rcs/fileType/img.png'
 import pptTypeImg from '@/assets/rcs/fileType/ppt.png'
@@ -88,7 +95,7 @@ const MaterialItem = (props: MaterialItemProps) => {
             <Image
               className='source-img'
               // src={codeImg}
-              src={props.item.filePath}
+              src={props.item.storeAt}
               fallback={imgTypeImg}
               preview={{
                 visible: visible,
@@ -149,6 +156,19 @@ const MaterialItem = (props: MaterialItemProps) => {
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}>
           {/* <span className='fn12'>通过</span> */}
+          <Space
+            className={`status fx-y-center ${
+              EnumMediaStatusColor[props.item.status]
+            }`}
+            size={4}>
+            <span className='atud-status fn12'>
+              <span
+                className={`icon iconfont fn16 ${
+                  EnumMediaStatusIcon[props.item.status]
+                }`}></span>
+              {EnumMediaStatusText[props.item.status]}
+            </span>
+          </Space>
           {props.item.status == '0' ? (
             <Space className='status fx-y-center' size={4}>
               <span className='atud-status fn12'>
@@ -161,7 +181,7 @@ const MaterialItem = (props: MaterialItemProps) => {
                 <span className='icon iconfont icon-yes fn16'></span>通过
               </span>
             </Space>
-          ) : props.item.status == '2' ? (
+          ) : props.item.status == '8' ? (
             <Space className='status color-status-error fx-y-center' size={4}>
               <span className='atud-status fn12'>
                 <span className='icon iconfont icon-no fn16'></span>未通过
@@ -179,6 +199,20 @@ const MaterialItem = (props: MaterialItemProps) => {
 
           {/* {hover && ( */}
           <Space className='handle'>
+            {props.item.type == '1' && (
+              <div className='handle-item' onClick={previewEvent}>
+                <EyeOutlined className='fn18' title='预览' rev={undefined} />
+              </div>
+            )}
+            {props.item.type == '3' && (
+              <div className='handle-item' onClick={previewEvent}>
+                <PlayCircleOutlined
+                  className='fn24'
+                  title='播放'
+                  rev={undefined}
+                />
+              </div>
+            )}
             <div className='handle-item'>
               <span className='icon iconfont icon-shuaxin fn18'></span>
             </div>
@@ -195,22 +229,10 @@ const MaterialItem = (props: MaterialItemProps) => {
             </Popconfirm>
           </Space>
           {/* )} */}
-          <div className='preview-btn' onClick={previewEvent}>
-            {props.item.type == '1' && (
-              <EyeOutlined className='fn24' title='预览' rev={undefined} />
-            )}
-
-            {props.item.type == '3' && (
-              <PlayCircleOutlined
-                className='fn24'
-                title='播放'
-                rev={undefined}
-              />
-            )}
-          </div>
+          {/* <div className='preview-btn' onClick={previewEvent}></div> */}
         </div>
       </div>
-      <div className='source-name fn14'>{props.item.name}</div>
+      <div className='source-name fn14 g-ellipsis'>{props.item.name}</div>
     </div>
   )
 }

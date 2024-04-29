@@ -20,30 +20,36 @@
 */
 
 /* .fx === .fx-x-start === .fx-y-start */
-.fx, .fx-x-start, .fx-y-start {
+.fx,
+.fx-x-start,
+.fx-y-start {
   display: flex;
 }
 
 /* 垂直显示 */
-.fx-col, .fx-col-start-start {
+.fx-col,
+.fx-col-start-start {
   display: flex;
   flex-direction: column;
 }
 
 /* 主轴对齐方式1 横向居中 */
-.fx-x-center, .fx-center-start {
+.fx-x-center,
+.fx-center-start {
   display: flex;
   justify-content: center;
 }
 
 /* 主轴对齐方式2 两端对齐 */
-.fx-x-between, .fx-between-start {
+.fx-x-between,
+.fx-between-start {
   display: flex;
   justify-content: space-between;
 }
 
 /* 主轴对齐方式3 间隔对齐 每个项目两侧的间隔相等 */
-.fx-x-around, .fx-around-start {
+.fx-x-around,
+.fx-around-start {
   display: flex;
   justify-content: space-around;
 }
@@ -52,13 +58,15 @@
 /* .fx === .fx-x-start === .fx-y-start */
 
 /* 主轴对齐方式4 右对齐 */
-.fx-x-end, .fx-end-start {
+.fx-x-end,
+.fx-end-start {
   display: flex;
   justify-content: flex-end;
 }
 
 /* 交叉轴对齐方式1 居中 */
-.fx-y-center, .fx-start-center {
+.fx-y-center,
+.fx-start-center {
   display: flex;
   align-items: center;
 }
@@ -67,7 +75,8 @@
 /* .fx === .fx-x-start === .fx-y-start */
 
 /* 交叉轴对齐方式3 下对齐 */
-.fx-y-end, .fx-start-end {
+.fx-y-end,
+.fx-start-end {
   display: flex;
   align-items: flex-end;
 }
@@ -212,6 +221,13 @@
 }
 
 /* 其他-剩余空间不足不缩小 */
-.fx-shrink{
+.fx-shrink {
   flex-shrink: 0;
+}
+
+.fx-after {
+  &::after {
+    content: '';
+    flex: auto;
+  }
 }

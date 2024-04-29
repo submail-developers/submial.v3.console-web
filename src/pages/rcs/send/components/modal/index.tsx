@@ -122,7 +122,6 @@ export default function Fn(props: Props) {
       destroyOnClose>
       <Flex
         justify={list.length < 2 ? 'flex-start' : 'space-around'}
-        align='center'
         gap={24}
         wrap='wrap'>
         {list.map((item, index) => (
