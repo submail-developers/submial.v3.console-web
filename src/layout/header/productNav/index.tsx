@@ -36,7 +36,7 @@ type ProdListItem = {
 const prodList: ProdListItem[] = [
   {
     text: '短信',
-    link: '/console/',
+    link: '/console/sms',
     extClass: 'sms-icon',
     icon: <MsgIcon />,
   },
@@ -142,14 +142,14 @@ export default function ProductNav(props: Props) {
         {prodList.map((item, index) => (
           <Col sm={6} xs={8} key={index}>
             {item.link ? (
-              <Link
-                to={item.link}
+              <a
+                href={item.link}
                 className={`prod-item fx-col-center-center ${
                   item.link ? '' : 'disabled'
                 }`}>
                 <ProdIcon extClass={item.extClass}>{item.icon}</ProdIcon>
                 <div className='prod-name'>{item.text}</div>
-              </Link>
+              </a>
             ) : (
               <div className={`prod-item fx-col-center-center disabled`}>
                 <ProdIcon extClass={item.extClass}>{item.icon}</ProdIcon>

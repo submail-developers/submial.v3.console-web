@@ -447,7 +447,7 @@ export const baseRouter: RouteObject[] = [
   {
     path: '/',
     loader: () => {
-      throw redirect('/console/rcs')
+      throw redirect('/console/rcs/welcome')
     },
   },
   {
@@ -483,7 +483,7 @@ export const baseRouter: RouteObject[] = [
   {
     path: '*',
     loader: () => {
-      throw redirect('/console/rcs')
+      throw redirect('/console/rcs/welcome')
     },
   },
 ]

@@ -105,6 +105,7 @@ declare module 'apis' {
       providerSwitchCode: '1' | '0'
       description: string
       menu: any
+      menu_status: '1' | '2' | '3' // 固定菜单审核状态 1通过  2不通过  3审核中
       genericCssTemplate: string
       autograph: string
       attachment: string
@@ -349,6 +350,7 @@ declare module 'apis' {
 
     // 获取非直签客户信息参数
     interface GetDicConfigParams {}
+
     // 非直签客户信息返回值
     interface GetDicConfigItems {
       id: string
@@ -373,7 +375,7 @@ declare module 'apis' {
       subhook_url: string
       unifySocialCreditCodes: string
       enterpriseOwnerName: string
-      certificateType: string
+      certificateType: '1' | '2' // 1居民身份证,2人名
       certificateCode: string
     }
   }

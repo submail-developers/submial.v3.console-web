@@ -15,7 +15,11 @@ const sideStyle: React.CSSProperties = {
 }
 
 export default function Fn() {
-  const [collapsed, setcollapsed] = useLocalStorage('siderClosed', true) // 是否收起侧边栏
+  const [isRouterHideMenu, setisRouterHideMenu] = useLocalStorage(
+    'isRouterHideMenu',
+    true,
+  ) // 是否收起侧边栏
+  const [isSmPoint, setIsSmPoint] = useLocalStorage('isSmPoint', true) // 是否收起侧边栏
   // 顶部导航的高度
   const [headerH, setHeaderH] = useState(65)
   const [hideRight, setHideRight] = useState(false)
@@ -23,10 +27,7 @@ export default function Fn() {
   const hideRef = useRef(false)
   const match = useMatches()
   const onBreakpoint = (broken) => {
-    // console.log(broken, !hideRef.current, 'b')
-    if (!hideRef.current) {
-      setcollapsed(broken)
-    }
+    setIsSmPoint(broken)
     setHeaderH(broken ? 104 : 65)
   }
 
@@ -50,24 +51,23 @@ export default function Fn() {
         )
       }
     })
-
-    hideMenu && setcollapsed(hideMenu)
+    setisRouterHideMenu(hideMenu)
     hideRef.current = hideMenu
     setHideRight(hideHeaderRight)
   }, [match])
   return (
     <Layout className='layout-container'>
       <Header className='layout-header' style={{ height: headerH }}>
-        <MyHeader broken={collapsed} hideRight={hideRight} />
+        <MyHeader broken={isSmPoint} hideRight={hideRight} />
       </Header>
       <Layout
         className='layout-content'
-        style={{ height: `calc(100% - ${collapsed ? '104px' : '65px'})` }}>
+        style={{ height: `calc(100% - ${isSmPoint ? '104px' : '65px'})` }}>
         <Sider
           className='layout-sider'
           width={280}
           style={sideStyle}
-          collapsed={collapsed}
+          collapsed={isSmPoint || isRouterHideMenu}
           breakpoint='sm'
           collapsedWidth={0}
           trigger={null}

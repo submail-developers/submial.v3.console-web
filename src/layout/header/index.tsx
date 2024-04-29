@@ -103,19 +103,19 @@ export default function MyHeader(props: Props) {
             </div>
             <ProductNav show={showProd} />
           </div>
-          <Link to='/console'>
+          <a href='/console'>
             <Image
               src={logo}
               preview={false}
               className={`header-logo ${props.broken ? 'mob' : ''}`}></Image>
-          </Link>
+          </a>
         </Space>
         <Flex
           justify={points.sm ? 'space-between' : 'flex-end'}
           align='center'
           style={{ flexGrow: '1', padding: '0 16px 0 0', height: '100%' }}>
           {points.sm && <MyBreadcrumb></MyBreadcrumb>}
-          <Button onClick={loginEvent}>登陆</Button>
+          {/* <Button onClick={loginEvent}>登陆</Button> */}
           {!props.hideRight && (
             <Space align='center' size={points.lg ? 16 : 0}>
               <Dropdown

@@ -224,7 +224,7 @@ export const uploadMmsLibs = (data: API.UploadMmsLibsParams) => {
 export const getDicConfig = (data: API.GetDicConfigParams) => {
   return request.post<
     any,
-    API.Response<API.GetDicConfigItems[]>,
+    API.Response<API.GetDicConfigItems>,
     API.GetDicConfigParams
   >('console/api/rcs/dic_config', { ...data })
 }

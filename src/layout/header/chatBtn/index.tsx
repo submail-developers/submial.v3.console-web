@@ -10,12 +10,12 @@ type Rect = {
   height?: number | 'auto'
 }
 
-let isDev = false
+let isDev = true
 
 // 开发环境隐藏iframe
-if (import.meta.env.MODE === 'development') {
-  isDev = true
-}
+// if (import.meta.env.MODE === 'development') {
+//   isDev = true
+// }
 
 const iframeRects = {
   lg: {
