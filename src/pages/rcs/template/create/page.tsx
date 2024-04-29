@@ -6,7 +6,9 @@ import {
   useSearchParams,
   useNavigate,
 } from 'react-router-dom'
+
 import './page.scss'
+import '@/pages/rcs/template/components/mobile.scss'
 
 type Props = {
   left: ReactNode
@@ -40,7 +42,7 @@ export default function Fn(props: Props) {
       </Space>
       <div className='left'>{props.left}</div>
       <div className='center'>
-        <div className='mobile'>
+        <div className='rcs-mobile'>
           <div className='mobile-content'>
             <div className='title fw-500'>{name}</div>
             <div className='temp-content'>{props.content}</div>

@@ -1,0 +1,31 @@
+.select-create-send-temp {
+  .ant-modal-content {
+    padding: 0;
+  }
+  .modal-header {
+    height: 60px;
+    width: 100%;
+    padding: 4px 24px 0;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    .ant-modal-title {
+      width: 100%;
+    }
+  }
+  .modal-body {
+    padding: 16px 24px 24px;
+    max-height: 70vh;
+    min-height: 40vh;
+    overflow-y: scroll;
+    @media screen and (max-width: 767px) {
+      & {
+        padding: 12px;
+      }
+    }
+    .modal-content {
+      // min-width: 650px;
+    }
+  }
+}

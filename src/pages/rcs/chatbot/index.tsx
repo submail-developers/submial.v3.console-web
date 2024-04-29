@@ -140,7 +140,7 @@ export default function Fn() {
   }, [limit, page])
 
   return (
-    <PageContent extClass='chatbot-list'>
+    <PageContent extClass='chatbot-list' lg={'100%'}>
       <Image src={codeImg} preview={false} width={72}></Image>
       <Flex justify='space-between' align='center'>
         <div className='fn22 fw-500'>申请/管理 Chatbot</div>
@@ -193,26 +193,27 @@ export default function Fn() {
           </Col>
         </Row>
       </Form>
-
-      <Table
-        className='theme-cell reset-table'
-        columns={columns}
-        dataSource={tableData}
-        rowKey={'name'}
-        sticky
-        loading={loading}
-        pagination={{
-          position: ['bottomRight'],
-          current: page,
-          pageSize: limit,
-          hideOnSinglePage: true,
-          showQuickJumper: true,
-          pageSizeOptions: [10, 20, 50],
-          total: total,
-          onChange: changePageInfo,
-        }}
-        scroll={{ x: 'max-content' }}
-      />
+      <div style={{ width: '100%', overflowX: 'hidden' }}>
+        <Table
+          className='theme-cell reset-table'
+          columns={columns}
+          dataSource={tableData}
+          rowKey={'name'}
+          sticky
+          loading={loading}
+          pagination={{
+            position: ['bottomRight'],
+            current: page,
+            pageSize: limit,
+            hideOnSinglePage: true,
+            showQuickJumper: true,
+            pageSizeOptions: [10, 20, 50],
+            total: total,
+            onChange: changePageInfo,
+          }}
+          scroll={{ x: 'max-content' }}
+        />
+      </div>
     </PageContent>
   )
 }

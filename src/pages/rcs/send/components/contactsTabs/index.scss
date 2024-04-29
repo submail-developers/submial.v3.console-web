@@ -1,0 +1,35 @@
+.contacts-tabs {
+  .tabs-item {
+    height: 32px;
+    position: relative;
+    cursor: pointer;
+    transition: color 0.3s;
+    &:after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 0;
+      height: 2px;
+      color: inherit;
+      transition: width 0.3s, background-color 0.3s;
+      background-color: transparent;
+      border-radius: 1px;
+    }
+    &:hover {
+      color: var(--black-color);
+      &:after {
+        width: 100%;
+        background-color: var(--gray-color-sub);
+      }
+    }
+    &.active {
+      color: var(--primary-color);
+      &:after {
+        width: 100%;
+        background-color: var(--primary-color);
+      }
+    }
+  }
+}

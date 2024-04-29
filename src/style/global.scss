@@ -128,6 +128,12 @@
 .h-100 {
   height: 100%;
 }
+.w-0 {
+  width: 0;
+}
+.h-0 {
+  height: 0;
+}
 
 // 隐藏滚动条
 .hide-scrollbar {
@@ -144,6 +150,7 @@
   .icon {
     transform: scale(1) rotate(270deg) translateY(0);
     transition: all 0.3s ease;
+    display: inline-block;
   }
   &:hover {
     .icon {

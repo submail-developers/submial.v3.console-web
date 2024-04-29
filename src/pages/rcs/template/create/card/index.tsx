@@ -517,7 +517,7 @@ export default function Fn() {
             </div>
           </Space>
           <div className='fn14 gray-color' style={{ marginTop: '8px' }}>
-            文本文字样式
+            内容文字样式
           </div>
           <Space style={{ margin: '6px 0' }}>
             <div

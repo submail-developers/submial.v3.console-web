@@ -161,8 +161,8 @@ export const menus: RouteObject[] = [
         loader: loaderFn({
           groupName: '5G 消息管理',
           groupIcon: 'icon-xiaoxi',
-          breadName: '创建/管理 5G消息模版',
-          menuName: '创建/管理 5G消息模版',
+          breadName: '创建/管理模版',
+          menuName: '创建/管理模版',
         }),
         errorElement: <Error />,
         children: [
@@ -245,11 +245,18 @@ export const menus: RouteObject[] = [
           menuName: '创建在线发送任务',
         }),
         errorElement: <Error />,
-        element: (
-          <LazyImportComponent
-            lazyChildren={lazy(() => import('@/pages/test-dnd'))}
-          />
-        ),
+        children: [
+          {
+            path: ':id',
+            loader: loaderFn({}),
+            errorElement: <Error />,
+            element: (
+              <LazyImportComponent
+                lazyChildren={lazy(() => import('@/pages/rcs/send'))}
+              />
+            ),
+          },
+        ],
       },
       {
         path: 'batchreport',
@@ -458,6 +465,10 @@ export const baseRouter: RouteObject[] = [
   {
     path: '/console/rcs/template',
     element: <Navigate to={'/console/rcs/template/index'} replace />,
+  },
+  {
+    path: '/console/rcs/send',
+    element: <Navigate to={'/console/rcs/send/0'} replace />,
   },
   {
     path: '/console/aim',

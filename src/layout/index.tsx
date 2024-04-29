@@ -23,6 +23,7 @@ export default function Fn() {
   const hideRef = useRef(false)
   const match = useMatches()
   const onBreakpoint = (broken) => {
+    // console.log(broken, !hideRef.current, 'b')
     if (!hideRef.current) {
       setcollapsed(broken)
     }
@@ -49,7 +50,8 @@ export default function Fn() {
         )
       }
     })
-    setcollapsed(hideMenu)
+
+    hideMenu && setcollapsed(hideMenu)
     hideRef.current = hideMenu
     setHideRight(hideHeaderRight)
   }, [match])

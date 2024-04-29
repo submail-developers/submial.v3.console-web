@@ -33,6 +33,7 @@ import { getRcsMeteialList, delRcsMeteial, getRcsTempList } from '@/api'
 import { IDIcon } from '@/components/aIcons'
 import ACopy from '@/components/aCopy'
 import SelectTypeModal from './selectTypeModal'
+import Item from './item'
 
 import audioTypeImg from '@/assets/rcs/fileType/audio.png'
 import imgTypeImg from '@/assets/rcs/fileType/img.png'
@@ -191,7 +192,7 @@ export default function Fn() {
           xs={24}
           // style={{ minWidth: '302px' }}
         >
-          <div className='temp-item'>
+          <div className='rcs-temp-item'>
             <div
               className='temp-item-content create-btn'
               onClick={() => setopenTypeModal(true)}>
@@ -215,50 +216,7 @@ export default function Fn() {
             xs={24}
             // style={{ minWidth: '302px' }}
             key={item.id}>
-            <div className='temp-item'>
-              <Tooltip title={'审核备注'} placement='bottom'>
-                <div className='temp-item-content'>
-                  <div className='name g-ellipsis'>{item.title}</div>
-                  <div className='time'>创建时间：{item.createAt}</div>
-                  <div
-                    className={`status ${
-                      item.checked == '0'
-                        ? 'fail'
-                        : item.checked == '1'
-                        ? 'success'
-                        : 'waiting'
-                    }`}>
-                    {item.checked == '0' && '未通过'}
-                    {item.checked == '1' && '通过'}
-                    {(item.checked == '8' || item.checked == '9') && '审核中'}
-                  </div>
-                  <div className='preview-model'>
-                    <div className='preview-content'>
-                      {/* <PreviewCard data={item} showName /> */}
-                    </div>
-                  </div>
-                  <Flex
-                    justify='space-between'
-                    align='center'
-                    style={{ paddingTop: '12px' }}>
-                    <Button
-                      className='id-btn'
-                      style={{ padding: '0 4px', color: '#fd29a4' }}
-                      size='small'
-                      icon={
-                        <IDIcon
-                          style={{
-                            color: '#fd29a4',
-                            fontSize: '14px',
-                          }}
-                        />
-                      }>
-                      {item.sign}
-                    </Button>
-                  </Flex>
-                </div>
-              </Tooltip>
-            </div>
+            <Item item={item} />
           </Col>
         ))}
       </Row>

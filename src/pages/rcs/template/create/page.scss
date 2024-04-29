@@ -2,6 +2,7 @@
   width: 100%;
   height: 100%;
   display: flex;
+  overflow: scroll;
   // position: relative;
   .handle-buttons {
     position: absolute;
@@ -11,6 +12,11 @@
     height: 65px;
     // width: fit-content;
     padding: 0 12px;
+  }
+  @media screen and (max-width: 575px) {
+    .handle-buttons {
+      top: -105px;
+    }
   }
   .left {
     flex-shrink: 0;
@@ -22,84 +28,11 @@
   }
   .center {
     flex: 1;
+    min-width: 360px;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    .mobile {
-      width: 360px;
-      height: 735px;
-      background-image: url('@/assets/rcs/mobile.png');
-      background-position: top left;
-      background-repeat: no-repeat;
-      background-size: 100%;
-      position: relative;
-      transform: scale(0.8);
-      margin-bottom: 80px;
-      .mobile-content {
-        width: 326px;
-        // width: 312px;
-        height: 570px;
-        position: relative;
-        left: 50%;
-        top: calc(50%);
-        transform: translate(-50%, -50%);
-        // border: 1px solid #ccc;
-        .title {
-          position: absolute;
-          top: -30px;
-          left: 0;
-          width: 100%;
-          height: 30px;
-          line-height: 30px;
-          text-align: center;
-          border-bottom: 1px solid #e7e7e7;
-        }
-        .temp-content {
-          width: 100%;
-          height: 100%;
-          position: relative;
-          padding: 16px 10px 42px;
-          overflow: hidden;
-          .center-content {
-            position: relative;
-          }
-          .float-content {
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            flex-wrap: nowrap;
-            padding: 0 12px;
-            overflow-x: scroll;
-            .float-item {
-              flex-shrink: 0;
-              height: 32px;
-              line-height: 32px;
-              // border-radius: 16px;
-              // font-size: 14px;
-              // background-color: #fff;
-              // padding: 0 12px;
-              // text-align: center;
-              width: fit-content;
-              min-width: 100px;
-              max-width: 160px;
-            }
-            .float-add-btn {
-              width: 24px;
-              height: 24px;
-              border-radius: 50%;
-              background-color: #1764ff;
-              color: #fff;
-              cursor: pointer;
-            }
-          }
-        }
-      }
-    }
   }
   .right {
     width: 320px;

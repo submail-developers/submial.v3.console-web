@@ -5,8 +5,8 @@
   .top-search {
     height: 64px;
     .type {
-      height: 24px;
-      line-height: 24px;
+      height: 32px;
+      line-height: 32px;
       cursor: pointer;
       &.active {
         color: #111;
@@ -15,7 +15,9 @@
     }
   }
   .meteial-list {
+    width: 100%;
     height: calc(100% - 64px);
+    overflow-x: hidden;
     overflow-y: scroll;
     .item {
       width: 100%;

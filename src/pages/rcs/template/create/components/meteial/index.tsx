@@ -86,6 +86,7 @@ export default function Fn() {
     <div className='rcs-temp-meteial'>
       <div className='top-search'>
         <Input
+          style={{ height: 32 }}
           value={keywords}
           onPressEnter={getList}
           onChange={(e) => setkeywords(e.target.value)}
