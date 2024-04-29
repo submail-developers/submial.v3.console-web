@@ -35,9 +35,10 @@ export default function Fn() {
     { name: '1223' },
     { name: '123' },
   ])
-  const [detail, setDetail] = useState<API.ChatbotItem>()
+  const [detail, setDetail] = useState<any>({})
   const [isVisible, setIsVisible] = useState(false)
   const [isVisible2, setIsVisible2] = useState(true)
+  const [isVisibleAppkey, setIsVisibleAppkey] = useState('********')
 
   const columns: ColumnsType<DataType> = [
     {
@@ -82,6 +83,7 @@ export default function Fn() {
         appid: id,
         status: 'all',
       })
+
       if (res.list.length == 1) {
         setDetail(res.list[0])
       }
@@ -197,21 +199,33 @@ export default function Fn() {
         <tbody>
           <tr>
             <td>Chatbot名称</td>
-            <td>赛邮技术部</td>
+            <td>{detail.name}</td>
             <td>Chatbo头像</td>
-            <td>预览</td>
+            <td>
+              <Image className='info-img' src={detail.logo} />
+            </td>
           </tr>
           <tr>
             <td>应用ID</td>
-            <td>10010</td>
+            <td>{detail.id}</td>
             <td>Appkey</td>
-            <td>*******************</td>
+            <td>
+              <div> {isVisibleAppkey}</div>
+              <div>
+                <span
+                  className='fn12 primary-color'
+                  style={{ marginRight: 10 }}>
+                  显示
+                </span>
+                <span className='fn12 primary-color'>重置</span>
+              </div>
+            </td>
           </tr>
           <tr>
             <td>行业类型</td>
             <td>行业/行业</td>
             <td>消息回落签名</td>
-            <td>【SUBMAIL】</td>
+            <td>【{detail.autograph}】</td>
           </tr>
           <tr>
             <td>服务描述</td>
@@ -221,19 +235,19 @@ export default function Fn() {
             <td>服务方名称</td>
             <td>上海赛邮云计算有限公司</td>
             <td>服务方电话</td>
-            <td>18226187949</td>
+            <td>{detail.callback}</td>
           </tr>
           <tr>
             <td>服务方官网</td>
-            <td>https://www.mysubmail.com/</td>
+            <td>{detail.website}</td>
             <td>服务条款链接</td>
-            <td>https://www.mysubmail.com/documents</td>
+            <td>{detail.tcPage}</td>
           </tr>
           <tr>
             <td>服务方邮箱</td>
-            <td>zkx@submail.com</td>
+            <td>{detail.email}</td>
             <td>服务方地址</td>
-            <td>上海/上海/松江区</td>
+            <td>{detail.address}</td>
           </tr>
           <tr>
             <td>服务方详细地址</td>
@@ -241,19 +255,21 @@ export default function Fn() {
           </tr>
           <tr>
             <td>经度/纬度</td>
-            <td>经度：90 </td>
+            <td>经度：90 &nbsp; 纬度：80 </td>
             <td>主题颜色</td>
             <td>#1764ff</td>
           </tr>
           <tr>
             <td>背景图</td>
-            <td>预览</td>
+            <td>
+              <Image className='info-img' src={detail.backgroundImage} />
+            </td>
             <td>合同信息</td>
             <td>上海璟春科技有限公司-20241011.pdf</td>
           </tr>
           <tr>
             <td>Chatbot调试白名单</td>
-            <td colSpan={3}>-</td>
+            <td colSpan={3}>{detail.debugWhiteAddress}</td>
           </tr>
         </tbody>
       </table>

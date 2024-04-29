@@ -15,7 +15,7 @@ import type { ColumnsType } from 'antd/es/table'
 import { NavLink, useNavigate } from 'react-router-dom'
 import PageContent from '@/components/pageContent'
 import { PlusOutlined } from '@ant-design/icons'
-import codeImg from '@/assets/rcs/code.png'
+import codeImg from '@/assets/rcs/chatbot_1.png'
 import { usePoint } from '@/hooks'
 import { getChatbot } from '@/api'
 
@@ -49,36 +49,35 @@ export default function Fn() {
 
   const columns: ColumnsType<DataType> = [
     {
-      title: '序号',
-      className: 'paddingL30',
-      width: 80,
-      dataIndex: 'index',
-    },
-    {
       title: 'Chatbot名称',
       className: 'paddingL30',
-      width: 150,
+      width: 240,
       fixed: true,
       dataIndex: 'name',
     },
+
     {
-      title: 'Chatbot ID',
-      width: 120,
-      dataIndex: 'chatbotID',
-    },
-    {
-      title: '基本信息审核',
-      width: 220,
-      dataIndex: 'provider',
-    },
-    {
-      title: '状态',
-      width: 120,
+      title: '基本信息审核状态',
+      width: 140,
+      dataIndex: 'status',
       render: (_, record) => (
-        <span className={`${ChatbotColor[record.status]}`}>
-          {ChatbotStatus[record.status]}
-        </span>
+        // <span className={`${ChatbotColor[record.status]}`}>
+        //   {ChatbotStatus[record.status]}
+        // </span>
+        <span className='success-color'>审核通过</span>
       ),
+    },
+    {
+      title: '固定菜单审核状态',
+      width: 140,
+      dataIndex: 'status',
+      render: (_, record) => <span className='error-color'>审核驳回</span>,
+    },
+    {
+      title: '上架状态',
+      width: 100,
+      dataIndex: 'status',
+      render: (_, record) => <span className='warning-color'>调试中</span>,
     },
     {
       title: '更新时间',
@@ -165,22 +164,52 @@ export default function Fn() {
         <Row gutter={16}>
           <Col span={10} md={10} lg={8} xl={6}>
             <Form.Item name='keywords' label='关键词搜索'>
-              <Input placeholder='Chatbot名称/ID' />
+              <Input placeholder='Chatbot名称' />
             </Form.Item>
           </Col>
           <Col span={8} md={8} lg={6} xl={4}>
-            <Form.Item name='status' label='状态'>
+            <Form.Item name='status' label='基本信息审核状态'>
               <Select
                 placeholder='请选择'
                 options={[
                   { value: 'all', label: '全部' },
-                  { value: '1', label: '我方通过' },
-                  { value: '2', label: '驳回' },
+                  { value: '1', label: '审核通过' },
+                  { value: '2', label: '审核驳回' },
                   { value: '3', label: '审核中' },
                 ]}
               />
             </Form.Item>
           </Col>
+
+          <Col span={8} md={8} lg={6} xl={4}>
+            <Form.Item name='status' label='固定菜单审核状态'>
+              <Select
+                placeholder='请选择'
+                options={[
+                  { value: 'all', label: '全部' },
+                  { value: '1', label: '等待审核' },
+                  { value: '2', label: '审核通过' },
+                  { value: '3', label: '审核驳回' },
+                  { value: '4', label: '未上传' },
+                ]}
+              />
+            </Form.Item>
+          </Col>
+
+          <Col span={8} md={8} lg={6} xl={4}>
+            <Form.Item name='status' label='上架状态'>
+              <Select
+                placeholder='请选择'
+                options={[
+                  { value: 'all', label: '全部' },
+                  { value: '1', label: '上架' },
+                  { value: '3', label: '调试中' },
+                  { value: '3', label: '未上架' },
+                ]}
+              />
+            </Form.Item>
+          </Col>
+
           <Col span={6} md={4} xl={3}>
             <Form.Item label=' '>
               <Button
