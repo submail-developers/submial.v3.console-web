@@ -398,8 +398,8 @@ export const menus: RouteObject[] = [
         loader: loaderFn({
           groupName: '计费',
           groupIcon: 'icon-qianbao',
-          breadName: '地址簿管理',
-          menuName: '地址簿管理',
+          breadName: '5G消息计费日志',
+          menuName: '5G消息计费日志',
         }),
         errorElement: <Error />,
         element: (

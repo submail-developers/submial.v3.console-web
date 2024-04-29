@@ -81,16 +81,16 @@ export default function Fn() {
           <Divider className='line'></Divider>
           <div className='info-title' style={{ marginBottom: '20px' }}>
             客户信息
-            <div className='auditing-status'>
+            <div className='auditing-status fn16'>
               审核状态
               {customerData.status == '0' ? (
-                <span className='atud-nosub'>未提交</span>
+                <span className='gray-color'>未提交</span>
               ) : customerData.status == '1' ? (
-                <span className='atud-success'>审核通过</span>
+                <span className='color-status-success'>审核通过</span>
               ) : customerData.status == '2' ? (
-                <span className='atud-fail'>未通过</span>
+                <span className='color-status-error'>未通过</span>
               ) : (
-                <span className='atud-ing'>待审核</span>
+                <span className='color-status-waiting'>待审核</span>
               )}
             </div>
           </div>
@@ -99,19 +99,17 @@ export default function Fn() {
             <tbody>
               <tr>
                 <td>客户名称</td>
-                <td>{customerData.customerName}</td>
-                <td>客户电话</td>
-                <td>{customerData.customerContactMob}</td>
+                <td colSpan={3}>{customerData.customerName}</td>
               </tr>
               <tr>
                 <td>客户邮箱</td>
                 <td>{customerData.customerContactEmail}</td>
-                <td>归属运营商</td>
-                <td>上海赛邮云计算有限公司</td>
+                <td>客户电话</td>
+                <td>{customerData.customerContactMob}</td>
               </tr>
               <tr>
                 <td>归属区域</td>
-                <td colSpan={3}>华东/上海/上海</td>
+                <td colSpan={3}>{customerData.belongRegionCode}</td>
               </tr>
               <tr>
                 <td>客户详细地址</td>
@@ -121,9 +119,17 @@ export default function Fn() {
               </tr>
               <tr>
                 <td>企业统一社会代码</td>
-                <td>{customerData.unifySocialCreditCodes}</td>
+                <td>
+                  {customerData.unifySocialCreditCodes == null
+                    ? '-'
+                    : customerData.unifySocialCreditCodes}
+                </td>
                 <td>企业责任人姓名</td>
-                <td>{customerData.enterpriseOwnerName}</td>
+                <td>
+                  {customerData.enterpriseOwnerName == null
+                    ? '-'
+                    : customerData.enterpriseOwnerName}
+                </td>
               </tr>
               <tr>
                 <td>企业责任人证件类型</td>
@@ -131,11 +137,17 @@ export default function Fn() {
                   {customerData.certificateType == '1'
                     ? '居民身份证'
                     : customerData.certificateType == '2'
-                    ? '中国人名'
-                    : ''}
+                    ? '中国人民解放军军人身份证'
+                    : customerData.certificateType == '3'
+                    ? '中国人民武装警察身份证件'
+                    : '-'}
                 </td>
                 <td>企业责任人证件号码</td>
-                <td>{customerData.certificateCode}</td>
+                <td>
+                  {customerData.certificateCode == null
+                    ? '-'
+                    : customerData.certificateCode}
+                </td>
               </tr>
               <tr>
                 <td>营业执照</td>

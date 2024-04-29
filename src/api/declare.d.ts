@@ -349,6 +349,7 @@ declare module 'apis' {
       credits: string
       datetime: string
       status: string
+      belongRegionCode: string
       customerName: string
       customerContactName: string
       customerContactMob: string
@@ -370,5 +371,31 @@ declare module 'apis' {
       certificateType: '1' | '2' // 1居民身份证,2人名
       certificateCode: string
     }
+
+    // / 注册非直签客户信息参数
+    interface signupForCspAccountParams {
+      customerName: string
+      customerContactName: string
+      customerContactMob: string
+      customerContactEmail: string
+      businessType: string
+      industryTypeCode: string
+      contractNo: string
+      contractName: string
+      contractEffectiveDate: string
+      contractExpiryDate: string
+      contractRenewStatus: string
+      contractRenewDate: string
+      companyLogo: string
+      contractAccessory: string
+      unifySocialCreditCodes: string
+      enterpriseOwnerName: string
+      certificateType: string
+      certificateCode: string
+      regionCode: string
+      provinceCode: string
+      cityCode: string
+    }
+    interface signupForCspAccountItems {}
   }
 }
