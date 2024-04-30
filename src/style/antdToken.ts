@@ -19,7 +19,7 @@ export default {
   // controlHeight: 40,
   controlHeightLG: 40,
   borderRadius: 4, // 基础组件的圆角大小，例如按钮、输入框、卡片等
-  // fontSizeLG: 14, // 大号字体大小
+  fontSizeLG: 15, // 大号字体大小
   // fontSizeSM: 12, // 大号字体大小
 }
 
