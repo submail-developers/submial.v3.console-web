@@ -27,7 +27,7 @@ import {
   EyeOutlined,
   PlusOutlined,
 } from '@ant-design/icons'
-import codeImg from '@/assets/rcs/code.png'
+import codeImg from '@/assets/rcs/5g2.png'
 import { usePoint } from '@/hooks'
 import { getRcsMeteialList, delRcsMeteial, getRcsTempList } from '@/api'
 import { IDIcon } from '@/components/aIcons'
@@ -108,10 +108,14 @@ export default function Fn() {
 
   return (
     <PageContent extClass='template-list' xxl={1400} xl={980}>
-      <Image src={codeImg} preview={false} width={60}></Image>
-      <Flex justify='space-between' wrap='wrap' gap={12}>
+      <Image src={codeImg} preview={false} width={72}></Image>
+      <Flex
+        justify='space-between'
+        wrap='wrap'
+        gap={12}
+        style={{ marginTop: '4px' }}>
         <Space align='baseline'>
-          <div className='fn24'>5G 消息模版</div>
+          <div className='fn22 fw-500'>5G 消息模版</div>
         </Space>
       </Flex>
       <Divider className='line'></Divider>
