@@ -24,15 +24,18 @@ import { useParams, NavLink, useNavigate } from 'react-router-dom'
 import { changeBreadcrumbItem } from '@/store/reducers/breadcrumb'
 import { useAppDispatch } from '@/store/hook'
 import utils from '@/utils/formRules'
-
+import { getChatbot, updateChatbot } from '@/api'
+import { API } from 'apis'
 import PageContent from '@/components/pageContent'
 import UploadLogo from './logo'
 import UploadBg from './bg'
 import UploadAttachment from './attachment'
+import { useSearchParams } from 'react-router-dom'
 
 import jiqiren from '@/assets/rcs/aco1.png'
 
 import './index.scss'
+interface DataType extends API.GetChatbotListItem {}
 
 const { TextArea } = Input
 
@@ -55,11 +58,52 @@ export default function Fn() {
   const [bgSrc, setBgSrc] = useState<string>('')
   const [attachmentFile, setAttachmentFile] = useState<UploadFile>(null)
   const [attachmentSrc, setAttachmentSrc] = useState<string>('')
+  const [params] = useSearchParams()
+  const id = params.get('id')
+  const [loading, setloading] = useState(false)
+
+  const getDetail = async () => {
+    try {
+      const res = await getChatbot({
+        page: 1,
+        limit: 20,
+        appid: id,
+        status: 'all',
+      })
+
+      if (res.list.length == 1) {
+        // setDetail(res.list[0])
+        form.resetFields()
+        form.setFieldsValue(res.list[0])
+      }
+    } catch (error) {}
+  }
+  useEffect(() => {
+    if (id) {
+      getDetail()
+    }
+  }, [id])
 
   const submit = async () => {
-    const values = await form.getFieldsValue()
-    message.success('创建成功', 4)
-    nav('/console/rcs/chatbot/index', { replace: true })
+    // const values = await form.getFieldsValue()
+    // message.success('创建成功', 4)
+    // nav('/console/rcs/chatbot/index', { replace: true })
+    try {
+      const formvalues = await form.getFieldsValue()
+      let params = {
+        ...formvalues,
+        appid: id,
+        category: '信息传输',
+        provider: '上海赛邮云计算有限公司',
+        description: '机器人描述',
+      }
+      console.log(params, '111')
+      await updateChatbot(params)
+      message.success('编辑成功！')
+      setloading(false)
+    } catch (error) {
+      setloading(false)
+    }
   }
 
   const handleUpload = () => {}
@@ -286,7 +330,7 @@ export default function Fn() {
             <Col span={24} xl={12}>
               <Form.Item
                 label='服务方邮箱'
-                name='autograph'
+                name='email'
                 required
                 rules={[{ max: 32 }]}>
                 <Input placeholder='' />
@@ -295,7 +339,7 @@ export default function Fn() {
             <Col span={24} xl={12}>
               <Form.Item
                 label='服务方地址'
-                name='autograph'
+                name='address'
                 required
                 rules={[{ max: 32 }]}>
                 <Input placeholder='' />
@@ -414,19 +458,23 @@ export default function Fn() {
                 type='primary'
                 size='large'
                 style={{ width: 120 }}
-                onClick={submit}>
+                // onClick={submit}
+              >
                 保存
               </Button>
             </ConfigProvider>
             <Space>
-              <Button
-                className='cancle'
-                type='primary'
-                size='large'
-                style={{ width: 120, marginRight: '12px' }}
-                onClick={submit}>
-                取消
-              </Button>
+              <NavLink to='/console/rcs/chatbot/index'>
+                <Button
+                  className='cancle'
+                  type='primary'
+                  size='large'
+                  style={{ width: 120, marginRight: '12px' }}
+                  // onClick={submit}
+                >
+                  取消
+                </Button>
+              </NavLink>
               <Button
                 type='primary'
                 size='large'

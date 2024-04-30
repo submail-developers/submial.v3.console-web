@@ -14,6 +14,7 @@ import {
   Divider,
   InputNumber,
   ConfigProvider,
+  App,
 } from 'antd'
 import type { GetProp, UploadFile, UploadProps } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
@@ -86,17 +87,16 @@ export default function Fn() {
   const [fileList, setFileList] = useState<UploadFile[]>([])
   const { id } = useParams()
   const [loading, setloading] = useState(false)
+  const [customerId, setCustomerId] = useState({})
 
-  console.log(id)
+  const { message } = App.useApp()
 
   const submit = async () => {
-    const values = await form.getFieldsValue()
-    console.log(values)
-
     try {
       const formvalues = await form.getFieldsValue()
       let params = {
         ...formvalues,
+        id: customerId,
         customerContactName: '朱天文',
         businessType: 'A',
         industryTypeCode: '02',
@@ -110,15 +110,15 @@ export default function Fn() {
         contractAccessory:
           'rcs/39cdee6050bd28ae89dacd2afd3b3f8f/user/2a2a2228bc3e75c37837b985a0f09a5f.pdf',
         unifySocialCreditCodes: '123123asda23ds',
-        enterpriseOwnerName: '张凯旋',
         certificateType: '01',
         certificateCode: '12313123123123121',
         regionCode: '01',
         provinceCode: '100',
         cityCode: '1000',
       }
-      const res = await signupForCspAccount(params)
-      // setCustomerData(res.data)
+      console.log(params, '111')
+      await signupForCspAccount(params)
+      message.success('保存成功！')
       setloading(false)
     } catch (error) {
       setloading(false)
@@ -160,7 +160,8 @@ export default function Fn() {
       const params = ''
       const res = await getDicConfig(params)
       // setCustomerData(res.data)
-      console.log(res.data)
+      // console.log(res.data, '///')
+      setCustomerId(res.data.id)
       form.resetFields()
       form.setFieldsValue(res.data)
       setloading(false)
@@ -368,13 +369,15 @@ export default function Fn() {
               </Button>
             </ConfigProvider>
             <Space>
-              <Button
-                className='cancle'
-                type='primary'
-                size='large'
-                style={{ width: 120, marginRight: '12px' }}>
-                取消
-              </Button>
+              <NavLink to='/console/rcs/account/index'>
+                <Button
+                  className='cancle'
+                  type='primary'
+                  size='large'
+                  style={{ width: 120, marginRight: '12px' }}>
+                  取消
+                </Button>
+              </NavLink>
               <Button
                 type='primary'
                 size='large'

@@ -237,3 +237,12 @@ export const signupForCspAccount = (data: API.signupForCspAccountParams) => {
     API.signupForCspAccountParams
   >('console/api/rcs/signup_for_csp_account', { ...data })
 }
+
+// 更新chatbot信息
+export const updateChatbot = (data: API.updateChatbotParams) => {
+  return request.post<
+    any,
+    API.Response<API.updateChatbotItems>,
+    API.updateChatbotParams
+  >('console/api/rcs/update_chatbot', { ...data })
+}
