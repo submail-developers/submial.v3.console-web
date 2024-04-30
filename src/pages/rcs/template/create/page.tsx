@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Space, Button } from 'antd'
+import { Space, Button, ConfigProvider } from 'antd'
 import {
   useParams,
   useLocation,

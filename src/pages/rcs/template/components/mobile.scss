@@ -71,6 +71,10 @@
           background-color: #1764ff;
           color: #fff;
           cursor: pointer;
+          opacity: 1;
+          &:hover {
+            opacity: 0.8;
+          }
         }
       }
     }

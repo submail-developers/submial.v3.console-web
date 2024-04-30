@@ -3,6 +3,7 @@ import { RouterProvider } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import router from '@/routes'
 import { store } from '@/store'
+import { usePoint } from '@/hooks'
 
 // antd
 import token, { components } from '@/style/antdToken'
@@ -21,6 +22,7 @@ type Locale = ConfigProviderProps['locale']
 
 export default function App() {
   const [locale, setLocal] = useState<Locale>(zhCN)
+  const point = usePoint('lg')
   useEffect(() => {
     setLocal(zhCN)
     dayjs.locale('zh-cn')
@@ -28,7 +30,7 @@ export default function App() {
   return (
     <ConfigProvider
       theme={{
-        token: token,
+        token: { ...token, controlHeight: point ? 40 : 32 },
         components,
       }}
       locale={locale}>

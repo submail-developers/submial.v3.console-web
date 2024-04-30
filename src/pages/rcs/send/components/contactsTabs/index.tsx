@@ -23,30 +23,30 @@ export default function ContactsTabs(props: Props) {
     <>
       <div className='contacts-tabs fx'>
         <div
-          className={`tabs-item p-x-8 fx-center-center ${
-            point ? 'fn16' : 'fn14'
-          } ${type == '1' ? 'active' : ''}`}
+          className={`tabs-item p-x-8 fx-center-center fn14 ${
+            type == '1' ? 'active' : ''
+          }`}
           onClick={() => setType('1')}>
           从地址簿导入
         </div>
         <div
-          className={`tabs-item p-x-8 fx-center-center  ${
-            point ? 'fn16' : 'fn14'
-          } ${type == '2' ? 'active' : ''}`}
+          className={`tabs-item p-x-8 fx-center-center fn14 ${
+            type == '2' ? 'active' : ''
+          }`}
           onClick={() => setType('2')}>
           从文件导入
         </div>
         <div
-          className={`tabs-item p-x-8 fx-center-center  ${
-            point ? 'fn16' : 'fn14'
-          } ${type == '3' ? 'active' : ''}`}
+          className={`tabs-item p-x-8 fx-center-center fn14 ${
+            type == '3' ? 'active' : ''
+          }`}
           onClick={() => setType('3')}>
           手动输入
         </div>
         <div
-          className={`tabs-item p-x-8 fx-center-center  ${
-            point ? 'fn16' : 'fn14'
-          } ${type == '4' ? 'active' : ''}`}
+          className={`tabs-item p-x-8 fx-center-center fn14 ${
+            type == '4' ? 'active' : ''
+          }`}
           onClick={() => setType('4')}>
           手动粘贴
         </div>

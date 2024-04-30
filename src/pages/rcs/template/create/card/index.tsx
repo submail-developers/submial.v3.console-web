@@ -129,7 +129,7 @@ export default function Fn() {
         setmedia({
           mediaUrl: item.filePath,
           storeAt: item.storeAt,
-          mediaContentType: 'image/png',
+          mediaContentType: item.file_type,
           mediaFileSize: item.fileSize,
           height: 'MEDIUM_HEIGHT',
           mediaType: item.type,
@@ -507,21 +507,21 @@ export default function Fn() {
                 richTitle.b ? 'color-btn-active' : 'color-btn'
               }`}
               onClick={() => setRichTitle({ ...richTitle, b: !richTitle.b })}>
-              <span className='icon iconfont icon-b'></span>
+              <span className='icon iconfont icon-b fn18'></span>
             </div>
             <div
               className={`fx-center-center rich-style-btn ${
                 richTitle.i ? 'color-btn-active' : 'color-btn'
               }`}
               onClick={() => setRichTitle({ ...richTitle, i: !richTitle.i })}>
-              <span className='icon iconfont icon-i'></span>
+              <span className='icon iconfont icon-i fn18'></span>
             </div>
             <div
               className={`fx-center-center rich-style-btn ${
                 richTitle.u ? 'color-btn-active' : 'color-btn'
               }`}
               onClick={() => setRichTitle({ ...richTitle, u: !richTitle.u })}>
-              <span className='icon iconfont icon-u'></span>
+              <span className='icon iconfont icon-u fn18'></span>
             </div>
           </Space>
           <div className='fn14 gray-color' style={{ marginTop: '8px' }}>
@@ -533,24 +533,24 @@ export default function Fn() {
                 richDes.b ? 'color-btn-active' : 'color-btn'
               }`}
               onClick={() => setRichDes({ ...richDes, b: !richDes.b })}>
-              <span className='icon iconfont icon-b'></span>
+              <span className='icon iconfont icon-b fn18'></span>
             </div>
             <div
               className={`fx-center-center rich-style-btn ${
                 richDes.i ? 'color-btn-active' : 'color-btn'
               }`}
               onClick={() => setRichDes({ ...richDes, i: !richDes.i })}>
-              <span className='icon iconfont icon-i'></span>
+              <span className='icon iconfont icon-i fn18'></span>
             </div>
             <div
               className={`fx-center-center rich-style-btn ${
                 richDes.u ? 'color-btn-active' : 'color-btn'
               }`}
               onClick={() => setRichDes({ ...richDes, u: !richDes.u })}>
-              <span className='icon iconfont icon-u'></span>
+              <span className='icon iconfont icon-u fn18'></span>
             </div>
           </Space>
-          <Divider />
+          <Divider className='m-y-12' />
           <div className='fn16 fw-500' style={{ marginBottom: '12px' }}>
             按钮
           </div>
@@ -575,7 +575,7 @@ export default function Fn() {
             onChange={updataAction}
             name='btn-form'
           />
-          <Divider />
+          <Divider className='m-y-12' />
           <div className='fn16 fw-500' style={{ marginBottom: '12px' }}>
             悬浮框
           </div>
@@ -754,6 +754,7 @@ export default function Fn() {
                 label={richDes.label}
                 chineseLen={2}
                 showInsertParams
+                style={{ minHeight: '48px' }}
               />
             </div>
             {actions.map((item, index) => (
@@ -777,7 +778,7 @@ export default function Fn() {
                     lineHeight: '34px',
                     textAlign: 'center',
                     borderRadius: '18px',
-                    backgroundColor: '#F3F7FA',
+                    backgroundColor: '#ECEFF2',
                     overflow: 'auto',
                     padding: '0 16px',
                   }}
@@ -786,7 +787,7 @@ export default function Fn() {
             ))}
             {actions.length < 4 && (
               <div className='card-btn-add fx-center-center' onClick={addBtn}>
-                <span className='icon iconfont icon-jia'></span>
+                <span className='icon iconfont icon-jia fn14'></span>
               </div>
             )}
           </div>

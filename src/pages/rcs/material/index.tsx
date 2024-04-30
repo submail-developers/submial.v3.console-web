@@ -418,22 +418,30 @@ export default function Fn() {
       <Flex align='center' justify='space-between'>
         <Space wrap>
           <div
-            className={`status-item ${status == 'all' ? 'active' : ''}`}
+            className={`status-item ${
+              status == 'all' ? 'color-status-primary' : ''
+            }`}
             onClick={() => setStatus('all')}>
             全部模版
           </div>
           <div
-            className={`status-item ${status == '0' ? 'active' : ''}`}
+            className={`status-item ${
+              status == '0' ? 'color-status-primary' : ''
+            }`}
             onClick={() => setStatus('0')}>
             审核通过
           </div>
           <div
-            className={`status-item ${status == '1' ? 'active' : ''}`}
+            className={`status-item ${
+              status == '1' ? 'color-status-primary' : ''
+            }`}
             onClick={() => setStatus('1')}>
             审核驳回
           </div>
           <div
-            className={`status-item ${status == '9' ? 'active' : ''}`}
+            className={`status-item ${
+              status == '9' ? 'color-status-primary' : ''
+            }`}
             onClick={() => setStatus('9')}>
             审核中
           </div>

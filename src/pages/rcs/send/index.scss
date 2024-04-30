@@ -5,6 +5,15 @@
   .left {
     width: 320px;
     flex-shrink: 0;
+    .rcs-mobile {
+      width: 288px;
+      height: 588px;
+      .mobile-content {
+        width: 260px;
+        // width: 312px;
+        height: 456px;
+      }
+    }
   }
   .right {
     min-width: 350px;

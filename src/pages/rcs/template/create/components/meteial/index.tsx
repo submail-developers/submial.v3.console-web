@@ -44,7 +44,7 @@ const Item = (props: ItemProps) => {
             src={props.item.storeAt}
             preview={false}
             fallback={imgTypeImg}
-            style={{ width: loadError ? '60%' : '100%' }}
+            style={{ width: loadError ? '50%' : '100%' }}
             onError={() => setLoadError(true)}
           />
         )}
@@ -52,7 +52,7 @@ const Item = (props: ItemProps) => {
           <Image
             src={audioTypeImg}
             preview={false}
-            style={{ width: loadError ? '60%' : '100%' }}
+            style={{ width: loadError ? '50%' : '100%' }}
           />
         )}
         {props.item.type == '3' && (
@@ -108,7 +108,7 @@ export default function Fn() {
     <div className='rcs-temp-meteial'>
       <div className='top-search'>
         <Input
-          style={{ height: 32 }}
+          style={{ height: 40 }}
           value={keywords}
           onPressEnter={getList}
           onChange={(e) => setkeywords(e.target.value)}

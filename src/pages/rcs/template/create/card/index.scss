@@ -69,13 +69,18 @@
     }
   }
   .card-btn-add {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     background-color: #1764ff;
     color: #fff;
     cursor: pointer;
     margin: 12px auto 0;
+    transition: all 0.3s;
+    opacity: 1;
+    &:hover {
+      opacity: 0.8;
+    }
   }
 
   .card-btn {
