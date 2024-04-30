@@ -19,7 +19,12 @@ import {
   App,
 } from 'antd'
 import type { TabsProps, SelectProps } from 'antd'
-import { useParams, useLocation, useSearchParams } from 'react-router-dom'
+import {
+  useParams,
+  useLocation,
+  useSearchParams,
+  useNavigate,
+} from 'react-router-dom'
 import Meteial from '../components/meteial'
 import ActionForm from '../components/actionForm'
 import Page from '../page'
@@ -106,9 +111,11 @@ const SearchInput = (props) => {
 }
 
 export default function Fn() {
+  const nav = useNavigate()
   const { message: messageApi } = App.useApp()
   const [searchParams] = useSearchParams()
   const name = decodeURIComponent(searchParams.get('name'))
+  const [loading, setLoading] = useState(false)
 
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -142,9 +149,6 @@ export default function Fn() {
   const [actions, setactions] = useState<Action[]>([
     {
       displayText: '按钮',
-      postback: {
-        data: '',
-      },
       urlAction: {
         openUrl: {
           application: 'browser',
@@ -159,9 +163,6 @@ export default function Fn() {
   const [suggestions, setsuggestions] = useState<Action[]>([
     {
       displayText: '悬浮按钮',
-      postback: {
-        data: '',
-      },
       urlAction: {
         openUrl: {
           application: 'browser',
@@ -246,9 +247,6 @@ export default function Fn() {
         ...prevActions,
         {
           displayText: '按钮',
-          postback: {
-            data: '',
-          },
           urlAction: {
             openUrl: {
               application: 'browser',
@@ -274,8 +272,8 @@ export default function Fn() {
       return [
         ...prevActions.map((item, index) => {
           if (index == idx) {
-            let { displayText, postback } = item
-            item = { ...values, displayText, postback }
+            let { displayText } = item
+            item = { ...values, displayText }
           }
           return item
         }),
@@ -304,9 +302,6 @@ export default function Fn() {
         ...prevActions,
         {
           displayText: '悬浮按钮',
-          postback: {
-            data: '',
-          },
           urlAction: {
             openUrl: {
               application: 'browser',
@@ -332,8 +327,8 @@ export default function Fn() {
       return [
         ...prevActions.map((item, index) => {
           if (index == idx) {
-            let { displayText, postback } = item
-            item = { ...values, displayText, postback }
+            let { displayText } = item
+            item = { ...values, displayText }
           }
           return item
         }),
@@ -352,9 +347,6 @@ export default function Fn() {
       // {
       //   reply: {
       //     displayText: '上行NO',
-      //     postback: {
-      //       data: '1536309659126861824',
-      //     },
       //   },
       // },
     ]
@@ -366,9 +358,6 @@ export default function Fn() {
       // {
       //   reply: {
       //     displayText: '上行NO',
-      //     postback: {
-      //       data: '1536309659126861824',
-      //     },
       //   },
       // },
     ]
@@ -426,13 +415,27 @@ export default function Fn() {
       mms: Boolean(mmsInfo) ? 'true' : 'false',
       mmsTemplate: '',
       mmsSubject: '这里是彩信标题',
-      suggestions: JSON.stringify(_suggestions),
+      suggestions: JSON.stringify({
+        suggestions: _suggestions,
+      }),
       message: JSON.stringify({ message }),
     }
     console.log(suggestions, actions, params)
+    setLoading(true)
 
-    const res = createRcsTemp(params)
-    console.log(res)
+    try {
+      const res = await createRcsTemp(params)
+      if (res.status == 'success') {
+        messageApi.success('创建成功', 3, () => {
+          setLoading(false)
+          nav('/console/rcs/template/index', { replace: true })
+        })
+      } else {
+        setLoading(false)
+      }
+    } catch (error) {
+      setLoading(false)
+    }
   }
 
   const checkTitle = () => (): Promise<any> => {
@@ -685,6 +688,7 @@ export default function Fn() {
 
   return (
     <Page
+      loading={loading}
       left={<Meteial />}
       content={
         <>
@@ -710,8 +714,11 @@ export default function Fn() {
                   fallback={errorImg}
                 />
               )}
+              {media && media.mediaType == '2' && (
+                <audio src={media.storeAt} controls></audio>
+              )}
               {media && media.mediaType == '3' && (
-                <video src={media.storeAt} poster={videoTypeImg}></video>
+                <video src={media.storeAt} controls></video>
               )}
             </div>
             <div

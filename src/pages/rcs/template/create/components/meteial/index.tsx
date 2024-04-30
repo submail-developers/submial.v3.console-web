@@ -1,4 +1,5 @@
 import { Input, Image, Space, Row, Col } from 'antd'
+import { LoadingOutlined } from '@ant-design/icons'
 import { useEffect, useState } from 'react'
 import { getRcsMeteialList, getRcsOnlineMeteialList } from '@/api'
 import { API } from 'apis'
@@ -8,6 +9,7 @@ import audioTypeImg from '@/assets/rcs/fileType/audio.png'
 import videoTypeImg from '@/assets/rcs/fileType/video.png'
 import { config as dndConfig } from '../../dnd'
 import { useDrag } from 'react-dnd'
+import { getFileName } from '@/utils'
 
 type T = '1' | '2' | '3' | 'all'
 
@@ -16,6 +18,7 @@ type ItemProps = {
 }
 type DropResult = API.RcsOnlineMeteialItem
 const Item = (props: ItemProps) => {
+  const [loadError, setLoadError] = useState(props.item.type != '1')
   const [{ isDragging }, drag] = useDrag(() => ({
     type: dndConfig.accept,
     item: { ...props.item },
@@ -34,20 +37,35 @@ const Item = (props: ItemProps) => {
 
   const opacity = isDragging ? 0.4 : 1
   return (
-    <div
-      className='item'
-      ref={drag}
-      style={{ opacity }}
-      data-testid={`box`}
-      title={props.item.name}>
-      {props.item.type == '1' && (
-        <Image src={props.item.storeAt} preview={false} fallback={imgTypeImg} />
-      )}
-      {props.item.type == '2' && <Image src={audioTypeImg} preview={false} />}
-      {props.item.type == '3' && (
-        <video src={props.item.storeAt} poster={videoTypeImg}></video>
-      )}
-      <div className='name g-ellipsis'>{props.item.name}</div>
+    <div className='item' ref={drag} style={{ opacity }} data-testid={`box`}>
+      <div className='item-media'>
+        {props.item.type == '1' && (
+          <Image
+            src={props.item.storeAt}
+            preview={false}
+            fallback={imgTypeImg}
+            style={{ width: loadError ? '60%' : '100%' }}
+            onError={() => setLoadError(true)}
+          />
+        )}
+        {props.item.type == '2' && (
+          <Image
+            src={audioTypeImg}
+            preview={false}
+            style={{ width: loadError ? '60%' : '100%' }}
+          />
+        )}
+        {props.item.type == '3' && (
+          <video src={props.item.storeAt} controls></video>
+        )}
+      </div>
+      <div className='name g-ellipsis' title={props.item.name}>
+        {getFileName({
+          fileName: props.item.name,
+          before: 4,
+          after: 3,
+        })}
+      </div>
     </div>
   )
 }
@@ -59,6 +77,7 @@ export default function Fn() {
   const [loading, setLoading] = useState(false)
   const [list, setList] = useState<API.RcsOnlineMeteialItem[]>([])
   const getList = async () => {
+    setLoading(true)
     try {
       const res = await getRcsOnlineMeteialList({
         id: '',
@@ -69,7 +88,10 @@ export default function Fn() {
         status: 'all',
       })
       setList(res.libs)
-    } catch (error) {}
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+    }
   }
   useEffect(() => {
     getList()
@@ -123,6 +145,14 @@ export default function Fn() {
             </Col>
           ))}
         </Row>
+        {loading && (
+          <div
+            className='fx-center-center fx-col w-100 color'
+            style={{ height: '80px' }}>
+            <LoadingOutlined rev={null} className='fn20' />
+            <span>加载中...</span>
+          </div>
+        )}
       </div>
     </div>
   )

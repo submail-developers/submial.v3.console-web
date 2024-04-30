@@ -30,6 +30,10 @@ import {
 import codeImg from '@/assets/rcs/code.png'
 import { usePoint } from '@/hooks'
 import { getRcsMeteialList, delRcsMeteial, getRcsTempList } from '@/api'
+import {
+  EnumTempStatusBadge,
+  EnumTempStatusText,
+} from '@/pages/rcs/template/list/type'
 import { IDIcon } from '@/components/aIcons'
 import ACopy from '@/components/aCopy'
 
@@ -61,17 +65,8 @@ export default function Fn({ item, onSelect }: Props) {
           onClick={handleItem}>
           <div className='name g-ellipsis'>{item.title}</div>
           <div className='time'>创建时间：{item.createAt}</div>
-          <div
-            className={`status ${
-              item.checked == '0'
-                ? 'fail'
-                : item.checked == '1'
-                ? 'success'
-                : 'waiting'
-            }`}>
-            {item.checked == '0' && '未通过'}
-            {item.checked == '1' && '通过'}
-            {(item.checked == '8' || item.checked == '9') && '审核中'}
+          <div className={`status ${EnumTempStatusBadge[item.checked]}`}>
+            {EnumTempStatusText[item.checked]}
           </div>
           <div className='preview-model'>
             <div className='preview-content'>

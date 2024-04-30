@@ -61,7 +61,7 @@ export default function CreateSend() {
       })
       setChatbotList(res.list)
       if (res.list.length > 0) {
-        form.setFieldValue('chatbot', res.list[0].id)
+        form.setFieldValue('appid', res.list[0].id)
         setChatbot(res.list[0])
       }
     } catch (error) {}
@@ -91,7 +91,11 @@ export default function CreateSend() {
       mms: mms,
       sms: sms,
     })
-    console.log(res)
+    if (res.status == 'success') {
+      message.success('创建成功', 4, () => {
+        nav('/console/rcs/send/0', { replace: true })
+      })
+    }
   }
   const init = () => {
     console.log('init')
@@ -110,13 +114,11 @@ export default function CreateSend() {
     if (id == '0') {
       setShowModal(true)
     } else {
+      getChatbotList()
       setShowModal(false)
       init()
     }
   }, [id, form])
-  useEffect(() => {
-    getChatbotList()
-  }, [])
 
   return (
     <>

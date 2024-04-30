@@ -43,7 +43,7 @@ export const dialerActionTypeArray: DialerActionType[] = [
 export type Action = {
   displayText: string
   // 上行文本携带的数据标识
-  postback: {
+  postback?: {
     data: string
   }
   // 链接事件

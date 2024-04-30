@@ -14,6 +14,7 @@ type Props = {
   left: ReactNode
   content: ReactNode
   right: ReactNode
+  loading: boolean
   submit: () => void
 }
 
@@ -23,6 +24,11 @@ export default function Fn(props: Props) {
   const nav = useNavigate()
   const cancelEdit = () => {
     nav(-1)
+  }
+  const onSub = () => {
+    if (!props.loading) {
+      props.submit()
+    }
   }
   return (
     <div className='rcs-template'>
@@ -36,7 +42,8 @@ export default function Fn(props: Props) {
         <Button
           type='primary'
           style={{ background: '#1764FF' }}
-          onClick={props.submit}>
+          loading={props.loading}
+          onClick={onSub}>
           提交审核
         </Button>
       </Space>

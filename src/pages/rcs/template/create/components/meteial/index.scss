@@ -3,39 +3,54 @@
   height: 100%;
   position: relative;
   .top-search {
-    height: 64px;
+    height: 68px;
     .type {
-      height: 32px;
-      line-height: 32px;
+      height: 36px;
+      line-height: 36px;
       cursor: pointer;
       &.active {
-        color: #111;
+        color: var(--primary-color);
         font-weight: 500;
       }
     }
   }
   .meteial-list {
     width: 100%;
-    height: calc(100% - 64px);
+    height: calc(100% - 68px);
     overflow-x: hidden;
     overflow-y: scroll;
     .item {
       width: 100%;
-      height: 120px;
+      // height: 120px;
       text-align: center;
       cursor: pointer;
-      .ant-image {
+      .item-media {
         width: 100%;
-        height: 102px;
-        img {
+        height: 154px;
+        border-radius: 4px;
+        background-color: #eaedf2;
+        .ant-image {
+          width: 100%;
+          height: 100%;
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+          }
+        }
+        video {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+        }
+        audio {
           width: 100%;
           height: 100%;
           object-fit: contain;
         }
       }
-      video {
-        width: 100%;
-        object-fit: contain;
+      .name {
+        line-height: 32px;
       }
     }
   }
