@@ -15,6 +15,7 @@ import {
   Popconfirm,
   App,
   ConfigProvider,
+  Empty,
 } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { NavLink, useNavigate } from 'react-router-dom'
@@ -50,6 +51,7 @@ import codeImg from '@/assets/rcs/5g1.png'
 
 import { API } from 'apis'
 import './index.scss'
+import { getFileName } from '@/utils'
 
 type MaterialItemProps = {
   item: API.RcsMeteialItem
@@ -155,45 +157,19 @@ const MaterialItem = (props: MaterialItemProps) => {
           className='modal'
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}>
-          {/* <span className='fn12'>通过</span> */}
           <Space
             className={`status fx-y-center ${
-              EnumMediaStatusColor[props.item.status]
+              EnumMediaStatusBadge[props.item.status]
             }`}
             size={4}>
             <span className='atud-status fn12'>
               <span
-                className={`icon iconfont fn16 ${
+                className={`icon iconfont fn16 m-r-2 ${
                   EnumMediaStatusIcon[props.item.status]
                 }`}></span>
               {EnumMediaStatusText[props.item.status]}
             </span>
           </Space>
-          {props.item.status == '0' ? (
-            <Space className='status fx-y-center' size={4}>
-              <span className='atud-status fn12'>
-                <span className='icon iconfont icon-shezhi fn16'></span>未提交
-              </span>
-            </Space>
-          ) : props.item.status == '1' ? (
-            <Space className='status color-status-success fx-y-center' size={4}>
-              <span className='atud-status fn12'>
-                <span className='icon iconfont icon-yes fn16'></span>通过
-              </span>
-            </Space>
-          ) : props.item.status == '8' ? (
-            <Space className='status color-status-error fx-y-center' size={4}>
-              <span className='atud-status fn12'>
-                <span className='icon iconfont icon-no fn16'></span>未通过
-              </span>
-            </Space>
-          ) : (
-            <Space className='status color-status-waiting fx-y-center' size={4}>
-              <span className='atud-status fn12'>
-                <span className='icon iconfont icon-time fn16'></span> 待审核
-              </span>
-            </Space>
-          )}
 
           <div className='time fx-center-center fn13'>期限:7天</div>
 
@@ -232,7 +208,11 @@ const MaterialItem = (props: MaterialItemProps) => {
           {/* <div className='preview-btn' onClick={previewEvent}></div> */}
         </div>
       </div>
-      <div className='source-name fn14 g-ellipsis'>{props.item.name}</div>
+      <div className='source-name fn14 g-ellipsis' title={props.item.name}>
+        {getFileName({
+          fileName: props.item.name,
+        })}
+      </div>
     </div>
   )
 }
@@ -441,9 +421,15 @@ export default function Fn() {
           </Col>
         ))}
       </Row>
+      {list.length == 0 && (
+        <div className='fx-center-center' style={{ height: '300px' }}>
+          <Empty />
+        </div>
+      )}
       <Flex justify='flex-end' align='center' style={{ marginTop: '32px' }}>
         <Pagination
           defaultCurrent={1}
+          // hideOnSinglePage
           current={currentPage}
           defaultPageSize={pageSize}
           pageSizeOptions={[]}

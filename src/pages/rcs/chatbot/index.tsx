@@ -25,14 +25,14 @@ import './index.scss'
 interface DataType extends API.ChatbotItem {}
 
 enum EnmuMenuStatusText {
-  '通过' = '1',
-  '不通过' = '2',
-  '审核中' = '3',
+  '通过' = 1,
+  '不通过' = 2,
+  '审核中' = 3,
 }
 enum EnmuMenuStatusColor {
-  'success-color' = '1',
-  'error-color' = '2',
-  'waiting-color' = '3',
+  'success-color' = 1,
+  'error-color' = 2,
+  'waiting-color' = 3,
 }
 export enum ChatbotStatus {
   '未提交',
