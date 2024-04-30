@@ -397,5 +397,15 @@ declare module 'apis' {
       cityCode: string
     }
     interface signupForCspAccountItems {}
+
+    // 创建发送任务
+    interface CreateRcsSendParams {
+      appid: string
+      template_id: string
+      tos: string
+      vars: string
+      mms: 'true' | 'false'
+      sms: 'true' | 'false'
+    }
   }
 }

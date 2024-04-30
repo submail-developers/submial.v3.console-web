@@ -120,7 +120,8 @@ export default function Fn() {
     drop: (item: API.RcsOnlineMeteialItem, monitor) => {
       if (item) {
         setmedia({
-          mediaUrl: item.storeAt,
+          mediaUrl: item.filePath,
+          storeAt: item.storeAt,
           mediaContentType: 'image/png',
           mediaFileSize: item.fileSize,
           height: 'MEDIUM_HEIGHT',
@@ -700,17 +701,17 @@ export default function Fn() {
               {media && media.mediaType == '1' && (
                 <Image
                   style={{
-                    width: '120px',
-                    height: '40px',
-                    objectFit: 'contain',
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
                   }}
-                  src={media.mediaUrl}
+                  src={media.storeAt}
                   preview={false}
                   fallback={errorImg}
                 />
               )}
               {media && media.mediaType == '3' && (
-                <video src={media.mediaUrl} poster={videoTypeImg}></video>
+                <video src={media.storeAt} poster={videoTypeImg}></video>
               )}
             </div>
             <div
@@ -719,6 +720,7 @@ export default function Fn() {
                 fontWeight: richTitle.b ? 'bold' : 'normal',
                 fontStyle: richTitle.i ? 'italic' : 'normal',
                 textDecoration: richTitle.u ? 'underline' : 'none',
+                fontSize: '14px',
               }}>
               <RcsInput
                 text={richTitle.text}

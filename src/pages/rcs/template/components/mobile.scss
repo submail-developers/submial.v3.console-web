@@ -1,18 +1,21 @@
 .rcs-mobile {
-  width: 288px;
-  height: 588px;
+  // transform: scale(0.9);
+  // width: 360px;
+  // height: 735px;
+  width: 324px;
+  height: 662px;
   background-image: url('@/assets/rcs/mobile.png');
   background-position: top left;
   background-repeat: no-repeat;
   background-size: 100%;
   position: relative;
-  // transform: scale(0.8);
   margin-bottom: 80px;
   font-size: 13px;
   .mobile-content {
-    width: 260px;
-    // width: 312px;
-    height: 456px;
+    // width: 326px;
+    // height: 570px;
+    width: 294px;
+    height: 513px;
     position: relative;
     left: 50%;
     top: calc(50%);

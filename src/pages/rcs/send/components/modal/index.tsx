@@ -62,7 +62,7 @@ export default function Fn(props: Props) {
       const res = await getRcsTempList({
         page: currentPage,
         limit: pageSize,
-        status: 'all',
+        status: '1',
         keyword: keyword,
       })
       setLoading(false)
@@ -86,7 +86,7 @@ export default function Fn(props: Props) {
   }
 
   const onSelect = (item: API.RcsTempListItem) => {
-    nav(`/console/rcs/send/${item.id}`, { replace: true })
+    nav(`/console/rcs/send/${item.sign}`, { replace: true })
     props.onCancel()
   }
 

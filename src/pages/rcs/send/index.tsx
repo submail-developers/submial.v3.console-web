@@ -19,6 +19,7 @@ import {
   DatePicker,
   Checkbox,
   Empty,
+  App,
 } from 'antd'
 import type { DatePickerProps, FormInstance } from 'antd'
 import type { Dayjs } from 'dayjs'
@@ -29,7 +30,7 @@ import { ProFormDependency } from '@ant-design/pro-components'
 import ContactsTabs from './components/contactsTabs'
 import Modal from './components/modal'
 
-import { getChatbot } from '@/api'
+import { getChatbot, createRcsSend } from '@/api'
 import { API } from 'apis'
 
 import codeImg from '@/assets/rcs/code.png'
@@ -42,6 +43,7 @@ export default function CreateSend() {
   const nav = useNavigate()
   const point = usePoint('lg')
   const [form] = Form.useForm()
+  const { message } = App.useApp()
   const [showModal, setShowModal] = useState(false)
 
   const [chatbotList, setChatbotList] = useState<API.ChatbotItem[]>([])
@@ -75,21 +77,43 @@ export default function CreateSend() {
   const onFieldsChange = (changedFields, allFields) => {
     console.log(allFields)
   }
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     console.log(values)
+    const { appid, mms, sms, textarea } = values
+    if (!textarea) {
+      message.warning('请输入手机号')
+    }
+    const res = await createRcsSend({
+      appid: appid,
+      template_id: id,
+      tos: textarea || '',
+      vars: '',
+      mms: mms,
+      sms: sms,
+    })
+    console.log(res)
   }
   const init = () => {
     console.log('init')
   }
 
+  // 是否开启回落
+  const changeBack = (val) => {
+    form.setFieldsValue({
+      mms: val ? 'true' : 'false',
+      sms: val ? 'true' : 'false',
+    })
+  }
+
   useEffect(() => {
+    // form.resetFields()
     if (id == '0') {
       setShowModal(true)
     } else {
       setShowModal(false)
       init()
     }
-  }, [id])
+  }, [id, form])
   useEffect(() => {
     getChatbotList()
   }, [])
@@ -154,7 +178,7 @@ export default function CreateSend() {
                   <Col span={24}>
                     <Row align={'middle'} gutter={point ? 24 : 8}>
                       <Col span={12}>
-                        <Form.Item label='Chatbot名称' name='chatbot'>
+                        <Form.Item label='Chatbot名称' name='appid'>
                           <Select
                             options={chatbotList}
                             fieldNames={{ label: 'name', value: 'id' }}
@@ -278,7 +302,7 @@ export default function CreateSend() {
                         className='m-b-0'
                         valuePropName='checked'
                         initialValue={true}>
-                        <Switch size='small' />
+                        <Switch size='small' onChange={changeBack} />
                       </Form.Item>
                       <span>短信回落</span>
                     </Space>
@@ -288,12 +312,20 @@ export default function CreateSend() {
                       {({ back }) => {
                         return (
                           <Space>
-                            <Form.Item label='' name='mmg' className='m-b-0'>
+                            <Form.Item
+                              label=''
+                              name='sms'
+                              className='m-b-0'
+                              initialValue={'true'}>
                               <Checkbox checked={back} disabled>
                                 回落短信
                               </Checkbox>
                             </Form.Item>
-                            <Form.Item label='' name='mms' className='m-b-0'>
+                            <Form.Item
+                              label=''
+                              name='mms'
+                              className='m-b-0'
+                              initialValue={'true'}>
                               <Checkbox checked={back} disabled>
                                 回落彩信
                               </Checkbox>

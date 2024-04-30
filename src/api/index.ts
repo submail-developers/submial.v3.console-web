@@ -237,3 +237,11 @@ export const signupForCspAccount = (data: API.signupForCspAccountParams) => {
     API.signupForCspAccountParams
   >('console/api/rcs/signup_for_csp_account', { ...data })
 }
+
+// 创建发送任务
+export const createRcsSend = (data: API.CreateRcsSendParams) => {
+  return request.post<any, any, API.CreateRcsSendParams>(
+    'console/api/rcs/send',
+    { ...data },
+  )
+}
