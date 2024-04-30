@@ -407,5 +407,30 @@ declare module 'apis' {
       mms: 'true' | 'false'
       sms: 'true' | 'false'
     }
+    // 更新chatbot信息参数
+    interface updateChatbotParams {
+      name: string
+      bind: string
+      logo: string
+      callback: string
+      email: string
+      website: string
+      tcPage: string
+      address: string
+      colour: string
+      backgroundImage: string
+      category: string
+      provider: string
+      providerSwitchCode: string
+      description: string
+      menu: string
+      genericCssTemplate: string
+      autograph: string
+      attachment: string
+      actualIssueIndustry: string
+      debugWhiteAddress: string
+      appid: string
+    }
+    interface updateChatbotItems {}
   }
 }

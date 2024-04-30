@@ -245,3 +245,11 @@ export const createRcsSend = (data: API.CreateRcsSendParams) => {
     { ...data },
   )
 }
+// 更新chatbot信息
+export const updateChatbot = (data: API.updateChatbotParams) => {
+  return request.post<
+    any,
+    API.Response<API.updateChatbotItems>,
+    API.updateChatbotParams
+  >('console/api/rcs/update_chatbot', { ...data })
+}

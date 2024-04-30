@@ -176,7 +176,7 @@ export default function Fn() {
       <Flex justify='space-between' align='center' style={{ marginTop: '4px' }}>
         <div className='fn22 fw-500'>Chatbot 详情</div>
         <Space>
-          <NavLink to='/console/rcs/account/create/0'>
+          <NavLink to={`/console/rcs/chatbot/create/0?id=${id}`}>
             <Button type='primary' className='detail-btn'>
               <i className='icon iconfont icon-bianji'></i>
               编辑基本信息

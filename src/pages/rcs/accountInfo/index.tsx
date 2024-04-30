@@ -71,11 +71,6 @@ export default function Fn() {
                   <i className='icon iconfont icon-bianji'></i>编辑
                 </Button>
               </NavLink>
-
-              <Button type='primary' danger>
-                <i className='icon iconfont icon-shanchu'></i>
-                删除
-              </Button>
             </Space>
           </Flex>
           <Divider className='line'></Divider>
@@ -160,10 +155,11 @@ export default function Fn() {
               <tr>
                 <td>合同信息</td>
                 <td colSpan={3}>
-                  <DownLoad
+                  已上传
+                  {/* <DownLoad
                     fileName={customerData.contractName}
                     url={customerData.contractAccessory}
-                  />
+                  /> */}
                 </td>
               </tr>
             </tbody>
