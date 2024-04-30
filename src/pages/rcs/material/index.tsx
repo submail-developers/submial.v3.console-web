@@ -336,7 +336,11 @@ export default function Fn() {
   return (
     <PageContent extClass='material-list'>
       <Image src={codeImg} preview={false} width={72}></Image>
-      <Flex justify='space-between' wrap='wrap' gap={12}>
+      <Flex
+        justify='space-between'
+        wrap='wrap'
+        gap={12}
+        style={{ marginTop: '4px' }}>
         <Space align='baseline'>
           <div className='fn22 fw-500'>5G 消息资源库</div>
         </Space>

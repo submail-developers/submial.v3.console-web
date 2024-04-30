@@ -33,7 +33,7 @@ import Modal from './components/modal'
 import { getChatbot, createRcsSend } from '@/api'
 import { API } from 'apis'
 
-import codeImg from '@/assets/rcs/code.png'
+import codeImg from '@/assets/rcs/send1.png'
 
 import './index.scss'
 import '@/pages/rcs/template/components/mobile.scss'
@@ -124,7 +124,10 @@ export default function CreateSend() {
     <>
       <PageContent extClass='create-send'>
         <Image src={codeImg} preview={false} width={72}></Image>
-        <Flex justify='space-between' align='center'>
+        <Flex
+          justify='space-between'
+          align='center'
+          style={{ marginTop: '4px' }}>
           <div className='fn22 fw-500'>创建在线发送任务</div>
           <Button
             type='primary'

@@ -76,8 +76,7 @@ export default function Fn() {
           <Divider className='line'></Divider>
           <div className='info-title' style={{ marginBottom: '20px' }}>
             客户信息
-            <div className='auditing-status fn16'>
-              审核状态
+            <div className='fn16'>
               {customerData.status == '0' ? (
                 <span className='gray-color'>未提交</span>
               ) : customerData.status == '1' ? (
@@ -88,6 +87,7 @@ export default function Fn() {
                 <span className='color-status-waiting'>待审核</span>
               )}
             </div>
+            <div className='auditing-status fn14'>支持运营商 : </div>
           </div>
 
           <table className='border'>
