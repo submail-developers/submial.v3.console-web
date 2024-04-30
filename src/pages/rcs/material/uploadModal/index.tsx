@@ -174,10 +174,8 @@ export default function UploadModal(props: Props) {
         if (fileList.find((item) => item.status == 'error')) {
           messageApi.warning('存在上传失败的素材，其余上传成功', 5)
         } else {
-          messageApi.success(
-            '全部上传成功，继续上传可直接选择文件或拖拽文件',
-            5,
-          )
+          messageApi.success('上传成功')
+          props.onOk()
         }
         return
       }
@@ -242,6 +240,15 @@ export default function UploadModal(props: Props) {
     }
   }
 
+  const onCancel = () => {
+    if (status == 1) {
+      messageApi.warning('正在上传素材，请耐心等待...')
+      return
+    } else {
+      props.onCancel()
+    }
+  }
+
   // 初始化比例和质量
   useEffect(() => {
     return () => {
@@ -259,7 +266,7 @@ export default function UploadModal(props: Props) {
       classNames={{ header: 'upload-header', body: 'upload-body' }}
       wrapClassName='upload-modal'
       destroyOnClose
-      onCancel={props.onCancel}
+      onCancel={onCancel}
       open={props.show}>
       <Flex justify='space-between' gap={24} className='modal-content'>
         <div className='img-layer-canvas'>
@@ -298,9 +305,7 @@ export default function UploadModal(props: Props) {
             })}
           </div>
           <Flex justify='space-between' style={{ marginTop: '0' }}>
-            <Button
-              style={{ width: '140px', height: 38 }}
-              onClick={props.onCancel}>
+            <Button style={{ width: '140px', height: 38 }} onClick={onCancel}>
               取消
             </Button>
             <Button

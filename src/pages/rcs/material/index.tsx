@@ -59,34 +59,40 @@ type MaterialItemProps = {
 }
 
 const MaterialItem = (props: MaterialItemProps) => {
-  const [visible, setVisible] = useState(false)
+  const [previewImg, setpreviewImg] = useState(false)
+  const [previewAudio, setpreviewAudio] = useState(false)
+  const [previewVideo, setpreviewVideo] = useState(false)
   const [videoRender, setvideoRender] = useState<React.ReactNode>()
+  const [audioRender, setaudioRender] = useState<React.ReactNode>()
   const point = usePoint('lg')
   const [hover, setHover] = useState(false)
+  const [loadError, setLoadError] = useState(props.item.type != '1')
 
   const previewEvent = () => {
-    setVisible(true)
-    if (props.item.type == '1') {
+    if (props.item.type == '2') {
+      setpreviewAudio(true)
+      setaudioRender(
+        <audio
+          className='source-video'
+          style={{ width: `${point ? '50%' : '90%'}` }}
+          controls
+          src={props.item.storeAt}
+        />,
+      )
+    } else if (props.item.type == '3') {
+      setpreviewVideo(true)
       setvideoRender(
         <video
           className='source-video'
           muted
           width={point ? '50%' : '90%'}
           controls
-          src={
-            'https://libraries.mysubmail.com/public/7405f1e8b0b2be6bccf68741d74dc339/images/541cbd95321944945ffcf3fc5d5a137e.mp4'
-          }
+          src={props.item.storeAt}
         />,
       )
+    } else {
+      setpreviewImg(true)
     }
-  }
-  // 鼠标移入移出事件
-  const handleMouseEnter = () => {
-    setHover(true)
-  }
-
-  const handleMouseLeave = () => {
-    setHover(false)
   }
 
   return (
@@ -99,16 +105,39 @@ const MaterialItem = (props: MaterialItemProps) => {
               // src={codeImg}
               src={props.item.storeAt}
               fallback={imgTypeImg}
+              style={{ height: loadError ? '60%' : '100%' }}
+              onError={() => setLoadError(true)}
               preview={{
-                visible: visible,
+                visible: previewImg,
                 onVisibleChange: (visible: boolean, prevVisible: boolean) => {
-                  setVisible(visible)
+                  setpreviewImg(visible)
                 },
               }}
             />
           )}
           {props.item.type == '2' && (
-            <Image className='source-img' src={audioTypeImg} preview={false} />
+            <>
+              <Image
+                className='source-img'
+                src={audioTypeImg}
+                style={{ height: loadError ? '60%' : '100%' }}
+                preview={false}
+              />
+              {/* 预览 */}
+              <Image
+                className='source-audio-preview'
+                src=''
+                preview={{
+                  visible: previewAudio,
+                  imageRender: () => audioRender,
+                  toolbarRender: () => null,
+                  onVisibleChange: (visible: boolean, prevVisible: boolean) => {
+                    setaudioRender(null)
+                    setpreviewAudio(visible)
+                  },
+                }}
+              />
+            </>
           )}
           {props.item.type == '3' && (
             <>
@@ -122,41 +151,70 @@ const MaterialItem = (props: MaterialItemProps) => {
                 className='source-video-preview'
                 src=''
                 preview={{
-                  visible: visible,
+                  visible: previewVideo,
                   imageRender: () => videoRender,
                   toolbarRender: () => null,
                   onVisibleChange: (visible: boolean, prevVisible: boolean) => {
                     setvideoRender(null)
-                    setVisible(visible)
+                    setpreviewVideo(visible)
                   },
                 }}
               />
+              <div className='video-play' onClick={previewEvent}>
+                <PlayCircleOutlined
+                  className='fn24'
+                  title='播放视频'
+                  rev={undefined}
+                />
+              </div>
             </>
           )}
 
           {props.item.type == '4' && (
-            <Image className='source-img' src={wordTypeImg} preview={false} />
+            <Image
+              className='source-img'
+              src={wordTypeImg}
+              preview={false}
+              style={{ height: loadError ? '60%' : '100%' }}
+            />
           )}
           {props.item.type == '5' && (
-            <Image className='source-img' src={xlsTypeImg} preview={false} />
+            <Image
+              className='source-img'
+              src={xlsTypeImg}
+              preview={false}
+              style={{ height: loadError ? '60%' : '100%' }}
+            />
           )}
           {props.item.type == '6' && (
-            <Image className='source-img' src={pptTypeImg} preview={false} />
+            <Image
+              className='source-img'
+              src={pptTypeImg}
+              preview={false}
+              style={{ height: loadError ? '60%' : '100%' }}
+            />
           )}
           {props.item.type == '7' && (
-            <Image className='source-img' src={zipTypeImg} preview={false} />
+            <Image
+              className='source-img'
+              src={zipTypeImg}
+              preview={false}
+              style={{ height: loadError ? '60%' : '100%' }}
+            />
           )}
           {props.item.type == '8' && (
-            <Image className='source-img' src={mmsTypeImg} preview={false} />
+            <Image
+              className='source-img'
+              src={mmsTypeImg}
+              preview={false}
+              style={{ height: loadError ? '60%' : '100%' }}
+            />
           )}
-          {/* {props.item.type == '9' && (
+          {props.item.type == '9' && (
             <Image className='source-img' src={unknowTypeImg} preview={false} />
-          )} */}
+          )}
         </div>
-        <div
-          className='modal'
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}>
+        <div className='modal'>
           <Space
             className={`status fx-y-center ${
               EnumMediaStatusBadge[props.item.status]
@@ -175,16 +233,18 @@ const MaterialItem = (props: MaterialItemProps) => {
 
           {/* {hover && ( */}
           <Space className='handle'>
+            {/* 预览图片按钮 */}
             {props.item.type == '1' && (
               <div className='handle-item' onClick={previewEvent}>
-                <EyeOutlined className='fn18' title='预览' rev={undefined} />
+                <EyeOutlined className='fn16' title='预览' rev={undefined} />
               </div>
             )}
-            {props.item.type == '3' && (
+            {/* 预览音频|视频按钮 */}
+            {(props.item.type == '2' || props.item.type == '3') && (
               <div className='handle-item' onClick={previewEvent}>
                 <PlayCircleOutlined
-                  className='fn24'
-                  title='播放'
+                  className='fn16'
+                  title={`${props.item.type == '2' ? '播放音频' : '播放音频'}`}
                   rev={undefined}
                 />
               </div>
@@ -441,7 +501,10 @@ export default function Fn() {
       </Flex>
       <UploadModal
         show={showUpload}
-        onOk={() => getList()}
+        onOk={() => {
+          setShowUpload(false)
+          getList()
+        }}
         onCancel={() => setShowUpload(false)}
       />
       <UploadMmsModal

@@ -1,9 +1,9 @@
-// 素材审核状态  9=我方审核，0=通过，1=驳回，8=我方通过
+// 素材审核状态  0=通过,1=驳回,8=我方通过,9=我方审核
 export enum EnumMediaStatusText {
   '通过' = 0,
   '驳回' = 1,
-  '我方通过' = 8,
-  '我方审核' = 9,
+  '审核中 ' = 8,
+  '审核中' = 9,
 }
 export enum EnumMediaStatusColor {
   'success-color' = 0,

@@ -183,8 +183,8 @@ declare module 'apis' {
       id: string
       sign: string
       account: string
-      //  1 图片,2 音频,3 视频,4 文档,5 表格,6 演示文件,7 压缩文件,8 其他
-      type: '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8'
+      //  1 图片,2 音频,3 视频,4 文档,5 表格,6 演示文件,7 压缩文件,8 mms彩信 9 未知
+      type: '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
       storeAt: string
       filePath: string
       fileSize: string
@@ -267,7 +267,7 @@ declare module 'apis' {
       createAt: string
       updateAt: string
       del: string
-      checked: string
+      checked: '0' | '1' | '2' //0等待审核，1通过，2驳回
       api: string
       ipAddress: string
       rejectReason: string

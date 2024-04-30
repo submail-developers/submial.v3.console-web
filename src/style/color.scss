@@ -87,6 +87,11 @@
   border: 1px solid var(--warning-red-border);
   background: var(--warning-red-bg);
 }
+// 状态-默认
+.color-status-primary {
+  background-color: var(--primary-color);
+  color: #fff;
+}
 // 状态-成功
 .color-status-success {
   background-color: var(--success-color);

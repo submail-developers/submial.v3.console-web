@@ -37,11 +37,11 @@ export const getFileName = ({
   if (arr[1]) {
     suffix = '.' + arr[1]
   }
-  if (arr[0].length < before + after + 5) {
+  if (arr[0].length < before + after + 3) {
     name = fileName
   } else {
-    const frontPart = arr[0].substring(0, 6) // 取前面6位
-    const endPart = arr[0].substring(arr[0].length - 4) // 取后面4位
+    const frontPart = arr[0].substring(0, before) // 取前面6位
+    const endPart = arr[0].substring(arr[0].length - after) // 取后面4位
     name = `${frontPart}...${endPart}${suffix}`
   }
   return name

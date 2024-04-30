@@ -15,6 +15,7 @@ import {
   Select,
   ConfigProvider,
   Pagination,
+  Empty,
 } from 'antd'
 
 import { getMmsMaterialList, uploadMmsLibs } from '@/api'
@@ -195,7 +196,7 @@ export default function UploadModal(props: Props) {
   return (
     <Modal
       width={1092}
-      title={[
+      title={
         <>
           <Form
             form={form}
@@ -230,8 +231,8 @@ export default function UploadModal(props: Props) {
               </div>
             </div>
           </Form>
-        </>,
-      ]}
+        </>
+      }
       footer={[
         <div
           style={{
@@ -285,6 +286,11 @@ export default function UploadModal(props: Props) {
             onCheck={onCheck}
             onSign={onSign}></Item>
         ))}
+        {templatesList.length == 0 && (
+          <div className='w-100 m-t-40'>
+            <Empty />
+          </div>
+        )}
       </div>
     </Modal>
   )

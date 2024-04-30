@@ -59,7 +59,8 @@
           height: 100%;
           object-fit: contain;
         }
-        .source-video-preview {
+        .source-video-preview,
+        .source-audio-preview {
           display: none;
         }
       }
@@ -117,6 +118,15 @@
           cursor: pointer;
           color: #fff;
         }
+      }
+      .video-play {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #fff;
+        cursor: pointer;
+        z-index: 2;
       }
     }
     .source-name {
