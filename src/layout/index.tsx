@@ -57,7 +57,9 @@ export default function Fn() {
   }, [match])
   return (
     <Layout className='layout-container'>
-      <Header className='layout-header' style={{ height: headerH }}>
+      <Header
+        className='layout-header'
+        style={{ height: headerH, lineHeight: '64px' }}>
         <MyHeader broken={isSmPoint} hideRight={hideRight} />
       </Header>
       <Layout
