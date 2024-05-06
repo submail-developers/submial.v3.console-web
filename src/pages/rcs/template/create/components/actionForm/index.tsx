@@ -50,7 +50,7 @@ const ActionForm = memo(({ activeIndex, data, onChange, name }: Props) => {
   useEffect(() => {
     if (form) {
       form.resetFields()
-      console.log(data[activeIndex], data)
+      // console.log(data[activeIndex], data)
       let actionKey = Object.keys(data[activeIndex]).find((key) =>
         actionTypeArray.includes(key as ActionType),
       )
@@ -82,6 +82,16 @@ const ActionForm = memo(({ activeIndex, data, onChange, name }: Props) => {
             form.setFieldsValue({
               type: actionKey,
               [actionKey]: { ...actionVal, mapType: mapType },
+            })
+            break
+          case 'calendarAction':
+            let timer
+            if (actionVal.startTime && actionVal.endTime) {
+              timer = [dayjs(actionVal.startTime), dayjs(actionVal.endTime)]
+            }
+            form.setFieldsValue({
+              type: actionKey,
+              [actionKey]: { ...actionVal, timer },
             })
             break
           default:
@@ -155,6 +165,27 @@ const ActionForm = memo(({ activeIndex, data, onChange, name }: Props) => {
           case 'mapAction':
             delete values[key].mapType
             params[key] = values[key]
+            break
+          case 'calendarAction':
+            params[key] = {}
+            let {
+              title = '',
+              description = '',
+              timer,
+              fallbackUrl = '',
+            } = values[key]
+            params[key]['title'] = title
+            params[key]['description'] = description
+            params[key]['fallbackUrl'] = fallbackUrl
+            if (timer) {
+              let startTime = timer[0].format('YYYY-MM-DDTHH:mm:ss[Z]')
+              let endTime = timer[1].format('YYYY-MM-DDTHH:mm:ss[Z]')
+              params[key]['startTime'] = startTime
+              params[key]['endTime'] = endTime
+            } else {
+              params[key]['startTime'] = ''
+              params[key]['endTime'] = ''
+            }
             break
           default:
             break
@@ -414,13 +445,14 @@ const ActionForm = memo(({ activeIndex, data, onChange, name }: Props) => {
                   <Form.Item label='日程描述' name={[type, 'description']}>
                     <Input placeholder='请输入' />
                   </Form.Item>
-                  <Form.Item label='开始时间' name={[type, 'startTime']}>
-                    <DatePicker showTime={true} format='YYYY-MM-DD HH:mm:ss' />
+                  <Form.Item label='开始时间 - 结束时间' name={[type, 'timer']}>
+                    <RangePicker
+                      showTime={true}
+                      format='YYYY-MM-DD HH:mm:ss'
+                      placeholder={['开始时间', '结束时间']}
+                    />
                   </Form.Item>
-                  <Form.Item label='结束时间' name={[type, 'endTime']}>
-                    <DatePicker showTime={true} format='YYYY-MM-DD HH:mm:ss' />
-                  </Form.Item>
-                  <Form.Item label='回落地址' name={[type, 'description']}>
+                  <Form.Item label='回落地址' name={[type, 'fallbackUrl']}>
                     <Input placeholder='请输入' />
                   </Form.Item>
                 </>
