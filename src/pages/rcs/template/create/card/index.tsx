@@ -1,45 +1,18 @@
-import {
-  useState,
-  useMemo,
-  useCallback,
-  useRef,
-  useEffect,
-  CSSProperties,
-} from 'react'
-import {
-  Flex,
-  Space,
-  Tabs,
-  Checkbox,
-  Divider,
-  Image,
-  Input,
-  Form,
-  Select,
-  App,
-} from 'antd'
+import { useState, useEffect, CSSProperties } from 'react'
+import { Space, Tabs, Divider, Image, Form, Select, App } from 'antd'
 import type { TabsProps, SelectProps } from 'antd'
-import {
-  useParams,
-  useLocation,
-  useSearchParams,
-  useNavigate,
-} from 'react-router-dom'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import Meteial from '../components/meteial'
 import ActionForm from '../components/actionForm'
 import Page from '../page'
-import { Media, Action, Reply, SuggestionItem, CardLayout } from '../type'
+import { Media, Action, Reply, CardLayout } from '../type'
 import RcsInput from '@/components/rcsInput'
 import ANumber from '@/components/aNumber'
 import { useDrop } from 'react-dnd'
 import { config as dndConfig } from '../dnd'
-import imgTypeImg from '@/assets/rcs/fileType/img.png'
-import audioTypeImg from '@/assets/rcs/fileType/audio.png'
-import videoTypeImg from '@/assets/rcs/fileType/video.png'
 import errorImg from '@/assets/rcs/error.png'
 import { API } from 'apis'
 import { createRcsTemp, getMmsList } from '@/api'
-import formUtils from '@/utils/formRules'
 
 import { debounce } from 'lodash'
 
@@ -71,54 +44,14 @@ const aNumberActiveStyle: CSSProperties = {
   backgroundColor: '#1764FF',
 }
 
-const SearchInput = (props) => {
-  const [data, setData] = useState<SelectProps['options']>([])
-  const [value, setValue] = useState<string>()
-
-  const handleSearch = debounce(async (newValue: string) => {
-    if (!newValue) {
-      setData([])
-      return
-    }
-    const res = await getMmsList({
-      page: 1,
-      limit: 20,
-      id: newValue,
-    })
-    setData(res.data)
-  }, 200)
-
-  const handleChange = (newValue: string) => {
-    setValue(newValue)
-  }
-
-  return (
-    <Select
-      showSearch
-      value={value}
-      placeholder='请输入模版ID'
-      defaultActiveFirstOption={false}
-      style={{ width: '100%' }}
-      filterOption={false}
-      onSearch={handleSearch}
-      onChange={handleChange}
-      options={(data || []).map((d) => ({
-        value: d.sign,
-        label: d.sign,
-      }))}
-    />
-  )
-}
-
 export default function Fn() {
   const nav = useNavigate()
   const { message: messageApi } = App.useApp()
   const [searchParams] = useSearchParams()
+  // 模版标题
   const name = decodeURIComponent(searchParams.get('name'))
   const [loading, setLoading] = useState(false)
-
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
+  // 拖拽的信息
   const [media, setmedia] = useState<Media>()
 
   // 拖拽素材到指定区域
@@ -157,7 +90,9 @@ export default function Fn() {
       },
     },
   ])
+  // 富文本中-当前编辑的第几个按钮
   const [actionsIndex, setactionsIndex] = useState(-1)
+  // 右侧-当前编辑的第几个按钮
   const [btnIndex, setbtnIndex] = useState(0)
   // 悬浮菜单
   const [suggestions, setsuggestions] = useState<Action[]>([
@@ -171,10 +106,10 @@ export default function Fn() {
       },
     },
   ])
+  // 富文本中-当前编辑的第几个悬浮按钮
   const [suggestionsIndex, setsuggestionsIndex] = useState(-1)
+  // 右侧-当前编辑的第几个悬浮按钮
   const [floatIndex, setfloatIndex] = useState(0)
-  // 上行回复
-  const [reply, setreply] = useState<Reply[]>([])
   const [layout, setlayout] = useState<CardLayout>()
 
   const [richTitle, setRichTitle] = useState<RichText>({
@@ -199,8 +134,10 @@ export default function Fn() {
   const [richMsg, setRichMsg] = useState('')
   // 彩信回落
   const [mmsInfo, setMmsInfo] = useState<API.MmsListItem>()
+  // 彩信列表
   const [mmsList, setMmsList] = useState<API.MmsListItem[]>([])
 
+  // 搜索彩信列表
   const searchMmsList = debounce(async (newValue: string) => {
     if (!newValue) {
       setMmsList([])
@@ -214,6 +151,7 @@ export default function Fn() {
     setMmsList(res.data)
   }, 200)
 
+  // 设置彩信回落
   const changeMmsValue = (val) => {
     const info = mmsList.find((item) => item.sign == val)
     if (info) {
@@ -221,12 +159,13 @@ export default function Fn() {
     }
   }
 
+  // 右侧模版配置与消息回落配置切换
   const [activeKey, setactiveKey] = useState('1')
   const onChange = (key: string) => {
     setactiveKey(key)
   }
 
-  // 按钮
+  // 编辑按钮
   const changeBtnText = (val, index) => {
     setactions((prevActions) => {
       return prevActions.map((item, idx) => {
@@ -281,7 +220,7 @@ export default function Fn() {
     })
   }
 
-  // 悬浮按钮
+  // 编辑悬浮按钮
   const changeSuggestionsText = (val, index) => {
     setsuggestions((prevActions) => {
       return prevActions.map((item, idx) => {
@@ -336,6 +275,7 @@ export default function Fn() {
     })
   }
 
+  // 提审
   const submit = async () => {
     const checkRes = [checkTitle(), checkDes(), checkBtn(), checkFloat()]
     checkRes.forEach((validator) => {
@@ -465,18 +405,6 @@ export default function Fn() {
 
   //   return flag
   // }
-
-  const getMms = async () => {
-    const res = await getMmsList({
-      page: 1,
-      limit: 20,
-    })
-    console.log(res)
-  }
-
-  useEffect(() => {
-    getMms()
-  }, [])
 
   const items: TabsProps['items'] = [
     {

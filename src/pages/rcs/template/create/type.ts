@@ -1,8 +1,10 @@
+// 素材
 export type Media = {
   mediaUrl: string
   mediaContentType: string
   mediaType?: '1' | '2' | '3' // 额外加的字段 1 图片,2 音频,3 视频
   storeAt?: string // 额外加的字段 展示图片使用
+  mediaOssUrl?: string // 额外加的字段 展示图片使用
   mediaFileSize: string
   height: 'SHORT_HEIGHT' | 'MEDIUM_HEIGHT' | 'TALL_HEIGHT' // 小/中/大图
   thumbnailUrl?: string // 缩略图
@@ -11,6 +13,7 @@ export type Media = {
   contentDescription?: string // 卡片描述
 }
 
+// 事件类型
 export type ActionType =
   | 'urlAction'
   | 'dialerAction'
@@ -30,6 +33,7 @@ export const actionTypeArray: ActionType[] = [
   'settingsAction',
 ]
 
+// 拨号类型: 普通通话 | 增强通话 | 视频通话
 export type DialerActionType =
   | 'dialPhoneNumber'
   | 'dialEnrichedCall'
@@ -86,6 +90,7 @@ export type Action = {
   }
 }
 
+// 事件类型
 export const actions = [
   {
     label: '打开浏览器',
@@ -126,11 +131,26 @@ export type Reply = {
   }
 }
 
+// 按钮｜悬浮按钮配置
 export type SuggestionItem = {
   action?: Action
   reply?: Reply
 }
 
+// 单卡片message
+export type CardMessage = {
+  generalPurposeCard: {
+    content: CardContent
+    layout: CardLayout
+  }
+}
+// 单卡片content
+export type CardContent = {
+  title: string
+  description: string
+  media: Media
+  suggestions: SuggestionItem[]
+}
 // 单卡片layout
 export type CardLayout = {
   cardOrientation: 'VERTICAL' | 'HORIZONTAL' // 垂直｜水平

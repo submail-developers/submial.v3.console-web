@@ -45,6 +45,8 @@ import wordTypeImg from '@/assets/rcs/fileType/word.png'
 import xlsTypeImg from '@/assets/rcs/fileType/xls.png'
 import zipTypeImg from '@/assets/rcs/fileType/zip.png'
 
+import CardItem from '@/pages/rcs/template/create/card/item'
+
 import { API } from 'apis'
 
 import './index.scss'
@@ -54,9 +56,15 @@ type Props = {
   onSelect?: () => void
 }
 export default function Fn({ item, onSelect }: Props) {
+  const [type, setType] = useState('')
   const handleItem = () => {
     if (onSelect) onSelect()
   }
+  useEffect(() => {
+    if ('generalPurposeCard' in item.message.message) {
+      setType('card')
+    }
+  }, [])
   return (
     <div className='rcs-temp-item'>
       <Tooltip title={onSelect ? '' : '审核备注'} placement='bottom'>
@@ -68,10 +76,20 @@ export default function Fn({ item, onSelect }: Props) {
           <div className={`status ${EnumTempStatusBadge[item.checked]}`}>
             {EnumTempStatusText[item.checked]}
           </div>
-          <div className='preview-model'>
+          <div className='preview-model p-12'>
             <div className='preview-content'>
-              {/* <PreviewCard data={item} showName /> */}
+              {type == 'card' && <CardItem message={item.message.message} />}
             </div>
+
+            <Space align='center' className='float-wrap'>
+              {item.suggestions.suggestions
+                .filter((item) => Boolean(item.action))
+                .map((item, index) => (
+                  <div className='float-item' key={index}>
+                    {item.action.displayText}
+                  </div>
+                ))}
+            </Space>
           </div>
           <Flex
             justify='space-between'
