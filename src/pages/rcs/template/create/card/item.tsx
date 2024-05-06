@@ -1,7 +1,10 @@
 import { Image } from 'antd'
 import { Media, Action, Reply, CardLayout, CardMessage } from '../type'
-import './index.scss'
 import { useEffect, useState } from 'react'
+import { imgTypes, audioTypes, videoTypes } from '@/pages/rcs/material/type'
+
+import './index.scss'
+
 type TextStyle = {
   b: boolean
   i: boolean
@@ -11,6 +14,7 @@ type Props = {
   message: CardMessage
 }
 export default function Fn({ message }: Props) {
+  const [mediaType, setMediaType] = useState<number>() // 0 ｜ 1 ｜ 2 图片｜音频｜视频
   const [titleStyle, setTitleStyle] = useState<TextStyle>({
     b: false,
     i: false,
@@ -22,7 +26,7 @@ export default function Fn({ message }: Props) {
     u: false,
   })
   useEffect(() => {
-    const { layout = {} } = message.generalPurposeCard
+    const { layout = {}, content } = message.generalPurposeCard
     if ('titleFontStyle' in layout) {
       let titleFontStyle = layout.titleFontStyle as string
       let styles = titleFontStyle.split(',')
@@ -41,22 +45,41 @@ export default function Fn({ message }: Props) {
         u: styles.includes('underline'),
       })
     }
+    let { mediaContentType = '' } = content.media
+    const index = [
+      imgTypes.includes(mediaContentType),
+      audioTypes.includes(mediaContentType),
+      videoTypes.includes(mediaContentType),
+    ].findIndex((item) => Boolean(item))
+    if (index > -1) setMediaType(index)
   }, [])
   console.log(message.generalPurposeCard)
   return (
     <div
       className='center-content card-center-content'
       style={{ height: '100%' }}>
-      <div className='banner'>
-        <Image
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-          }}
-          src={message.generalPurposeCard.content.media.mediaOssUrl}
-          preview={false}
-        />
+      <div className='banner' style={{ background: 'transparent' }}>
+        {mediaType == 0 && (
+          <Image
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+            src={message.generalPurposeCard.content.media.mediaOssUrl}
+            preview={false}
+          />
+        )}
+        {mediaType == 1 && (
+          <audio
+            src={message.generalPurposeCard.content.media.mediaOssUrl}
+            controls></audio>
+        )}
+        {mediaType == 2 && (
+          <video
+            src={message.generalPurposeCard.content.media.mediaOssUrl}
+            controls></video>
+        )}
       </div>
       <div
         className='card-title'

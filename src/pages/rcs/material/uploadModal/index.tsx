@@ -11,6 +11,7 @@ import videoFileImg from '@/assets/rcs/fileType/video.png'
 import wordFileImg from '@/assets/rcs/fileType/word.png'
 import xlsFileImg from '@/assets/rcs/fileType/xls.png'
 import zipFileImg from '@/assets/rcs/fileType/zip.png'
+import { imgTypes, videoTypes, audioTypes } from '../type'
 
 import './index.scss'
 
@@ -30,8 +31,6 @@ type FaqItem = {
 
 const { Dragger } = Upload
 
-const imgTypes = ['image/jpeg', 'image/png', 'image/gif']
-const videoTypes = ['video/mp4', 'video/3gpp']
 const imgSize = 2
 const videoSize = 10
 const defaultSize = 5 // 默认文件大小限制
@@ -48,7 +47,7 @@ const faq: FaqItem[] = [
     title: '音频',
     size: defaultSize,
     suffix: ['mp3', 'midi', 'wav'],
-    types: ['audio/mpeg', 'audio/midi', 'audio/wav'],
+    types: audioTypes,
     img: audioFileImg,
   },
   {

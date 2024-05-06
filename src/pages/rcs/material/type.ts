@@ -23,3 +23,7 @@ export enum EnumMediaStatusIcon {
   'icon-time' = 8,
   'icon-dengpao' = 9,
 }
+
+export const imgTypes = ['image/jpeg', 'image/png', 'image/gif']
+export const videoTypes = ['video/mp4', 'video/3gpp']
+export const audioTypes = ['audio/mpeg', 'audio/midi', 'audio/wav']
