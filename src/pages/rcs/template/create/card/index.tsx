@@ -820,11 +820,13 @@ export default function Fn() {
                 />
               </div>
             ))}
-            <div
-              className='float-add-btn fx-center-center'
-              onClick={addSuggestions}>
-              <span className='icon iconfont icon-jia fn12'></span>
-            </div>
+            {suggestions.length < 4 && (
+              <div
+                className='float-add-btn fx-center-center'
+                onClick={addSuggestions}>
+                <span className='icon iconfont icon-jia fn12'></span>
+              </div>
+            )}
           </Space>
         </>
       }

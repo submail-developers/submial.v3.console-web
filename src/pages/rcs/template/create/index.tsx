@@ -4,11 +4,29 @@ import { Outlet } from 'react-router-dom'
 import { useAppDispatch } from '@/store/hook'
 import { changeBreadcrumbItem } from '@/store/reducers/breadcrumb'
 import { useEffect } from 'react'
-
-import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-const { Header, Sider, Content } = Layout
-
+import { TouchBackend } from 'react-dnd-touch-backend'
+import {
+  DndProvider,
+  TouchTransition,
+  MouseTransition,
+} from 'react-dnd-multi-backend'
+const HTML5toTouch = {
+  backends: [
+    {
+      id: 'html5',
+      backend: HTML5Backend,
+      transition: MouseTransition,
+    },
+    {
+      id: 'touch',
+      backend: TouchBackend,
+      options: { enableMouseEvents: true },
+      preview: true,
+      transition: TouchTransition,
+    },
+  ],
+}
 export default function Fn() {
   const dispatch = useAppDispatch()
   const params = useParams()
@@ -29,7 +47,7 @@ export default function Fn() {
   // }, [id])
 
   return (
-    <DndProvider backend={HTML5Backend}>
+    <DndProvider options={HTML5toTouch}>
       <Outlet />
     </DndProvider>
   )
