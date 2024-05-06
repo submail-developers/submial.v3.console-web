@@ -211,7 +211,6 @@ export default function Fn() {
               <div className='create-card'>
                 <PlusOutlined
                   style={{ fontSize: '40px', marginBottom: '24px' }}
-                  rev={undefined}
                 />
                 <div>创建模版</div>
               </div>

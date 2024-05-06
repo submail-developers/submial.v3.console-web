@@ -149,7 +149,7 @@ export default function Fn() {
           <div
             className='fx-center-center fx-col w-100 color'
             style={{ height: '80px' }}>
-            <LoadingOutlined rev={null} className='fn20' />
+            <LoadingOutlined className='fn20' />
             <span>加载中...</span>
           </div>
         )}

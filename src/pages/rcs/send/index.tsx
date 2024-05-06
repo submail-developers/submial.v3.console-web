@@ -133,7 +133,7 @@ export default function CreateSend() {
             type='primary'
             size={point ? 'large' : 'middle'}
             onClick={() => setShowModal(true)}
-            icon={<PlusOutlined className='fn14' rev={null} />}>
+            icon={<PlusOutlined className='fn14' />}>
             {id == '0' ? '选择模板' : '选择其他模板'}
           </Button>
         </Flex>

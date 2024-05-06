@@ -161,11 +161,7 @@ const MaterialItem = (props: MaterialItemProps) => {
                 }}
               />
               <div className='video-play' onClick={previewEvent}>
-                <PlayCircleOutlined
-                  className='fn24'
-                  title='播放视频'
-                  rev={undefined}
-                />
+                <PlayCircleOutlined className='fn24' title='播放视频' />
               </div>
             </>
           )}
@@ -236,7 +232,7 @@ const MaterialItem = (props: MaterialItemProps) => {
             {/* 预览图片按钮 */}
             {props.item.type == '1' && (
               <div className='handle-item' onClick={previewEvent}>
-                <EyeOutlined className='fn16' title='预览' rev={undefined} />
+                <EyeOutlined className='fn16' title='预览' />
               </div>
             )}
             {/* 预览音频|视频按钮 */}
@@ -245,7 +241,6 @@ const MaterialItem = (props: MaterialItemProps) => {
                 <PlayCircleOutlined
                   className='fn16'
                   title={`${props.item.type == '2' ? '播放音频' : '播放音频'}`}
-                  rev={undefined}
                 />
               </div>
             )}
@@ -358,7 +353,7 @@ export default function Fn() {
               type='primary'
               size={point ? 'large' : 'middle'}
               onClick={() => setShowMmsUpload(true)}
-              icon={<UploadOutlined className='fn18' rev={undefined} />}>
+              icon={<UploadOutlined className='fn18' />}>
               上传彩信回落素材
             </Button>
           </ConfigProvider>
@@ -366,7 +361,7 @@ export default function Fn() {
             type='primary'
             size={point ? 'large' : 'middle'}
             onClick={() => setShowUpload(true)}
-            icon={<UploadOutlined className='fn18' rev={undefined} />}>
+            icon={<UploadOutlined className='fn18' />}>
             上传素材
           </Button>
         </Space>

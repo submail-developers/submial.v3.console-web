@@ -25,7 +25,7 @@ export default function APreviewImg(props: Props) {
           onVisibleChange: (visible) => setVisible(visible),
         }}
       />
-      <EyeOutlined rev={null} />
+      <EyeOutlined />
     </div>
   )
 }

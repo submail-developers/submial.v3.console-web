@@ -160,7 +160,7 @@ export default function Fn() {
           type='primary'
           size={point ? 'large' : 'middle'}
           onClick={toCreate}
-          icon={<PlusOutlined className='fn14' rev={null} />}>
+          icon={<PlusOutlined className='fn14' />}>
           申请 Chatbot
         </Button>
       </Flex>
