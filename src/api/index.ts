@@ -99,8 +99,8 @@ export const getIndustry = () => {
 }
 
 // 获取大区，省市相关信息
-export const getRegionRes = () => {
-  return request.post<any, API.GetRegionRes, any>(
+export const getRegion = () => {
+  return request.post<any, API.Response<API.RegionItem[]>, any>(
     '/console/api/rcs/get_district_list',
     {},
   )

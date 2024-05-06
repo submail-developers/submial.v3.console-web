@@ -22,7 +22,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useParams, NavLink } from 'react-router-dom'
 import { changeBreadcrumbItem } from '@/store/reducers/breadcrumb'
 import { useAppDispatch } from '@/store/hook'
-import { getRegionRes, getDicConfig, signupForCspAccount } from '@/api'
+import { getRegion, getDicConfig, signupForCspAccount } from '@/api'
 import utils from '@/utils/formRules'
 import { API } from 'apis'
 
@@ -88,6 +88,7 @@ export default function Fn() {
   const { id } = useParams()
   const [loading, setloading] = useState(false)
   const [customerId, setCustomerId] = useState({})
+  const [regionList, setregionList] = useState<API.RegionItem[]>([])
 
   const { message } = App.useApp()
 
@@ -149,8 +150,8 @@ export default function Fn() {
   // 获取省 市
   const getProvincesCities = async () => {
     try {
-      const res = await getRegionRes()
-      // console.log(res)
+      const res = await getRegion()
+      setregionList(res.data)
     } catch (error) {}
   }
   // 获取客户资料
@@ -238,7 +239,11 @@ export default function Fn() {
             </Col>
             <Col span={24} xl={12}>
               <Form.Item label='归属区域' name='actualIssueIndustry' required>
-                <Cascader options={options} placeholder='请选择' />
+                <Cascader
+                  options={regionList}
+                  placeholder='请选择'
+                  expandTrigger='hover'
+                />
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>

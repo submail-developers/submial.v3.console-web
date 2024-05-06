@@ -138,11 +138,6 @@ declare module 'apis' {
       cmName: string
     }
     // 获取大区，省市相关信息
-    interface GetRegionRes {
-      status: string
-      message: string
-      data: RegionItem[]
-    }
     interface RegionItem {
       label: string
       value: string
