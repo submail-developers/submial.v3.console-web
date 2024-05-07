@@ -363,8 +363,11 @@ declare module 'apis' {
       subhook_url: string
       unifySocialCreditCodes: string
       enterpriseOwnerName: string
-      certificateType: '1' | '2' // 1居民身份证,2人名
+      certificateType: '01' | '02' | '03' // 1居民身份证,2人名
       certificateCode: string
+      region: string
+      province: string
+      city: string
     }
 
     // / 注册非直签客户信息参数
@@ -392,6 +395,32 @@ declare module 'apis' {
       cityCode: string
     }
     interface signupForCspAccountItems {}
+
+    // / 注册非直签客户信息参数
+    interface saveupForCspAccountParams {
+      customerName: string
+      customerContactName: string
+      customerContactMob: string
+      customerContactEmail: string
+      businessType: string
+      industryTypeCode: string
+      contractNo: string
+      contractName: string
+      contractEffectiveDate: string
+      contractExpiryDate: string
+      contractRenewStatus: string
+      contractRenewDate: string
+      companyLogo: string
+      contractAccessory: string
+      unifySocialCreditCodes: string
+      enterpriseOwnerName: string
+      certificateType: string
+      certificateCode: string
+      regionCode: string
+      provinceCode: string
+      cityCode: string
+    }
+    interface saveupForCspAccountItems {}
 
     // 创建发送任务
     interface CreateRcsSendParams {

@@ -195,7 +195,7 @@ export default function Fn() {
           </Col>
 
           <Col span={8} md={8} lg={6} xl={4}>
-            <Form.Item name='status' label='固定菜单审核状态'>
+            <Form.Item name='status2' label='固定菜单审核状态'>
               <Select
                 placeholder='请选择'
                 options={[
@@ -210,7 +210,7 @@ export default function Fn() {
           </Col>
 
           <Col span={8} md={8} lg={6} xl={4}>
-            <Form.Item name='status' label='上架状态'>
+            <Form.Item name='status3' label='上架状态'>
               <Select
                 placeholder='请选择'
                 options={[

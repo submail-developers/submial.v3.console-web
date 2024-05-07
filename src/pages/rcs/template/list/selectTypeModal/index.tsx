@@ -1,4 +1,4 @@
-import { Modal, Form, Input, Space, Button, Flex, type FormProps } from 'antd'
+import { Modal, Form, Input, Space, Button, Flex, type, FormProps } from 'antd'
 import utils from '@/utils/formRules'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'

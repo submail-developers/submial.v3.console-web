@@ -368,7 +368,7 @@ export default function Fn({ onGetStatsu }) {
         <Col span={24}>
           <Table
             rowClassName='table-row'
-            // className='theme-cell bg-white'
+            className='tbale2'
             columns={columns}
             dataSource={list}
             pagination={false}
@@ -377,7 +377,7 @@ export default function Fn({ onGetStatsu }) {
           />
           <Table
             style={{ marginTop: '20px', marginBottom: '20px' }}
-            // className='theme-cell bg-white'
+            className='tbale2'
             columns={columns2}
             dataSource={list2}
             pagination={false}
@@ -385,7 +385,7 @@ export default function Fn({ onGetStatsu }) {
             scroll={{ x: 'max-content' }}
           />
           <Table
-            // className='theme-cell bg-white'
+            className='tbale2'
             columns={columns2}
             dataSource={list2}
             pagination={false}
