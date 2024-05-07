@@ -210,6 +210,7 @@ export default function Fn() {
               onClick={() => setopenTypeModal(true)}>
               <div className='create-card'>
                 <PlusOutlined
+                  rev={null}
                   style={{ fontSize: '40px', marginBottom: '24px' }}
                 />
                 <div>创建模版</div>

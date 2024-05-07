@@ -271,7 +271,7 @@ export default function UploadModal(props: Props) {
         <div className='img-layer-canvas'>
           <Dragger {...propsDragger} className='dragger'>
             <p className='ant-upload-drag-icon'>
-              <InboxOutlined />
+              <InboxOutlined rev={undefined} />
             </p>
             <p className='ant-upload-text'>点击选择文件或拖拽文件到此区域</p>
             <p className='ant-upload-hint'>

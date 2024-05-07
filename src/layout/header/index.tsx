@@ -130,6 +130,7 @@ export default function MyHeader(props: Props) {
                   <div className='account-mini-btn'>
                     <UserOutlined
                       style={{ color: '#393e49', fontSize: '16px' }}
+                      rev={undefined}
                     />
                   </div>
                 )}

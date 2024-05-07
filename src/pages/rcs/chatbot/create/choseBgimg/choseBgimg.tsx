@@ -100,7 +100,7 @@ const Dialog = ({}: Props, ref: any) => {
           <div key={Math.random()}>
             <Upload>
               <Button
-                icon={<UploadOutlined />}
+                icon={<UploadOutlined rev={undefined} />}
                 style={{ width: 120, height: 40 }}>
                 上传
               </Button>

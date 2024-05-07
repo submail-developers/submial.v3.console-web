@@ -95,7 +95,7 @@ export default function CreateSend() {
     })
     if (res.status == 'success') {
       message.success('创建成功', 4, () => {
-        nav('/console/rcs/send/0', { replace: true })
+        // nav('/console/rcs/send/0/0', { replace: true })
       })
     }
   }
@@ -148,7 +148,7 @@ export default function CreateSend() {
             type='primary'
             size={point ? 'large' : 'middle'}
             onClick={() => setShowModal(true)}
-            icon={<PlusOutlined className='fn14' />}>
+            icon={<PlusOutlined className='fn14' rev={undefined} />}>
             {id == '0' ? '选择模板' : '选择其他模板'}
           </Button>
         </Flex>

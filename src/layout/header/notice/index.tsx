@@ -46,7 +46,7 @@ const Item = ({ item, onReGetList }: ItemProps) => {
           title='删除该通知'
           onClick={() => delEvent(item.id)}>
           {loading ? (
-            <LoadingOutlined className='fn14' />
+            <LoadingOutlined className='fn14' rev={undefined} />
           ) : (
             <span
               className='iconfont icon-chahao fn14'
@@ -133,7 +133,8 @@ export default function Notice(props: Props) {
     if (loading) {
       loadMore = (
         <div className='loadmore-btn fx-col fx-y-center' onClick={onLoadMore}>
-          <span>加载更多通知</span> <LoadingOutlined spin className='fn16' />
+          <span>加载更多通知</span>{' '}
+          <LoadingOutlined spin className='fn16' rev={undefined} />
         </div>
       )
     } else {

@@ -408,87 +408,87 @@ const ChatSvg = () => {
 
 // 圆环
 export const CircleIcon = (props: Partial<CustomIconComponentProps>) => (
-  <Icon component={CircleSvg} {...props} />
+  <Icon component={CircleSvg} {...props} rev={null} />
 )
 
 // 四方块
 export const TableIcon = (props: Partial<CustomIconComponentProps>) => (
-  <Icon component={TableSvg} {...props} />
+  <Icon component={TableSvg} {...props} rev={null} />
 )
 
 // ID
 export const IDIcon = (props: Partial<CustomIconComponentProps>) => (
-  <Icon component={IDSvg} {...props} />
+  <Icon component={IDSvg} {...props} rev={null} />
 )
 
 // 短信
 export const MsgIcon = (props: Partial<CustomIconComponentProps>) => (
-  <Icon component={MsgSvg} {...props} />
+  <Icon component={MsgSvg} {...props} rev={null} />
 )
 
 // 国际短信
 export const IntersmsIcon = (props: Partial<CustomIconComponentProps>) => (
-  <Icon component={IntersmsSvg} {...props} />
+  <Icon component={IntersmsSvg} {...props} rev={null} />
 )
 
 // 多媒体彩信
 export const MmsIcon = (props: Partial<CustomIconComponentProps>) => (
-  <Icon component={MmsSvg} {...props} />
+  <Icon component={MmsSvg} {...props} rev={null} />
 )
 
 // 邮件
 export const MailIcon = (props: Partial<CustomIconComponentProps>) => (
-  <Icon component={MailSvg} {...props} />
+  <Icon component={MailSvg} {...props} rev={null} />
 )
 
 // 语音
 export const VoiceIcon = (props: Partial<CustomIconComponentProps>) => (
-  <Icon component={VoiceSvg} {...props} />
+  <Icon component={VoiceSvg} {...props} rev={null} />
 )
 
 // 短网址
 export const ShortUrlIcon = (props: Partial<CustomIconComponentProps>) => (
-  <Icon component={ShortUrlSvg} {...props} />
+  <Icon component={ShortUrlSvg} {...props} rev={null} />
 )
 
 // 一键登录
 export const OnepassIcon = (props: Partial<CustomIconComponentProps>) => (
-  <Icon component={OnepassSvg} {...props} />
+  <Icon component={OnepassSvg} {...props} rev={null} />
 )
 
 // 身份验证
 export const IdentificationIcon = (
   props: Partial<CustomIconComponentProps>,
-) => <Icon component={IdentificationSvg} {...props} />
+) => <Icon component={IdentificationSvg} {...props} rev={null} />
 
 // 本机号码认证
 export const VfmobileIcon = (props: Partial<CustomIconComponentProps>) => (
-  <Icon component={VfmobileSvg} {...props} />
+  <Icon component={VfmobileSvg} {...props} rev={null} />
 )
 
 // 5G RCS 消息
 export const RcsIcon = (props: Partial<CustomIconComponentProps>) => (
-  <Icon component={RcsSVg} {...props} />
+  <Icon component={RcsSVg} {...props} rev={null} />
 )
 
 // 空号检测
 export const MdetectIcon = (props: Partial<CustomIconComponentProps>) => (
-  <Icon component={MdetectSvg} {...props} />
+  <Icon component={MdetectSvg} {...props} rev={null} />
 )
 
 // 5G阅信
 export const AimIcon = (props: Partial<CustomIconComponentProps>) => (
-  <Icon component={AimSvg} {...props} />
+  <Icon component={AimSvg} {...props} rev={null} />
 )
 
 // 控制台
 export const ConsoleIcon = (props: Partial<CustomIconComponentProps>) => (
-  <Icon component={ConsoleSvg} {...props} />
+  <Icon component={ConsoleSvg} {...props} rev={null} />
 )
 
 // Logo-Mini
 export const LogoIcon = (props: Partial<CustomIconComponentProps>) => (
-  <Icon component={LogoSvg} {...props} />
+  <Icon component={LogoSvg} {...props} rev={null} />
 )
 
 // 客服工单按钮
@@ -496,6 +496,7 @@ export const ChatIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon
     component={ChatSvg}
     {...props}
+    rev={null}
     style={{ transform: 'rotate(180deg) scaleX(-1) translateY(4px)' }}
   />
 )
