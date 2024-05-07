@@ -234,7 +234,7 @@ const MaterialItem = (props: MaterialItemProps) => {
             </span>
           </Space>
 
-          {props.item.status == '1' ? (
+          {props.item.status == '0' ? (
             <div className='time fx-center-center fn13'>期限:7天</div>
           ) : (
             ''
@@ -258,9 +258,11 @@ const MaterialItem = (props: MaterialItemProps) => {
                 />
               </div>
             )}
-            <div className='handle-item'>
-              <span className='icon iconfont icon-shuaxin fn18'></span>
-            </div>
+            {props.item.type == '1' && (
+              <div className='handle-item'>
+                <span className='icon iconfont icon-shuaxin fn18'></span>
+              </div>
+            )}
             <Popconfirm
               title='删除素材'
               description='确定删除该素材？'
