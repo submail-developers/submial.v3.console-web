@@ -50,7 +50,7 @@ const ActionForm = memo(({ activeIndex, data, onChange, name }: Props) => {
   useEffect(() => {
     if (form) {
       form.resetFields()
-      // console.log(data[activeIndex], data)
+      console.log(data[activeIndex], data)
       let actionKey = Object.keys(data[activeIndex]).find((key) =>
         actionTypeArray.includes(key as ActionType),
       )
@@ -167,24 +167,30 @@ const ActionForm = memo(({ activeIndex, data, onChange, name }: Props) => {
             params[key] = values[key]
             break
           case 'calendarAction':
-            params[key] = {}
+            params[key] = {
+              createCalendarEvent: {},
+            }
             let {
               title = '',
               description = '',
               timer,
               fallbackUrl = '',
-            } = values[key]
-            params[key]['title'] = title
-            params[key]['description'] = description
-            params[key]['fallbackUrl'] = fallbackUrl
+            } = values[key]['createCalendarEvent']
+            console.log(
+              values[key]['createCalendarEvent'],
+              "values[key]['createCalendarEvent']",
+            )
+            params[key]['createCalendarEvent']['title'] = title
+            params[key]['createCalendarEvent']['description'] = description
+            params[key]['createCalendarEvent']['fallbackUrl'] = fallbackUrl
             if (timer) {
               let startTime = timer[0].format('YYYY-MM-DDTHH:mm:ss[Z]')
               let endTime = timer[1].format('YYYY-MM-DDTHH:mm:ss[Z]')
-              params[key]['startTime'] = startTime
-              params[key]['endTime'] = endTime
+              params[key]['createCalendarEvent']['startTime'] = startTime
+              params[key]['createCalendarEvent']['endTime'] = endTime
             } else {
-              params[key]['startTime'] = ''
-              params[key]['endTime'] = ''
+              params[key]['createCalendarEvent']['startTime'] = ''
+              params[key]['createCalendarEvent']['endTime'] = ''
             }
             break
           default:
@@ -336,7 +342,12 @@ const ActionForm = memo(({ activeIndex, data, onChange, name }: Props) => {
                               <Col span={24}>
                                 <Form.Item
                                   label='经度'
-                                  name={[type, 'location', 'longitude']}
+                                  name={[
+                                    type,
+                                    'showLocation',
+                                    'location',
+                                    'longitude',
+                                  ]}
                                   initialValue=''
                                   rules={[
                                     {
@@ -358,7 +369,12 @@ const ActionForm = memo(({ activeIndex, data, onChange, name }: Props) => {
                               <Col span={24}>
                                 <Form.Item
                                   label='纬度'
-                                  name={[type, 'location', 'latitude']}
+                                  name={[
+                                    type,
+                                    'showLocation',
+                                    'location',
+                                    'latitude',
+                                  ]}
                                   initialValue=''
                                   rules={[
                                     {
@@ -382,7 +398,7 @@ const ActionForm = memo(({ activeIndex, data, onChange, name }: Props) => {
                           {mapType == '1' && (
                             <Form.Item
                               label='地址'
-                              name={[type, 'location', 'query']}
+                              name={[type, 'showLocation', 'location', 'query']}
                               initialValue=''
                               rules={[
                                 {
@@ -406,7 +422,7 @@ const ActionForm = memo(({ activeIndex, data, onChange, name }: Props) => {
 
                   <Form.Item
                     label='标签（选填）'
-                    name={[type, 'location', 'label']}
+                    name={[type, 'showLocation', 'location', 'label']}
                     initialValue=''
                     rules={[
                       {
@@ -418,7 +434,7 @@ const ActionForm = memo(({ activeIndex, data, onChange, name }: Props) => {
                   </Form.Item>
                   <Form.Item
                     label='消息推送地址（选填）'
-                    name={[type, 'fallbackUrl']}
+                    name={[type, 'showLocation', 'fallbackUrl']}
                     initialValue=''
                     rules={[
                       {
@@ -439,20 +455,33 @@ const ActionForm = memo(({ activeIndex, data, onChange, name }: Props) => {
                         message: '请输入',
                       },
                     ]}
-                    name={[type, 'title']}>
+                    name={[type, 'createCalendarEvent', 'title']}>
                     <Input placeholder='请输入' />
                   </Form.Item>
-                  <Form.Item label='日程描述' name={[type, 'description']}>
+                  <Form.Item
+                    label='日程描述'
+                    name={[type, 'createCalendarEvent', 'description']}>
                     <Input placeholder='请输入' />
                   </Form.Item>
-                  <Form.Item label='开始时间 - 结束时间' name={[type, 'timer']}>
+                  <Form.Item
+                    label='开始时间 - 结束时间'
+                    required
+                    name={[type, 'createCalendarEvent', 'timer']}
+                    rules={[
+                      {
+                        required: true,
+                        message: '请选择',
+                      },
+                    ]}>
                     <RangePicker
                       showTime={true}
                       format='YYYY-MM-DD HH:mm:ss'
                       placeholder={['开始时间', '结束时间']}
                     />
                   </Form.Item>
-                  <Form.Item label='回落地址' name={[type, 'fallbackUrl']}>
+                  <Form.Item
+                    label='回落地址'
+                    name={[type, 'createCalendarEvent', 'fallbackUrl']}>
                     <Input placeholder='请输入' />
                   </Form.Item>
                 </>
