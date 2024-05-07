@@ -86,13 +86,17 @@ export default function Fn(props: Props) {
   }
 
   const onSelect = (item: API.RcsTempListItem) => {
-    nav(`/console/rcs/send/${item.sign}`, { replace: true })
+    nav(`/console/rcs/send/${item.sign}/${item.id}`, { replace: true })
     props.onCancel()
   }
 
   useEffect(() => {
-    getList()
-  }, [currentPage, pageSize])
+    if (props.open) {
+      getList()
+    } else {
+      setcurrentPage(1)
+    }
+  }, [currentPage, pageSize, props.open])
 
   return (
     <Modal

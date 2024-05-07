@@ -57,7 +57,7 @@ export default function Fn() {
   const [form] = Form.useForm()
 
   const [currentPage, setcurrentPage] = useState<number>(1)
-  const [pageSize, setpageSize] = useState<number>(12)
+  const [pageSize, setpageSize] = useState<number>(11)
   const [total, setTotal] = useState<number>(0)
   const [list, setList] = useState<API.RcsTempListItem[]>([])
   const [loading, setLoading] = useState(false)

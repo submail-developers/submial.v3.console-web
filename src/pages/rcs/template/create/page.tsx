@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom'
 
 import './page.scss'
-import '@/pages/rcs/template/components/mobile.scss'
+import '@/pages/rcs/template/mobile.scss'
 
 type Props = {
   left: ReactNode

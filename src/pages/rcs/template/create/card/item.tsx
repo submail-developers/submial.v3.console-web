@@ -92,7 +92,7 @@ export default function Fn({ message }: Props) {
         {message.generalPurposeCard.content.title}
       </div>
       <div
-        className='card-des'
+        className='card-des fn13'
         style={{
           fontWeight: desStyle.b ? 'bold' : 'normal',
           fontStyle: desStyle.i ? 'italic' : 'normal',

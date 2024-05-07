@@ -207,7 +207,12 @@ const MaterialItem = (props: MaterialItemProps) => {
             />
           )}
           {props.item.type == '9' && (
-            <Image className='source-img' src={unknowTypeImg} preview={false} />
+            <Image
+              className='source-img'
+              src={unknowTypeImg}
+              preview={false}
+              style={{ height: loadError ? '60%' : '100%' }}
+            />
           )}
         </div>
         <div className='modal'>

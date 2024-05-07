@@ -29,17 +29,18 @@ import { PlusOutlined, DownOutlined } from '@ant-design/icons'
 import { ProFormDependency } from '@ant-design/pro-components'
 import ContactsTabs from './components/contactsTabs'
 import Modal from './components/modal'
+import CardMob from '@/pages/rcs/template/create/card/item'
 
-import { getChatbot, createRcsSend } from '@/api'
+import { getChatbot, createRcsSend, getRcsTempList } from '@/api'
 import { API } from 'apis'
 
 import codeImg from '@/assets/rcs/send1.png'
 
 import './index.scss'
-import '@/pages/rcs/template/components/mobile.scss'
+import '@/pages/rcs/template/mobile.scss'
 
 export default function CreateSend() {
-  const { id } = useParams()
+  const { id, sign } = useParams()
   const nav = useNavigate()
   const point = usePoint('lg')
   const [form] = Form.useForm()
@@ -48,6 +49,7 @@ export default function CreateSend() {
 
   const [chatbotList, setChatbotList] = useState<API.ChatbotItem[]>([])
   const [chatbot, setChatbot] = useState<API.ChatbotItem>()
+  const [tempInfo, setTempInfo] = useState<API.RcsTempListItem>()
   const [showChatbotMenu, setShowChatbotMenu] = useState(true)
 
   const getChatbotList = async () => {
@@ -85,7 +87,7 @@ export default function CreateSend() {
     }
     const res = await createRcsSend({
       appid: appid,
-      template_id: id,
+      template_id: sign,
       tos: textarea || '',
       vars: '',
       mms: mms,
@@ -97,8 +99,21 @@ export default function CreateSend() {
       })
     }
   }
-  const init = () => {
-    console.log('init')
+  const getTempInfo = async () => {
+    try {
+      const res = await getRcsTempList({
+        page: 1,
+        limit: 10,
+        status: '1',
+        id: id,
+      })
+      if (res.list.length == 1) {
+        setTempInfo(res.list[0])
+      } else {
+        message.error('未查询到模版，请重新选择模版')
+        nav('/console/rcs/send/0/0', { replace: true })
+      }
+    } catch (error) {}
   }
 
   // 是否开启回落
@@ -111,14 +126,14 @@ export default function CreateSend() {
 
   useEffect(() => {
     // form.resetFields()
-    if (id == '0') {
+    if (sign == '0') {
       setShowModal(true)
     } else {
       getChatbotList()
+      getTempInfo()
       setShowModal(false)
-      init()
     }
-  }, [id, form])
+  }, [sign, id, form])
 
   return (
     <>
@@ -147,7 +162,23 @@ export default function CreateSend() {
               <div className='rcs-mobile m-t-8' style={{ marginBottom: 0 }}>
                 <div className='mobile-content'>
                   <div className='title fw-500'>测试</div>
-                  <div className='temp-content'>content</div>
+                  <div className='temp-content'>
+                    {tempInfo && (
+                      <>
+                        <CardMob message={tempInfo.message.message} />
+
+                        <Space align='center' className='float-wrap'>
+                          {tempInfo.suggestions.suggestions
+                            .filter((item) => Boolean(item.action))
+                            .map((item, index) => (
+                              <div className='float-item' key={index}>
+                                {item.action.displayText}
+                              </div>
+                            ))}
+                        </Space>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
               <div className='color-warning-yellow g-radius-8 p-x-16 p-y-8 fn12 m-t-24'>
@@ -171,7 +202,7 @@ export default function CreateSend() {
                       <div className='color-btn g-radius-50 step-number fx-center-center color fn16'>
                         1
                       </div>
-                      <span className='fw-500 m-l-8'>任务</span>
+                      <span className='fw-500 m-l-8 fn16'>任务</span>
                     </Flex>
                     <Divider className='line m-y-12'></Divider>
                   </Col>
@@ -280,7 +311,7 @@ export default function CreateSend() {
                       <div className='color-btn g-radius-50 step-number fx-center-center color fn16 '>
                         2
                       </div>
-                      <span className='fw-500 m-l-8'>添加联系人</span>
+                      <span className='fw-500 m-l-8 fn16'>添加联系人</span>
                     </Flex>
                     <Divider className='line m-y-12'></Divider>
                   </Col>
@@ -295,7 +326,7 @@ export default function CreateSend() {
                       <div className='color-btn g-radius-50 step-number fx-center-center color fn16 '>
                         3
                       </div>
-                      <span className='fw-500 m-l-8'>配置</span>
+                      <span className='fw-500 m-l-8 fn16'>配置</span>
                     </Flex>
                     <Divider className='line m-y-12'></Divider>
                   </Col>
