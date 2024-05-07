@@ -125,7 +125,8 @@ export default function UploadModal(props: Props) {
         ...formValues,
         page: currentPage,
         // limit: pageSize,
-        search_type: 'id',
+        status: '1',
+        search_type: 'all',
       })
       setTemplatesList(res.templates)
       // console.log(res)
