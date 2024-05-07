@@ -230,7 +230,11 @@ const MaterialItem = (props: MaterialItemProps) => {
             </span>
           </Space>
 
-          <div className='time fx-center-center fn13'>期限:7天</div>
+          {props.item.status == '1' ? (
+            <div className='time fx-center-center fn13'>期限:7天</div>
+          ) : (
+            ''
+          )}
 
           {/* {hover && ( */}
           <Space className='handle'>
