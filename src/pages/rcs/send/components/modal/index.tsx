@@ -124,16 +124,15 @@ export default function Fn(props: Props) {
       classNames={{ header: 'modal-header', body: 'modal-body' }}
       wrapClassName='select-create-send-temp'
       destroyOnClose>
-      <Flex
-        justify={list.length < 2 ? 'flex-start' : 'space-around'}
-        gap={24}
-        wrap='wrap'>
+      <Row gutter={24}>
         {list.map((item, index) => (
-          <div key={item.id}>
-            <Item item={item} onSelect={() => onSelect(item)} />
-          </div>
+          <Col span={24} md={12} lg={8}>
+            <div key={item.id}>
+              <Item item={item} hiddenHandle onSelect={() => onSelect(item)} />
+            </div>
+          </Col>
         ))}
-      </Flex>
+      </Row>
       {list.length == 0 && <Empty className='m-t-40' />}
     </Modal>
   )

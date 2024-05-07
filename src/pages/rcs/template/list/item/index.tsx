@@ -53,9 +53,10 @@ import './index.scss'
 
 type Props = {
   item: API.RcsTempListItem
+  hiddenHandle?: boolean
   onSelect?: () => void
 }
-export default function Fn({ item, onSelect }: Props) {
+export default function Fn({ item, onSelect, hiddenHandle = false }: Props) {
   const [type, setType] = useState('')
   const handleItem = () => {
     if (onSelect) onSelect()
@@ -109,17 +110,19 @@ export default function Fn({ item, onSelect }: Props) {
               }>
               {item.sign}
             </Button>
-            <Space align='center' size={16}>
-              <div className='g-pointer' title='查看'>
-                <span className='icon iconfont icon-xianshi fn18'></span>
-              </div>
-              <div className='g-pointer' title='编辑'>
-                <span className='icon iconfont icon-bianji fn18'></span>
-              </div>
-              <div className='g-pointer' title='删除'>
-                <span className='icon iconfont icon-shanchu fn18 error-color'></span>
-              </div>
-            </Space>
+            {!hiddenHandle && (
+              <Space align='center' size={16}>
+                <div className='g-pointer' title='查看'>
+                  <span className='icon iconfont icon-xianshi fn18'></span>
+                </div>
+                <div className='g-pointer' title='编辑'>
+                  <span className='icon iconfont icon-bianji fn18'></span>
+                </div>
+                <div className='g-pointer' title='删除'>
+                  <span className='icon iconfont icon-shanchu fn18 error-color'></span>
+                </div>
+              </Space>
+            )}
           </Flex>
         </div>
       </Tooltip>
