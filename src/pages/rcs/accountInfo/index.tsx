@@ -68,7 +68,7 @@ export default function Fn() {
             <Space>
               <NavLink to='/console/rcs/account/create/0'>
                 <Button type='primary'>
-                  <i className='icon iconfont icon-bianji'></i>编辑
+                  <i className='icon iconfont icon-bianji'></i>编辑客户资料
                 </Button>
               </NavLink>
             </Space>
@@ -87,7 +87,11 @@ export default function Fn() {
                 <span className='color-status-waiting'>待审核</span>
               )}
             </div>
-            <div className='auditing-status fn14'>支持运营商 : </div>
+            <div className='auditing-status fn14'>
+              支持运营商 &nbsp;
+              <i className='icon iconfont icon-yidonglogo fn28'></i>
+              &nbsp; 移动
+            </div>
           </div>
 
           <table className='border'>
@@ -104,7 +108,10 @@ export default function Fn() {
               </tr>
               <tr>
                 <td>归属区域</td>
-                <td colSpan={3}>{customerData.belongRegionCode}</td>
+                <td colSpan={3}>
+                  {customerData.region}/{customerData.province}/
+                  {customerData.city}
+                </td>
               </tr>
               <tr>
                 <td>客户详细地址</td>
@@ -129,11 +136,11 @@ export default function Fn() {
               <tr>
                 <td>企业责任人证件类型</td>
                 <td>
-                  {customerData.certificateType == '1'
+                  {customerData.certificateType === '01'
                     ? '居民身份证'
-                    : customerData.certificateType == '2'
+                    : customerData.certificateType === '02'
                     ? '中国人民解放军军人身份证'
-                    : customerData.certificateType == '3'
+                    : customerData.certificateType === '03'
                     ? '中国人民武装警察身份证件'
                     : '-'}
                 </td>

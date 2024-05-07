@@ -14,6 +14,7 @@ import {
   Divider,
   InputNumber,
   ConfigProvider,
+  List,
   App,
 } from 'antd'
 import type { GetProp, UploadFile, UploadProps } from 'antd'
@@ -22,7 +23,13 @@ import { useState, useRef, useEffect } from 'react'
 import { useParams, NavLink } from 'react-router-dom'
 import { changeBreadcrumbItem } from '@/store/reducers/breadcrumb'
 import { useAppDispatch } from '@/store/hook'
-import { getRegion, getDicConfig, signupForCspAccount } from '@/api'
+import {
+  getRegion,
+  getDicConfig,
+  signupForCspAccount,
+  uploadCustomerFile,
+  saveupForCspAccount,
+} from '@/api'
 import utils from '@/utils/formRules'
 import { API } from 'apis'
 
@@ -44,60 +51,33 @@ interface Option {
   children?: Option[]
 }
 
-const options: Option[] = [
-  {
-    value: 'zhejiang',
-    label: 'Zhejiang',
-    children: [
-      {
-        value: 'hangzhou',
-        label: 'Hangzhou',
-        children: [
-          {
-            value: 'xihu',
-            label: 'West Lake',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    value: 'jiangsu',
-    label: 'Jiangsu',
-    children: [
-      {
-        value: 'nanjing',
-        label: 'Nanjing',
-        children: [
-          {
-            value: 'zhonghuamen',
-            label: 'Zhong Hua Men',
-          },
-        ],
-      },
-    ],
-  },
-]
-
 const IdOptions: Option[] = [{ value: 'ids', label: '身份证' }]
 
 export default function Fn() {
   const dispatch = useAppDispatch()
   const [form] = Form.useForm()
   const [fileList, setFileList] = useState<UploadFile[]>([])
+  const [fileList2, setFileList2] = useState<UploadFile[]>([])
+  const [status, setStatus] = useState('')
   const { id } = useParams()
   const [loading, setloading] = useState(false)
   const [customerId, setCustomerId] = useState({})
   const [regionList, setregionList] = useState<API.RegionItem[]>([])
-
   const { message } = App.useApp()
 
+  // 提交
   const submit = async () => {
     try {
+      const res1 = await uploadCustomerFile({
+        file: fileList[0],
+        type: '4',
+      })
+      const res2 = await uploadCustomerFile({
+        file: fileList2[0],
+        type: '1',
+      })
       const formvalues = await form.getFieldsValue()
       let params = {
-        ...formvalues,
-        id: customerId,
         customerContactName: '朱天文',
         businessType: 'A',
         industryTypeCode: '02',
@@ -108,17 +88,76 @@ export default function Fn() {
         contractRenewDate: '2024-12-10 12:30:00',
         companyLogo:
           'rcs/39cdee6050bd28ae89dacd2afd3b3f8f/user/2a2a2228bc3e75c37837b985a0f09a5f.png',
-        contractAccessory:
-          'rcs/39cdee6050bd28ae89dacd2afd3b3f8f/user/2a2a2228bc3e75c37837b985a0f09a5f.pdf',
-        unifySocialCreditCodes: '123123asda23ds',
-        certificateType: '01',
-        certificateCode: '12313123123123121',
-        regionCode: '01',
-        provinceCode: '100',
-        cityCode: '1000',
+        // companyLogo: res1.path,
+        contractRenewStatus: '0',
+
+        id: customerId,
+        customerName: formvalues.customerName,
+        customerContactMob: formvalues.customerContactMob,
+        customerContactEmail: formvalues.customerContactEmail,
+        unifySocialCreditCodes: formvalues.unifySocialCreditCodes,
+        enterpriseOwnerName: formvalues.enterpriseOwnerName,
+        certificateType: formvalues.certificateType,
+        certificateCode: formvalues.certificateCode,
+        contractAccessory: res2.path,
+        regionCode: formvalues.belongRegionCode[0],
+        provinceCode: formvalues.belongRegionCode[1],
+        cityCode: formvalues.belongRegionCode[2],
       }
-      console.log(params, '111')
+
       await signupForCspAccount(params)
+      message.success('提交成功！')
+      setloading(false)
+    } catch (error) {
+      setloading(false)
+    }
+  }
+  // 保存
+  const save = async () => {
+    try {
+      let res1, res2
+      res1 =
+        fileList[0] &&
+        (await uploadCustomerFile({
+          file: fileList[0],
+          type: '4',
+        }))
+      res2 =
+        fileList2[0] &&
+        (await uploadCustomerFile({
+          file: fileList2[0],
+          type: '1',
+        }))
+
+      const formvalues = await form.getFieldsValue()
+      let params = {
+        customerContactName: '朱天文',
+        businessType: 'A',
+        industryTypeCode: '02',
+        contractNo: '1111111',
+        contractName: '合同名称',
+        contractEffectiveDate: '2024-10-10 12:30:00',
+        contractExpiryDate: '2024-12-10 12:30:00',
+        contractRenewDate: '2024-12-10 12:30:00',
+        companyLogo:
+          'rcs/39cdee6050bd28ae89dacd2afd3b3f8f/user/2a2a2228bc3e75c37837b985a0f09a5f.png',
+        // companyLogo: (res1 && res1.path) || '',
+        contractRenewStatus: '0',
+
+        id: customerId,
+        customerName: formvalues.customerName,
+        customerContactMob: formvalues.customerContactMob,
+        customerContactEmail: formvalues.customerContactEmail,
+        unifySocialCreditCodes: formvalues.unifySocialCreditCodes,
+        enterpriseOwnerName: formvalues.enterpriseOwnerName,
+        certificateType: formvalues.certificateType,
+        certificateCode: formvalues.certificateCode,
+        contractAccessory: (res2 && res2.path) || '',
+        regionCode: formvalues.belongRegionCode[0],
+        provinceCode: formvalues.belongRegionCode[1],
+        cityCode: formvalues.belongRegionCode[2],
+      }
+      await saveupForCspAccount(params)
       message.success('保存成功！')
       setloading(false)
     } catch (error) {
@@ -126,9 +165,9 @@ export default function Fn() {
     }
   }
 
-  const handleUpload = () => {}
-
   const props: UploadProps = {
+    accept:
+      '.pdf, .doc, .docx, .xls, .xIsx, .ppt, .pptx, .jpg, .jpeg, .gif, .rar, .7z, .zip',
     onRemove: (file) => {
       const index = fileList.indexOf(file)
       const newFileList = fileList.slice()
@@ -136,13 +175,49 @@ export default function Fn() {
       setFileList(newFileList)
     },
     beforeUpload: (file) => {
-      setFileList([...fileList, file])
-
-      return false
+      const isLt10M = file.size / 1024 / 1024 < 10
+      if (!isLt10M) {
+        message.error('文件不允许超过10M！')
+      } else {
+        setFileList([...fileList, file])
+        return false
+      }
+    },
+    onChange: () => {
+      try {
+        setFileList(fileList.slice(-1))
+      } catch (e) {
+        message.error(e.message)
+      }
     },
     fileList,
   }
-
+  const props2: UploadProps = {
+    accept: '.pdf, .doc, .docx, .jpg, .jpeg, .gif, .rar, .zip',
+    onRemove: (file) => {
+      const index = fileList2.indexOf(file)
+      const newFileList = fileList2.slice()
+      newFileList.splice(index, 1)
+      setFileList2(newFileList)
+    },
+    beforeUpload: (file) => {
+      const isLt10M = file.size / 1024 / 1024 < 10
+      if (!isLt10M) {
+        message.error('文件不允许超过10M！')
+      } else {
+        setFileList2([...fileList2, file])
+        return false
+      }
+    },
+    onChange: () => {
+      try {
+        setFileList2(fileList2.slice(-1))
+      } catch (e) {
+        message.error(e.message)
+      }
+    },
+    fileList: fileList2,
+  }
   const onSetLogo = (src: string) => {
     form.setFieldValue('logo', src)
   }
@@ -160,11 +235,13 @@ export default function Fn() {
       ifshowLoading && setloading(true)
       const params = ''
       const res = await getDicConfig(params)
-      // setCustomerData(res.data)
-      // console.log(res.data, '///')
       setCustomerId(res.data.id)
+      setStatus(res.data.status)
       form.resetFields()
-      form.setFieldsValue(res.data)
+      form.setFieldsValue({
+        ...res.data,
+        belongRegionCode: res.data.belongRegionCode.split(','),
+      })
       setloading(false)
     } catch (error) {
       setloading(false)
@@ -233,12 +310,26 @@ export default function Fn() {
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
-              <Form.Item label='客户电话' required name='customerContactMob'>
-                <Input placeholder='客户电话信息' />
+              <Form.Item
+                label='客户电话'
+                required
+                name='customerContactMob'
+                rules={[
+                  {
+                    required: true,
+                    message: '请输入正确的手机号',
+                    pattern: new RegExp(/^1(3|4|5|6|7|8|9)\d{9}$/, 'g'),
+                  },
+                ]}>
+                <Input placeholder='客户电话信息' max={11} />
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
-              <Form.Item label='归属区域' name='actualIssueIndustry' required>
+              <Form.Item
+                label='归属区域'
+                name='belongRegionCode'
+                required
+                rules={[{ required: true }]}>
                 <Cascader
                   options={regionList}
                   placeholder='请选择'
@@ -247,7 +338,19 @@ export default function Fn() {
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
-              <Form.Item label='客户邮箱' required name='customerContactEmail'>
+              <Form.Item
+                label='客户邮箱'
+                required
+                name='customerContactEmail'
+                rules={[
+                  {
+                    required: true,
+                    message: '请输入正确的邮箱',
+                    pattern: new RegExp(
+                      /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/,
+                    ),
+                  },
+                ]}>
                 <Input placeholder='客户邮箱' />
               </Form.Item>
             </Col>
@@ -261,6 +364,7 @@ export default function Fn() {
               <Form.Item
                 label='企业统一社会信用代码'
                 required
+                rules={[{ required: true }]}
                 name='unifySocialCreditCodes'>
                 <Input placeholder='' />
               </Form.Item>
@@ -269,6 +373,7 @@ export default function Fn() {
               <Form.Item
                 label='企业责任人姓名'
                 required
+                rules={[{ required: true }]}
                 name='enterpriseOwnerName'>
                 <Input placeholder='不超过20个字符' />
               </Form.Item>
@@ -277,7 +382,8 @@ export default function Fn() {
               <Form.Item
                 label='企业责任人证件类型'
                 name='certificateType'
-                required>
+                required
+                rules={[{ required: true }]}>
                 <Select
                   options={[
                     {
@@ -299,6 +405,7 @@ export default function Fn() {
               <Form.Item
                 label='企业责任人证件号码'
                 required
+                rules={[{ required: true }]}
                 name='certificateCode'>
                 <Input placeholder='' />
               </Form.Item>
@@ -314,7 +421,9 @@ export default function Fn() {
                   </Extra>
                 }>
                 <Upload {...props}>
-                  <Button icon={<UploadOutlined />} className='upload'>
+                  <Button
+                    icon={<UploadOutlined rev={null} />}
+                    className='upload'>
                     上传
                   </Button>
                 </Upload>
@@ -340,8 +449,10 @@ export default function Fn() {
                     您可上传的文件类型：pdf、doc、docx、jpg、jpeg、gif、rar、zip，单个附件大小限10M，限上传1个文件
                   </Extra>
                 }>
-                <Upload {...props}>
-                  <Button icon={<UploadOutlined />} className='upload'>
+                <Upload {...props2}>
+                  <Button
+                    icon={<UploadOutlined rev={null} />}
+                    className='upload'>
                     上传
                   </Button>
                 </Upload>
@@ -359,15 +470,18 @@ export default function Fn() {
                   colorPrimaryHover: '#e9ae5e',
                 },
               }}>
-              <Button
-                className='color-status-waiting'
-                type='primary'
-                size='large'
-                style={{ width: 120 }}
-                // onClick={submit}
-              >
-                保存
-              </Button>
+              {status == '0' || status == '2' ? (
+                <Button
+                  className='color-status-waiting'
+                  type='primary'
+                  size='large'
+                  style={{ width: 120 }}
+                  onClick={() => save()}>
+                  保存
+                </Button>
+              ) : (
+                ''
+              )}
             </ConfigProvider>
             <Space>
               <NavLink to='/console/rcs/account/index'>
@@ -383,7 +497,7 @@ export default function Fn() {
                 type='primary'
                 size='large'
                 style={{ width: 120 }}
-                onClick={submit}>
+                onClick={() => submit()}>
                 提交审核
               </Button>
             </Space>

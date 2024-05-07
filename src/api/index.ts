@@ -44,12 +44,12 @@ export const login = () => {
   return request.post<any, API.Response<any>, any>(
     'console/api/account/login',
     {
-      // account: 'duanlangjd@126.com',
-      // password: 'yanzhi2010',
+      account: 'duanlangjd@126.com',
+      password: 'yanzhi2010',
       // account: '18616200024@163.com',
       // password: 'sumeng',
-      account: '514030829@qq.com',
-      password: 'yanzhi2010',
+      // account: '514030829@qq.com',
+      // password: 'yanzhi2010',
       //
     },
   )
@@ -236,6 +236,14 @@ export const signupForCspAccount = (data: API.signupForCspAccountParams) => {
     API.Response<API.signupForCspAccountItems>,
     API.signupForCspAccountParams
   >('console/api/rcs/signup_for_csp_account', { ...data })
+}
+// 保存非直签客户信息
+export const saveupForCspAccount = (data: API.saveupForCspAccountParams) => {
+  return request.post<
+    any,
+    API.Response<API.saveupForCspAccountItems>,
+    API.saveupForCspAccountParams
+  >('console/api/rcs/temporary_storage_csp_account', { ...data })
 }
 
 // 创建发送任务

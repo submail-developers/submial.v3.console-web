@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 dependencies:
   '@ant-design/icons':
     specifier: ^5.2.6
@@ -10,6 +14,12 @@ dependencies:
   '@reduxjs/toolkit':
     specifier: ^1.9.5
     version: 1.9.5(react-redux@8.0.5)(react@18.2.0)
+  '@types/react-dnd-multi-backend':
+    specifier: ^6.0.6
+    version: 6.0.6(react-dom@18.2.0)(react@18.2.0)
+  '@types/react-dnd-touch-backend':
+    specifier: ^0.5.0
+    version: 0.5.0
   '@types/react-redux':
     specifier: ^7.1.25
     version: 7.1.25
@@ -53,6 +63,12 @@ dependencies:
     specifier: ^16.0.1
     version: 16.0.1(@types/node@18.15.12)(@types/react@18.0.28)(react@18.2.0)
   react-dnd-html5-backend:
+    specifier: ^16.0.1
+    version: 16.0.1
+  react-dnd-multi-backend:
+    specifier: ^8.0.3
+    version: 8.0.3(dnd-core@16.0.1)(react-dnd@16.0.1)(react-dom@18.2.0)(react@18.2.0)
+  react-dnd-touch-backend:
     specifier: ^16.0.1
     version: 16.0.1
   react-dom:
@@ -1239,12 +1255,24 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
+  /@react-dnd/asap@4.0.1:
+    resolution: {integrity: sha512-kLy0PJDDwvwwTXxqTFNAAllPHD73AycE9ypWeln/IguoGBEbvFcPDbCV03G52bEcC5E+YgupBE0VzHGdC8SIXg==}
+    dev: false
+
   /@react-dnd/asap@5.0.2:
     resolution: {integrity: sha512-WLyfoHvxhs0V9U+GTsGilGgf2QsPl6ZZ44fnv0/b8T3nQyvzxidxsg/ZltbWssbsRDlYW8UKSQMTGotuTotZ6A==}
     dev: false
 
+  /@react-dnd/invariant@2.0.0:
+    resolution: {integrity: sha512-xL4RCQBCBDJ+GRwKTFhGUW8GXa4yoDfJrPbLblc3U09ciS+9ZJXJ3Qrcs/x2IODOdIE5kQxvMmE2UKyqUictUw==}
+    dev: false
+
   /@react-dnd/invariant@4.0.2:
     resolution: {integrity: sha512-xKCTqAK/FFauOM9Ta2pswIyT3D8AQlfrYdOi/toTPEhqCuAs1v5tcJ3Y08Izh1cJ5Jchwy9SeAXmMg6zrKs2iw==}
+    dev: false
+
+  /@react-dnd/shallowequal@2.0.0:
+    resolution: {integrity: sha512-Pc/AFTdwZwEKJxFJvlxrSmGe/di+aAOBn60sremrpLo6VI/6cmiUYNNwlI5KNYttg7uypzA3ILPMPgxB2GYZEg==}
     dev: false
 
   /@react-dnd/shallowequal@4.0.2:
@@ -1430,6 +1458,25 @@ packages:
       '@types/react': 18.0.28
       cropperjs: 1.6.1
     dev: true
+
+  /@types/react-dnd-multi-backend@6.0.6(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-rM+AUaejK5I2jUh+q3dE9/B8b5Oae2iMoirgdOAnsEseuBo/89HT8UeNXxwSJVxWndc9quBZYEW7Hcu+JlM0jA==}
+    dependencies:
+      '@types/react': 18.0.28
+      dnd-core: 10.0.2
+      react-dnd: 10.0.2(react-dom@18.2.0)(react@18.2.0)
+      react-dnd-touch-backend: 10.0.2
+    transitivePeerDependencies:
+      - react
+      - react-dom
+    dev: false
+
+  /@types/react-dnd-touch-backend@0.5.0:
+    resolution: {integrity: sha512-4IOQ+RSnUmJAq1jM01Fvl3Y7+SXphRCTnat6bAkyfBrncGLOPL4OWv68n1FCKMvBUXmdXcDh7YCwb8uFGnbCnQ==}
+    deprecated: This is a stub types definition. react-dnd-touch-backend provides its own type definitions, so you do not need this installed.
+    dependencies:
+      react-dnd-touch-backend: 16.0.1
+    dev: false
 
   /@types/react-dom@18.0.11:
     resolution: {integrity: sha512-O38bPbI2CWtgw/OoQoY+BRelw7uysmXbWvw3nLWO21H1HSh+GOlqPuXshJfjmpNlKiiSDG9cc1JZAaMmVdcTlw==}
@@ -2182,12 +2229,28 @@ packages:
       path-type: 4.0.0
     dev: true
 
+  /dnd-core@10.0.2:
+    resolution: {integrity: sha512-PrxEjxF0+6Y1n1n1Z9hSWZ1tvnDXv9syL+BccV1r1RC08uWNsyetf8AnWmUF3NgYPwy0HKQJwTqGkZK+1NlaFA==}
+    dependencies:
+      '@react-dnd/asap': 4.0.1
+      '@react-dnd/invariant': 2.0.0
+      redux: 4.2.1
+    dev: false
+
   /dnd-core@16.0.1:
     resolution: {integrity: sha512-HK294sl7tbw6F6IeuK16YSBUoorvHpY8RHO+9yFfaJyCDVb6n7PRcezrOEOa2SBCqiYpemh5Jx20ZcjKdFAVng==}
     dependencies:
       '@react-dnd/asap': 5.0.2
       '@react-dnd/invariant': 4.0.2
       redux: 4.2.1
+    dev: false
+
+  /dnd-multi-backend@8.0.3(dnd-core@16.0.1):
+    resolution: {integrity: sha512-yFFARotr+OEJk787Fsj+V52pi6j7+Pt/CRp3IR2Ai3fnxA/z6J54T7+gxkXzXu4cvxTNE7NiBzzAaJ2f7JjFTw==}
+    peerDependencies:
+      dnd-core: ^16.0.1
+    dependencies:
+      dnd-core: 16.0.1
     dev: false
 
   /doctrine@2.1.0:
@@ -4177,6 +4240,60 @@ packages:
       dnd-core: 16.0.1
     dev: false
 
+  /react-dnd-multi-backend@8.0.3(dnd-core@16.0.1)(react-dnd@16.0.1)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-IwH7Mf6R05KIFohX0hHMTluoAvuUD8SO15KCD+9fY0nJ4nc1FGCMCSyMZw8R1XNStKp+JnNg3ZMtiaf5DebSUg==}
+    peerDependencies:
+      dnd-core: ^16.0.1
+      react: ^16.14.0 || ^17.0.2 || ^18.0.0
+      react-dnd: ^16.0.1
+      react-dom: ^16.14.0 || ^17.0.2 || ^18.0.0
+    dependencies:
+      dnd-core: 16.0.1
+      dnd-multi-backend: 8.0.3(dnd-core@16.0.1)
+      react: 18.2.0
+      react-dnd: 16.0.1(@types/node@18.15.12)(@types/react@18.0.28)(react@18.2.0)
+      react-dnd-preview: 8.0.3(react-dnd@16.0.1)(react@18.2.0)
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /react-dnd-preview@8.0.3(react-dnd@16.0.1)(react@18.2.0):
+    resolution: {integrity: sha512-s69Ro47QYDthDhj73iQ0VioMCjtlZ1AytKBDkQaHKm5DTjA8D2bIaFKCBQd330QEW0SIzqLJrZGCSlIY2xraJg==}
+    peerDependencies:
+      react: ^16.14.0 || ^17.0.2 || ^18.0.0
+      react-dnd: ^16.0.1
+    dependencies:
+      react: 18.2.0
+      react-dnd: 16.0.1(@types/node@18.15.12)(@types/react@18.0.28)(react@18.2.0)
+    dev: false
+
+  /react-dnd-touch-backend@10.0.2:
+    resolution: {integrity: sha512-+lW/Ern0dKyHToD0oP+Wc/ZD6l7qJazosLqbjzL7OnPlig6WxdlrHkJylOLkeAdZj41fIJJ551Lb57pIL0CcPw==}
+    dependencies:
+      '@react-dnd/invariant': 2.0.0
+      dnd-core: 10.0.2
+    dev: false
+
+  /react-dnd-touch-backend@16.0.1:
+    resolution: {integrity: sha512-NonoCABzzjyWGZuDxSG77dbgMZ2Wad7eQiCd/ECtsR2/NBLTjGksPUx9UPezZ1nQ/L7iD130Tz3RUshL/ClKLA==}
+    dependencies:
+      '@react-dnd/invariant': 4.0.2
+      dnd-core: 16.0.1
+    dev: false
+
+  /react-dnd@10.0.2(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-SC2Ymvntynhoqtf5zaFhZscm9xenCoMofilxPdlwUlaelAzmbl9fw82C4ZJ//+lNm3kWAKXjGDZg2/aWjKEAtg==}
+    peerDependencies:
+      react: '>= 16.8'
+      react-dom: '>= 16.8'
+    dependencies:
+      '@react-dnd/shallowequal': 2.0.0
+      '@types/hoist-non-react-statics': 3.3.1
+      dnd-core: 10.0.2
+      hoist-non-react-statics: 3.3.2
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
   /react-dnd@16.0.1(@types/node@18.15.12)(@types/react@18.0.28)(react@18.2.0):
     resolution: {integrity: sha512-QeoM/i73HHu2XF9aKksIUuamHPDvRglEwdHL4jsp784BgUuWcg6mzfxT0QDdQz8Wj0qyRKx2eMg8iZtWvU4E2Q==}
     peerDependencies:
@@ -4955,7 +5072,3 @@ packages:
     dependencies:
       tslib: 2.3.0
     dev: false
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false

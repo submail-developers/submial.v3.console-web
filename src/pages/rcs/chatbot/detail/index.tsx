@@ -200,7 +200,7 @@ export default function Fn() {
           <tr>
             <td>Chatbot名称</td>
             <td>{detail.name}</td>
-            <td>Chatbo头像</td>
+            <td>Chatbot头像</td>
             <td>
               <Image className='info-img' src={detail.logo} />
             </td>
@@ -283,7 +283,7 @@ export default function Fn() {
           <Row style={{ marginTop: '16px' }} gutter={24}>
             <Col span={24}>
               <Table
-                // className='theme-cell bg-white'
+                className='tbale1'
                 columns={columns2}
                 dataSource={list}
                 sticky
