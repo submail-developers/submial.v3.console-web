@@ -3,7 +3,7 @@
   height: 100%;
   position: relative;
   .top-search {
-    height: 80px;
+    height: 96px;
     .type {
       height: 40px;
       line-height: 40px;
@@ -14,44 +14,23 @@
       }
     }
   }
-  .meteial-list {
+  .rcs-meteial-list {
     width: 100%;
-    height: calc(100% - 80px);
     overflow-x: hidden;
     overflow-y: scroll;
-    .item {
-      width: 100%;
-      // height: 120px;
-      text-align: center;
-      cursor: pointer;
-      .item-media {
-        width: 100%;
-        height: 100px;
-        border-radius: 4px;
-        background-color: #eaedf2;
-        .ant-image {
-          width: 100%;
-          height: 100%;
-          img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-          }
-        }
-        video {
-          width: 100%;
-          height: 100%;
-          object-fit: contain;
-        }
-        audio {
-          width: 100%;
-          height: 100%;
-          object-fit: contain;
-        }
-      }
-      .name {
-        line-height: 32px;
-      }
+  }
+  .float-btm {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    .page {
+      background-color: #fff;
     }
+  }
+  .refresh-wrap {
+    background-color: #fff;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
   }
 }

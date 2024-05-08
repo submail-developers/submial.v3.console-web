@@ -58,6 +58,7 @@ export default function Fn() {
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: dndConfig.accept,
     drop: (item: API.RcsOnlineMeteialItem, monitor) => {
+      console.log('drop', item)
       if (item) {
         setmedia({
           mediaUrl: item.filePath,

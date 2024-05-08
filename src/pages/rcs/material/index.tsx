@@ -141,12 +141,7 @@ const MaterialItem = (props: MaterialItemProps) => {
           )}
           {props.item.type == '3' && (
             <>
-              <video
-                className='source-video'
-                src={
-                  'https://libraries.mysubmail.com/public/7405f1e8b0b2be6bccf68741d74dc339/images/541cbd95321944945ffcf3fc5d5a137e.mp4'
-                }
-              />
+              <video className='source-video' src={props.item.storeAt} />
               <Image
                 className='source-video-preview'
                 src=''

@@ -189,6 +189,7 @@ declare module 'apis' {
       status: '0' | '1' | '8' | '9'
       datetime: string
       name: string
+      tid: string
     }
 
     // 获取创建模版时使用的素材
