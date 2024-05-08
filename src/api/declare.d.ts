@@ -128,9 +128,9 @@ declare module 'apis' {
       data: IndustryItem[]
     }
     interface IndustryItem {
-      ctCode: string
-      ctName: string
-      sub_data: SubIndustryItem[]
+      label: string
+      value: string
+      children: IndustryItem[]
     }
     interface SubIndustryItem {
       cmCode: string
