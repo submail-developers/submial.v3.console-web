@@ -14,10 +14,18 @@ import {
   Divider,
   InputNumber,
   ConfigProvider,
+  DatePicker,
+  TimePicker,
   List,
   App,
 } from 'antd'
-import type { GetProp, UploadFile, UploadProps } from 'antd'
+import type {
+  GetProp,
+  UploadFile,
+  UploadProps,
+  TimePickerProps,
+  DatePickerProps,
+} from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import { useState, useRef, useEffect } from 'react'
 import { useParams, NavLink } from 'react-router-dom'
@@ -29,6 +37,8 @@ import {
   signupForCspAccount,
   uploadCustomerFile,
   saveupForCspAccount,
+  delCustomerFile,
+  getIndustry,
 } from '@/api'
 import utils from '@/utils/formRules'
 import { API } from 'apis'
@@ -56,55 +66,78 @@ const IdOptions: Option[] = [{ value: 'ids', label: '身份证' }]
 export default function Fn() {
   const dispatch = useAppDispatch()
   const [form] = Form.useForm()
+  // 营业执照
   const [fileList, setFileList] = useState<UploadFile[]>([])
+  // 合同
   const [fileList2, setFileList2] = useState<UploadFile[]>([])
+
+  const [contractAccessoryPath, setContractAccessoryPath] = useState('')
   const [status, setStatus] = useState('')
+  const contractAccessoryPathRef = useRef('')
+  const companyLogoPathRef = useRef('')
   const { id } = useParams()
   const [loading, setloading] = useState(false)
   const [customerId, setCustomerId] = useState({})
   const [regionList, setregionList] = useState<API.RegionItem[]>([])
+  const [industryList, setIndustryList] = useState<API.IndustryItem[]>([])
   const { message } = App.useApp()
 
   // 提交
   const submit = async () => {
     try {
-      const res1 = await uploadCustomerFile({
-        file: fileList[0],
-        type: '4',
-      })
-      const res2 = await uploadCustomerFile({
-        file: fileList2[0],
-        type: '1',
-      })
+      let res1, res2
       const formvalues = await form.getFieldsValue()
-      let params = {
-        customerContactName: '朱天文',
-        businessType: 'A',
-        industryTypeCode: '02',
-        contractNo: '1111111',
-        contractName: '合同名称',
-        contractEffectiveDate: '2024-10-10 12:30:00',
-        contractExpiryDate: '2024-12-10 12:30:00',
-        contractRenewDate: '2024-12-10 12:30:00',
-        companyLogo:
-          'rcs/39cdee6050bd28ae89dacd2afd3b3f8f/user/2a2a2228bc3e75c37837b985a0f09a5f.png',
-        // companyLogo: res1.path,
-        contractRenewStatus: '0',
+      console.log(formvalues)
 
-        id: customerId,
-        customerName: formvalues.customerName,
-        customerContactMob: formvalues.customerContactMob,
-        customerContactEmail: formvalues.customerContactEmail,
-        unifySocialCreditCodes: formvalues.unifySocialCreditCodes,
-        enterpriseOwnerName: formvalues.enterpriseOwnerName,
-        certificateType: formvalues.certificateType,
-        certificateCode: formvalues.certificateCode,
-        contractAccessory: res2.path,
-        regionCode: formvalues.belongRegionCode[0],
-        provinceCode: formvalues.belongRegionCode[1],
-        cityCode: formvalues.belongRegionCode[2],
+      if (contractAccessoryPathRef.current) {
+        if (fileList2[0].url != contractAccessoryPathRef.current) {
+          delCustomerFile({
+            path: contractAccessoryPathRef.current,
+          })
+          res2 = await uploadCustomerFile({
+            file: fileList2[0],
+            type: '1',
+          })
+        } else {
+          res2['path'] = contractAccessoryPathRef.current
+        }
+      } else {
+        if (fileList2.length > 0) {
+          res2 = await uploadCustomerFile({
+            file: fileList2[0],
+            type: '1',
+          })
+        }
       }
 
+      if (companyLogoPathRef.current) {
+        if (fileList[0].url != companyLogoPathRef.current) {
+          delCustomerFile({
+            path: companyLogoPathRef.current,
+          })
+          res1 = await uploadCustomerFile({
+            file: fileList[0],
+            type: '2',
+          })
+        } else {
+          res1['path'] = companyLogoPathRef.current
+        }
+      } else {
+        if (fileList.length > 0) {
+          res2 = await uploadCustomerFile({
+            file: fileList[0],
+            type: '2',
+          })
+        }
+      }
+
+      let params = {
+        ...formvalues,
+        businessType: formvalues.formvalues[0],
+        industryTypeCode: formvalues.formvalues[1],
+        contractRenewStatus: formvalues.value,
+        companyLogo: (res1 && res1.path) || '',
+      }
       await signupForCspAccount(params)
       message.success('提交成功！')
       setloading(false)
@@ -116,58 +149,70 @@ export default function Fn() {
   const save = async () => {
     try {
       let res1, res2
-      res1 =
-        fileList[0] &&
-        (await uploadCustomerFile({
-          file: fileList[0],
-          type: '4',
-        }))
-      res2 =
-        fileList2[0] &&
-        (await uploadCustomerFile({
-          file: fileList2[0],
-          type: '1',
-        }))
+      if (companyLogoPathRef.current) {
+        if (fileList[0].url != companyLogoPathRef.current) {
+          delCustomerFile({
+            path: companyLogoPathRef.current,
+          })
+          res1 = await uploadCustomerFile({
+            file: fileList[0],
+            type: '2',
+          })
+        } else {
+          res1['path'] = companyLogoPathRef.current
+        }
+      } else {
+        if (fileList.length > 0) {
+          res2 = await uploadCustomerFile({
+            file: fileList[0],
+            type: '2',
+          })
+        }
+      }
+
+      if (contractAccessoryPathRef.current) {
+        if (fileList2[0].url != contractAccessoryPathRef.current) {
+          delCustomerFile({
+            path: contractAccessoryPathRef.current,
+          })
+          res2 = await uploadCustomerFile({
+            file: fileList2[0],
+            type: '1',
+          })
+        } else {
+          res2['path'] = contractAccessoryPathRef.current
+        }
+      } else {
+        if (fileList2.length > 0) {
+          res2 = await uploadCustomerFile({
+            file: fileList2[0],
+            type: '1',
+          })
+        }
+      }
 
       const formvalues = await form.getFieldsValue()
+      // console.log(formvalues)
       let params = {
-        customerContactName: '朱天文',
-        businessType: 'A',
-        industryTypeCode: '02',
-        contractNo: '1111111',
-        contractName: '合同名称',
-        contractEffectiveDate: '2024-10-10 12:30:00',
-        contractExpiryDate: '2024-12-10 12:30:00',
-        contractRenewDate: '2024-12-10 12:30:00',
-        companyLogo:
-          'rcs/39cdee6050bd28ae89dacd2afd3b3f8f/user/2a2a2228bc3e75c37837b985a0f09a5f.png',
-        // companyLogo: (res1 && res1.path) || '',
-        contractRenewStatus: '0',
-
-        id: customerId,
-        customerName: formvalues.customerName,
-        customerContactMob: formvalues.customerContactMob,
-        customerContactEmail: formvalues.customerContactEmail,
-        unifySocialCreditCodes: formvalues.unifySocialCreditCodes,
-        enterpriseOwnerName: formvalues.enterpriseOwnerName,
-        certificateType: formvalues.certificateType,
-        certificateCode: formvalues.certificateCode,
+        ...formvalues,
+        businessType: formvalues.businessType[0],
+        industryTypeCode: formvalues.businessType[1],
+        contractRenewStatus: formvalues.value,
+        companyLogo: (res1 && res1.path) || '',
         contractAccessory: (res2 && res2.path) || '',
-        regionCode: formvalues.belongRegionCode[0],
-        provinceCode: formvalues.belongRegionCode[1],
-        cityCode: formvalues.belongRegionCode[2],
       }
-      await saveupForCspAccount(params)
-      message.success('保存成功！')
+
+      // await saveupForCspAccount(params)
+      // message.success('保存成功！')
       setloading(false)
     } catch (error) {
+      console.log(error)
       setloading(false)
     }
   }
 
   const props: UploadProps = {
-    accept:
-      '.pdf, .doc, .docx, .xls, .xIsx, .ppt, .pptx, .jpg, .jpeg, .gif, .rar, .7z, .zip',
+    accept: '.jpg, .jpeg, .png',
     onRemove: (file) => {
       const index = fileList.indexOf(file)
       const newFileList = fileList.slice()
@@ -179,17 +224,11 @@ export default function Fn() {
       if (!isLt10M) {
         message.error('文件不允许超过10M！')
       } else {
-        setFileList([...fileList, file])
+        setFileList([file])
         return false
       }
     },
-    onChange: () => {
-      try {
-        setFileList(fileList.slice(-1))
-      } catch (e) {
-        message.error(e.message)
-      }
-    },
+
     fileList,
   }
   const props2: UploadProps = {
@@ -205,32 +244,17 @@ export default function Fn() {
       if (!isLt10M) {
         message.error('文件不允许超过10M！')
       } else {
-        setFileList2([...fileList2, file])
+        setFileList2([file])
         return false
-      }
-    },
-    onChange: () => {
-      try {
-        setFileList2(fileList2.slice(-1))
-      } catch (e) {
-        message.error(e.message)
       }
     },
     fileList: fileList2,
   }
-  const onSetLogo = (src: string) => {
-    form.setFieldValue('logo', src)
-  }
 
-  // 获取省 市
-  const getProvincesCities = async () => {
-    try {
-      const res = await getRegion()
-      setregionList(res.data)
-    } catch (error) {}
-  }
+  useEffect(() => {}, [fileList2])
+
   // 获取客户资料
-  const search = async (ifshowLoading = false) => {
+  const getCusInfo = async (ifshowLoading = false) => {
     try {
       ifshowLoading && setloading(true)
       const params = ''
@@ -240,19 +264,47 @@ export default function Fn() {
       form.resetFields()
       form.setFieldsValue({
         ...res.data,
-        belongRegionCode: res.data.belongRegionCode.split(','),
+        businessType: [res.data.businessType, res.data.industryTypeCode],
       })
+      // 合同回显
+      if (res.data.contractAccessory) {
+        contractAccessoryPathRef.current = res.data.contractAccessory
+        setFileList2([
+          {
+            uid: '',
+            name: '文件',
+            url: res.data.contractAccessory,
+          },
+        ])
+      }
+      //头像回显
+      if (res.data.companyLogo) {
+        companyLogoPathRef.current = res.data.companyLogo
+        setFileList([
+          {
+            uid: '',
+            name: '头像',
+            url: res.data.companyLogo,
+          },
+        ])
+      }
       setloading(false)
     } catch (error) {
       setloading(false)
     }
   }
 
-  useEffect(() => {
-    search(true)
-    getProvincesCities()
-  }, [])
+  // 获取行业类型
+  const getIndustryList = async () => {
+    try {
+      const res = await getIndustry()
+      setIndustryList(res.data)
+    } catch (error) {}
+  }
 
+  useEffect(() => {
+    getIndustryList()
+  }, [])
   useEffect(() => {
     if (id == '0') {
       dispatch(
@@ -262,6 +314,7 @@ export default function Fn() {
         }),
       )
     } else {
+      getCusInfo(true)
       dispatch(
         changeBreadcrumbItem({
           index: 2,
@@ -279,6 +332,20 @@ export default function Fn() {
       })
     }
   }, [form])
+  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
+    console.log(date, dateString)
+  }
+
+  const contractRenewStatusOptions = [
+    {
+      value: '0',
+      label: '是',
+    },
+    {
+      value: '1',
+      label: '否',
+    },
+  ]
 
   return (
     <PageContent xxl={970} extClass='create-account-page'>
@@ -310,13 +377,16 @@ export default function Fn() {
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
+              <Form.Item label='联系人名称' name='customerContactName'>
+                <Input placeholder='不超过 20 个字符' max={20} />
+              </Form.Item>
+            </Col>
+            <Col span={24} xl={12}>
               <Form.Item
-                label='客户电话'
-                required
+                label='联系人手机号'
                 name='customerContactMob'
                 rules={[
                   {
-                    required: true,
                     message: '请输入正确的手机号',
                     pattern: new RegExp(/^1(3|4|5|6|7|8|9)\d{9}$/, 'g'),
                   },
@@ -324,27 +394,13 @@ export default function Fn() {
                 <Input placeholder='客户电话信息' max={11} />
               </Form.Item>
             </Col>
+
             <Col span={24} xl={12}>
               <Form.Item
-                label='归属区域'
-                name='belongRegionCode'
-                required
-                rules={[{ required: true }]}>
-                <Cascader
-                  options={regionList}
-                  placeholder='请选择'
-                  expandTrigger='hover'
-                />
-              </Form.Item>
-            </Col>
-            <Col span={24} xl={12}>
-              <Form.Item
-                label='客户邮箱'
-                required
+                label='联系人邮箱'
                 name='customerContactEmail'
                 rules={[
                   {
-                    required: true,
                     message: '请输入正确的邮箱',
                     pattern: new RegExp(
                       /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/,
@@ -355,11 +411,20 @@ export default function Fn() {
               </Form.Item>
             </Col>
 
-            <Col span={24}>
-              <Form.Item label='客户详细地址' name='acoDetailAdress'>
-                <Input placeholder='请输入' />
+            <Col span={24} xl={12}>
+              <Form.Item
+                label='行业类型'
+                name='businessType'
+                required
+                rules={[{ required: true }]}>
+                <Cascader
+                  options={industryList}
+                  placeholder='请选择'
+                  expandTrigger='hover'
+                />
               </Form.Item>
             </Col>
+
             <Col span={24} xl={12}>
               <Form.Item
                 label='企业统一社会信用代码'
@@ -385,6 +450,7 @@ export default function Fn() {
                 required
                 rules={[{ required: true }]}>
                 <Select
+                  placeholder='请选择证件类型'
                   options={[
                     {
                       label: '居民身份证',
@@ -410,14 +476,81 @@ export default function Fn() {
                 <Input placeholder='' />
               </Form.Item>
             </Col>
+            <Col span={24} xl={12}>
+              <Form.Item label='合同编号' name='contractNo'>
+                <Input placeholder='请输入合同编号' />
+              </Form.Item>
+            </Col>
+            <Col span={24} xl={12}>
+              <Form.Item label='合同名称' name='contractName'>
+                <Input placeholder='请输入合同名称' />
+              </Form.Item>
+            </Col>
+            <Col
+              span={24}
+              xl={12}
+              style={{ display: 'flex', alignItems: 'center' }}>
+              <Form.Item
+                label='合同生效期'
+                validateTrigger='onSubmit'
+                name='contractEffectiveDate'>
+                <div>
+                  <Space direction='vertical'>
+                    <DatePicker onChange={onChange} />
+                  </Space>
+                </div>
+              </Form.Item>
+              &nbsp;
+              <Form.Item
+                label='合同失效期'
+                validateTrigger='onSubmit'
+                name='contractExpiryDate'>
+                <div>
+                  <Space direction='vertical'>
+                    <DatePicker onChange={onChange} />
+                  </Space>
+                </div>
+              </Form.Item>
+              &nbsp;
+              <Form.Item
+                label='自动续签日期'
+                validateTrigger='onSubmit'
+                name='contractRenewDate'>
+                <div>
+                  <Space direction='vertical'>
+                    <DatePicker onChange={onChange} />
+                  </Space>
+                </div>
+              </Form.Item>
+            </Col>
+
+            <Col span={24} xl={12}>
+              <Form.Item
+                label='合同是否续签'
+                name='contractRenewStatus'
+                initialValue={contractRenewStatusOptions[1]}>
+                <Select
+                  fieldNames={{
+                    label: 'label',
+                    value: 'value',
+                  }}
+                  filterOption={(input, option) =>
+                    (option?.label + option.value ?? '')
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
+                  options={contractRenewStatusOptions}
+                />
+              </Form.Item>
+            </Col>
+
             <Col span={24}>
               <Form.Item
-                label='上传营业执照'
-                name='attachment'
-                required
+                label='企业logo'
+                name='companyLogo'
                 extra={
                   <Extra>
-                    您可上传的文件类型：pdf、doc、docx、xls、xIsx、ppt、pptx、jpg、jpeg、gif、rar、7z、zip，单个附件大小限10M，限上传1个文件
+                    您可上传的文件类型：png,jpg、jpeg，单个附件大小限10M，限上传1个文件
                   </Extra>
                 }>
                 <Upload {...props}>
@@ -429,8 +562,9 @@ export default function Fn() {
                 </Upload>
               </Form.Item>
             </Col>
+
             <Col span={24}>
-              <Form.Item label='备注' name='description'>
+              <Form.Item label='备注' name='remarkText'>
                 <TextArea autoSize={{ minRows: 4, maxRows: 4 }} />
               </Form.Item>
             </Col>
@@ -443,7 +577,8 @@ export default function Fn() {
             <Col span={24}>
               <Form.Item
                 label='合同电子扫描件（正反面）'
-                name='backgroundImage'
+                name='contractAccessory'
+                required
                 extra={
                   <Extra>
                     您可上传的文件类型：pdf、doc、docx、jpg、jpeg、gif、rar、zip，单个附件大小限10M，限上传1个文件
@@ -476,7 +611,7 @@ export default function Fn() {
                   type='primary'
                   size='large'
                   style={{ width: 120 }}
-                  onClick={() => save()}>
+                  onClick={save}>
                   保存
                 </Button>
               ) : (
@@ -497,7 +632,7 @@ export default function Fn() {
                 type='primary'
                 size='large'
                 style={{ width: 120 }}
-                onClick={() => submit()}>
+                onClick={submit}>
                 提交审核
               </Button>
             </Space>

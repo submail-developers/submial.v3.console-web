@@ -66,7 +66,7 @@ export default function Fn() {
             style={{ marginTop: '4px' }}>
             <div className='fn22 fw-500'>客户资料管理</div>
             <Space>
-              <NavLink to='/console/rcs/account/create/0'>
+              <NavLink to='/console/rcs/account/create/1'>
                 <Button type='primary'>
                   <i className='icon iconfont icon-bianji'></i>编辑客户资料
                 </Button>
@@ -101,24 +101,12 @@ export default function Fn() {
                 <td colSpan={3}>{customerData.customerName}</td>
               </tr>
               <tr>
-                <td>客户邮箱</td>
+                <td>联系人邮箱</td>
                 <td>{customerData.customerContactEmail}</td>
-                <td>客户电话</td>
+                <td>联系人</td>
                 <td>{customerData.customerContactMob}</td>
               </tr>
-              <tr>
-                <td>归属区域</td>
-                <td colSpan={3}>
-                  {customerData.region}/{customerData.province}/
-                  {customerData.city}
-                </td>
-              </tr>
-              <tr>
-                <td>客户详细地址</td>
-                <td colSpan={3}>
-                  上海市普陀区金沙江路1977弄金环商务花园3座705
-                </td>
-              </tr>
+
               <tr>
                 <td>企业统一社会代码</td>
                 <td>
@@ -150,10 +138,6 @@ export default function Fn() {
                     ? '-'
                     : customerData.certificateCode}
                 </td>
-              </tr>
-              <tr>
-                <td>营业执照</td>
-                <td colSpan={3}>yingyezhizhao.pdf</td>
               </tr>
               <tr>
                 <td>备注</td>
