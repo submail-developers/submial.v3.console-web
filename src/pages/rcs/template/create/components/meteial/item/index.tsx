@@ -24,6 +24,7 @@ export default function MeteialItem(props: ItemProps) {
   const [previewImg, setpreviewImg] = useState(false)
   const [previewAudio, setpreviewAudio] = useState(false)
   const [previewVideo, setpreviewVideo] = useState(false)
+  const [imageRender, setimageRender] = useState<React.ReactNode>()
   const [videoRender, setvideoRender] = useState<React.ReactNode>()
   const [audioRender, setaudioRender] = useState<React.ReactNode>()
 
@@ -51,6 +52,14 @@ export default function MeteialItem(props: ItemProps) {
       )
     } else {
       setpreviewImg(true)
+      setimageRender(
+        <Image
+          preview={false}
+          className='source-video'
+          width={point ? '50%' : '90%'}
+          src={props.item.storeAt}
+        />,
+      )
     }
   }
 
@@ -58,18 +67,30 @@ export default function MeteialItem(props: ItemProps) {
     <div className='rcs-meteial-item'>
       <div className='item-media'>
         {props.item.type == '1' && (
-          <Image
-            src={props.item.storeAt}
-            fallback={imgTypeImg}
-            style={{ width: loadError ? '50%' : '100%' }}
-            onError={() => setLoadError(true)}
-            preview={{
-              visible: previewImg,
-              onVisibleChange: (visible: boolean, prevVisible: boolean) => {
-                setpreviewImg(visible)
-              },
-            }}
-          />
+          <>
+            <Image
+              src={props.item.storeAt}
+              fallback={imgTypeImg}
+              style={{ width: loadError ? '50%' : '100%' }}
+              onError={() => setLoadError(true)}
+              preview={false}
+            />
+            {/* 预览 */}
+            <div style={{ display: 'none' }}>
+              <Image
+                src=''
+                preview={{
+                  visible: previewImg,
+                  imageRender: () => imageRender,
+                  toolbarRender: () => null,
+                  onVisibleChange: (visible: boolean, prevVisible: boolean) => {
+                    setimageRender(null)
+                    setpreviewImg(visible)
+                  },
+                }}
+              />
+            </div>
+          </>
         )}
         {props.item.type == '2' && (
           <>
@@ -176,7 +197,7 @@ export default function MeteialItem(props: ItemProps) {
       <div className='name g-ellipsis' title={props.item.name}>
         {getFileName({
           fileName: props.item.name,
-          before: 4,
+          before: 6,
           after: 3,
         })}
       </div>

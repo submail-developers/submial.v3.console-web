@@ -53,7 +53,7 @@ export default function Fn({ message }: Props) {
     ].findIndex((item) => Boolean(item))
     if (index > -1) setMediaType(index)
   }, [])
-  console.log(message.generalPurposeCard)
+  // console.log(message.generalPurposeCard)
   return (
     <div
       className='center-content card-center-content'
