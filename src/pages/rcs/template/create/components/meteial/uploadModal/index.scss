@@ -1,66 +1,50 @@
 .rcs-mateial-upload-modal {
-  .ant-modal-content {
-    padding: 0;
+  .modal-content {
+    min-width: 650px;
   }
-  .upload-header {
-    height: 60px;
+  .utils-wrap {
     width: 100%;
-    padding: 4px 24px 0;
+    height: 36px;
+    padding: 0 14px;
+    box-sizing: border-box;
+    img {
+      cursor: pointer;
+      display: block;
+    }
+  }
+  .img-layer-canvas {
+    width: 602px;
+    height: 670px;
+    border-radius: 6px;
+    overflow: hidden;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    padding: 16px;
+    .dragger {
+      width: 100%;
+      height: 335px;
+      display: inline-block;
+    }
+  }
+  .img-editor-wrap {
+    border-radius: 6px;
+    flex: 1;
+    height: 670px;
+    min-width: 350px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    padding: 16px;
     box-sizing: border-box;
     display: flex;
-    align-items: center;
-    border-bottom: 1px solid #ddd;
+    flex-direction: column;
+    justify-content: space-between;
   }
-  .upload-body {
-    padding: 16px 24px 32px;
-    overflow-x: scroll;
-    .modal-content {
-      min-width: 650px;
-    }
-    .utils-wrap {
-      width: 100%;
-      height: 36px;
-      padding: 0 14px;
-      box-sizing: border-box;
-      img {
-        cursor: pointer;
-        display: block;
-      }
-    }
-    .img-layer-canvas {
-      width: 602px;
-      height: 670px;
-      border-radius: 6px;
-      overflow: hidden;
-      box-sizing: border-box;
-      border: 1px solid #ddd;
-      padding: 16px;
-      .dragger {
-        width: 100%;
-        height: 335px;
-        display: inline-block;
-      }
-    }
-    .img-editor-wrap {
-      border-radius: 6px;
-      flex: 1;
-      height: 670px;
-      min-width: 350px;
-      border: 1px solid #ddd;
-      box-sizing: border-box;
-      padding: 16px;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
+}
+.ant-upload-list-item.ant-upload-list-item-done {
+  .ant-upload-list-item-actions {
+    display: none;
   }
-  .ant-upload-list-item.ant-upload-list-item-done {
-    .ant-upload-list-item-actions {
-      display: none;
-    }
-    .ant-upload-list-item-name {
-      color: #00a97b;
-    }
+  .ant-upload-list-item-name {
+    color: #00a97b;
   }
 }

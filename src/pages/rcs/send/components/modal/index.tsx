@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import {
   Modal,
   Flex,
@@ -11,10 +11,11 @@ import {
   Col,
   Empty,
 } from 'antd'
-import { getRcsMeteialList, delRcsMeteial, getRcsTempList } from '@/api'
+import { getRcsTempList } from '@/api'
 import Item from '@/pages/rcs/template/list/item'
 import { API } from 'apis'
-import './index.scss'
+import { usePoint } from '@/hooks'
+
 type Props = {
   open: boolean
   onCancel: () => void
@@ -24,6 +25,8 @@ type TitleProps = {
   loading: boolean
   onSearch: (str: string) => void
 }
+
+// 弹框title
 const Title = (props: TitleProps) => {
   const [text, setText] = useState<string>()
   return (
@@ -47,10 +50,12 @@ const Title = (props: TitleProps) => {
     </Flex>
   )
 }
+
+// 选择发送模版弹框
 export default function Fn(props: Props) {
+  const point = usePoint('sm')
   const nav = useNavigate()
   const [keyword, setKeyword] = useState('')
-
   const [currentPage, setcurrentPage] = useState<number>(1)
   const [pageSize, setpageSize] = useState<number>(12)
   const [total, setTotal] = useState<number>(0)
@@ -85,6 +90,7 @@ export default function Fn(props: Props) {
     getList()
   }
 
+  // 选择该模版
   const onSelect = (item: API.RcsTempListItem) => {
     nav(`/console/rcs/send/${item.sign}/${item.id}`, { replace: true })
     props.onCancel()
@@ -112,6 +118,7 @@ export default function Fn(props: Props) {
             current={currentPage}
             defaultPageSize={pageSize}
             pageSizeOptions={[]}
+            size={point ? 'default' : 'small'}
             total={total}
             showSizeChanger={false}
             showQuickJumper
@@ -121,8 +128,6 @@ export default function Fn(props: Props) {
           <Button onClick={props.onCancel}>取消</Button>
         </Flex>
       }
-      classNames={{ header: 'modal-header', body: 'modal-body' }}
-      wrapClassName='select-create-send-temp'
       destroyOnClose>
       <Row gutter={24}>
         {list.map((item, index) => (
