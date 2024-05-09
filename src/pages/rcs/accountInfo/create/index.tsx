@@ -401,12 +401,12 @@ export default function Fn() {
                 label='客户名称'
                 name='customerName'
                 rules={[{ required: true }, { max: 20 }]}>
-                <Input placeholder='不超过 20 个字符' />
+                <Input placeholder='请输入客户名称' />
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
               <Form.Item label='联系人名称' name='customerContactName'>
-                <Input placeholder='不超过 20 个字符' />
+                <Input placeholder='请输入联系人名称' />
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
@@ -419,7 +419,7 @@ export default function Fn() {
                     pattern: new RegExp(/^1(3|4|5|6|7|8|9)\d{9}$/, 'g'),
                   },
                 ]}>
-                <Input placeholder='客户电话信息' max={11} />
+                <Input placeholder='请输入联系人手机号' max={11} />
               </Form.Item>
             </Col>
 
@@ -435,7 +435,7 @@ export default function Fn() {
                     ),
                   },
                 ]}>
-                <Input placeholder='客户邮箱' />
+                <Input placeholder='请输入联系人邮箱' />
               </Form.Item>
             </Col>
 
@@ -459,7 +459,7 @@ export default function Fn() {
                 required
                 rules={[{ required: true }]}
                 name='unifySocialCreditCodes'>
-                <Input placeholder='' />
+                <Input placeholder='请输入企业统一社会信用代码' />
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
@@ -468,7 +468,7 @@ export default function Fn() {
                 required
                 rules={[{ required: true }]}
                 name='enterpriseOwnerName'>
-                <Input placeholder='不超过20个字符' />
+                <Input placeholder='请输入企业责任人姓名' />
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
@@ -501,7 +501,7 @@ export default function Fn() {
                 required
                 rules={[{ required: true }]}
                 name='certificateCode'>
-                <Input placeholder='' />
+                <Input placeholder='请输入企业责任人证件号码' />
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
