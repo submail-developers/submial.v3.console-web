@@ -7,6 +7,7 @@ import {
   Pagination,
   Button,
   ConfigProvider,
+  Empty,
 } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import { useEffect, useRef, useState } from 'react'
@@ -121,6 +122,11 @@ export default function Fn() {
               <Item item={item} delSuccess={() => getList()} />
             </Col>
           ))}
+          {list.length == 0 && (
+            <Col span={24} className='fx-center-center m-t-40'>
+              <Empty description='暂无素材，请上传素材' />
+            </Col>
+          )}
         </Row>
       </div>
       <div className='float-btm'>

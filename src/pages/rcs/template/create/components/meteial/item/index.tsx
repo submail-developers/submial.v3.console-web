@@ -25,8 +25,9 @@ type EndTimeProps = {
   expireAt: string
 }
 const EndTime = ({ expireAt }: EndTimeProps) => {
-  const currentTime = dayjs()
-  const days = currentTime.diff(expireAt, 'd', true)
+  const currentTime = dayjs().format()
+  const expireAtTime = dayjs(expireAt)
+  const days = expireAtTime.diff(currentTime, 'd', true)
   return (
     <div className='end-time p-l-6 p-b-6'>
       <div className='time-text p-x-10 fn13'>
