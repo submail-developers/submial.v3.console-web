@@ -21,22 +21,6 @@ type ItemProps = {
   delSuccess: () => void
 }
 
-type EndTimeProps = {
-  expireAt: string
-}
-const EndTime = ({ expireAt }: EndTimeProps) => {
-  const currentTime = dayjs().format()
-  const expireAtTime = dayjs(expireAt)
-  const days = expireAtTime.diff(currentTime, 'd', true)
-  return (
-    <div className='end-time p-l-6 p-b-6'>
-      <div className='time-text p-x-10 fn13'>
-        {days < 0 ? '已过期' : `期限: ${Math.ceil(days)}天`}
-      </div>
-    </div>
-  )
-}
-
 export default function MeteialItem(props: ItemProps) {
   const { message } = App.useApp()
   const point = usePoint('lg')
@@ -48,6 +32,7 @@ export default function MeteialItem(props: ItemProps) {
   const [videoRender, setvideoRender] = useState<React.ReactNode>()
   const [audioRender, setaudioRender] = useState<React.ReactNode>()
 
+  // 预览
   const previewEvent = () => {
     if (props.item.type == '2') {
       setpreviewAudio(true)
@@ -83,6 +68,7 @@ export default function MeteialItem(props: ItemProps) {
     }
   }
 
+  // 删除
   const delEvent = async () => {
     try {
       const res = await delRcsMeteial({
@@ -175,10 +161,6 @@ export default function MeteialItem(props: ItemProps) {
           </>
         )}
 
-        {props.item.status == '0' && props.item.expireAt && (
-          <EndTime expireAt={props.item.expireAt} />
-        )}
-
         <div className='modal'>
           <Space className='handle' size={4}>
             {/* 预览图片按钮 */}
@@ -196,19 +178,6 @@ export default function MeteialItem(props: ItemProps) {
                   rev={undefined}
                 />
               </div>
-            )}
-            {props.item.status == '0' && (
-              <Tooltip
-                placement='bottom'
-                mouseEnterDelay={0.3}
-                title='重置素材有效期'
-                overlayInnerStyle={{ fontSize: '12px', minHeight: '24px' }}
-                trigger={['click', 'hover']}
-                destroyTooltipOnHide>
-                <div className='handle-item'>
-                  <span className='icon iconfont icon-shuaxin fn16'></span>
-                </div>
-              </Tooltip>
             )}
             <Popconfirm
               title='删除素材'

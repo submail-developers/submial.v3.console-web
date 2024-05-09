@@ -58,23 +58,6 @@
       display: none;
     }
 
-    .end-time {
-      width: fit-content;
-      height: fit-content;
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      z-index: 4;
-      .time-text {
-        width: fit-content;
-        height: 22px;
-        line-height: 22px;
-        border-radius: 11px;
-        background-color: rgba(0, 0, 0, 0.3);
-        color: #fff;
-      }
-    }
-
     .modal {
       width: 100%;
       height: fit-content;
@@ -97,23 +80,12 @@
           align-items: center;
         }
       }
-      .time {
-        position: absolute;
-        left: 6px;
-        bottom: 6px;
-        height: 24px;
-        border-radius: 12px;
-        width: fit-content;
-        padding: 0 10px;
-        background-color: rgba(0, 0, 0, 0.3);
-        color: #fff;
-      }
       .handle {
         position: absolute;
         right: 6px;
         bottom: 6px;
         .handle-item {
-          background-color: rgba(255, 255, 255, 0.9);
+          background-color: #fff;
           height: 24px;
           width: 24px;
           cursor: pointer;

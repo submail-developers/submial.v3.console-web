@@ -28,7 +28,6 @@ export default function Fn() {
   const [total, setTotal] = useState<number>(0)
   const [showModal, setshowModal] = useState(false)
   const [list, setList] = useState<API.RcsOnlineMeteialItem[]>([])
-  const [refresh, setrefresh] = useState(0) // 待刷新素材数量
   const timerRef = useRef(null) // 定时器
   const getListingRef = useRef(false) // 是否正在获取列表数据
 
@@ -109,13 +108,7 @@ export default function Fn() {
           </Space>
         </Flex>
       </div>
-      <div
-        className='rcs-meteial-list p-16'
-        style={{
-          height: `calc(100% - ${
-            refresh > 0 ? 96 + 30 + 12 + 96 : 96 + 30 + 12
-          }px)`,
-        }}>
+      <div className='rcs-meteial-list p-16'>
         <Row wrap gutter={[20, 12]}>
           {list.map((item) => (
             <Col span={12} key={item.id}>
@@ -145,24 +138,6 @@ export default function Fn() {
             showTotal={(total) => `共 ${total} 条`}
           />
         </Flex>
-        {refresh > 0 && (
-          <Space className='p-x-16 p-y-8 m-b-8 refresh-wrap'>
-            <div>
-              <div className='fw-500'>{refresh}个素材即将到期</div>
-              <div className='gray-color fn13'>
-                所有素材有效期为7天，请及时刷新素材剩余期限。
-              </div>
-            </div>
-            <ConfigProvider
-              theme={{
-                token: {
-                  colorPrimary: '#f19d25',
-                },
-              }}>
-              <Button type='primary'>刷新临期素材</Button>
-            </ConfigProvider>
-          </Space>
-        )}
       </div>
       <UploadModal
         show={showModal}
