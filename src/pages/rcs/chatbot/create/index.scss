@@ -37,9 +37,7 @@
         }
       }
     }
-    .ant-input {
-      font-size: 15px;
-    }
+
     .ant-select-single {
       height: 42px;
     }
@@ -62,7 +60,7 @@
   }
 
   .upload-btn {
-    width: 44px;
+    width: 45px;
     height: 44px;
     border-radius: 50%;
     overflow: hidden;
@@ -85,14 +83,6 @@
     }
     .form-con {
       width: 100%;
-    }
-  }
-  .ant-input-number-affix-wrapper,
-  .ant-color-picker-trigger {
-    height: 40px;
-    .ant-input-number-input-wrap {
-      height: 40px;
-      line-height: 37px;
     }
   }
 }

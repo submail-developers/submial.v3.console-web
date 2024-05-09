@@ -13,10 +13,11 @@ import {
   Radio,
   Divider,
   InputNumber,
+  Cascader,
   App,
   ConfigProvider,
 } from 'antd'
-import type { GetProp, UploadFile, UploadProps } from 'antd'
+import type { GetProp, UploadFile, UploadProps, RadioChangeEvent } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 
 import { useState, useRef, useEffect } from 'react'
@@ -24,7 +25,7 @@ import { useParams, NavLink, useNavigate } from 'react-router-dom'
 import { changeBreadcrumbItem } from '@/store/reducers/breadcrumb'
 import { useAppDispatch } from '@/store/hook'
 import utils from '@/utils/formRules'
-import { getChatbot, updateChatbot } from '@/api'
+import { getChatbot, updateChatbot, getIndustry } from '@/api'
 import { API } from 'apis'
 import PageContent from '@/components/pageContent'
 import UploadLogo from './logo'
@@ -61,6 +62,8 @@ export default function Fn() {
   const [params] = useSearchParams()
   const id = params.get('id')
   const [loading, setloading] = useState(false)
+  const [industryList, setIndustryList] = useState<API.IndustryItem[]>([])
+  const [value, setValue] = useState(1)
 
   const getDetail = async () => {
     try {
@@ -122,6 +125,73 @@ export default function Fn() {
     },
     fileList,
   }
+  const onChange = (e: RadioChangeEvent) => {
+    console.log('radio checked', e.target.value)
+    setValue(e.target.value)
+  }
+  // 实际下发行业
+  const actualIssueIndustryOptions = [
+    {
+      value: '1',
+      label: '党政军',
+    },
+    {
+      value: '2',
+      label: '民生',
+    },
+    {
+      value: '3',
+      label: '金融',
+    },
+    {
+      value: '4',
+      label: '物流',
+    },
+    {
+      value: '5',
+      label: '游戏',
+    },
+    {
+      value: '6',
+      label: '电商',
+    },
+    {
+      value: '7',
+      label: '微商（个人）',
+    },
+    {
+      value: '8',
+      label: '沿街商铺（中小）',
+    },
+    {
+      value: '9',
+      label: '企业（大型）',
+    },
+    {
+      value: '10',
+      label: '教育培训',
+    },
+    {
+      value: '11',
+      label: '房地产',
+    },
+    {
+      value: '12',
+      label: '医疗器械、药店',
+    },
+    {
+      value: '13',
+      label: '其他',
+    },
+  ]
+
+  // 获取行业类型
+  const getIndustryList = async () => {
+    try {
+      const res = await getIndustry()
+      setIndustryList(res.data)
+    } catch (error) {}
+  }
 
   // 修改logo文件
   const onChangeLogoFile = (file: UploadFile, src: string) => {
@@ -152,7 +222,9 @@ export default function Fn() {
     setBgFile(null)
     setBgSrc('')
   }
-
+  useEffect(() => {
+    getIndustryList()
+  }, [])
   useEffect(() => {
     if (chatbotId == '0') {
       dispatch(
@@ -179,6 +251,81 @@ export default function Fn() {
       })
     }
   }, [form])
+
+  // 保存
+  const save = async () => {
+    try {
+      // let res1: FilePath = {},
+      //   res2: FilePath = {}
+      // if (companyLogoPathRef.current) {
+      //   if (fileList[0].url != companyLogoPathRef.current) {
+      //     delCustomerFile({
+      //       path: companyLogoPathRef.current,
+      //     })
+      //     res1 = await uploadCustomerFile({
+      //       file: fileList[0],
+      //       type: '2',
+      //     })
+      //   } else {
+      //     res1['path'] = companyLogoPathRef.current
+      //   }
+      // } else {
+      //   if (fileList.length > 0) {
+      //     res2 = await uploadCustomerFile({
+      //       file: fileList[0],
+      //       type: '2',
+      //     })
+      //   }
+      // }
+
+      // if (contractAccessoryPathRef.current) {
+      //   if (fileList2[0].url != contractAccessoryPathRef.current) {
+      //     delCustomerFile({
+      //       path: contractAccessoryPathRef.current,
+      //     })
+      //     res2 = await uploadCustomerFile({
+      //       file: fileList2[0],
+      //       type: '1',
+      //     })
+      //   } else {
+      //     res2['path'] = contractAccessoryPathRef.current
+      //   }
+      // } else {
+      //   if (fileList2.length > 0) {
+      //     res2 = await uploadCustomerFile({
+      //       file: fileList2[0],
+      //       type: '1',
+      //     })
+      //   }
+      // }
+
+      const formvalues = await form.getFieldsValue()
+      console.log(formvalues, '????')
+      // let params = {
+      //   ...formvalues,
+      //   businessType: formvalues.businessType[0],
+      //   industryTypeCode: formvalues.businessType[1],
+      //   contractRenewStatus: formvalues.contractRenewStatus.value,
+      //   companyLogo: (res1 && res1.path) || '',
+      //   contractAccessory: (res2 && res2.path) || '',
+      //   contractEffectiveDate:
+      //     formvalues.contractEffectiveDate.format('YYYY-MM-DD'),
+      //   contractExpiryDate: formvalues.contractExpiryDate.format('YYYY-MM-DD'),
+      //   contractRenewDate: formvalues.contractRenewDate.format('YYYY-MM-DD'),
+      // }
+
+      // const res = await saveupForCspAccount(params)
+      // if (res) {
+      //   message.success('保存成功！')
+      // navigate('/console/rcs/account/index')
+      // }
+
+      setloading(false)
+    } catch (error) {
+      console.log(error)
+      setloading(false)
+    }
+  }
 
   return (
     <PageContent xxl={970} extClass='create-chatbot-page'>
@@ -233,35 +380,35 @@ export default function Fn() {
                 onDelFile={onDelLogoFile}
               />
             </Col>
-            <Col span={24}>
-              <Form.Item
-                label='服务描述'
-                name='debugWhiteAddress'
-                validateTrigger='onBlur'
-                required
-                rules={[
-                  {
-                    validator: utils.validateMobiles,
-                  },
-                ]}>
-                <TextArea
-                  placeholder='用于解释 Chatbot 的用途，不可携带英文双引号、\、emoji，不超过500个字符'
-                  autoSize={{ minRows: 3, maxRows: 3 }}
-                />
-              </Form.Item>
-            </Col>
           </Row>
           <Row gutter={24}>
             <Col span={24} xl={12}>
-              <Form.Item label='行业类型' name='actualIssueIndustry' required>
+              <Form.Item
+                label='行业类型'
+                name='businessType'
+                required
+                rules={[{ required: true }]}>
+                <Cascader
+                  options={industryList}
+                  placeholder='请选择'
+                  expandTrigger='hover'
+                />
+              </Form.Item>
+            </Col>
+            <Col span={24} xl={12}>
+              <Form.Item label='下发行业' name='actualIssueIndustry'>
                 <Select
                   placeholder='请选择'
-                  options={[
-                    { value: 'jack', label: 'Jack' },
-                    { value: 'lucy', label: 'Lucy' },
-                    { value: 'Yiminghe', label: 'yiminghe' },
-                    { value: 'disabled', label: 'Disabled', disabled: true },
-                  ]}
+                  fieldNames={{
+                    label: 'label',
+                    value: 'value',
+                  }}
+                  filterOption={(input, option) =>
+                    (option?.label + option.value ?? '')
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
+                  options={actualIssueIndustryOptions}
                 />
               </Form.Item>
             </Col>
@@ -279,10 +426,10 @@ export default function Fn() {
             <Col span={24} xl={12}>
               <Form.Item
                 label='服务方名称'
-                name='autograph'
                 required
-                rules={[{ max: 32 }]}>
-                <Input placeholder='不超过 32 个字符' />
+                name='provider'
+                validateTrigger='onBlur'>
+                <Input placeholder='用于 Chatbot 用户电话咨询' />
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
@@ -336,62 +483,29 @@ export default function Fn() {
                 <Input placeholder='' />
               </Form.Item>
             </Col>
-            <Col span={24} xl={12}>
+
+            <Col span={12}>
+              <Form.Item label='提供者开关' name='providerSwitchCode'>
+                <Radio.Group onChange={onChange} value={value}>
+                  <Space>
+                    <Radio value={1}>显示</Radio>
+                    <Radio value={0}>不显示</Radio>
+                  </Space>
+                </Radio.Group>
+              </Form.Item>
+            </Col>
+
+            <Col span={24}>
               <Form.Item
-                label='服务方地址'
+                label='服务方详细地址'
                 name='address'
                 required
                 rules={[{ max: 32 }]}>
                 <Input placeholder='' />
               </Form.Item>
             </Col>
+
             <Col span={24}>
-              <Form.Item
-                label='服务方详细地址'
-                name='autograph'
-                required
-                rules={[{ max: 32 }]}>
-                <Input placeholder='' />
-              </Form.Item>
-            </Col>
-            <Col span={24} xl={12}>
-              <Form.Item
-                label='经度/纬度（经纬度需同时填写，最多支持小数点后3个数字）'
-                style={{ marginBottom: 0 }}>
-                <Row gutter={24}>
-                  <Col span={12} xl={9}>
-                    <Form.Item name={'lon'}>
-                      <InputNumber
-                        placeholder=''
-                        className='w-100'
-                        max={180}
-                        min={-180}
-                        step={0.001}
-                        changeOnWheel={false}
-                        controls={false}
-                        prefix={<div>经度：</div>}
-                      />
-                    </Form.Item>
-                  </Col>
-                  <Col span={12} xl={9}>
-                    <Form.Item name={'lat'}>
-                      <InputNumber
-                        placeholder=''
-                        className='w-100'
-                        max={90}
-                        min={-90}
-                        step={0.001}
-                        type='number'
-                        changeOnWheel={false}
-                        controls={false}
-                        prefix={<div>纬度：</div>}
-                      />
-                    </Form.Item>
-                  </Col>
-                </Row>
-              </Form.Item>
-            </Col>
-            <Col span={24} xl={12}>
               <Form.Item style={{ marginBottom: 0 }}>
                 <Row gutter={24}>
                   <Col span={24} xl={12}>
@@ -441,6 +555,35 @@ export default function Fn() {
                 />
               </Form.Item>
             </Col>
+            <Col span={24}>
+              <Form.Item
+                label='IP限制'
+                name='bind'
+                validateTrigger='onBlur'
+                required>
+                <TextArea
+                  placeholder='无限制    多个IP地址以英文逗号拼接'
+                  autoSize={{ minRows: 3, maxRows: 3 }}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item
+                label='服务描述'
+                name='description'
+                validateTrigger='onBlur'
+                required
+                rules={[
+                  {
+                    validator: utils.validateMobiles,
+                  },
+                ]}>
+                <TextArea
+                  placeholder='用于解释 Chatbot 的用途，不可携带英文双引号、\、emoji，不超过500个字符'
+                  autoSize={{ minRows: 3, maxRows: 3 }}
+                />
+              </Form.Item>
+            </Col>
           </Row>
         </div>
 
@@ -458,8 +601,7 @@ export default function Fn() {
                 type='primary'
                 size='large'
                 style={{ width: 120 }}
-                // onClick={submit}
-              >
+                onClick={save}>
                 保存
               </Button>
             </ConfigProvider>

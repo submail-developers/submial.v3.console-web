@@ -1,10 +1,19 @@
 import { useState, useRef, MutableRefObject } from 'react'
 import { LoadingOutlined } from '@ant-design/icons'
-import { Input, Upload, Form, App, Image as AImage, Flex, Button } from 'antd'
+import {
+  Input,
+  Upload,
+  Form,
+  App,
+  Image as AImage,
+  Flex,
+  Button,
+  Space,
+} from 'antd'
 import type { UploadFile, UploadProps } from 'antd'
-
+import ava2 from '@/assets/rcs/avatarImgs/ava2.png'
 import ADel from '@/components/aDel'
-import AddDialog from '../addAvatarDialog/addDialog'
+import AvatarDialog from './avatarDialog'
 import './index.scss'
 
 type Props = {
@@ -25,6 +34,8 @@ export default function Fn(props: Props) {
   const { message } = App.useApp()
   const [uploading, setUploading] = useState(false)
   const [delLoading, setDelLoading] = useState(false)
+  const [file, setFile] = useState<UploadFile>()
+  const [fileSrc, setFileSrc] = useState<string>()
   const addDialogRef: MutableRefObject<any> = useRef(null)
 
   // 删除
@@ -71,6 +82,9 @@ export default function Fn(props: Props) {
     maxCount: 1,
   }
 
+  const chooseAvatar = (file: UploadFile, src: string) => {
+    props.onChangeFile(file, src)
+  }
   // 展示头像弹框
   const showDialog = () => {
     addDialogRef.current.open()
@@ -82,26 +96,24 @@ export default function Fn(props: Props) {
       </Form.Item>
       <Form.Item label='Chatbot 头像' required>
         <Flex align='center' gap={12}>
-          {/* <Upload {...uploadProps}> */}
           <div className='upload-btn fx-center-center'>
-            {/* {props.logoSrc ? (
+            {props.logoSrc ? (
               <AImage src={props.logoSrc} preview={false} alt='' />
-            ) : ( */}
-            <span className='icon iconfont icon-jiqiren-filled jiqiren'></span>
-            {/* )}
-           {uploading ? (
-                <div className='loading fx-center-center'>
-                  <LoadingOutlined className='fn22' />
-                </div>
-              ) : null} */}
+            ) : (
+              <img src={ava2} alt='' />
+            )}
+            {uploading ? (
+              <div className='loading fx-center-center'>
+                <LoadingOutlined className='fn22' rev={null} />
+              </div>
+            ) : null}
           </div>
-          {/* </Upload> */}
-          {/* <Space style={{ color: '#999' }}>
+          <Space style={{ color: '#999' }}>
             <span>{props.logoFile ? props.logoFile.name : ''}</span>
             {props.logoSrc && (
               <ADel onDel={delLogoEvent} loading={delLoading} />
             )}
-          </Space> */}
+          </Space>
 
           <Button
             className='chose-avatar'
@@ -112,7 +124,7 @@ export default function Fn(props: Props) {
           </Button>
         </Flex>
       </Form.Item>
-      <AddDialog ref={addDialogRef} />
+      <AvatarDialog ref={addDialogRef} onOk={chooseAvatar} />
     </div>
   )
 }

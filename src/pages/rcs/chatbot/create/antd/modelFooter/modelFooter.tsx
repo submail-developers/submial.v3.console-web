@@ -12,7 +12,7 @@ export default (props: Props) => {
   const [visible, setVisible] = useState(false)
   return (
     <div data-class='model-footer-wrap'>
-      <div className='left-part' onClick={() => setVisible(true)}>
+      {/* <div className='left-part' onClick={() => setVisible(true)}>
         <i
           className='icon iconfont icon-xianshi'
           onClick={() => setVisible(true)}></i>{' '}
@@ -28,15 +28,15 @@ export default (props: Props) => {
             setVisible(value)
           },
         }}
-      />
-      <div className='right-part'>
-        <div className='footer-btn cancel' onClick={props.onCancel}>
-          取消
-        </div>
-        <div className='footer-btn confirm' onClick={props.onOk}>
-          确定
-        </div>
+      /> */}
+      {/* <div className='right-part'> */}
+      <div className='footer-btn cancel' onClick={props.onCancel}>
+        取消
       </div>
+      <div className='footer-btn confirm' onClick={props.onOk}>
+        确定
+      </div>
+      {/* </div> */}
     </div>
   )
 }
