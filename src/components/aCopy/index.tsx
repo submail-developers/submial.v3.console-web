@@ -6,6 +6,7 @@ const { Paragraph } = Typography
 
 type Props = {
   text: string
+  title?: string
 }
 
 /**
@@ -23,6 +24,7 @@ export default function ACopy(props: Props) {
         icon: [false, false],
         onCopy: () => messageApi.success('复制成功'),
       }}
-      className='handle-copy'></Paragraph>
+      className='handle-copy'
+      title={props.title || '点击复制'}></Paragraph>
   )
 }

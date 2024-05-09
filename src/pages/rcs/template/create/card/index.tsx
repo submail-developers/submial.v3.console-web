@@ -4,6 +4,7 @@ import type { TabsProps, SelectProps } from 'antd'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import Meteial from '../components/meteial'
 import ActionForm from '../components/actionForm'
+import MmsCallback from '../components/mmsCallback'
 import Page from '../page'
 import { Media, Action, Reply, CardLayout } from '../type'
 import RcsInput from '@/components/rcsInput'
@@ -134,7 +135,7 @@ export default function Fn() {
   // 短信消息回落
   const [richMsg, setRichMsg] = useState('')
   // 彩信回落
-  const [mmsInfo, setMmsInfo] = useState<API.MmsListItem>()
+  const [mmsInfo, setMmsInfo] = useState<API.UploadMmsLibsRes>()
   // 彩信列表
   const [mmsList, setMmsList] = useState<API.MmsListItem[]>([])
 
@@ -154,10 +155,7 @@ export default function Fn() {
 
   // 设置彩信回落
   const changeMmsValue = (val) => {
-    const info = mmsList.find((item) => item.sign == val)
-    if (info) {
-      setMmsInfo(info)
-    }
+    // setMmsInfo(info)
   }
 
   // 右侧模版配置与消息回落配置切换
@@ -354,8 +352,8 @@ export default function Fn() {
       sms: Boolean(richMsg) ? 'true' : 'false',
       smsContent: richMsg,
       mms: Boolean(mmsInfo) ? 'true' : 'false',
-      mmsTemplate: '',
-      mmsSubject: '这里是彩信标题',
+      mmsTemplate: Boolean(mmsInfo) ? mmsInfo.sign : '',
+      mmsSubject: Boolean(mmsInfo) ? mmsInfo.mmsSubject : '',
       suggestions: JSON.stringify({
         suggestions: _suggestions,
       }),
@@ -543,62 +541,12 @@ export default function Fn() {
         </>
       ),
       children: (
-        <div className='message-config hide-scrollbar'>
-          <div className='fn16 fw-500'>回落配置</div>
-          <Form.Item
-            label='短信回落信息（选填）'
-            colon={false}
-            style={{ margin: '4px 0 0' }}></Form.Item>
-          <RcsInput
-            text={richMsg}
-            onChange={(val) => setRichMsg(val)}
-            onBlur={() => setactionsIndex(-1)}
-            min={0}
-            chineseLen={2}
-            label={'短信消息回落'}
-            showInsertParams
-            active
-            style={{
-              height: 120,
-              lineHeight: '24px',
-              backgroundColor: '#fff',
-              overflow: 'auto',
-              padding: '0',
-              // borderStyle: 'solid',
-              // borderColor: '#ccc',
-              border: 'none',
-            }}
-            wrapStyle={{
-              padding: '4px 8px',
-              border: '1px solid #ccc',
-              // overflow: 'auto',
-              borderRadius: '4px',
-            }}
-          />
-
-          {/* <Divider /> */}
-
-          {/* <div className='fn16 fw-500' style={{ margin: '16px 0 8px' }}>
-            多媒体彩信消息回落
-          </div> */}
-          <Form.Item
-            label='多媒体彩信回落（选填）'
-            colon={false}
-            style={{ margin: '4px 0 0' }}></Form.Item>
-
-          <Select
-            showSearch
-            value={(mmsInfo && mmsInfo.sign) || null}
-            placeholder='请输入模版ID'
-            defaultActiveFirstOption={false}
-            style={{ width: '100%' }}
-            filterOption={false}
-            onSearch={searchMmsList}
-            onChange={changeMmsValue}
-            fieldNames={{ label: 'sign', value: 'sign' }}
-            options={mmsList}
-          />
-        </div>
+        <MmsCallback
+          msg={richMsg}
+          mmsInfo={mmsInfo}
+          onChangeMms={(data) => setMmsInfo(data)}
+          onChangeMsg={(val) => setRichMsg(val)}
+        />
       ),
     },
   ]

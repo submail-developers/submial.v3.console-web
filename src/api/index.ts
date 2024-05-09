@@ -214,10 +214,11 @@ export const getMmsMaterialList = (data: API.GetMmsMaterialListParams) => {
 
 // 将彩信模板上报至运营商
 export const uploadMmsLibs = (data: API.UploadMmsLibsParams) => {
-  return request.post<any, API.Response<any>, API.UploadMmsLibsParams>(
-    'console/api/rcs/upload_mms_libs',
-    { ...data },
-  )
+  return request.post<
+    any,
+    API.Response<API.UploadMmsLibsRes>,
+    API.UploadMmsLibsParams
+  >('console/api/rcs/upload_mms_libs', { ...data })
 }
 
 // 获取非直签客户信息

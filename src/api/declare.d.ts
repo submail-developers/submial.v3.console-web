@@ -335,6 +335,10 @@ declare module 'apis' {
     interface UploadMmsLibsParams {
       mms_template_id: string
     }
+    interface UploadMmsLibsRes {
+      mmsSubject: string
+      sign: string
+    }
 
     // 获取非直签客户信息参数
     interface GetDicConfigParams {}

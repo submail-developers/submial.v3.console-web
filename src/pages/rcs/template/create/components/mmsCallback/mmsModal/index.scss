@@ -1,0 +1,111 @@
+.mms-modal {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ant-modal-body {
+    padding: 0 16px;
+  }
+  .mms-temp {
+    height: 60vh;
+    overflow: hidden;
+    overflow-y: auto;
+  }
+  .temp-item {
+    width: 100%;
+    height: 380px;
+    cursor: pointer;
+    &.active .preview-model {
+      background-color: #dfe6ef;
+    }
+    .temp-item-content {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      overflow: hidden;
+      border-radius: 6px;
+      padding: 10px 12px;
+      &.create-btn {
+        .create-card {
+          &:hover {
+            color: inherit;
+          }
+        }
+      }
+      .name {
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 24px;
+        width: 80%;
+      }
+      .time {
+        color: #999;
+        width: 100%;
+        font-size: 12px;
+        height: 22px;
+        line-height: 22px;
+        word-wrap: normal;
+        word-break: keep-all;
+      }
+      .status {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        overflow: hidden;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        &.success {
+          background-color: var(--primary-color);
+        }
+        &.fail {
+          background-color: #de3500;
+        }
+        &.waiting {
+          background-color: #72c240;
+        }
+      }
+      .preview-model {
+        width: 100%;
+        height: 308px;
+        position: relative;
+        overflow: hidden;
+        overflow-y: scroll;
+        border-radius: 5px;
+        margin-top: 8px;
+        border: 1px solid #e6e6e6;
+
+        .preview-content {
+          width: 100%;
+          height: 100%;
+          position: relative;
+          padding: 1.25rem 1.75rem;
+          font-size: 16px;
+          .temp-subject,
+          .info-text {
+            margin-bottom: 6px;
+            color: #003883;
+            background-color: #f1f2f4;
+            border-radius: 4px;
+            padding: 8px 14px;
+          }
+        }
+        video,
+        .info-img {
+          border-radius: 4px;
+        }
+      }
+      .factory-list {
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+      }
+    }
+  }
+}
