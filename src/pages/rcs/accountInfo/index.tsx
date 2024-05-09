@@ -6,7 +6,7 @@ import { getDicConfig } from '@/api'
 import { API } from 'apis'
 import jiqirenImg from '@/assets/rcs/gunali.png'
 import './index.scss'
-
+import yidong from '@/assets/rcs/operator/yidong.png'
 interface DataType extends API.GetDicConfigItems {}
 
 type DownLoadProps = {
@@ -89,7 +89,7 @@ export default function Fn() {
             </div>
             <div className='auditing-status fn14'>
               支持运营商 &nbsp;
-              <i className='icon iconfont icon-yidonglogo fn28'></i>
+              <img src={yidong} style={{ width: '30px' }} alt='' />
               &nbsp; 移动
             </div>
           </div>
@@ -100,11 +100,16 @@ export default function Fn() {
                 <td>客户名称</td>
                 <td colSpan={3}>{customerData.customerName}</td>
               </tr>
+
               <tr>
+                <td>联系人名称</td>
+                <td>{customerData.customerContactName}</td>
                 <td>联系人邮箱</td>
                 <td>{customerData.customerContactEmail}</td>
-                <td>联系人</td>
-                <td>{customerData.customerContactMob}</td>
+              </tr>
+              <tr>
+                <td>联系人电话</td>
+                <td colSpan={3}>{customerData.customerContactMob}</td>
               </tr>
 
               <tr>
@@ -146,11 +151,7 @@ export default function Fn() {
               <tr>
                 <td>合同信息</td>
                 <td colSpan={3}>
-                  已上传
-                  {/* <DownLoad
-                    fileName={customerData.contractName}
-                    url={customerData.contractAccessory}
-                  /> */}
+                  {customerData.contractAccessory && '已上传'}
                 </td>
               </tr>
             </tbody>

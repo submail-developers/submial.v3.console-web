@@ -28,7 +28,7 @@ import type {
 } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import { useState, useRef, useEffect } from 'react'
-import { useParams, NavLink } from 'react-router-dom'
+import { useParams, NavLink, useNavigate } from 'react-router-dom'
 import { changeBreadcrumbItem } from '@/store/reducers/breadcrumb'
 import { useAppDispatch } from '@/store/hook'
 import {
@@ -40,13 +40,11 @@ import {
   delCustomerFile,
   getIndustry,
 } from '@/api'
+import dayjs from 'dayjs'
 import utils from '@/utils/formRules'
 import { API } from 'apis'
-
 import PageContent from '@/components/pageContent'
-
 import jiqiren from '@/assets/rcs/aco1.png'
-
 import './index.scss'
 
 const { TextArea } = Input
@@ -59,6 +57,9 @@ interface Option {
   value: string | number
   label: string
   children?: Option[]
+}
+type FilePath = {
+  path?: string
 }
 
 const IdOptions: Option[] = [{ value: 'ids', label: '身份证' }]
@@ -81,11 +82,14 @@ export default function Fn() {
   const [regionList, setregionList] = useState<API.RegionItem[]>([])
   const [industryList, setIndustryList] = useState<API.IndustryItem[]>([])
   const { message } = App.useApp()
-
+  const navigate = useNavigate()
   // 提交
   const submit = async () => {
     try {
-      let res1, res2
+      const values = await form.validateFields()
+      console.log('Success:', values)
+      let res1: FilePath = {},
+        res2: FilePath = {}
       const formvalues = await form.getFieldsValue()
       console.log(formvalues)
 
@@ -133,22 +137,35 @@ export default function Fn() {
 
       let params = {
         ...formvalues,
-        businessType: formvalues.formvalues[0],
-        industryTypeCode: formvalues.formvalues[1],
-        contractRenewStatus: formvalues.value,
+        businessType: formvalues.businessType[0],
+        industryTypeCode:
+          formvalues.businessType[1] < 10
+            ? '0' + formvalues.businessType[1]
+            : formvalues.businessType[1].toString(),
+        contractRenewStatus: formvalues.contractRenewStatus.value,
         companyLogo: (res1 && res1.path) || '',
+        contractAccessory: res2 && res2.path,
+        contractEffectiveDate:
+          formvalues.contractEffectiveDate.format('YYYY-MM-DD'),
+        contractExpiryDate: formvalues.contractExpiryDate.format('YYYY-MM-DD'),
+        contractRenewDate: formvalues.contractRenewDate.format('YYYY-MM-DD'),
       }
-      await signupForCspAccount(params)
-      message.success('提交成功！')
+      const res = await signupForCspAccount(params)
+      if (res) {
+        message.success('提交成功！')
+        navigate('/console/rcs/account/index')
+      }
       setloading(false)
     } catch (error) {
       setloading(false)
+      console.log('Failed:', error)
     }
   }
   // 保存
   const save = async () => {
     try {
-      let res1, res2
+      let res1: FilePath = {},
+        res2: FilePath = {}
       if (companyLogoPathRef.current) {
         if (fileList[0].url != companyLogoPathRef.current) {
           delCustomerFile({
@@ -192,18 +209,25 @@ export default function Fn() {
       }
 
       const formvalues = await form.getFieldsValue()
-      // console.log(formvalues)
       let params = {
         ...formvalues,
         businessType: formvalues.businessType[0],
         industryTypeCode: formvalues.businessType[1],
-        contractRenewStatus: formvalues.value,
+        contractRenewStatus: formvalues.contractRenewStatus.value,
         companyLogo: (res1 && res1.path) || '',
         contractAccessory: (res2 && res2.path) || '',
+        contractEffectiveDate:
+          formvalues.contractEffectiveDate.format('YYYY-MM-DD'),
+        contractExpiryDate: formvalues.contractExpiryDate.format('YYYY-MM-DD'),
+        contractRenewDate: formvalues.contractRenewDate.format('YYYY-MM-DD'),
       }
 
-      // await saveupForCspAccount(params)
-      // message.success('保存成功！')
+      const res = await saveupForCspAccount(params)
+      if (res) {
+        message.success('保存成功！')
+        navigate('/console/rcs/account/index')
+      }
+
       setloading(false)
     } catch (error) {
       console.log(error)
@@ -265,6 +289,15 @@ export default function Fn() {
       form.setFieldsValue({
         ...res.data,
         businessType: [res.data.businessType, res.data.industryTypeCode],
+        contractEffectiveDate: res.data.contractEffectiveDate
+          ? dayjs(res.data.contractEffectiveDate)
+          : null,
+        contractExpiryDate: res.data.contractExpiryDate
+          ? dayjs(res.data.contractExpiryDate)
+          : null,
+        contractRenewDate: res.data.contractRenewDate
+          ? dayjs(res.data.contractRenewDate)
+          : null,
       })
       // 合同回显
       if (res.data.contractAccessory) {
@@ -283,7 +316,7 @@ export default function Fn() {
         setFileList([
           {
             uid: '',
-            name: '头像',
+            name: 'logo',
             url: res.data.companyLogo,
           },
         ])
@@ -332,10 +365,6 @@ export default function Fn() {
       })
     }
   }, [form])
-  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-    console.log(date, dateString)
-  }
-
   const contractRenewStatusOptions = [
     {
       value: '0',
@@ -370,15 +399,14 @@ export default function Fn() {
             <Col span={24} xl={12}>
               <Form.Item
                 label='客户名称'
-                required
                 name='customerName'
                 rules={[{ required: true }, { max: 20 }]}>
-                <Input placeholder='不超过 20 个字符' max={20} />
+                <Input placeholder='请输入客户名称' />
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
               <Form.Item label='联系人名称' name='customerContactName'>
-                <Input placeholder='不超过 20 个字符' max={20} />
+                <Input placeholder='请输入联系人名称' />
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
@@ -391,7 +419,7 @@ export default function Fn() {
                     pattern: new RegExp(/^1(3|4|5|6|7|8|9)\d{9}$/, 'g'),
                   },
                 ]}>
-                <Input placeholder='客户电话信息' max={11} />
+                <Input placeholder='请输入联系人手机号' max={11} />
               </Form.Item>
             </Col>
 
@@ -407,7 +435,7 @@ export default function Fn() {
                     ),
                   },
                 ]}>
-                <Input placeholder='客户邮箱' />
+                <Input placeholder='请输入联系人邮箱' />
               </Form.Item>
             </Col>
 
@@ -431,7 +459,7 @@ export default function Fn() {
                 required
                 rules={[{ required: true }]}
                 name='unifySocialCreditCodes'>
-                <Input placeholder='' />
+                <Input placeholder='请输入企业统一社会信用代码' />
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
@@ -440,7 +468,7 @@ export default function Fn() {
                 required
                 rules={[{ required: true }]}
                 name='enterpriseOwnerName'>
-                <Input placeholder='不超过20个字符' />
+                <Input placeholder='请输入企业责任人姓名' />
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
@@ -473,7 +501,7 @@ export default function Fn() {
                 required
                 rules={[{ required: true }]}
                 name='certificateCode'>
-                <Input placeholder='' />
+                <Input placeholder='请输入企业责任人证件号码' />
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
@@ -486,42 +514,33 @@ export default function Fn() {
                 <Input placeholder='请输入合同名称' />
               </Form.Item>
             </Col>
-            <Col
-              span={24}
-              xl={12}
-              style={{ display: 'flex', alignItems: 'center' }}>
-              <Form.Item
-                label='合同生效期'
-                validateTrigger='onSubmit'
-                name='contractEffectiveDate'>
-                <div>
-                  <Space direction='vertical'>
-                    <DatePicker onChange={onChange} />
-                  </Space>
-                </div>
-              </Form.Item>
-              &nbsp;
-              <Form.Item
-                label='合同失效期'
-                validateTrigger='onSubmit'
-                name='contractExpiryDate'>
-                <div>
-                  <Space direction='vertical'>
-                    <DatePicker onChange={onChange} />
-                  </Space>
-                </div>
-              </Form.Item>
-              &nbsp;
-              <Form.Item
-                label='自动续签日期'
-                validateTrigger='onSubmit'
-                name='contractRenewDate'>
-                <div>
-                  <Space direction='vertical'>
-                    <DatePicker onChange={onChange} />
-                  </Space>
-                </div>
-              </Form.Item>
+            <Col span={24} xl={12}>
+              <Row gutter={12}>
+                <Col span={8}>
+                  <Form.Item
+                    label='合同生效期'
+                    validateTrigger='onSubmit'
+                    name='contractEffectiveDate'>
+                    <DatePicker />
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item
+                    label='合同失效期'
+                    validateTrigger='onSubmit'
+                    name='contractExpiryDate'>
+                    <DatePicker />
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item
+                    label='自动续签日期'
+                    validateTrigger='onSubmit'
+                    name='contractRenewDate'>
+                    <DatePicker />
+                  </Form.Item>
+                </Col>
+              </Row>
             </Col>
 
             <Col span={24} xl={12}>

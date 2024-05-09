@@ -13,9 +13,9 @@ import type { UploadFile, UploadProps } from 'antd'
 import { LoadingOutlined, UploadOutlined, EyeOutlined } from '@ant-design/icons'
 import ADel from '@/components/aDel'
 import APreviewImg from '@/components/aPreviewImg'
-import AddDialog from '../choseBgimg/choseBgimg'
+import ChooseBgDialog from './bgImgDialog'
 import './index.scss'
-
+import ava2 from '@/assets/rcs/avatarImgs/bgnone.png'
 type Props = {
   bgSrc: string
   bgFile: UploadFile
@@ -82,60 +82,33 @@ export default function Fn(props: Props) {
   const showDialog = () => {
     addDialogRef.current.open()
   }
+  const chooseBg = (file: UploadFile, src: string) => {
+    props.onChangeFile(file, src)
+  }
   return (
     <div className='upload-bg'>
       <Form.Item hidden name='backgroundImage'>
         <Input type='text' />
       </Form.Item>
-      {/* <Form.Item
-        label='背景图12'
-        extra={
-          <div style={{ marginTop: '8px' }}>
-            支持的文件类型：png、jpg、jpeg，附件大小限20K
-          </div>
-        }>
-        <Flex align='center' gap={12}>
-          <Upload {...uploadProps}>
-            <div className='upload-btn fx-center-center'>
-              {props.bgSrc ? (
-                <>
-                  <AImage
-                    src={props.bgSrc}
-                    alt=''
-                    width={32}
-                    height={32}
-                    preview={false}
-                  />
-                  <UploadOutlined className='image-wrap-icon' />
-                  <div className='bg-model'></div>
-                </>
-              ) : (
-                <Button icon={<UploadOutlined />}>上传</Button>
-              )}
 
-              {uploading ? (
-                <div className='loading fx-center-center'>
-                  <LoadingOutlined className='fn22' />
-                </div>
-              ) : null}
-            </div>
-          </Upload>
-          <Space style={{ color: '#999' }} align='center'>
-            <span>{props.bgFile ? props.bgFile.name : ''}</span>
-            {props.bgSrc && (
-              <>
-                <APreviewImg src={props.bgSrc} style={{ color: '#999' }} />
-                <ADel onDel={delEvent} loading={delLoading} />
-              </>
-            )}
-          </Space>
-        </Flex>
-      </Form.Item> */}
       <Form.Item label='背景图' required>
         <Flex align='center' gap={12}>
           <div className='upload-btn fx-center-center'>
-            <span className='icon iconfont icon-jiqiren-filled jiqiren'></span>
+            {props.bgSrc ? (
+              <AImage src={props.bgSrc} preview={false} alt='' />
+            ) : (
+              <img src={ava2} alt='' />
+            )}
+            {uploading ? (
+              <div className='loading fx-center-center'>
+                <LoadingOutlined className='fn22' rev={null} />
+              </div>
+            ) : null}
           </div>
+          <Space style={{ color: '#999' }}>
+            <span>{props.bgFile ? props.bgFile.name : ''}</span>
+            {props.bgSrc && <ADel onDel={delEvent} loading={delLoading} />}
+          </Space>
           <Button
             className='choseBgimg'
             type='primary'
@@ -146,7 +119,7 @@ export default function Fn(props: Props) {
           </Button>
         </Flex>
       </Form.Item>
-      <AddDialog ref={addDialogRef} />
+      <ChooseBgDialog ref={addDialogRef} onOk={chooseBg} />
     </div>
   )
 }
