@@ -58,6 +58,23 @@
       display: none;
     }
 
+    .end-time {
+      width: fit-content;
+      height: fit-content;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      z-index: 4;
+      .time-text {
+        width: fit-content;
+        height: 22px;
+        line-height: 22px;
+        border-radius: 11px;
+        background-color: rgba(0, 0, 0, 0.3);
+        color: #fff;
+      }
+    }
+
     .modal {
       width: 100%;
       height: fit-content;

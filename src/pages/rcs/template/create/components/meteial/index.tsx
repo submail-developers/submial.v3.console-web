@@ -118,7 +118,7 @@ export default function Fn() {
         <Row wrap gutter={[20, 12]}>
           {list.map((item) => (
             <Col span={12} key={item.id}>
-              <Item item={item} />
+              <Item item={item} delSuccess={() => getList()} />
             </Col>
           ))}
         </Row>

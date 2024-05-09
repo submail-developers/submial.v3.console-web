@@ -1,6 +1,7 @@
-import { Image, Space, Spin, Popconfirm, Tooltip } from 'antd'
+import { Image, Space, Spin, Popconfirm, Tooltip, App } from 'antd'
 import { PlayCircleOutlined, EyeOutlined } from '@ant-design/icons'
 import { useState } from 'react'
+import { delRcsMeteial } from '@/api'
 import { API } from 'apis'
 import './index.scss'
 import imgTypeImg from '@/assets/rcs/fileType/img.png'
@@ -9,6 +10,7 @@ import videoTypeImg from '@/assets/rcs/fileType/video.png'
 import { getFileName } from '@/utils'
 import { usePoint } from '@/hooks'
 import MediaDrag from '../drag'
+import dayjs from 'dayjs'
 import './index.scss'
 
 type MediaType = '1' | '2' | '3' // 1图片 2音频 3视频
@@ -16,9 +18,26 @@ type T = MediaType | 'all'
 
 type ItemProps = {
   item: API.RcsOnlineMeteialItem
+  delSuccess: () => void
+}
+
+type EndTimeProps = {
+  expireAt: string
+}
+const EndTime = ({ expireAt }: EndTimeProps) => {
+  const currentTime = dayjs()
+  const days = currentTime.diff(expireAt, 'd', true)
+  return (
+    <div className='end-time p-l-6 p-b-6'>
+      <div className='time-text p-x-10 fn13'>
+        {days < 0 ? '已过期' : `期限: ${Math.ceil(days)}天`}
+      </div>
+    </div>
+  )
 }
 
 export default function MeteialItem(props: ItemProps) {
+  const { message } = App.useApp()
   const point = usePoint('lg')
   const [loadError, setLoadError] = useState(props.item.type != '1')
   const [previewImg, setpreviewImg] = useState(false)
@@ -61,6 +80,18 @@ export default function MeteialItem(props: ItemProps) {
         />,
       )
     }
+  }
+
+  const delEvent = async () => {
+    try {
+      const res = await delRcsMeteial({
+        id: props.item.id,
+      })
+      if (res.status == 'success') {
+        message.success('删除成功')
+        props.delSuccess()
+      }
+    } catch (error) {}
   }
 
   return (
@@ -143,6 +174,10 @@ export default function MeteialItem(props: ItemProps) {
           </>
         )}
 
+        {props.item.status == '0' && props.item.expireAt && (
+          <EndTime expireAt={props.item.expireAt} />
+        )}
+
         <div className='modal'>
           <Space className='handle' size={4}>
             {/* 预览图片按钮 */}
@@ -162,14 +197,22 @@ export default function MeteialItem(props: ItemProps) {
               </div>
             )}
             {props.item.status == '0' && (
-              <div className='handle-item'>
-                <span className='icon iconfont icon-shuaxin fn16'></span>
-              </div>
+              <Tooltip
+                placement='bottom'
+                mouseEnterDelay={0.3}
+                title='重置素材有效期'
+                overlayInnerStyle={{ fontSize: '12px', minHeight: '24px' }}
+                trigger={['click', 'hover']}
+                destroyTooltipOnHide>
+                <div className='handle-item'>
+                  <span className='icon iconfont icon-shuaxin fn16'></span>
+                </div>
+              </Tooltip>
             )}
             <Popconfirm
               title='删除素材'
               description='确定删除该素材？'
-              onConfirm={() => {}}
+              onConfirm={delEvent}
               placement='bottom'
               okText='确定'
               cancelText='取消'>
