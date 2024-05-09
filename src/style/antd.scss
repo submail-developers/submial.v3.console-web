@@ -74,6 +74,7 @@
   }
 }
 
+// 重置下拉样式
 .ant-select {
   .ant-select-selector {
     border: none !important;
@@ -107,6 +108,7 @@
     }
   }
 }
+// 重置弹框样式
 .ant-modal-wrap {
   .ant-modal-content {
     padding: 0;
@@ -138,16 +140,12 @@
   @media screen and (max-width: 767px) {
     .ant-modal-header {
       min-height: 52px;
-      padding-left: 12px;
-      padding-right: 12px;
       .ant-modal-title {
         font-size: 14px;
       }
     }
-    .ant-modal-body {
-      padding-left: 12px;
-      padding-right: 12px;
-    }
+    .ant-modal-header,
+    .ant-modal-body,
     .ant-modal-footer {
       padding-left: 12px;
       padding-right: 12px;
