@@ -1,19 +1,19 @@
 import { useState, useEffect, CSSProperties } from 'react'
 import { Space, Tabs, Divider, Image, Form, Select, App } from 'antd'
 import type { TabsProps, SelectProps } from 'antd'
-import { useSearchParams, useNavigate } from 'react-router-dom'
+import { useSearchParams, useNavigate, useParams } from 'react-router-dom'
 import Meteial from '../components/meteial'
 import ActionForm from '../components/actionForm'
 import MmsCallback from '../components/mmsCallback'
 import Page from '../page'
-import { Media, Action, Reply, CardLayout } from '../type'
+import { Media, Action, Reply, CardLayout, GeneralPurposeCard } from '../type'
 import RcsInput from '@/components/rcsInput'
 import ANumber from '@/components/aNumber'
 import { useDrop } from 'react-dnd'
 import { config as dndConfig } from '../dnd'
 import errorImg from '@/assets/rcs/error.png'
 import { API } from 'apis'
-import { createRcsTemp, getMmsList } from '@/api'
+import { createRcsTemp, getMmsList, getRcsTempList } from '@/api'
 
 import { debounce } from 'lodash'
 
@@ -46,6 +46,7 @@ const aNumberActiveStyle: CSSProperties = {
 }
 
 export default function Fn() {
+  const { id } = useParams()
   const nav = useNavigate()
   const { message: messageApi } = App.useApp()
   const [searchParams] = useSearchParams()
@@ -63,7 +64,7 @@ export default function Fn() {
       if (item) {
         setmedia({
           mediaUrl: item.filePath,
-          storeAt: item.storeAt,
+          mediaOssUrl: item.storeAt,
           mediaContentType: item.file_type,
           mediaFileSize: item.fileSize,
           height: 'MEDIUM_HEIGHT',
@@ -114,6 +115,7 @@ export default function Fn() {
   const [floatIndex, setfloatIndex] = useState(0)
   const [layout, setlayout] = useState<CardLayout>()
 
+  // 模版-内容标题
   const [richTitle, setRichTitle] = useState<RichText>({
     label: '卡片标题',
     text: '请输入标题，最多100个中文字符',
@@ -123,6 +125,7 @@ export default function Fn() {
     min: 1,
     max: 200,
   })
+  // 模版-内容描述
   const [richDes, setRichDes] = useState<RichText>({
     label: '卡片内容',
     text: '请输入内容，最多1000个中文字符',
@@ -139,29 +142,65 @@ export default function Fn() {
   // 彩信列表
   const [mmsList, setMmsList] = useState<API.MmsListItem[]>([])
 
-  // 搜索彩信列表
-  const searchMmsList = debounce(async (newValue: string) => {
-    if (!newValue) {
-      setMmsList([])
-      return
-    }
-    const res = await getMmsList({
-      page: 1,
-      limit: 20,
-      id: newValue,
-    })
-    setMmsList(res.data)
-  }, 200)
+  // 编辑模版-获取模版信息
+  const getTempInfo = async () => {
+    try {
+      const res = await getRcsTempList({
+        page: 1,
+        limit: 10,
+        status: 'all',
+        id: id,
+      })
+      if (res.list.length == 1) {
+        const info = res.list[0]
+        const generalPurposeCard = info.message.message
+          .generalPurposeCard as GeneralPurposeCard
+        setmedia({
+          ...generalPurposeCard.content.media,
+          mediaType: '1',
+        })
 
-  // 设置彩信回落
-  const changeMmsValue = (val) => {
-    // setMmsInfo(info)
-  }
-
-  // 右侧模版配置与消息回落配置切换
-  const [activeKey, setactiveKey] = useState('1')
-  const onChange = (key: string) => {
-    setactiveKey(key)
+        let titleStyles = [],
+          desStyles = []
+        if (generalPurposeCard.layout?.titleFontStyle) {
+          titleStyles = generalPurposeCard.layout?.titleFontStyle.split(',')
+        }
+        if (generalPurposeCard.layout?.descriptionFontStyle) {
+          desStyles = generalPurposeCard.layout?.descriptionFontStyle.split(',')
+        }
+        // 模版-内容标题
+        setRichTitle({
+          label: '卡片标题',
+          text: generalPurposeCard.content.title,
+          b: titleStyles.includes('bold'),
+          i: titleStyles.includes('italics'),
+          u: titleStyles.includes('underline'),
+          min: 1,
+          max: 200,
+        })
+        // 模版-内容描述
+        setRichDes({
+          label: '卡片内容',
+          text: generalPurposeCard.content.description,
+          b: desStyles.includes('bold'),
+          i: desStyles.includes('italics'),
+          u: desStyles.includes('underline'),
+          min: 1,
+          max: 2000,
+        })
+        // 按钮
+        setactions(
+          generalPurposeCard.content.suggestions.map((item) => item.action),
+        )
+        setsuggestions(info.suggestions.suggestions.map((item) => item.action))
+        setRichMsg(info.smsContent)
+        setMmsInfo({
+          mmsSubject: info.mmsSubject,
+          sign: info.sign,
+        })
+        console.log(info)
+      }
+    } catch (error) {}
   }
 
   // 编辑按钮
@@ -346,6 +385,7 @@ export default function Fn() {
     //   messageApi.warning('请选择彩信回落')
     // }
     let params: API.CreateRcsTempParams = {
+      id: id,
       type: '2',
       title: name,
       appid: '1024252',
@@ -405,161 +445,124 @@ export default function Fn() {
   //   return flag
   // }
 
-  const items: TabsProps['items'] = [
-    {
-      key: '1',
-      label: (
-        <>
-          <span
-            className='icon iconfont icon-card fn18'
-            style={{ marginRight: '2px' }}></span>
-          <span>模版配置</span>
-        </>
-      ),
-      children: (
-        <div className='base-config'>
-          {/* <div className='title'>单卡片</div> */}
-          {/* <div>卡片缩略图</div>
-          <div>
-            不选择缩略图 <Checkbox></Checkbox>
-          </div> */}
-          {/* <Divider /> */}
-          <div className='fn16 fw-500'>正文</div>
-          <div className='fn14 gray-color' style={{ marginTop: '8px' }}>
-            标题文字样式
-          </div>
-          <Space style={{ margin: '6px 0' }}>
-            <div
-              className={`fx-center-center rich-style-btn ${
-                richTitle.b ? 'color-btn-active' : 'color-btn'
-              }`}
-              onClick={() => setRichTitle({ ...richTitle, b: !richTitle.b })}>
-              <span className='icon iconfont icon-b fn18'></span>
-            </div>
-            <div
-              className={`fx-center-center rich-style-btn ${
-                richTitle.i ? 'color-btn-active' : 'color-btn'
-              }`}
-              onClick={() => setRichTitle({ ...richTitle, i: !richTitle.i })}>
-              <span className='icon iconfont icon-i fn18'></span>
-            </div>
-            <div
-              className={`fx-center-center rich-style-btn ${
-                richTitle.u ? 'color-btn-active' : 'color-btn'
-              }`}
-              onClick={() => setRichTitle({ ...richTitle, u: !richTitle.u })}>
-              <span className='icon iconfont icon-u fn18'></span>
-            </div>
-          </Space>
-          <div className='fn14 gray-color' style={{ marginTop: '8px' }}>
-            内容文字样式
-          </div>
-          <Space style={{ margin: '6px 0' }}>
-            <div
-              className={`fx-center-center rich-style-btn ${
-                richDes.b ? 'color-btn-active' : 'color-btn'
-              }`}
-              onClick={() => setRichDes({ ...richDes, b: !richDes.b })}>
-              <span className='icon iconfont icon-b fn18'></span>
-            </div>
-            <div
-              className={`fx-center-center rich-style-btn ${
-                richDes.i ? 'color-btn-active' : 'color-btn'
-              }`}
-              onClick={() => setRichDes({ ...richDes, i: !richDes.i })}>
-              <span className='icon iconfont icon-i fn18'></span>
-            </div>
-            <div
-              className={`fx-center-center rich-style-btn ${
-                richDes.u ? 'color-btn-active' : 'color-btn'
-              }`}
-              onClick={() => setRichDes({ ...richDes, u: !richDes.u })}>
-              <span className='icon iconfont icon-u fn18'></span>
-            </div>
-          </Space>
-          <Divider className='m-y-12' />
-          <div className='fn16 fw-500' style={{ marginBottom: '12px' }}>
-            按钮
-          </div>
-          <ANumber
-            dataSource={actions}
-            activeKey='index'
-            active={btnIndex}
-            min={1}
-            max={4}
-            onChange={(i) => {
-              setactionsIndex(i)
-              setbtnIndex(i)
-            }}
-            onAdd={() => addBtn()}
-            onDel={() => delBtn()}
-            style={aNumberStyle}
-            activeStyle={aNumberActiveStyle}
-          />
-          <ActionForm
-            data={actions}
-            activeIndex={btnIndex}
-            onChange={updataAction}
-            name='btn-form'
-          />
-          <Divider className='m-y-12' />
-          <div className='fn16 fw-500' style={{ marginBottom: '12px' }}>
-            悬浮框
-          </div>
-          <ANumber
-            dataSource={suggestions}
-            activeKey='index'
-            active={floatIndex}
-            min={1}
-            max={4}
-            onChange={(i) => {
-              setsuggestionsIndex(i)
-              setfloatIndex(i)
-            }}
-            onAdd={() => addSuggestions()}
-            onDel={() => delSuggestions()}
-            style={aNumberStyle}
-            activeStyle={aNumberActiveStyle}
-          />
-          <ActionForm
-            data={suggestions}
-            activeIndex={floatIndex}
-            onChange={updataSuggestions}
-            name='suggestions-form'
-          />
-        </div>
-      ),
-    },
-    {
-      key: '2',
-      label: (
-        <>
-          <span
-            className='icon iconfont icon-jiaohu fn18'
-            style={{ marginRight: '2px' }}></span>
-          <span>消息回落配置</span>
-        </>
-      ),
-      children: (
-        <MmsCallback
-          msg={richMsg}
-          mmsInfo={mmsInfo}
-          onChangeMms={(data) => setMmsInfo(data)}
-          onChangeMsg={(val) => setRichMsg(val)}
-        />
-      ),
-    },
-  ]
-  const renderTabBar: TabsProps['renderTabBar'] = (props, DefaultTabBar) => (
-    <div className='tabs'>
-      {items.map((item) => (
+  useEffect(() => {
+    // 编辑
+    if (id != '0') {
+      getTempInfo()
+    }
+  }, [id])
+
+  const tempConfig = (
+    <div className='p-x-12 p-y-16 g-scroll'>
+      <div className='fn16 fw-500'>正文</div>
+      <div className='fn14 gray-color' style={{ marginTop: '8px' }}>
+        标题文字样式
+      </div>
+      <Space style={{ margin: '6px 0' }}>
         <div
-          key={item.key}
-          className={`tab-item ${activeKey == item.key ? 'active' : ''}`}
-          onClick={() => setactiveKey(item.key)}>
-          {item.label}
+          className={`fx-center-center g-radius-4 g-pointer ${
+            richTitle.b ? 'color-btn-active' : 'color-btn'
+          }`}
+          style={{ width: 36, height: 36 }}
+          onClick={() => setRichTitle({ ...richTitle, b: !richTitle.b })}>
+          <span className='icon iconfont icon-b fn18'></span>
         </div>
-      ))}
+        <div
+          className={`fx-center-center g-radius-4 g-pointer ${
+            richTitle.i ? 'color-btn-active' : 'color-btn'
+          }`}
+          style={{ width: 36, height: 36 }}
+          onClick={() => setRichTitle({ ...richTitle, i: !richTitle.i })}>
+          <span className='icon iconfont icon-i fn18'></span>
+        </div>
+        <div
+          className={`fx-center-center g-radius-4 g-pointer ${
+            richTitle.u ? 'color-btn-active' : 'color-btn'
+          }`}
+          style={{ width: 36, height: 36 }}
+          onClick={() => setRichTitle({ ...richTitle, u: !richTitle.u })}>
+          <span className='icon iconfont icon-u fn18'></span>
+        </div>
+      </Space>
+      <div className='fn14 gray-color' style={{ marginTop: '8px' }}>
+        内容文字样式
+      </div>
+      <Space style={{ margin: '6px 0' }}>
+        <div
+          className={`fx-center-center g-radius-4 g-pointer ${
+            richDes.b ? 'color-btn-active' : 'color-btn'
+          }`}
+          style={{ width: 36, height: 36 }}
+          onClick={() => setRichDes({ ...richDes, b: !richDes.b })}>
+          <span className='icon iconfont icon-b fn18'></span>
+        </div>
+        <div
+          className={`fx-center-center g-radius-4 g-pointer ${
+            richDes.i ? 'color-btn-active' : 'color-btn'
+          }`}
+          style={{ width: 36, height: 36 }}
+          onClick={() => setRichDes({ ...richDes, i: !richDes.i })}>
+          <span className='icon iconfont icon-i fn18'></span>
+        </div>
+        <div
+          className={`fx-center-center g-radius-4 g-pointer ${
+            richDes.u ? 'color-btn-active' : 'color-btn'
+          }`}
+          style={{ width: 36, height: 36 }}
+          onClick={() => setRichDes({ ...richDes, u: !richDes.u })}>
+          <span className='icon iconfont icon-u fn18'></span>
+        </div>
+      </Space>
+      <Divider className='m-y-12' />
+      <div className='fn16 fw-500' style={{ marginBottom: '12px' }}>
+        按钮
+      </div>
+      <ANumber
+        dataSource={actions}
+        activeKey='index'
+        active={btnIndex}
+        min={1}
+        max={4}
+        onChange={(i) => {
+          setactionsIndex(i)
+          setbtnIndex(i)
+        }}
+        onAdd={() => addBtn()}
+        onDel={() => delBtn()}
+        style={aNumberStyle}
+        activeStyle={aNumberActiveStyle}
+      />
+      <ActionForm
+        data={actions}
+        activeIndex={btnIndex}
+        onChange={updataAction}
+        name='btn-form'
+      />
+      <Divider className='m-y-12' />
+      <div className='fn16 fw-500' style={{ marginBottom: '12px' }}>
+        悬浮框
+      </div>
+      <ANumber
+        dataSource={suggestions}
+        activeKey='index'
+        active={floatIndex}
+        min={1}
+        max={4}
+        onChange={(i) => {
+          setsuggestionsIndex(i)
+          setfloatIndex(i)
+        }}
+        onAdd={() => addSuggestions()}
+        onDel={() => delSuggestions()}
+        style={aNumberStyle}
+        activeStyle={aNumberActiveStyle}
+      />
+      <ActionForm
+        data={suggestions}
+        activeIndex={floatIndex}
+        onChange={updataSuggestions}
+        name='suggestions-form'
+      />
     </div>
   )
 
@@ -586,16 +589,16 @@ export default function Fn() {
                     height: '100%',
                     objectFit: 'cover',
                   }}
-                  src={media.storeAt}
+                  src={media.mediaOssUrl}
                   preview={false}
                   fallback={errorImg}
                 />
               )}
               {media && media.mediaType == '2' && (
-                <audio src={media.storeAt} controls></audio>
+                <audio src={media.mediaOssUrl} controls></audio>
               )}
               {media && media.mediaType == '3' && (
-                <video src={media.storeAt} controls></video>
+                <video src={media.mediaOssUrl} controls></video>
               )}
             </div>
             <div
@@ -707,12 +710,13 @@ export default function Fn() {
           </Space>
         </>
       }
-      right={
-        <Tabs
-          renderTabBar={renderTabBar}
-          activeKey={activeKey}
-          items={items}
-          onChange={onChange}
+      tempConfig={tempConfig}
+      callbackConfig={
+        <MmsCallback
+          msg={richMsg}
+          mmsInfo={mmsInfo}
+          onChangeMms={(data) => setMmsInfo(data)}
+          onChangeMsg={(val) => setRichMsg(val)}
         />
       }
       submit={submit}></Page>

@@ -1,49 +1,11 @@
 import { useEffect, useState } from 'react'
-import {
-  Flex,
-  Button,
-  Divider,
-  Form,
-  Input,
-  Select,
-  Row,
-  Col,
-  Table,
-  Image,
-  Space,
-  Pagination,
-  Popconfirm,
-  App,
-  Tooltip,
-} from 'antd'
-import type { ColumnsType } from 'antd/es/table'
-import { NavLink, useNavigate, Link } from 'react-router-dom'
-import PageContent from '@/components/pageContent'
-import {
-  UploadOutlined,
-  RedoOutlined,
-  DeleteOutlined,
-  PlayCircleOutlined,
-  EyeOutlined,
-  PlusOutlined,
-} from '@ant-design/icons'
-import codeImg from '@/assets/rcs/code.png'
-import { usePoint } from '@/hooks'
-import { getRcsMeteialList, delRcsMeteial, getRcsTempList } from '@/api'
+import { useNavigate } from 'react-router-dom'
+import { Flex, Button, Space, Tooltip } from 'antd'
 import {
   EnumTempStatusBadge,
   EnumTempStatusText,
 } from '@/pages/rcs/template/list/type'
 import { IDIcon } from '@/components/aIcons'
-import ACopy from '@/components/aCopy'
-
-import audioTypeImg from '@/assets/rcs/fileType/audio.png'
-import imgTypeImg from '@/assets/rcs/fileType/img.png'
-import pptTypeImg from '@/assets/rcs/fileType/ppt.png'
-import unknowTypeImg from '@/assets/rcs/fileType/unknow.png'
-import wordTypeImg from '@/assets/rcs/fileType/word.png'
-import xlsTypeImg from '@/assets/rcs/fileType/xls.png'
-import zipTypeImg from '@/assets/rcs/fileType/zip.png'
 
 import CardItem from '@/pages/rcs/template/create/card/item'
 
@@ -57,9 +19,13 @@ type Props = {
   onSelect?: () => void
 }
 export default function Fn({ item, onSelect, hiddenHandle = false }: Props) {
+  const nav = useNavigate()
   const [type, setType] = useState('')
   const handleItem = () => {
     if (onSelect) onSelect()
+  }
+  const editEvent = () => {
+    nav(`/console/rcs/template/create/card/${item.id}?name=${item.title}`)
   }
   useEffect(() => {
     if ('generalPurposeCard' in item.message.message) {
@@ -115,7 +81,7 @@ export default function Fn({ item, onSelect, hiddenHandle = false }: Props) {
                 <div className='g-pointer' title='查看'>
                   <span className='icon iconfont icon-xianshi fn18'></span>
                 </div>
-                <div className='g-pointer' title='编辑'>
+                <div className='g-pointer' title='编辑' onClick={editEvent}>
                   <span className='icon iconfont icon-bianji fn18'></span>
                 </div>
                 <div className='g-pointer' title='删除'>

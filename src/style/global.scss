@@ -7,6 +7,8 @@
 * g-scale-(5,200|200,1000) 小于100缩小，大于100放大;5-200每增加 5 为一个className;300-100每增加 100 为一个className
 * g-transition-(50,3000) 开启动画，单位毫秒；每 50 增加一个className
 * 
+* g-pointer
+* g-scroll scroll-hidden scroll-x/y scroll-x/y-hidden
 * fw-500
 * w-100
 * h-100
@@ -121,6 +123,25 @@
 
 .g-pointer {
   cursor: pointer;
+}
+
+.g-scroll {
+  overflow: scroll;
+}
+.g-scroll-x {
+  overflow-x: scroll;
+}
+.g-scroll-y {
+  overflow-y: scroll;
+}
+.g-scroll-hidden {
+  overflow: hidden;
+}
+.g-scroll-x-hidden {
+  overflow-x: hidden;
+}
+.g-scroll-y-hidden {
+  overflow-y: hidden;
 }
 
 .fw-500 {

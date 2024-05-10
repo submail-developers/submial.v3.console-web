@@ -22,7 +22,7 @@ type Locale = ConfigProviderProps['locale']
 
 export default function App() {
   const [locale, setLocal] = useState<Locale>(zhCN)
-  const point = usePoint('lg')
+  const point = usePoint('xl')
   useEffect(() => {
     setLocal(zhCN)
     dayjs.locale('zh-cn')

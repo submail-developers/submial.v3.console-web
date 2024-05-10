@@ -86,12 +86,18 @@ const ActionForm = memo(({ activeIndex, data, onChange, name }: Props) => {
             break
           case 'calendarAction':
             let timer
-            if (actionVal.startTime && actionVal.endTime) {
-              timer = [dayjs(actionVal.startTime), dayjs(actionVal.endTime)]
+            if (
+              actionVal.createCalendarEvent.startTime &&
+              actionVal.createCalendarEvent.endTime
+            ) {
+              timer = [
+                dayjs(actionVal.createCalendarEvent.startTime),
+                dayjs(actionVal.createCalendarEvent.endTime),
+              ]
             }
             form.setFieldsValue({
               type: actionKey,
-              [actionKey]: { ...actionVal, timer },
+              [actionKey]: { createCalendarEvent: { ...actionVal, timer } },
             })
             break
           default:
@@ -109,7 +115,7 @@ const ActionForm = memo(({ activeIndex, data, onChange, name }: Props) => {
         })
       }
     }
-  }, [form, activeIndex])
+  }, [form, activeIndex, data])
 
   // 切换类型后初始化
   const changeType = (val) => {

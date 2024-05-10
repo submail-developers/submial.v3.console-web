@@ -28,7 +28,6 @@ import {
   PlusOutlined,
 } from '@ant-design/icons'
 import codeImg from '@/assets/rcs/5g2.png'
-import { usePoint } from '@/hooks'
 import { getRcsMeteialList, delRcsMeteial, getRcsTempList } from '@/api'
 import { IDIcon } from '@/components/aIcons'
 import ACopy from '@/components/aCopy'
@@ -52,7 +51,6 @@ type ItemProps = {
 }
 
 export default function Fn() {
-  const point = usePoint('lg')
   const nav = useNavigate()
   const [form] = Form.useForm()
 
@@ -125,7 +123,6 @@ export default function Fn() {
         className='template-list-form'
         form={form}
         layout='vertical'
-        size={point ? 'large' : 'middle'}
         initialValues={{ type: 'all', keyword: '' }}
         autoComplete='off'>
         <Row gutter={16}>

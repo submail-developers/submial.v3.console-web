@@ -3,7 +3,6 @@ export type Media = {
   mediaUrl: string
   mediaContentType: string
   mediaType?: '1' | '2' | '3' // 额外加的字段 1 图片,2 音频,3 视频
-  storeAt?: string // 额外加的字段 展示图片使用
   mediaOssUrl?: string // 额外加的字段 展示图片使用
   mediaFileSize: string
   height: 'SHORT_HEIGHT' | 'MEDIUM_HEIGHT' | 'TALL_HEIGHT' // 小/中/大图
@@ -139,10 +138,11 @@ export type SuggestionItem = {
 
 // 单卡片message
 export type CardMessage = {
-  generalPurposeCard: {
-    content: CardContent
-    layout: CardLayout
-  }
+  generalPurposeCard: GeneralPurposeCard
+}
+export type GeneralPurposeCard = {
+  content: CardContent
+  layout: CardLayout
 }
 // 单卡片content
 export type CardContent = {

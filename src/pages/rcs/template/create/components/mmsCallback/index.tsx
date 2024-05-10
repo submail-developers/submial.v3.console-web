@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Form, Button, Input, Flex } from 'antd'
+import { Button, Input, Flex } from 'antd'
 import RcsInput from '@/components/rcsInput'
 import MmsModal from './mmsModal'
 import { API } from 'apis'
@@ -10,20 +10,21 @@ type Props = {
   msg: string
   mmsInfo: API.UploadMmsLibsRes
   onChangeMsg: (msg: string) => void
-  onChangeMms: (info: API.UploadMmsLibsRes) => void
+  onChangeMms: (info: API.UploadMmsLibsRes | null) => void
 }
 
 export default function Fn(props: Props) {
   const [show, setshow] = useState(false)
+  const delMms = () => {
+    props.onChangeMms(null)
+  }
 
   return (
-    <div className='message-config hide-scrollbar'>
+    <div className='message-config hide-scrollbar p-12 g-scroll'>
       <div className='fn16 fw-500'>回落配置</div>
-      <Form.Item
-        label='短信回落信息（选填）'
-        colon={false}
-        labelCol={{ span: 24 }}
-        style={{ margin: '4px 0 0' }}></Form.Item>
+      <div className='callback-label fx-y-center m-t-4'>
+        短信回落信息（选填）
+      </div>
       <RcsInput
         text={props.msg}
         onChange={(val) => props.onChangeMsg(val)}
@@ -48,16 +49,23 @@ export default function Fn(props: Props) {
         }}
       />
 
-      <Form.Item
-        label='多媒体彩信回落（选填）'
-        colon={false}
-        labelCol={{ span: 24 }}
-        style={{ margin: '4px 0 0' }}></Form.Item>
-      <Input
-        value={props.mmsInfo?.mmsSubject || ''}
-        disabled
-        placeholder='请选择彩信模版'
-      />
+      <div className='callback-label fx-y-center m-t-4'>
+        多媒体彩信回落（选填）
+      </div>
+      <div className='mms-wrap'>
+        <Input
+          value={props.mmsInfo?.mmsSubject || ''}
+          disabled
+          placeholder='请选择彩信模版'
+        />
+        {props.mmsInfo && (
+          <div className='clear-btn fx-center-center' onClick={delMms}>
+            <i
+              className='icon iconfont icon-chahao'
+              style={{ fontSize: '9px' }}></i>
+          </div>
+        )}
+      </div>
       <Flex justify='flex-end' className='m-t-16'>
         <Button type='primary' onClick={() => setshow(true)}>
           选择彩信模版

@@ -14,7 +14,7 @@ type Props = {
   message: CardMessage
 }
 export default function Fn({ message }: Props) {
-  const [mediaType, setMediaType] = useState<number>() // 0 ｜ 1 ｜ 2 图片｜音频｜视频
+  const [mediaType, setMediaType] = useState<'1' | '2' | '3'>() // '1' | '2' | '3' 图片｜音频｜视频
   const [titleStyle, setTitleStyle] = useState<TextStyle>({
     b: false,
     i: false,
@@ -51,7 +51,14 @@ export default function Fn({ message }: Props) {
       audioTypes.includes(mediaContentType),
       videoTypes.includes(mediaContentType),
     ].findIndex((item) => Boolean(item))
-    if (index > -1) setMediaType(index)
+    if (index == 0) {
+      setMediaType(`1`)
+    } else if (index == 1) {
+      setMediaType(`2`)
+    } else if (index == 2) {
+      setMediaType(`3`)
+    } else {
+    }
   }, [])
   // console.log(message.generalPurposeCard)
   return (
@@ -59,7 +66,7 @@ export default function Fn({ message }: Props) {
       className='center-content card-center-content'
       style={{ height: '100%' }}>
       <div className='banner' style={{ background: 'transparent' }}>
-        {mediaType == 0 && (
+        {mediaType == '1' && (
           <Image
             style={{
               width: '100%',
@@ -70,12 +77,12 @@ export default function Fn({ message }: Props) {
             preview={false}
           />
         )}
-        {mediaType == 1 && (
+        {mediaType == '2' && (
           <audio
             src={message.generalPurposeCard.content.media.mediaOssUrl}
             controls></audio>
         )}
-        {mediaType == 2 && (
+        {mediaType == '3' && (
           <video
             src={message.generalPurposeCard.content.media.mediaOssUrl}
             controls></video>

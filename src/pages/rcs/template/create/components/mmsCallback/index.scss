@@ -1,5 +1,25 @@
 .message-config {
-  .ant-col.ant-col-24 {
-    padding-bottom: 0;
+  .callback-label {
+    color: #666d7a;
+    height: 40px;
+  }
+  .mms-wrap {
+    position: relative;
+    cursor: pointer;
+    .clear-btn {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background-color: rgba(0, 0, 0, 0.3);
+      color: #fff;
+      position: absolute;
+      top: 50%;
+      right: 12px;
+      transform: translate(0, -50%);
+      transition: all 0.3s;
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.45);
+      }
+    }
   }
 }
