@@ -9,8 +9,8 @@ import '@/pages/rcs/template/mobile.scss'
 type Props = {
   left?: ReactNode
   content: ReactNode
-  tempConfig: ReactNode // 模版配置
-  callbackConfig: ReactNode // 回落配置
+  tempConfig?: ReactNode // 模版配置
+  callbackConfig?: ReactNode // 回落配置
   checkContent: ReactNode // 验证提审内容提示
   loading: boolean // 上传按钮loading
   submit: () => void
@@ -21,14 +21,14 @@ export default function Fn(props: Props) {
   const [searchParams] = useSearchParams()
   const name = decodeURIComponent(searchParams.get('name'))
   // 右侧模版配置与消息回落配置切换
-  const [activeKey, setactiveKey] = useState('1')
+  const [activeKey, setactiveKey] = useState('0')
   const onChange = (key: string) => {
     setactiveKey(key)
   }
 
-  const items: TabsProps['items'] = [
+  let items: TabsProps['items'] = [
     {
-      key: '1',
+      key: '0',
       label: (
         <>
           <span
@@ -40,18 +40,24 @@ export default function Fn(props: Props) {
       children: props.tempConfig,
     },
     {
-      key: '2',
+      key: '1',
       label: (
         <>
           <span
-            className='icon iconfont icon-jiaohu fn18'
+            className='icon iconfont icon-card fn18'
             style={{ marginRight: '2px' }}></span>
-          <span>消息回落配置</span>
+          <span>回落配置</span>
         </>
       ),
       children: props.callbackConfig,
     },
   ]
+  items = items
+    .filter((item) => Boolean(item.children))
+    .map((item, index) => {
+      item.key = `${index}`
+      return item
+    })
 
   const renderTabBar: TabsProps['renderTabBar'] = (props, DefaultTabBar) => (
     <div className='tabs'>

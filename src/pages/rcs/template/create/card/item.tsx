@@ -1,5 +1,5 @@
 import { Image } from 'antd'
-import { Media, Action, Reply, CardLayout, CardMessage } from '../type'
+import { CardMessage } from '../type'
 import { useEffect, useState } from 'react'
 import { imgTypes, audioTypes, videoTypes } from '@/pages/rcs/material/type'
 

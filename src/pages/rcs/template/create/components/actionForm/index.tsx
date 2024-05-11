@@ -207,7 +207,7 @@ const ActionForm = memo(({ activeIndex, data, onChange, name }: Props) => {
       autoComplete='off'
       validateTrigger='onBlur'
       onFieldsChange={onFieldsChange}>
-      <Form.Item name='type' label='事件类型'>
+      <Form.Item name='type' label='事件类型' initialValue={'urlAction'}>
         <Select options={actions} onChange={changeType} />
       </Form.Item>
 

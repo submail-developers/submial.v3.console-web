@@ -49,14 +49,16 @@ export default function ANumber(props: Props) {
   }
   return (
     <div className='a-number'>
-      <div
-        className={`handle-btn ${
-          props.dataSource.length <= props.min ? 'disable' : ''
-        }`}
-        onClick={del}
-        style={{ ...props.style }}>
-        -
-      </div>
+      {props.dataSource.length > 0 && (
+        <div
+          className={`handle-btn ${
+            props.dataSource.length <= props.min ? 'disable' : ''
+          }`}
+          onClick={del}
+          style={{ ...props.style }}>
+          -
+        </div>
+      )}
       {props.dataSource.map((item, index) => {
         let activeStyle =
           props.activeKey == 'index'

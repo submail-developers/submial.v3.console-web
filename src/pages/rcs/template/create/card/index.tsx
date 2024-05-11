@@ -4,6 +4,8 @@ import { useSearchParams, useNavigate, useParams } from 'react-router-dom'
 import Meteial from '../components/meteial'
 import ActionForm from '../components/actionForm'
 import MmsCallback from '../components/mmsCallback'
+import CheckContent from '../components/checkContent'
+import type { CheckStatusItem } from '../components/checkContent'
 import Page from '../page'
 import { Media, Action, GeneralPurposeCard } from '../type'
 import RcsInput from '@/components/rcsInput'
@@ -41,12 +43,6 @@ type RichText = {
   u: boolean
   min: number
   max: number
-}
-
-type CheckStatusItem = {
-  name: string // 验证的字段
-  label: string // 提示名称
-  value: boolean // 提示状态
 }
 
 const aNumberStyle: CSSProperties = {
@@ -657,7 +653,7 @@ export default function Fn() {
         dataSource={actions}
         activeKey='index'
         active={btnIndex}
-        min={1}
+        min={0}
         max={4}
         onChange={(i) => {
           setactionsIndex(i)
@@ -668,12 +664,14 @@ export default function Fn() {
         style={aNumberStyle}
         activeStyle={aNumberActiveStyle}
       />
-      <ActionForm
-        data={actions}
-        activeIndex={btnIndex}
-        onChange={updataAction}
-        name='btn-form'
-      />
+      {actions.length > 0 && (
+        <ActionForm
+          data={actions}
+          activeIndex={btnIndex}
+          onChange={updataAction}
+          name='btn-form'
+        />
+      )}
       <Divider className='m-y-12' />
       <div className='fn16 fw-500' style={{ marginBottom: '12px' }}>
         悬浮框
@@ -682,7 +680,7 @@ export default function Fn() {
         dataSource={suggestions}
         activeKey='index'
         active={floatIndex}
-        min={1}
+        min={0}
         max={4}
         onChange={(i) => {
           setsuggestionsIndex(i)
@@ -693,12 +691,14 @@ export default function Fn() {
         style={aNumberStyle}
         activeStyle={aNumberActiveStyle}
       />
-      <ActionForm
-        data={suggestions}
-        activeIndex={floatIndex}
-        onChange={updataSuggestions}
-        name='suggestions-form'
-      />
+      {suggestions.length > 0 && (
+        <ActionForm
+          data={suggestions}
+          activeIndex={floatIndex}
+          onChange={updataSuggestions}
+          name='suggestions-form'
+        />
+      )}
     </div>
   )
 
@@ -865,37 +865,5 @@ export default function Fn() {
         />
       }
       submit={submit}></Page>
-  )
-}
-
-type CheckContentProps = {
-  style: CSSProperties
-  items: CheckStatusItem[]
-}
-const CheckContent = (props: CheckContentProps) => {
-  return (
-    <div className='temp-check-content' style={props.style}>
-      <div className='check-wrap p-y-4'>
-        <div className='check-title p-x-16 fx-y-center fw-500'>编辑状态</div>
-        <div className='check-list'>
-          {props.items.map((item) => (
-            <Flex
-              justify='space-between'
-              align='center'
-              className='p-x-16 check-item'
-              key={item.name}>
-              <div className='name'>{item.label}</div>
-              <div className='status'>
-                {item.value ? (
-                  <i className='icon iconfont icon-yes fw-600 primary-color'></i>
-                ) : (
-                  <i className='icon iconfont icon-chahao error-color'></i>
-                )}
-              </div>
-            </Flex>
-          ))}
-        </div>
-      </div>
-    </div>
   )
 }
