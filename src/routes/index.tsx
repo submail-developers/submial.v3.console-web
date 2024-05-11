@@ -144,7 +144,7 @@ export const menus: RouteObject[] = [
       {
         path: 'template',
         loader: loaderFn({
-          groupName: '5G 消息管理',
+          groupName: '模版管理',
           groupIcon: 'icon-xiaoxi',
           breadName: '创建/管理模版',
           menuName: '创建/管理模版',

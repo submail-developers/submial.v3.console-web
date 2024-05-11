@@ -12,6 +12,8 @@ import ava2 from '@/assets/rcs/avatarImgs/ava2.png'
 
 interface Props {
   onOk: (file: UploadFile, src: string) => void
+  open: boolean
+  onCancel: () => void
 }
 interface OpenParams {}
 
@@ -33,7 +35,6 @@ const Dialog = (props: Props, ref: any) => {
       open,
     }
   })
-  const [isModalOpen, setIsModalOpen] = useState(false)
 
   // 选择上传文件
   const uploadProps: UploadProps = {
@@ -71,18 +72,16 @@ const Dialog = (props: Props, ref: any) => {
     console.log('checked = ', e)
   }
 
-  const open = (params: OpenParams) => {
-    setIsModalOpen(true)
-  }
+  const open = (params: OpenParams) => {}
 
   const handleOk = () => {
     props.onOk(fileList[0], imgSrc)
-    setIsModalOpen(false)
+    props.onCancel()
   }
 
   const handleCancel = () => {
     setAvatar(2)
-    setIsModalOpen(false)
+    props.onCancel()
   }
 
   const onFinish = () => {}
@@ -104,15 +103,15 @@ const Dialog = (props: Props, ref: any) => {
 
   return (
     <Modal
+      open={props.open}
+      onCancel={props.onCancel}
       title='选择默认头像'
       width={480}
       style={{ top: 240 }}
       data-class='chose-avatar'
       closable={false}
-      onCancel={handleCancel}
       wrapClassName='modal-reset'
-      footer={<ModelFooter onOk={handleOk} onCancel={handleCancel} />}
-      open={isModalOpen}>
+      footer={<ModelFooter onOk={handleOk} onCancel={handleCancel} />}>
       <Form
         name='form-0'
         form={form}

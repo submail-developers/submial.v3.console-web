@@ -13,6 +13,8 @@ import {
   Tree,
   Form,
   Tooltip,
+  App,
+  message,
 } from 'antd'
 import type { TreeDataNode, TreeProps } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
@@ -21,11 +23,12 @@ import PageContent from '@/components/pageContent'
 import { API } from 'apis'
 import jiqirenImg from '@/assets/rcs/chatbot_1.png'
 import { useParams, NavLink, useNavigate } from 'react-router-dom'
-import { getChatbot } from '@/api'
+import { getChatbot, refreshAppkey } from '@/api'
 import EditMean from '../edit/index'
 import APreviewImg from '@/components/aPreviewImg'
 
 import './index.scss'
+import { constant } from 'lodash'
 
 const { TextArea } = Input
 interface DataType extends API.GetChatbotListItem {}
@@ -35,10 +38,12 @@ export default function Fn() {
     { name: '1223' },
     { name: '123' },
   ])
+  const { message } = App.useApp()
+
   const [detail, setDetail] = useState<any>({})
   const [isVisible, setIsVisible] = useState(false)
   const [isVisible2, setIsVisible2] = useState(true)
-  const [isVisibleAppkey, setIsVisibleAppkey] = useState('********')
+  const [isVisibleAppkey, setIsVisibleAppkey] = useState(false)
 
   const columns: ColumnsType<DataType> = [
     {
@@ -170,6 +175,24 @@ export default function Fn() {
     }
   }
 
+  const toggleVisibility = () => {
+    setIsVisibleAppkey(!isVisibleAppkey)
+  }
+
+  const resetAppkey = async (id) => {
+    try {
+      let params = {
+        appid: id,
+      }
+      console.log(params)
+      const res = await refreshAppkey(params)
+      if (res.status == 'success') {
+        message.success('重置成功')
+        getDetail()
+      }
+    } catch (error) {}
+  }
+
   return (
     <PageContent extClass='chatbot-detail'>
       <Image src={jiqirenImg} preview={false} width={72}></Image>
@@ -199,73 +222,118 @@ export default function Fn() {
         <tbody>
           <tr>
             <td>Chatbot名称</td>
-            <td>{detail.name}</td>
-            <td>Chatbot头像</td>
-            <td>
-              <Image className='info-img' src={detail.logo} />
-            </td>
+            <td colSpan={3}>{detail.name}</td>
           </tr>
           <tr>
             <td>应用ID</td>
             <td>{detail.id}</td>
+            <td>提供者开关</td>
+            <td>{detail.providerSwitchCode == '1' ? '显示' : '不显示'}</td>
+          </tr>
+          <tr>
             <td>Appkey</td>
-            <td>
-              <div> {isVisibleAppkey}</div>
-              <div>
+            <td colSpan={3}>
+              <div className='fx-start-center'>
+                {isVisibleAppkey == true ? (
+                  <div className='fn14'>{detail.appkey}</div>
+                ) : (
+                  '*************************************'
+                )}
                 <span
                   className='fn12 primary-color'
-                  style={{ marginRight: 10 }}>
-                  显示
+                  style={{ marginLeft: 10, marginRight: 10, cursor: 'pointer' }}
+                  onClick={toggleVisibility}>
+                  {isVisibleAppkey ? '隐藏' : '显示'}
                 </span>
-                <span className='fn12 primary-color'>重置</span>
+                <span
+                  className='fn12 primary-color'
+                  onClick={() => resetAppkey(detail.id)}
+                  style={{ cursor: 'pointer' }}>
+                  重置
+                </span>
               </div>
             </td>
           </tr>
           <tr>
             <td>行业类型</td>
-            <td>行业/行业</td>
+            <td>{detail.category}</td>
+            <td>实际下发行业</td>
+            <td>
+              {detail.actualIssueIndustry == '1'
+                ? '党政军'
+                : detail.actualIssueIndustry == '2'
+                ? '民生'
+                : detail.actualIssueIndustry == '3'
+                ? '金融'
+                : detail.actualIssueIndustry == '4'
+                ? '物流'
+                : detail.actualIssueIndustry == '5'
+                ? '游戏'
+                : detail.actualIssueIndustry == '6'
+                ? '电商'
+                : detail.actualIssueIndustry == '7'
+                ? '微商（个人）'
+                : detail.actualIssueIndustry == '8'
+                ? '沿街商铺（中小）'
+                : detail.actualIssueIndustry == '9'
+                ? '企业（大型）'
+                : detail.actualIssueIndustry == '10'
+                ? '教育培训'
+                : detail.actualIssueIndustry == '11'
+                ? '房地产'
+                : detail.actualIssueIndustry == '12'
+                ? '医疗器械、药店'
+                : '其他'}
+            </td>
+          </tr>
+          <tr>
             <td>消息回落签名</td>
             <td>【{detail.autograph}】</td>
+
+            <td>服务方邮箱</td>
+            <td>{detail.email}</td>
           </tr>
           <tr>
             <td>服务描述</td>
-            <td colSpan={3}>提供短信、邮件购买服务</td>
+            <td colSpan={3}>{detail.description}</td>
           </tr>
           <tr>
             <td>服务方名称</td>
-            <td>上海赛邮云计算有限公司</td>
+            <td>{detail.provider}</td>
             <td>服务方电话</td>
             <td>{detail.callback}</td>
           </tr>
           <tr>
             <td>服务方官网</td>
-            <td>{detail.website}</td>
-            <td>服务条款链接</td>
-            <td>{detail.tcPage}</td>
+            <td colSpan={3}>{detail.website}</td>
           </tr>
           <tr>
-            <td>服务方邮箱</td>
-            <td>{detail.email}</td>
-            <td>服务方地址</td>
-            <td>{detail.address}</td>
+            <td>服务条款链接</td>
+            <td colSpan={3}>{detail.tcPage}</td>
           </tr>
+
           <tr>
             <td>服务方详细地址</td>
-            <td colSpan={3}>上海市松江区九亭镇九亭中心路1158号21幢213室-44</td>
+            <td colSpan={3}>{detail.address}</td>
           </tr>
-          <tr>
-            <td>经度/纬度</td>
-            <td>经度：90 &nbsp; 纬度：80 </td>
-            <td>主题颜色</td>
-            <td>#1764ff</td>
-          </tr>
+
           <tr>
             <td>背景图</td>
             <td>
-              <Image className='info-img' src={detail.backgroundImage} />
+              <Image
+                className='info-img'
+                src={detail.backgroundImage}
+                style={{ width: '60px', height: '60px' }}
+              />
             </td>
-            <td>合同信息</td>
-            <td>上海璟春科技有限公司-20241011.pdf</td>
+            <td>Chatbot头像</td>
+            <td>
+              <Image
+                className='info-img'
+                src={detail.logo}
+                style={{ width: '60px', height: '60px' }}
+              />
+            </td>
           </tr>
           <tr>
             <td>Chatbot调试白名单</td>

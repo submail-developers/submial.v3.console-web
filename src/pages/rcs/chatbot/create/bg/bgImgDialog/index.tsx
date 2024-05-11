@@ -10,6 +10,8 @@ import './index.scss'
 interface OpenParams {}
 interface Props {
   onOk: (file: UploadFile, src: string) => void
+  open: boolean
+  onCancel: () => void
 }
 const Dialog = (props: Props, ref: any) => {
   const [form] = Form.useForm()
@@ -27,17 +29,15 @@ const Dialog = (props: Props, ref: any) => {
     console.log('checked = ', e)
   }
 
-  const open = (params: OpenParams) => {
-    setIsModalOpen(true)
-  }
+  const open = (params: OpenParams) => {}
 
   const handleOk = async () => {
     props.onOk(fileList[0], imgSrc)
-    setIsModalOpen(false)
+    props.onCancel()
   }
 
   const handleCancel = () => {
-    setIsModalOpen(false)
+    props.onCancel()
   }
 
   const onFinish = () => {}
@@ -48,16 +48,16 @@ const Dialog = (props: Props, ref: any) => {
   }
 
   // 限制图片的宽高和大小
-  const logoWidth = 400
-  const logoHeight = 400
-  const maxFileSize = 50 // 50k
+  // const logoWidth = 400
+  // const logoHeight = 400
+  const maxFileSize = 20 // 50k
   const accept = '.png,.jpg,.jpeg'
   // 选择上传文件
   const uploadProps: UploadProps = {
     accept: accept,
     beforeUpload: (file) => {
       let img_w: number, img_h: number
-      const isLt50k = file.size < maxFileSize * 1024
+      const isLt20k = file.size < maxFileSize * 1024
       try {
         const reader = new FileReader()
         reader.onload = (e) => {
@@ -66,8 +66,8 @@ const Dialog = (props: Props, ref: any) => {
           img.onload = async () => {
             img_w = img.width
             img_h = img.height
-            if (img_w != logoWidth || img_h != logoHeight || !isLt50k) {
-              message.error('请上传400 * 400，最大50k的图片', 4)
+            if (!isLt20k) {
+              message.error('请上传最大20k的图片', 4)
               return false
             }
             // props.onChangeFile(file, e.target.result as string)
@@ -86,17 +86,17 @@ const Dialog = (props: Props, ref: any) => {
 
   return (
     <Modal
+      open={props.open}
+      onCancel={props.onCancel}
       title='选择背景图'
       width={480}
       style={{ top: 240 }}
       data-class='chose-bgimg'
       closable={false}
-      onCancel={handleCancel}
       wrapClassName='modal-reset'
-      footer={<ModelFooter onOk={handleOk} onCancel={handleCancel} />}
-      open={isModalOpen}>
+      footer={<ModelFooter onOk={handleOk} onCancel={handleCancel} />}>
       <Form
-        name='form-0'
+        name='form-bg'
         form={form}
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 24 }}

@@ -87,7 +87,6 @@ export default function Fn() {
   const submit = async () => {
     try {
       const values = await form.validateFields()
-      console.log('Success:', values)
       let res1: FilePath = {},
         res2: FilePath = {}
       const formvalues = await form.getFieldsValue()

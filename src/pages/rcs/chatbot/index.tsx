@@ -10,6 +10,8 @@ import {
   Col,
   Table,
   Image,
+  Popconfirm,
+  message,
 } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { NavLink, useNavigate } from 'react-router-dom'
@@ -17,10 +19,11 @@ import PageContent from '@/components/pageContent'
 import { PlusOutlined } from '@ant-design/icons'
 import codeImg from '@/assets/rcs/chatbot_1.png'
 import { usePoint } from '@/hooks'
-import { getChatbot } from '@/api'
+import { getChatbot, deleteChatbot } from '@/api'
 
 import { API } from 'apis'
 import './index.scss'
+import { constant } from 'lodash'
 
 interface DataType extends API.ChatbotItem {}
 
@@ -99,7 +102,7 @@ export default function Fn() {
     },
     {
       title: '操作',
-      width: 140,
+      width: 240,
       render: (_, record) => (
         <>
           <Button type='link' style={{ paddingLeft: 0 }}>
@@ -108,11 +111,22 @@ export default function Fn() {
             </NavLink>
           </Button>
           <Button type='link' style={{ paddingLeft: 0 }}>
-            <NavLink to='/console/rcs/chatbot/create/1'>编辑</NavLink>
+            <NavLink to={`/console/rcs/chatbot/create/1?id=${record.id}`}>
+              编辑
+            </NavLink>
           </Button>
-          <Button type='link' style={{ paddingLeft: 0 }}>
+          {/* <Button type='link' style={{ paddingLeft: 0 }}>
             删除
-          </Button>
+          </Button> */}
+          <Popconfirm
+            placement='left'
+            title='警告'
+            description='确定删除该chatbot吗？'
+            onConfirm={() => deleteSingleChatbot(record.id)}
+            okText='确定'
+            cancelText='取消'>
+            <Button type='link'>删除</Button>
+          </Popconfirm>
         </>
       ),
     },
@@ -140,6 +154,18 @@ export default function Fn() {
     } catch (error) {
       setLoading(false)
     }
+  }
+  // 删除chatbot
+  const deleteSingleChatbot = async (id) => {
+    try {
+      const res = await deleteChatbot({
+        appid: id,
+      })
+      if (res.status == 'success') {
+        message.success('删除成功')
+        getList()
+      }
+    } catch (error) {}
   }
 
   const changePageInfo = (page, pageSize) => {

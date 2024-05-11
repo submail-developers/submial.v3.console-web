@@ -33,7 +33,7 @@ export default function Fn(props: Props) {
   const [uploading, setUploading] = useState(false)
   const [delLoading, setDelLoading] = useState(false)
   const [visible, setVisible] = useState(false)
-  const addDialogRef: MutableRefObject<any> = useRef(null)
+  const [openTypeModal, setopenTypeModal] = useState(false)
 
   // 删除
   const delEvent = () => {
@@ -78,10 +78,7 @@ export default function Fn(props: Props) {
     fileList: [],
     maxCount: 1,
   }
-  // 展示背景弹窗
-  const showDialog = () => {
-    addDialogRef.current.open()
-  }
+
   const chooseBg = (file: UploadFile, src: string) => {
     props.onChangeFile(file, src)
   }
@@ -91,7 +88,7 @@ export default function Fn(props: Props) {
         <Input type='text' />
       </Form.Item>
 
-      <Form.Item label='背景图' required>
+      <Form.Item label='背景图'>
         <Flex align='center' gap={12}>
           <div className='upload-btn fx-center-center'>
             {props.bgSrc ? (
@@ -114,12 +111,16 @@ export default function Fn(props: Props) {
             type='primary'
             size='large'
             style={{ width: 120 }}
-            onClick={showDialog}>
+            onClick={() => setopenTypeModal(true)}>
             选择背景图
           </Button>
         </Flex>
       </Form.Item>
-      <ChooseBgDialog ref={addDialogRef} onOk={chooseBg} />
+      <ChooseBgDialog
+        onOk={chooseBg}
+        open={openTypeModal}
+        onCancel={() => setopenTypeModal(false)}
+      />
     </div>
   )
 }

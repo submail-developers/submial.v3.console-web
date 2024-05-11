@@ -72,6 +72,33 @@ declare module 'apis' {
     interface GetChatbotListItem {
       name: string
     }
+    // 创建chatbot
+    interface CreateChatbotParams {
+      name: string
+      bind: string
+      logo: string
+      callback: string
+      email: string
+      website: string
+      tcPage: string
+      address: string
+      colour: string
+      backgroundImage: string
+      category: string
+      provider: string
+      providerSwitchCode: string
+      description: string
+      menu: string
+      genericCssTemplate: string
+      autograph: string
+      attachment: string
+      actualIssueIndustry: string
+      debugWhiteAddress: string
+    }
+    // 删除chatbot
+    interface DeleteChatbotParams {
+      appid: string
+    }
 
     // 获取chatbot
     interface GetChatbotParams {
@@ -119,6 +146,11 @@ declare module 'apis' {
       message: string
       total: 1
       list: ChatbotItem[]
+    }
+
+    //更新chatbot-appkey
+    interface RefreshAppkeyParams {
+      appid: string
     }
 
     // 获取行业一级、二级编码信息

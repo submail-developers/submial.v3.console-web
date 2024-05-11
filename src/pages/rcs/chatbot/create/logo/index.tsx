@@ -36,7 +36,7 @@ export default function Fn(props: Props) {
   const [delLoading, setDelLoading] = useState(false)
   const [file, setFile] = useState<UploadFile>()
   const [fileSrc, setFileSrc] = useState<string>()
-  const addDialogRef: MutableRefObject<any> = useRef(null)
+  const [openTypeModal, setopenTypeModal] = useState(false)
 
   // 删除
   const delLogoEvent = () => {
@@ -85,16 +85,13 @@ export default function Fn(props: Props) {
   const chooseAvatar = (file: UploadFile, src: string) => {
     props.onChangeFile(file, src)
   }
-  // 展示头像弹框
-  const showDialog = () => {
-    addDialogRef.current.open()
-  }
+
   return (
     <div className='upload-logo'>
       <Form.Item hidden name='logo'>
         <Input type='text' />
       </Form.Item>
-      <Form.Item label='Chatbot 头像' required>
+      <Form.Item label='Chatbot 头像' required rules={[{ required: true }]}>
         <Flex align='center' gap={12}>
           <div className='upload-btn fx-center-center'>
             {props.logoSrc ? (
@@ -119,12 +116,16 @@ export default function Fn(props: Props) {
             className='chose-avatar'
             type='primary'
             size='large'
-            onClick={showDialog}>
+            onClick={() => setopenTypeModal(true)}>
             选择头像
           </Button>
         </Flex>
       </Form.Item>
-      <AvatarDialog ref={addDialogRef} onOk={chooseAvatar} />
+      <AvatarDialog
+        onOk={chooseAvatar}
+        open={openTypeModal}
+        onCancel={() => setopenTypeModal(false)}
+      />
     </div>
   )
 }
