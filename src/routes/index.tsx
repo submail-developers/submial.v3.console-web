@@ -142,21 +142,6 @@ export const menus: RouteObject[] = [
         ],
       },
       {
-        path: 'material',
-        loader: loaderFn({
-          groupName: '5G 消息管理',
-          groupIcon: 'icon-xiaoxi',
-          breadName: '5G 消息资源库',
-          menuName: '5G 消息资源库',
-        }),
-        errorElement: <Error />,
-        element: (
-          <LazyImportComponent
-            lazyChildren={lazy(() => import('@/pages/rcs/material'))}
-          />
-        ),
-      },
-      {
         path: 'template',
         loader: loaderFn({
           groupName: '5G 消息管理',
