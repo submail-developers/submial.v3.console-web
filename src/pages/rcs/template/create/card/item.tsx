@@ -1,7 +1,7 @@
 import { Image } from 'antd'
 import { CardMessage } from '../type'
 import { useEffect, useState } from 'react'
-import { imgTypes, audioTypes, videoTypes } from '@/pages/rcs/material/type'
+import { imgTypes, audioTypes, videoTypes } from '../components/meteial/type'
 
 import './index.scss'
 

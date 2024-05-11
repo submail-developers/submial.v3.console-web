@@ -138,14 +138,6 @@ export const uploadRcsMeteialFile = (data: { file: any }) => {
     },
   )
 }
-// 获取素材列表
-export const getRcsMeteialList = (data: API.GetRcsMeteialListParams) => {
-  return request.post<
-    any,
-    API.GetRcsMeteialListRes,
-    API.GetRcsMeteialListParams
-  >('/console/api/rcs/get_libs', data)
-}
 // 获取创建模版时使用的素材列表
 export const getRcsOnlineMeteialList = (
   data: API.GetRcsOnlineMeteialListParams,
@@ -187,6 +179,15 @@ export const createRcsTemp = (data: API.CreateRcsTempParams) => {
 export const getRcsTempList = (data: API.GetRcsTempListParams) => {
   return request.post<any, API.GetRcsTempListRes, API.GetRcsTempListParams>(
     '/console/api/rcs/get_templates',
+    {
+      ...data,
+    },
+  )
+}
+// 删除RCS模版列表
+export const delRcsTemp = (data: API.DelRcsTempParams) => {
+  return request.post<any, any, API.DelRcsTempParams>(
+    '/console/api/rcs/delete_template',
     {
       ...data,
     },

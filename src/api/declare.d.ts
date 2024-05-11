@@ -237,6 +237,9 @@ declare module 'apis' {
       type?: 'all' | '1' | '2' | '3' | '4' // 默认all  1 文本,2 单卡片,3 多卡片,4 文件
       status?: 'all' | '0' | '1' | '2' // 默认all    0等待审核，1通过，2驳回
     }
+    interface DelRcsTempParams {
+      id: string
+    }
     interface GetRcsTempListRes {
       status: string
       message: string

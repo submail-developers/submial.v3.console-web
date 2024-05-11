@@ -1,4 +1,4 @@
-import { useState, useEffect, CSSProperties } from 'react'
+import { useState, useEffect, useRef, CSSProperties } from 'react'
 import { Space, App } from 'antd'
 import { useSearchParams, useNavigate, useParams } from 'react-router-dom'
 import ActionForm from '../components/actionForm'
@@ -55,6 +55,7 @@ export default function Fn() {
   const nav = useNavigate()
   const { message: messageApi } = App.useApp()
   const [searchParams] = useSearchParams()
+  const signRef = useRef('0')
   // 模版标题
   const name = decodeURIComponent(searchParams.get('name'))
   const [loading, setLoading] = useState(false)
@@ -106,6 +107,7 @@ export default function Fn() {
       })
       if (res.list.length == 1) {
         const info = res.list[0]
+        signRef.current = info.sign
         const desText = info.message.message as string
 
         // 模版-内容描述
@@ -199,7 +201,7 @@ export default function Fn() {
     })
 
     let params: API.CreateRcsTempParams = {
-      id: id,
+      id: signRef.current,
       type: '1',
       title: name,
       sms: Boolean(richMsg) ? 'true' : 'false',
@@ -217,7 +219,7 @@ export default function Fn() {
     try {
       const res = await createRcsTemp(params)
       if (res.status == 'success') {
-        messageApi.success('创建成功', 3, () => {
+        messageApi.success('提交成功', 3, () => {
           setLoading(false)
           nav('/console/rcs/template/index', { replace: true })
         })

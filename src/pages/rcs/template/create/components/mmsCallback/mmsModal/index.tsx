@@ -196,6 +196,10 @@ export default function UploadModal(props: Props) {
 
   // 将彩信模板上报值运营商
   const netxClck = async () => {
+    if (!sign) {
+      message.warning('请选择模版')
+      return
+    }
     setUploadLoading(true)
     try {
       const res = await uploadMmsLibs({ mms_template_id: sign })

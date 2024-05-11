@@ -8,52 +8,23 @@ import {
   Select,
   Row,
   Col,
-  Table,
   Image,
   Space,
   Pagination,
-  Popconfirm,
-  App,
-  Tooltip,
 } from 'antd'
-import type { ColumnsType } from 'antd/es/table'
-import { NavLink, useNavigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import PageContent from '@/components/pageContent'
-import {
-  UploadOutlined,
-  RedoOutlined,
-  DeleteOutlined,
-  PlayCircleOutlined,
-  EyeOutlined,
-  PlusOutlined,
-} from '@ant-design/icons'
+import { PlusOutlined } from '@ant-design/icons'
 import codeImg from '@/assets/rcs/5g2.png'
-import { getRcsMeteialList, delRcsMeteial, getRcsTempList } from '@/api'
-import { IDIcon } from '@/components/aIcons'
-import ACopy from '@/components/aCopy'
+import { delRcsMeteial, getRcsTempList } from '@/api'
 import SelectTypeModal from './selectTypeModal'
 import Item from './item'
-
-import audioTypeImg from '@/assets/rcs/fileType/audio.png'
-import imgTypeImg from '@/assets/rcs/fileType/img.png'
-import pptTypeImg from '@/assets/rcs/fileType/ppt.png'
-import unknowTypeImg from '@/assets/rcs/fileType/unknow.png'
-import wordTypeImg from '@/assets/rcs/fileType/word.png'
-import xlsTypeImg from '@/assets/rcs/fileType/xls.png'
-import zipTypeImg from '@/assets/rcs/fileType/zip.png'
 
 import { API } from 'apis'
 import './index.scss'
 
-type ItemProps = {
-  item: any
-  onDel: (id: string) => void
-}
-
 export default function Fn() {
-  const nav = useNavigate()
   const [form] = Form.useForm()
-
   const [currentPage, setcurrentPage] = useState<number>(1)
   const [pageSize, setpageSize] = useState<number>(11)
   const [total, setTotal] = useState<number>(0)
@@ -91,13 +62,6 @@ export default function Fn() {
   const handleSearch = () => {
     setLoading(true)
     getList()
-  }
-
-  const delEvent = async (id) => {
-    const res = await delRcsMeteial({ id })
-    if (res.status == 'success') {
-      getList()
-    }
   }
 
   useEffect(() => {
@@ -225,7 +189,7 @@ export default function Fn() {
             xs={24}
             // style={{ minWidth: '302px' }}
             key={item.id}>
-            <Item item={item} />
+            <Item item={item} onDel={() => getList()} />
           </Col>
         ))}
       </Row>

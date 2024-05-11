@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Flex, Button, Space, Tooltip } from 'antd'
+import { Flex, Button, Space, Tooltip, App, Popconfirm } from 'antd'
 import {
   EnumTempStatusBadge,
   EnumTempStatusText,
@@ -10,6 +10,7 @@ import { IDIcon } from '@/components/aIcons'
 import TextItem from '@/pages/rcs/template/create/text/item'
 import CardItem from '@/pages/rcs/template/create/card/item'
 
+import { delRcsTemp } from '@/api'
 import { API } from 'apis'
 
 import './index.scss'
@@ -18,16 +19,38 @@ type Props = {
   item: API.RcsTempListItem
   hiddenHandle?: boolean
   onSelect?: () => void
+  onDel?: () => void
 }
-export default function Fn({ item, onSelect, hiddenHandle = false }: Props) {
+export default function Fn({
+  item,
+  onSelect,
+  hiddenHandle = false,
+  onDel,
+}: Props) {
   const nav = useNavigate()
+  const { message } = App.useApp()
   const [type, setType] = useState<'text' | 'card' | 'cards' | ''>('')
+  // 选中该模版
   const handleItem = () => {
     if (onSelect) onSelect()
   }
+  // 编辑事件
   const editEvent = () => {
     nav(`/console/rcs/template/create/${type}/${item.id}?name=${item.title}`)
   }
+  // 删除事件
+  const delEvent = async () => {
+    try {
+      const res = await delRcsTemp({
+        id: item.sign,
+      })
+      if (res.status == 'success') {
+        message.success('删除成功！')
+        onDel()
+      }
+    } catch (error) {}
+  }
+  // 初始化获取模版类型
   useEffect(() => {
     if (typeof item.message.message == 'string') {
       setType('text')
@@ -96,9 +119,15 @@ export default function Fn({ item, onSelect, hiddenHandle = false }: Props) {
                 <div className='g-pointer' title='编辑' onClick={editEvent}>
                   <span className='icon iconfont icon-bianji fn18'></span>
                 </div>
-                <div className='g-pointer' title='删除'>
-                  <span className='icon iconfont icon-shanchu fn18 error-color'></span>
-                </div>
+                <Popconfirm
+                  title='删除模版'
+                  description='确认删除该模版吗？'
+                  onConfirm={delEvent}
+                  placement='bottom'>
+                  <div className='g-pointer'>
+                    <span className='icon iconfont icon-shanchu fn18 error-color'></span>
+                  </div>
+                </Popconfirm>
               </Space>
             )}
           </Flex>
