@@ -164,6 +164,15 @@ export const delRcsMeteial = (data: { id: string }) => {
     data,
   )
 }
+// 创建chatbot
+export const createChatbot = (data: API.CreateChatbotParams) => {
+  return request.post<any, any, API.CreateChatbotParams>(
+    '/console/api/rcs/create_chatbot',
+    {
+      ...data,
+    },
+  )
+}
 
 // 获取chatbot
 export const getChatbot = (data: API.GetChatbotParams) => {
@@ -174,6 +183,16 @@ export const getChatbot = (data: API.GetChatbotParams) => {
     },
   )
 }
+// 更新chatbot-appkey
+export const refreshAppkey = (data: API.RefreshAppkeyParams) => {
+  return request.post<any, any, API.RefreshAppkeyParams>(
+    '/console/api/rcs/refresh_appkey',
+    {
+      ...data,
+    },
+  )
+}
+
 // 创建/修改RCS模版
 export const createRcsTemp = (data: API.CreateRcsTempParams) => {
   return request.post<any, any, API.CreateRcsTempParams>(

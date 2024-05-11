@@ -108,7 +108,9 @@ export default function Fn() {
             </NavLink>
           </Button>
           <Button type='link' style={{ paddingLeft: 0 }}>
-            <NavLink to='/console/rcs/chatbot/create/1'>编辑</NavLink>
+            <NavLink to={`/console/rcs/chatbot/create/1?id=${record.id}`}>
+              编辑
+            </NavLink>
           </Button>
           <Button type='link' style={{ paddingLeft: 0 }}>
             删除

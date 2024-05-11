@@ -25,7 +25,14 @@ import { useParams, NavLink, useNavigate } from 'react-router-dom'
 import { changeBreadcrumbItem } from '@/store/reducers/breadcrumb'
 import { useAppDispatch } from '@/store/hook'
 import utils from '@/utils/formRules'
-import { getChatbot, updateChatbot, getIndustry } from '@/api'
+import {
+  getChatbot,
+  updateChatbot,
+  getIndustry,
+  delCustomerFile,
+  uploadCustomerFile,
+  createChatbot,
+} from '@/api'
 import { API } from 'apis'
 import PageContent from '@/components/pageContent'
 import UploadLogo from './logo'
@@ -37,7 +44,9 @@ import jiqiren from '@/assets/rcs/aco1.png'
 
 import './index.scss'
 interface DataType extends API.GetChatbotListItem {}
-
+type FilePath = {
+  path?: string
+}
 const { TextArea } = Input
 
 const Extra = (props) => {
@@ -62,9 +71,11 @@ export default function Fn() {
   const [params] = useSearchParams()
   const id = params.get('id')
   const [loading, setloading] = useState(false)
-  const [industryList, setIndustryList] = useState<API.IndustryItem[]>([])
-  const [value, setValue] = useState(1)
+  const [industryList, setIndustryList] = useState([])
+  const companyLogoPathRef = useRef('')
+  const [color, setColor] = useState('#ffffff')
 
+  // 获取chtbot
   const getDetail = async () => {
     try {
       const res = await getChatbot({
@@ -87,27 +98,27 @@ export default function Fn() {
     }
   }, [id])
 
-  const submit = async () => {
-    // const values = await form.getFieldsValue()
-    // message.success('创建成功', 4)
-    // nav('/console/rcs/chatbot/index', { replace: true })
-    try {
-      const formvalues = await form.getFieldsValue()
-      let params = {
-        ...formvalues,
-        appid: id,
-        category: '信息传输',
-        provider: '上海赛邮云计算有限公司',
-        description: '机器人描述',
-      }
-      console.log(params, '111')
-      await updateChatbot(params)
-      message.success('编辑成功！')
-      setloading(false)
-    } catch (error) {
-      setloading(false)
-    }
-  }
+  // const submit = async () => {
+  //   const values = await form.getFieldsValue()
+  //   message.success('创建成功', 4)
+  //   nav('/console/rcs/chatbot/index', { replace: true })
+  //   try {
+  //     const formvalues = await form.getFieldsValue()
+  //     let params = {
+  //       ...formvalues,
+  //       appid: id,
+  //       category: '信息传输',
+  //       provider: '上海赛邮云计算有限公司',
+  //       description: '机器人描述',
+  //     }
+  //     console.log(params, '111')
+  //     await updateChatbot(params)
+  //     message.success('编辑成功！')
+  //     setloading(false)
+  //   } catch (error) {
+  //     setloading(false)
+  //   }
+  // }
 
   const handleUpload = () => {}
 
@@ -125,10 +136,7 @@ export default function Fn() {
     },
     fileList,
   }
-  const onChange = (e: RadioChangeEvent) => {
-    console.log('radio checked', e.target.value)
-    setValue(e.target.value)
-  }
+
   // 实际下发行业
   const actualIssueIndustryOptions = [
     {
@@ -189,7 +197,11 @@ export default function Fn() {
   const getIndustryList = async () => {
     try {
       const res = await getIndustry()
-      setIndustryList(res.data)
+      let newArr = res.data.map((item) => {
+        let { children, ...rest } = item
+        return rest
+      })
+      setIndustryList(newArr)
     } catch (error) {}
   }
 
@@ -221,6 +233,12 @@ export default function Fn() {
   const onDelBgFile = () => {
     setBgFile(null)
     setBgSrc('')
+  }
+
+  // 颜色
+  const handleColorChange = (value) => {
+    let color = value.toHexString()
+    setColor(color)
   }
   useEffect(() => {
     getIndustryList()
@@ -255,28 +273,24 @@ export default function Fn() {
   // 保存
   const save = async () => {
     try {
-      // let res1: FilePath = {},
-      //   res2: FilePath = {}
-      // if (companyLogoPathRef.current) {
-      //   if (fileList[0].url != companyLogoPathRef.current) {
-      //     delCustomerFile({
-      //       path: companyLogoPathRef.current,
-      //     })
-      //     res1 = await uploadCustomerFile({
-      //       file: fileList[0],
-      //       type: '2',
-      //     })
-      //   } else {
-      //     res1['path'] = companyLogoPathRef.current
-      //   }
-      // } else {
-      //   if (fileList.length > 0) {
-      //     res2 = await uploadCustomerFile({
-      //       file: fileList[0],
-      //       type: '2',
-      //     })
-      //   }
-      // }
+      let res1: FilePath = {}, //头像
+        res2: FilePath = {}, //背景图
+        res3: FilePath = {} //营业执照
+
+      // res1 = await uploadCustomerFile({
+      //   file: logoFile,
+      //   type: '2',
+      // })
+      // res2 = await uploadCustomerFile({
+      //   file: bgFile,
+      //   type: '3',
+      // })
+      // res3 = await uploadCustomerFile({
+      //   file: attachmentFile,
+      //   type: '4',
+      // })
+
+      console.log(logoFile, '头像')
 
       // if (contractAccessoryPathRef.current) {
       //   if (fileList2[0].url != contractAccessoryPathRef.current) {
@@ -300,7 +314,15 @@ export default function Fn() {
       // }
 
       const formvalues = await form.getFieldsValue()
-      console.log(formvalues, '????')
+
+      let params = {
+        ...formvalues,
+        logo: (res1 && res1.path) || '',
+        backgroundImage: (res2 && res2.path) || '',
+        attachment: (res3 && res3.path) || '',
+        colour: color,
+      }
+      console.log(params, '????')
       // let params = {
       //   ...formvalues,
       //   businessType: formvalues.businessType[0],
@@ -326,6 +348,101 @@ export default function Fn() {
       setloading(false)
     }
   }
+  // 提交
+  const submit = async () => {
+    try {
+      const values = await form.validateFields()
+      let res1: FilePath = {}, //头像
+        res2: FilePath = {}, //背景图
+        res3: FilePath = {} //营业执照
+
+      console.log(bgFile, 'bgFile')
+      if (logoFile) {
+        res1 = await uploadCustomerFile({
+          file: logoFile,
+          type: '2',
+        })
+      } else {
+        res1['path'] =
+          'https://libraries.mysubmail.com/public/7405f1e8b0b2be6bccf68741d74dc339/images/07ff77d1325f947e27c1fd62ef468813.png'
+      }
+
+      // if (bgFile) {
+      //   res2 = await uploadCustomerFile({
+      //     file: bgFile,
+      //     type: '3',
+      //   })
+      // } else {
+      //   res2['path'] = ''
+      // }
+
+      // if (bgFile) {
+      //   res3 = await uploadCustomerFile({
+      //     file: bgFile,
+      //     type: '4',
+      //   })
+      // } else {
+      //   res3['path'] = ''
+      // }
+
+      // res1 = await uploadCustomerFile({
+      //   file: logoFile,
+      //   type: '2',
+      // })
+      // res2 = await uploadCustomerFile({
+      //   file: bgFile,
+      //   type: '3',
+      // })
+      // res3 = await uploadCustomerFile({
+      //   file: attachmentFile,
+      //   type: '4',
+      // })
+
+      // if (contractAccessoryPathRef.current) {
+      //   if (fileList2[0].url != contractAccessoryPathRef.current) {
+      //     delCustomerFile({
+      //       path: contractAccessoryPathRef.current,
+      //     })
+      //     res2 = await uploadCustomerFile({
+      //       file: fileList2[0],
+      //       type: '1',
+      //     })
+      //   } else {
+      //     res2['path'] = contractAccessoryPathRef.current
+      //   }
+      // } else {
+      //   if (fileList2.length > 0) {
+      //     res2 = await uploadCustomerFile({
+      //       file: fileList2[0],
+      //       type: '1',
+      //     })
+      //   }
+      // }
+
+      const formvalues = await form.getFieldsValue()
+
+      let params = {
+        ...formvalues,
+        logo: res1 && res1.path,
+        backgroundImage: (res2 && res2.path) || '',
+        attachment: (res3 && res3.path) || '',
+        colour: color,
+        category: formvalues.category.join(','),
+      }
+      // console.log(params, '????')
+
+      const res = await createChatbot(params)
+      // if (res) {
+      //   message.success('保存成功！')
+      // navigate('/console/rcs/chatbot/index', { replace: true })
+      // }
+
+      setloading(false)
+    } catch (error) {
+      // console.log(error)
+      setloading(false)
+    }
+  }
 
   return (
     <PageContent xxl={970} extClass='create-chatbot-page'>
@@ -334,7 +451,10 @@ export default function Fn() {
         className='create-chatbot-form'
         name='craete-chatbot'
         layout='vertical'
-        autoComplete='off'>
+        autoComplete='off'
+        initialValues={{
+          providerSwitchCode: '1',
+        }}>
         <div className='form-header'>
           <Image src={jiqiren} preview={false}></Image>
           <div className='fn22 fw-500 form-con'>
@@ -385,18 +505,24 @@ export default function Fn() {
             <Col span={24} xl={12}>
               <Form.Item
                 label='行业类型'
-                name='businessType'
+                name='category'
                 required
                 rules={[{ required: true }]}>
-                <Cascader
-                  options={industryList}
+                <Select
+                  mode='multiple'
+                  allowClear
+                  style={{ width: '100%' }}
                   placeholder='请选择'
-                  expandTrigger='hover'
+                  options={industryList}
                 />
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
-              <Form.Item label='下发行业' name='actualIssueIndustry'>
+              <Form.Item
+                label='下发行业'
+                name='actualIssueIndustry'
+                required
+                rules={[{ required: true }]}>
                 <Select
                   placeholder='请选择'
                   fieldNames={{
@@ -426,7 +552,6 @@ export default function Fn() {
             <Col span={24} xl={12}>
               <Form.Item
                 label='服务方名称'
-                required
                 name='provider'
                 validateTrigger='onBlur'>
                 <Input placeholder='用于 Chatbot 用户电话咨询' />
@@ -435,7 +560,6 @@ export default function Fn() {
             <Col span={24} xl={12}>
               <Form.Item
                 label='服务方电话'
-                required
                 name='callback'
                 validateTrigger='onBlur'
                 rules={[
@@ -449,7 +573,6 @@ export default function Fn() {
             <Col span={24} xl={12}>
               <Form.Item
                 label='服务方官网'
-                required
                 name='website'
                 validateTrigger='onBlur'
                 rules={[
@@ -463,7 +586,6 @@ export default function Fn() {
             <Col span={24} xl={12}>
               <Form.Item
                 label='服务条款链接'
-                required
                 name='tcPage'
                 validateTrigger='onBlur'
                 rules={[
@@ -475,18 +597,18 @@ export default function Fn() {
               </Form.Item>
             </Col>
             <Col span={24} xl={12}>
-              <Form.Item
-                label='服务方邮箱'
-                name='email'
-                required
-                rules={[{ max: 32 }]}>
+              <Form.Item label='服务方邮箱' name='email'>
                 <Input placeholder='' />
               </Form.Item>
             </Col>
 
             <Col span={12}>
-              <Form.Item label='提供者开关' name='providerSwitchCode'>
-                <Radio.Group onChange={onChange} value={value}>
+              <Form.Item
+                label='提供者开关'
+                name='providerSwitchCode'
+                required
+                rules={[{ required: true }]}>
+                <Radio.Group>
                   <Space>
                     <Radio value={1}>显示</Radio>
                     <Radio value={0}>不显示</Radio>
@@ -496,11 +618,7 @@ export default function Fn() {
             </Col>
 
             <Col span={24}>
-              <Form.Item
-                label='服务方详细地址'
-                name='address'
-                required
-                rules={[{ max: 32 }]}>
+              <Form.Item label='服务方详细地址' name='address'>
                 <Input placeholder='' />
               </Form.Item>
             </Col>
@@ -510,7 +628,11 @@ export default function Fn() {
                 <Row gutter={24}>
                   <Col span={24} xl={12}>
                     <Form.Item name='colour' label='主题颜色'>
-                      <ColorPicker disabledAlpha={true} showText={showText} />
+                      <ColorPicker
+                        disabledAlpha={true}
+                        showText={showText}
+                        onChange={handleColorChange}
+                      />
                     </Form.Item>
                   </Col>
                   <Col span={24} xl={12}>
@@ -538,11 +660,6 @@ export default function Fn() {
                 name='debugWhiteAddress'
                 validateTrigger='onBlur'
                 required
-                rules={[
-                  {
-                    validator: utils.validateMobiles,
-                  },
-                ]}
                 extra={
                   <Extra>
                     <div>1、最多录入20个调试手机号码，用英文逗号隔开</div>
@@ -556,11 +673,7 @@ export default function Fn() {
               </Form.Item>
             </Col>
             <Col span={24}>
-              <Form.Item
-                label='IP限制'
-                name='bind'
-                validateTrigger='onBlur'
-                required>
+              <Form.Item label='IP限制' name='bind' validateTrigger='onBlur'>
                 <TextArea
                   placeholder='无限制    多个IP地址以英文逗号拼接'
                   autoSize={{ minRows: 3, maxRows: 3 }}
@@ -571,15 +684,9 @@ export default function Fn() {
               <Form.Item
                 label='服务描述'
                 name='description'
-                validateTrigger='onBlur'
-                required
-                rules={[
-                  {
-                    validator: utils.validateMobiles,
-                  },
-                ]}>
+                validateTrigger='onBlur'>
                 <TextArea
-                  placeholder='用于解释 Chatbot 的用途，不可携带英文双引号、\、emoji，不超过500个字符'
+                  placeholder='机器人描述信息'
                   autoSize={{ minRows: 3, maxRows: 3 }}
                 />
               </Form.Item>
