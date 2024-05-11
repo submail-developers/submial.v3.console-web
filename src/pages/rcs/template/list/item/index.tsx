@@ -7,6 +7,7 @@ import {
 } from '@/pages/rcs/template/list/type'
 import { IDIcon } from '@/components/aIcons'
 
+import TextItem from '@/pages/rcs/template/create/text/item'
 import CardItem from '@/pages/rcs/template/create/card/item'
 
 import { API } from 'apis'
@@ -20,16 +21,19 @@ type Props = {
 }
 export default function Fn({ item, onSelect, hiddenHandle = false }: Props) {
   const nav = useNavigate()
-  const [type, setType] = useState('')
+  const [type, setType] = useState<'text' | 'card' | 'cards' | ''>('')
   const handleItem = () => {
     if (onSelect) onSelect()
   }
   const editEvent = () => {
-    nav(`/console/rcs/template/create/card/${item.id}?name=${item.title}`)
+    nav(`/console/rcs/template/create/${type}/${item.id}?name=${item.title}`)
   }
   useEffect(() => {
-    if ('generalPurposeCard' in item.message.message) {
+    if (typeof item.message.message == 'string') {
+      setType('text')
+    } else if ('generalPurposeCard' in item.message.message) {
       setType('card')
+    } else {
     }
   }, [])
   return (
@@ -40,11 +44,19 @@ export default function Fn({ item, onSelect, hiddenHandle = false }: Props) {
           onClick={handleItem}>
           <div className='name g-ellipsis'>{item.title}</div>
           <div className='time'>创建时间：{item.createAt}</div>
-          <div className={`status ${EnumTempStatusBadge[item.checked]}`}>
-            {EnumTempStatusText[item.checked]}
-          </div>
+          {!hiddenHandle && (
+            <div className={`status ${EnumTempStatusBadge[item.checked]}`}>
+              {EnumTempStatusText[item.checked]}
+            </div>
+          )}
           <div className='preview-model p-12'>
+            <div className='temp-type fx-center-center p-x-16 fn12'>
+              {type == 'text' && '纯文本模版'}
+              {type == 'card' && '单卡片模版'}
+              {type == 'cards' && '多卡片模版'}
+            </div>
             <div className='preview-content'>
+              {type == 'text' && <TextItem message={item.message.message} />}
               {type == 'card' && <CardItem message={item.message.message} />}
             </div>
 

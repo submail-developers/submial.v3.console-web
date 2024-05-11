@@ -1,0 +1,100 @@
+.center-content.text-center-content {
+  // margin: 0 8px 0;
+  background-color: #fff;
+  border-radius: 8px;
+  box-sizing: border-box;
+  padding-bottom: 12px;
+  height: fit-content;
+  max-height: 100%;
+  overflow-y: scroll;
+  .banner {
+    width: 100%;
+    height: 160px;
+    background-image: url('@/assets/rcs/defaultImg.png');
+    background-position: top left;
+    background-repeat: no-repeat;
+    // background-size: 100%;
+    background-size: cover;
+    position: relative;
+    .banner-tips {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translate(-50%, 0);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      word-break: keep-all;
+      line-height: 2;
+    }
+    .ant-image {
+      width: 100%;
+      height: 100%;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    audio {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+  .card-title {
+    margin-top: 8px;
+    padding: 0 8px;
+  }
+  .card-des {
+    padding: 0 8px;
+  }
+  .card-btn {
+    margin-top: 16px;
+    padding: 0 12px;
+    .card-btn-input {
+      text-align: center;
+      outline: none;
+      border: none;
+      background-color: #f3f7fa;
+      box-shadow: none;
+      height: 36px;
+      border-radius: 18px;
+      font-weight: bold;
+    }
+  }
+  .card-btn-add {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: #1764ff;
+    color: #fff;
+    cursor: pointer;
+    margin: 12px auto 0;
+    transition: all 0.3s;
+    opacity: 1;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  .card-btn {
+    margin-top: 16px;
+    padding: 0 12px;
+    .card-btn-input {
+      text-align: center;
+      outline: none;
+      border: none;
+      background-color: #f3f7fa;
+      box-shadow: none;
+      height: 36px;
+      border-radius: 18px;
+      font-weight: bold;
+    }
+  }
+}

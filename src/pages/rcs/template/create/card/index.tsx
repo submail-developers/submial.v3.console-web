@@ -381,7 +381,6 @@ export default function Fn() {
       id: id,
       type: '2',
       title: name,
-      appid: '1024252',
       sms: Boolean(richMsg) ? 'true' : 'false',
       smsContent: richMsg,
       mms: Boolean(mmsInfo) ? 'true' : 'false',

@@ -215,7 +215,6 @@ declare module 'apis' {
       id?: string
       type: '1' | '2' | '3' | '4' // 1纯文本  2单卡片  3多卡片  4文件
       title: string
-      appid: string
       sms: string // 是否支持短信回落， true：转短信，false：不转短信
       smsContent: string
       mms: string // 是否支持彩信回落，true：转彩信，false：不转彩信
