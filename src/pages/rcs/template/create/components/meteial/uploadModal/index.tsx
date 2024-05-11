@@ -18,7 +18,7 @@ import './index.scss'
 type Props = {
   show: boolean
   onCancel: () => void
-  onOk: () => void
+  onOk: (hasError: boolean) => void
 }
 
 type FaqItem = {
@@ -34,6 +34,7 @@ const { Dragger } = Upload
 const imgSize = 2
 const videoSize = 10
 const defaultSize = 5 // 默认文件大小限制
+const accept = '.jpg,.jpeg,.png,.gif,.mp3,.midi,.wav,.mp4,.3gp'
 
 const faq: FaqItem[] = [
   {
@@ -114,7 +115,7 @@ export default function UploadModal(props: Props) {
   const [fileList, setFileList] = useState<UploadFile[]>([])
   const listRef = useRef<UploadFile[]>([])
   const propsDragger = {
-    accept: '.jpg,.jpeg,.png,.gif,.mp3,.midi,.wav,.mp4,.3gp',
+    accept: accept,
     name: 'file',
     maxCount: 10,
     multiple: true,
@@ -144,19 +145,17 @@ export default function UploadModal(props: Props) {
       if (imgTypes.includes(file.type)) {
         if (file.size > imgSize * 1024 * 1024) {
           file.status = 'error'
-          file.response = `该图片大小超出2M限制，当前文件${currentSize}M`
+          file.response = `该图片不会被上传，因为该图片大小超出2M限制，当前文件${currentSize}M`
         }
       } else if (videoTypes.includes(file.type)) {
-        // 视频限制10M
         if (file.size > videoSize * 1024 * 1024) {
           file.status = 'error'
-          file.response = `该视频大小超出10M限制，当前文件${currentSize}M`
+          file.response = `该视频不会被上传，因为该视频大小超出10M限制，当前文件${currentSize}M`
         }
       } else {
-        // 视频限制10M
         if (file.size > defaultSize * 1024 * 1024) {
           file.status = 'error'
-          file.response = `该文件大小超出5M限制，当前文件${currentSize}M`
+          file.response = `该音频不会被上传，因为该音频大小超出5M限制，当前文件${currentSize}M`
         }
       }
 
@@ -172,13 +171,17 @@ export default function UploadModal(props: Props) {
       if (fileList.length < index + 1) {
         setSatus(2)
         if (fileList.find((item) => item.status == 'error')) {
-          messageApi.warning('存在提交失败的素材，其余上传成功', 5)
+          messageApi.warning('存在提交失败的素材，其余提交成功', 5)
+          props.onOk(true)
+          setFileList((prev) => {
+            return [...prev.filter((item) => item.status == 'error')]
+          })
         } else {
           messageApi.success(
             '提交成功，请等待素材上传成功后才能在模版中使用',
             5,
           )
-          props.onOk()
+          props.onOk(false)
         }
         return
       }
@@ -285,10 +288,8 @@ export default function UploadModal(props: Props) {
         </div>
         <div className='img-editor-wrap'>
           <div className='' style={{ color: 'rgba(0, 0, 0, 0.45)' }}>
-            <div className='black-color'>上传文件说明：</div>
-            <div className='fn14'>
-              5G消息支持任意格式文件上传。可识别文件为以下格式：
-            </div>
+            <div className='black-color fn14 fw-500'>上传文件说明</div>
+            <div className='fn14'>支持以下格式的文件：</div>
             {faq.map((item) => {
               return (
                 <Space key={item.title} style={{ padding: '6px 0' }}>

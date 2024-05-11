@@ -1,15 +1,8 @@
 import { CSSProperties, useEffect, memo } from 'react'
 import {
-  Flex,
-  Space,
-  Tabs,
-  Checkbox,
-  Divider,
-  Image,
   Input,
   Form,
   Select,
-  Button,
   Radio,
   InputNumber,
   Row,
@@ -31,10 +24,6 @@ import type {
 import formRules from '@/utils/formRules'
 import './index.scss'
 
-const formItemStyle: CSSProperties = {
-  marginBottom: 12,
-}
-
 type Props = {
   data: any[]
   activeIndex: number
@@ -48,61 +37,14 @@ const ActionForm = memo(({ activeIndex, data, onChange, name }: Props) => {
 
   // 每次修改activeIndex后回显当前的表单，增加表单需要的额外类型值
   useEffect(() => {
-    if (form) {
+    if (form && activeIndex != -1) {
       form.resetFields()
-      console.log(data[activeIndex], data)
       let actionKey = Object.keys(data[activeIndex]).find((key) =>
         actionTypeArray.includes(key as ActionType),
       )
       if (actionKey) {
         let actionVal = data[activeIndex][actionKey]
-        switch (actionKey) {
-          case 'urlAction':
-            form.setFieldsValue({
-              type: actionKey,
-              [actionKey]: actionVal,
-            })
-            break
-          case 'dialerAction':
-            // 获取拨号方式
-            let dialerTypeKey = Object.keys(actionVal).find((key) =>
-              dialerActionTypeArray.includes(key as DialerActionType),
-            )
-            form.setFieldsValue({
-              type: actionKey,
-              [actionKey]: { ...actionVal, dialType: dialerTypeKey },
-            })
-            break
-          case 'mapAction':
-            // 地图类型 0经纬度1位置
-            let mapType = Number(
-              Boolean('query' in actionVal.location),
-            ).toString()
-
-            form.setFieldsValue({
-              type: actionKey,
-              [actionKey]: { ...actionVal, mapType: mapType },
-            })
-            break
-          case 'calendarAction':
-            let timer
-            if (
-              actionVal.createCalendarEvent.startTime &&
-              actionVal.createCalendarEvent.endTime
-            ) {
-              timer = [
-                dayjs(actionVal.createCalendarEvent.startTime),
-                dayjs(actionVal.createCalendarEvent.endTime),
-              ]
-            }
-            form.setFieldsValue({
-              type: actionKey,
-              [actionKey]: { createCalendarEvent: { ...actionVal, timer } },
-            })
-            break
-          default:
-            break
-        }
+        setInitValue(actionKey, actionVal)
       } else {
         form.setFieldsValue({
           type: 'urlAction',
@@ -115,7 +57,60 @@ const ActionForm = memo(({ activeIndex, data, onChange, name }: Props) => {
         })
       }
     }
-  }, [form, activeIndex, data])
+  }, [form, activeIndex])
+
+  const setInitValue = (actionKey: string, actionVal) => {
+    switch (actionKey) {
+      case 'urlAction':
+        form.setFieldsValue({
+          type: actionKey,
+          [actionKey]: actionVal,
+        })
+        break
+      case 'dialerAction':
+        // 获取拨号方式
+        let dialerTypeKey = Object.keys(actionVal).find((key) =>
+          dialerActionTypeArray.includes(key as DialerActionType),
+        )
+        form.setFieldsValue({
+          type: actionKey,
+          [actionKey]: { ...actionVal, dialType: dialerTypeKey },
+        })
+        break
+      case 'mapAction':
+        // 地图类型 0经纬度1位置
+        let mapType = '0'
+        if (actionVal?.showLocation) {
+          mapType = Number(
+            Boolean('query' in actionVal.showLocation.location),
+          ).toString()
+        }
+
+        form.setFieldsValue({
+          type: actionKey,
+          [actionKey]: { ...actionVal, mapType: mapType },
+        })
+        break
+      case 'calendarAction':
+        let timer
+        if (
+          actionVal.createCalendarEvent.startTime &&
+          actionVal.createCalendarEvent.endTime
+        ) {
+          timer = [
+            dayjs(actionVal.createCalendarEvent.startTime),
+            dayjs(actionVal.createCalendarEvent.endTime),
+          ]
+        }
+        form.setFieldsValue({
+          type: actionKey,
+          [actionKey]: { createCalendarEvent: { ...actionVal, timer } },
+        })
+        break
+      default:
+        break
+    }
+  }
 
   // 切换类型后初始化
   const changeType = (val) => {
@@ -182,10 +177,6 @@ const ActionForm = memo(({ activeIndex, data, onChange, name }: Props) => {
               timer,
               fallbackUrl = '',
             } = values[key]['createCalendarEvent']
-            console.log(
-              values[key]['createCalendarEvent'],
-              "values[key]['createCalendarEvent']",
-            )
             params[key]['createCalendarEvent']['title'] = title
             params[key]['createCalendarEvent']['description'] = description
             params[key]['createCalendarEvent']['fallbackUrl'] = fallbackUrl
@@ -267,6 +258,9 @@ const ActionForm = memo(({ activeIndex, data, onChange, name }: Props) => {
                       {
                         required: true,
                         message: '请输入',
+                      },
+                      {
+                        validator: formRules.validateUrl,
                       },
                     ]}>
                     <Input placeholder='请输入' />

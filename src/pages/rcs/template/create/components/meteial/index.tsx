@@ -56,6 +56,14 @@ export default function Fn() {
       getListingRef.current = false
     }
   }
+
+  const uploadSuccess = (hasError: boolean) => {
+    getList()
+    if (!hasError) {
+      setshowModal(false)
+    }
+  }
+
   useEffect(() => {
     getList()
   }, [type, currentPage, pageSize])
@@ -142,10 +150,7 @@ export default function Fn() {
       <UploadModal
         show={showModal}
         onCancel={() => setshowModal(false)}
-        onOk={() => {
-          setshowModal(false)
-          getList()
-        }}
+        onOk={uploadSuccess}
       />
     </div>
   )

@@ -10,7 +10,6 @@ import videoTypeImg from '@/assets/rcs/fileType/video.png'
 import { getFileName } from '@/utils'
 import { usePoint } from '@/hooks'
 import MediaDrag from '../drag'
-import dayjs from 'dayjs'
 import './index.scss'
 
 type MediaType = '1' | '2' | '3' // 1图片 2音频 3视频

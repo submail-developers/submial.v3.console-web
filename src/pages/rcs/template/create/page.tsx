@@ -1,12 +1,7 @@
 import { ReactNode, useState } from 'react'
 import { Space, Button, Tabs } from 'antd'
-import type { TabsProps, SelectProps } from 'antd'
-import {
-  useParams,
-  useLocation,
-  useSearchParams,
-  useNavigate,
-} from 'react-router-dom'
+import type { TabsProps } from 'antd'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 
 import './page.scss'
 import '@/pages/rcs/template/mobile.scss'
@@ -16,14 +11,15 @@ type Props = {
   content: ReactNode
   tempConfig: ReactNode // 模版配置
   callbackConfig: ReactNode // 回落配置
+  checkContent: ReactNode // 验证提审内容提示
   loading: boolean // 上传按钮loading
   submit: () => void
 }
 
 export default function Fn(props: Props) {
+  const nav = useNavigate()
   const [searchParams] = useSearchParams()
   const name = decodeURIComponent(searchParams.get('name'))
-  const nav = useNavigate()
   // 右侧模版配置与消息回落配置切换
   const [activeKey, setactiveKey] = useState('1')
   const onChange = (key: string) => {
@@ -69,9 +65,6 @@ export default function Fn(props: Props) {
       ))}
     </div>
   )
-  const cancelEdit = () => {
-    nav(-1)
-  }
   const onSub = () => {
     if (!props.loading) {
       props.submit()
@@ -83,7 +76,7 @@ export default function Fn(props: Props) {
         <Button
           type='primary'
           style={{ background: '#F1F2F4', color: '#282b31' }}
-          onClick={cancelEdit}>
+          onClick={() => nav(-1)}>
           取消编辑
         </Button>
         <Button
@@ -102,6 +95,7 @@ export default function Fn(props: Props) {
             <div className='temp-content'>{props.content}</div>
           </div>
         </div>
+        <div className='check-tips'>{props.checkContent}</div>
       </div>
       <div className='right'>
         <Tabs

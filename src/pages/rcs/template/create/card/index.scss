@@ -98,3 +98,25 @@
     }
   }
 }
+
+.temp-check-content {
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  transition: width 0.3s, height 0.3s;
+  background-color: rgba(255, 255, 255, 0.9);
+  .check-wrap {
+    width: 160px;
+    border-left: 1px solid #e7e7e7;
+    border-bottom: 1px solid #e7e7e7;
+    .check-title {
+      height: 32px;
+    }
+    .check-list {
+      width: 100%;
+      .check-item {
+        height: 36px;
+      }
+    }
+  }
+}

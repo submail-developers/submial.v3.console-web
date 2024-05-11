@@ -1,21 +1,28 @@
 import { useState, useEffect, CSSProperties } from 'react'
-import { Space, Tabs, Divider, Image, Form, Select, App } from 'antd'
-import type { TabsProps, SelectProps } from 'antd'
+import { Space, Divider, Image, Flex, App } from 'antd'
 import { useSearchParams, useNavigate, useParams } from 'react-router-dom'
 import Meteial from '../components/meteial'
 import ActionForm from '../components/actionForm'
 import MmsCallback from '../components/mmsCallback'
 import Page from '../page'
-import { Media, Action, Reply, CardLayout, GeneralPurposeCard } from '../type'
+import { Media, Action, GeneralPurposeCard } from '../type'
 import RcsInput from '@/components/rcsInput'
 import ANumber from '@/components/aNumber'
 import { useDrop } from 'react-dnd'
 import { config as dndConfig } from '../dnd'
 import errorImg from '@/assets/rcs/error.png'
 import { API } from 'apis'
-import { createRcsTemp, getMmsList, getRcsTempList } from '@/api'
-
-import { debounce } from 'lodash'
+import { createRcsTemp, getRcsTempList } from '@/api'
+import { getTextLength } from '@/utils'
+import {
+  actionTypeArray,
+  dialerActionTypeArray,
+} from '@/pages/rcs/template/create/type'
+import type {
+  ActionType,
+  SuggestionItem,
+  DialerActionType,
+} from '@/pages/rcs/template/create/type'
 
 import './index.scss'
 
@@ -34,6 +41,12 @@ type RichText = {
   u: boolean
   min: number
   max: number
+}
+
+type CheckStatusItem = {
+  name: string // 验证的字段
+  label: string // 提示名称
+  value: boolean // 提示状态
 }
 
 const aNumberStyle: CSSProperties = {
@@ -55,12 +68,10 @@ export default function Fn() {
   const [loading, setLoading] = useState(false)
   // 拖拽的信息
   const [media, setmedia] = useState<Media>()
-
   // 拖拽素材到指定区域
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: dndConfig.accept,
     drop: (item: API.RcsOnlineMeteialItem, monitor) => {
-      console.log('drop', item)
       if (item) {
         setmedia({
           mediaUrl: item.filePath,
@@ -77,8 +88,8 @@ export default function Fn() {
       canDrop: monitor.canDrop(),
     }),
   }))
-
-  const isActive = canDrop && isOver
+  // 是否正在拖拽
+  const isDroping = canDrop && isOver
 
   // 按钮和悬浮菜单的结构相同，按钮是在message里的suggestions。悬浮菜单是和message同级的suggestions
   // 按钮
@@ -96,7 +107,7 @@ export default function Fn() {
   // 富文本中-当前编辑的第几个按钮
   const [actionsIndex, setactionsIndex] = useState(-1)
   // 右侧-当前编辑的第几个按钮
-  const [btnIndex, setbtnIndex] = useState(0)
+  const [btnIndex, setbtnIndex] = useState(-1)
   // 悬浮菜单
   const [suggestions, setsuggestions] = useState<Action[]>([
     {
@@ -112,8 +123,7 @@ export default function Fn() {
   // 富文本中-当前编辑的第几个悬浮按钮
   const [suggestionsIndex, setsuggestionsIndex] = useState(-1)
   // 右侧-当前编辑的第几个悬浮按钮
-  const [floatIndex, setfloatIndex] = useState(0)
-  const [layout, setlayout] = useState<CardLayout>()
+  const [floatIndex, setfloatIndex] = useState(-1)
 
   // 模版-内容标题
   const [richTitle, setRichTitle] = useState<RichText>({
@@ -139,8 +149,10 @@ export default function Fn() {
   const [richMsg, setRichMsg] = useState('')
   // 彩信回落
   const [mmsInfo, setMmsInfo] = useState<API.UploadMmsLibsRes>()
-  // 彩信列表
-  const [mmsList, setMmsList] = useState<API.MmsListItem[]>([])
+  // 提审验证-是否显示验证结果
+  const [showCheckStatus, setshowCheckStatus] = useState(false)
+  // 提审验证-验证结果列表
+  const [checkStatus, setcheckStatus] = useState<CheckStatusItem[]>([])
 
   // 编辑模版-获取模版信息
   const getTempInfo = async () => {
@@ -194,11 +206,15 @@ export default function Fn() {
         )
         setsuggestions(info.suggestions.suggestions.map((item) => item.action))
         setRichMsg(info.smsContent)
-        setMmsInfo({
-          mmsSubject: info.mmsSubject,
-          sign: info.sign,
-        })
-        console.log(info)
+
+        setbtnIndex(0)
+        setfloatIndex(0)
+        if (info.mmsSubject && info.sign) {
+          setMmsInfo({
+            mmsSubject: info.mmsSubject,
+            sign: info.sign,
+          })
+        }
       }
     } catch (error) {}
   }
@@ -315,32 +331,17 @@ export default function Fn() {
 
   // 提审
   const submit = async () => {
-    const checkRes = [checkTitle(), checkDes(), checkBtn(), checkFloat()]
-    checkRes.forEach((validator) => {
-      validator()
-        .then(() => {})
-        .catch((error) => {})
-    })
-    let _suggestions: any[] = [
-      // {
-      //   reply: {
-      //     displayText: '上行NO',
-      //   },
-      // },
-    ]
-    suggestions.forEach((item) => {
-      _suggestions.push({ action: item })
+    // 表单验证
+    const checkRes = checkEvent()
+    if (!checkRes) {
+      return
+    }
+    let _suggestions: SuggestionItem[] = suggestions.map((item) => {
+      return { action: item }
     })
 
-    let msg_suggestions: any[] = [
-      // {
-      //   reply: {
-      //     displayText: '上行NO',
-      //   },
-      // },
-    ]
-    actions.forEach((item) => {
-      msg_suggestions.push({ action: item })
+    let msg_suggestions: SuggestionItem[] = actions.map((item) => {
+      return { action: item }
     })
 
     // 标题样式，用,链接
@@ -380,10 +381,6 @@ export default function Fn() {
       },
     }
 
-    console.log(titleFontStyle, descriptionFontStyle, message)
-    // if (!mmsInfo) {
-    //   messageApi.warning('请选择彩信回落')
-    // }
     let params: API.CreateRcsTempParams = {
       id: id,
       type: '2',
@@ -399,7 +396,6 @@ export default function Fn() {
       }),
       message: JSON.stringify({ message }),
     }
-    console.log(suggestions, actions, params)
     setLoading(true)
 
     try {
@@ -417,40 +413,180 @@ export default function Fn() {
     }
   }
 
-  const checkTitle = () => (): Promise<any> => {
-    return Promise.resolve()
-  }
-  const checkDes = () => (): Promise<any> => {
-    return Promise.resolve()
-  }
-  const checkBtn = () => (): Promise<any> => {
-    return Promise.resolve()
-  }
-  const checkFloat = () => (): Promise<any> => {
-    return Promise.resolve()
+  // 表单验证
+  const checkEvent = (): boolean => {
+    const checkRes: CheckStatusItem[] = [
+      checkBanner(),
+      checkTitle(),
+      checkDes(),
+      checkBtn(),
+      checkFloat(),
+    ]
+    setshowCheckStatus(true)
+    setcheckStatus(checkRes)
+    // 验证未通过
+    if (checkRes.map((item) => item.value).includes(false)) {
+      return false
+    } else {
+      return true
+    }
   }
 
-  // const checkEvent = (arr: Action[]): boolean => {
-  //   let flag = true
-  //   arr.forEach((item) => {
-  //     if (!item.displayText) {
-  //       flag = false
-  //     }
-  //     let byteLen = formUtils.byteLength(item.displayText)
-  //     if (byteLen > 25) {
-  //       flag = false
-  //     }
-  //   })
+  // 验证banner
+  const checkBanner = (): CheckStatusItem => {
+    let value: boolean = true
+    if (!media) {
+      value = false
+    }
+    return {
+      name: 'banner',
+      label: '卡片',
+      value: value,
+    }
+  }
+  // 验证标题
+  const checkTitle = (): CheckStatusItem => {
+    let value: boolean = true
+    if (richTitle.text) {
+      let len = getTextLength(richTitle.text, 2)
+      if (len < richTitle.min || len > richTitle.max) {
+        value = false
+      }
+    } else {
+      value = false
+    }
+    return {
+      name: 'title',
+      label: '标题',
+      value: value,
+    }
+  }
+  // 验证正文
+  const checkDes = (): CheckStatusItem => {
+    let value: boolean = true
+    if (richDes.text) {
+      let len = getTextLength(richDes.text, 2)
+      if (len < richDes.min || len > richDes.max) {
+        value = false
+      }
+    } else {
+      value = false
+    }
+    return {
+      name: 'des',
+      label: '正文',
+      value: value,
+    }
+  }
+  // 验证按钮
+  const checkBtn = (): CheckStatusItem => {
+    let value: boolean = true
+    actions.forEach((item) => {
+      const status: boolean = checkAction(item)
+      if (!status) {
+        value = false
+      }
+    })
+    return {
+      name: 'btn',
+      label: '按钮',
+      value: value,
+    }
+  }
+  // 验证悬浮按钮
+  const checkFloat = (): CheckStatusItem => {
+    let value: boolean = true
+    suggestions.forEach((item) => {
+      const status: boolean = checkAction(item)
+      if (!status) {
+        value = false
+      }
+    })
+    return {
+      name: 'floatbtn',
+      label: '悬浮按钮',
+      value: value,
+    }
+  }
+  // 事件验证
+  const checkAction = (item: Action): boolean => {
+    let value: boolean = true
+    // 标题为空
+    if (!item.displayText) {
+      return false
+    }
+    let actionKey = Object.keys(item).find((key) =>
+      actionTypeArray.includes(key as ActionType),
+    )
+    if (actionKey) {
+      let actionVal = item[actionKey]
+      switch (actionKey) {
+        // 浏览器事件验证不通过
+        case 'urlAction':
+          const urlReg = /^(https?:\/\/)?([\w.-]+\.[a-zA-Z]{2,})(\/\S*)?$/
 
-  //   return flag
-  // }
+          if (!actionVal.openUrl.url) {
+            value = false
+          } else {
+            if (!urlReg.test(actionVal.openUrl.url)) {
+              value = false
+            }
+          }
+          break
+        // 拨号事件验证不通过
+        case 'dialerAction':
+          // 获取拨号方式
+          let dialerTypeKey = Object.keys(actionVal).find((key) =>
+            dialerActionTypeArray.includes(key as DialerActionType),
+          )
+          if (!actionVal[dialerTypeKey]['phoneNumber']) {
+            value = false
+          }
+          break
+        // 地图事件验证不通过
+        case 'mapAction':
+          if (
+            !(
+              (actionVal.showLocation.latitude.toString() &&
+                actionVal.showLocation.longitude.toString()) ||
+              actionVal.showLocation.query
+            )
+          ) {
+            value = false
+          }
+          break
+        // 日历事件验证不通过
+        case 'calendarAction':
+          if (
+            !actionVal.createCalendarEvent.title ||
+            !actionVal.createCalendarEvent.startTime ||
+            !actionVal.createCalendarEvent.endTime
+          ) {
+            value = false
+          }
+          break
+        default:
+      }
+    }
+    return value
+  }
 
   useEffect(() => {
     // 编辑
     if (id != '0') {
       getTempInfo()
+    } else {
+      setbtnIndex(0)
+      setfloatIndex(0)
     }
   }, [id])
+
+  // 展示验证结果后持续监听字段变化
+  useEffect(() => {
+    if (showCheckStatus) {
+      checkEvent()
+    }
+  }, [showCheckStatus, media, richTitle, richDes, actions, suggestions])
 
   const tempConfig = (
     <div className='p-x-12 p-y-16 g-scroll'>
@@ -460,7 +596,7 @@ export default function Fn() {
       </div>
       <Space style={{ margin: '6px 0' }}>
         <div
-          className={`fx-center-center g-radius-4 g-pointer ${
+          className={`fx-center-center g-radius-4 g-pointer g-transition-300 ${
             richTitle.b ? 'color-btn-active' : 'color-btn'
           }`}
           style={{ width: 36, height: 36 }}
@@ -468,7 +604,7 @@ export default function Fn() {
           <span className='icon iconfont icon-b fn18'></span>
         </div>
         <div
-          className={`fx-center-center g-radius-4 g-pointer ${
+          className={`fx-center-center g-radius-4 g-pointer g-transition-300 ${
             richTitle.i ? 'color-btn-active' : 'color-btn'
           }`}
           style={{ width: 36, height: 36 }}
@@ -476,7 +612,7 @@ export default function Fn() {
           <span className='icon iconfont icon-i fn18'></span>
         </div>
         <div
-          className={`fx-center-center g-radius-4 g-pointer ${
+          className={`fx-center-center g-radius-4 g-pointer g-transition-300 ${
             richTitle.u ? 'color-btn-active' : 'color-btn'
           }`}
           style={{ width: 36, height: 36 }}
@@ -489,7 +625,7 @@ export default function Fn() {
       </div>
       <Space style={{ margin: '6px 0' }}>
         <div
-          className={`fx-center-center g-radius-4 g-pointer ${
+          className={`fx-center-center g-radius-4 g-pointer g-transition-300 ${
             richDes.b ? 'color-btn-active' : 'color-btn'
           }`}
           style={{ width: 36, height: 36 }}
@@ -497,7 +633,7 @@ export default function Fn() {
           <span className='icon iconfont icon-b fn18'></span>
         </div>
         <div
-          className={`fx-center-center g-radius-4 g-pointer ${
+          className={`fx-center-center g-radius-4 g-pointer g-transition-300 ${
             richDes.i ? 'color-btn-active' : 'color-btn'
           }`}
           style={{ width: 36, height: 36 }}
@@ -505,7 +641,7 @@ export default function Fn() {
           <span className='icon iconfont icon-i fn18'></span>
         </div>
         <div
-          className={`fx-center-center g-radius-4 g-pointer ${
+          className={`fx-center-center g-radius-4 g-pointer g-transition-300 ${
             richDes.u ? 'color-btn-active' : 'color-btn'
           }`}
           style={{ width: 36, height: 36 }}
@@ -566,6 +702,14 @@ export default function Fn() {
     </div>
   )
 
+  const checkContentStyle: CSSProperties = {
+    width: showCheckStatus ? '160px' : '0',
+    height: showCheckStatus ? `calc(41px + ${checkStatus.length * 36}px)` : '0',
+  }
+  // 提审验证提示
+  const checkContent = (
+    <CheckContent style={checkContentStyle} items={checkStatus} />
+  )
   return (
     <Page
       loading={loading}
@@ -579,7 +723,7 @@ export default function Fn() {
               style={{ backgroundImage: media ? 'none' : '' }}>
               {!media && (
                 <div className='banner-tips'>
-                  {isActive ? '释放' : '拖拽左侧文件到此区域'}
+                  {isDroping ? '释放' : '拖拽左侧文件到此区域'}
                 </div>
               )}
               {media && media.mediaType == '1' && (
@@ -710,6 +854,7 @@ export default function Fn() {
           </Space>
         </>
       }
+      checkContent={checkContent}
       tempConfig={tempConfig}
       callbackConfig={
         <MmsCallback
@@ -720,5 +865,37 @@ export default function Fn() {
         />
       }
       submit={submit}></Page>
+  )
+}
+
+type CheckContentProps = {
+  style: CSSProperties
+  items: CheckStatusItem[]
+}
+const CheckContent = (props: CheckContentProps) => {
+  return (
+    <div className='temp-check-content' style={props.style}>
+      <div className='check-wrap p-y-4'>
+        <div className='check-title p-x-16 fx-y-center fw-500'>编辑状态</div>
+        <div className='check-list'>
+          {props.items.map((item) => (
+            <Flex
+              justify='space-between'
+              align='center'
+              className='p-x-16 check-item'
+              key={item.name}>
+              <div className='name'>{item.label}</div>
+              <div className='status'>
+                {item.value ? (
+                  <i className='icon iconfont icon-yes fw-600 primary-color'></i>
+                ) : (
+                  <i className='icon iconfont icon-chahao error-color'></i>
+                )}
+              </div>
+            </Flex>
+          ))}
+        </div>
+      </div>
+    </div>
   )
 }
