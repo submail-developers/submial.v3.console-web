@@ -173,6 +173,15 @@ export const createChatbot = (data: API.CreateChatbotParams) => {
     },
   )
 }
+// 删除chatbot
+export const deleteChatbot = (data: API.DeleteChatbotParams) => {
+  return request.post<any, any, API.DeleteChatbotParams>(
+    '/console/api/rcs/delete_chatbot',
+    {
+      ...data,
+    },
+  )
+}
 
 // 获取chatbot
 export const getChatbot = (data: API.GetChatbotParams) => {

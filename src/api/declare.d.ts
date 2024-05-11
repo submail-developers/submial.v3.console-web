@@ -95,6 +95,10 @@ declare module 'apis' {
       actualIssueIndustry: string
       debugWhiteAddress: string
     }
+    // 删除chatbot
+    interface DeleteChatbotParams {
+      appid: string
+    }
 
     // 获取chatbot
     interface GetChatbotParams {
