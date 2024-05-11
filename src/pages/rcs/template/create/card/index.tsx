@@ -204,13 +204,12 @@ export default function Fn() {
         )
         setsuggestions(info.suggestions.suggestions.map((item) => item.action))
         setRichMsg(info.smsContent)
-
         setbtnIndex(0)
         setfloatIndex(0)
-        if (info.mmsSubject && info.sign) {
+        if (info.mmsSubject && info.mmsTemplate) {
           setMmsInfo({
             mmsSubject: info.mmsSubject,
-            sign: info.sign,
+            sign: info.mmsTemplate,
           })
         }
       }

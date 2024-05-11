@@ -124,10 +124,10 @@ export default function Fn() {
         setRichMsg(info.smsContent)
 
         setfloatIndex(0)
-        if (info.mmsSubject && info.sign) {
+        if (info.mmsSubject && info.mmsTemplate) {
           setMmsInfo({
             mmsSubject: info.mmsSubject,
-            sign: info.sign,
+            sign: info.mmsTemplate,
           })
         }
       }

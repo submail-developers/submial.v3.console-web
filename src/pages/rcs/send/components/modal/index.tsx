@@ -131,8 +131,8 @@ export default function Fn(props: Props) {
       destroyOnClose>
       <Row gutter={24}>
         {list.map((item, index) => (
-          <Col span={24} md={12} lg={8}>
-            <div key={item.id}>
+          <Col span={24} md={12} lg={8} key={item.id}>
+            <div>
               <Item item={item} hiddenHandle onSelect={() => onSelect(item)} />
             </div>
           </Col>
