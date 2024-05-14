@@ -52,7 +52,7 @@ const Extra = (props) => {
 // 选择新建-模版消息类型
 export default function Fn(props: Props) {
   const nav = useNavigate()
-  const [type, setType] = useState<T>('card')
+  const [type, setType] = useState<T>('text')
   const [form] = Form.useForm()
 
   const onFinish: FormProps<FieldType>['onFinish'] = (values) => {

@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef, CSSProperties } from 'react'
 import { Space, Divider, Image, Flex, App } from 'antd'
 import { useSearchParams, useNavigate, useParams } from 'react-router-dom'
+import { changeBreadcrumbItem } from '@/store/reducers/breadcrumb'
+import { useAppDispatch } from '@/store/hook'
 import Meteial from '../components/meteial'
 import ActionForm from '../components/actionForm'
 import MmsCallback from '../components/mmsCallback'
@@ -58,6 +60,7 @@ const aNumberActiveStyle: CSSProperties = {
 export default function Fn() {
   const { id } = useParams()
   const nav = useNavigate()
+  const dispatch = useAppDispatch()
   const { message: messageApi } = App.useApp()
   const [searchParams] = useSearchParams()
   const signRef = useRef('0')
@@ -594,9 +597,21 @@ export default function Fn() {
     // 编辑
     if (id != '0') {
       getTempInfo()
+      dispatch(
+        changeBreadcrumbItem({
+          index: 3,
+          title: '编辑模版',
+        }),
+      )
     } else {
       setbtnIndex(0)
       setfloatIndex(0)
+      dispatch(
+        changeBreadcrumbItem({
+          index: 3,
+          title: '创建模版',
+        }),
+      )
     }
   }, [id])
 
