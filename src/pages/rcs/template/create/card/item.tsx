@@ -62,9 +62,7 @@ export default function Fn({ message }: Props) {
   }, [])
   // console.log(message.generalPurposeCard)
   return (
-    <div
-      className='center-content card-center-content'
-      style={{ height: '100%' }}>
+    <div className='center-content card-center-content'>
       <div className='banner' style={{ background: 'transparent' }}>
         {mediaType == '1' && (
           <Image
@@ -107,7 +105,7 @@ export default function Fn({ message }: Props) {
         }}>
         {message.generalPurposeCard.content.description}
       </div>
-      {message.generalPurposeCard.content.suggestions.map((item, index) => (
+      {message.generalPurposeCard.content.suggestions?.map((item, index) => (
         <div className='card-btn' key={index}>
           <div className='card-btn-input fx-center-center'>
             {item.action.displayText}

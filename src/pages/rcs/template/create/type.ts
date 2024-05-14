@@ -159,10 +159,30 @@ export type CardLayout = {
   descriptionFontStyle?: string // 描述
   style?: string
 }
+// 多卡片 message
+
+export type CardsMessage = {
+  generalPurposeCardCarousel: GeneralPurposeCards
+}
+export type GeneralPurposeCards = {
+  content: CardContent[]
+  layout: CardsLayout
+}
 // 多卡片layout
 export type CardsLayout = {
   cardWidth: 'SMALL_WIDTH' | 'MEDIUM_WIDTH' // 小图｜中图
   titleFontStyle?: string // 标题 'italics' | 'bold' | 'underline' // 斜体｜粗体｜下划线。可多选，多选用英文逗号隔开
   descriptionFontStyle?: string // 描述
-  style?: string
+}
+export type CardsItem = {
+  media: Media
+  title: string
+  description: string
+  suggestions: Action[]
+}
+export type ContentItem = {
+  media: Media
+  title: string
+  description: string
+  suggestions: SuggestionItem[]
 }

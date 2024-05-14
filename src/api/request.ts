@@ -36,8 +36,13 @@ request.interceptors.response.use(
         },
       })
       return Promise.reject(res.data)
+    } else if (res && res.data && res.data.status == 'success') {
+      return res.data
+    } else {
+      message.error(JSON.stringify(res.data))
+      console.error(res.data)
+      return Promise.reject(res)
     }
-    return res.data
   },
   (error) => {
     return Promise.reject(error)

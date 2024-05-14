@@ -69,7 +69,7 @@ export default function Fn() {
   }, [currentPage, pageSize, status])
 
   return (
-    <PageContent extClass='template-list' xxl={1400} xl={980}>
+    <PageContent extClass='template-list' xxl={1400} xl={1100}>
       <Image src={codeImg} preview={false} width={72}></Image>
       <Flex
         justify='space-between'

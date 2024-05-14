@@ -27,6 +27,7 @@ import './index.scss'
 type Props = {
   data: any[]
   activeIndex: number
+  cardsIndex?: number
   onChange: (values, activeIndex) => void
   name: string // 表单名
 }
@@ -326,184 +327,188 @@ export const ActionFormItems = (props: ActionFormItemsParams) => {
   )
 }
 
-const ActionForm = memo(({ activeIndex, data, onChange, name }: Props) => {
-  const [form] = Form.useForm()
+const ActionForm = memo(
+  ({ activeIndex, cardsIndex, data, onChange, name }: Props) => {
+    const [form] = Form.useForm()
 
-  // 每次修改activeIndex后回显当前的表单，增加表单需要的额外类型值
-  useEffect(() => {
-    if (form && activeIndex != -1) {
-      form.resetFields()
-      let actionKey = Object.keys(data[activeIndex]).find((key) =>
-        actionTypeArray.includes(key as ActionType),
-      )
-      if (actionKey) {
-        let actionVal = data[activeIndex][actionKey]
-        setInitValue(actionKey, actionVal)
-      } else {
-        form.setFieldsValue({
-          type: 'urlAction',
-          urlAction: {
-            openUrl: {
-              application: 'browser',
-              url: '',
+    // 每次修改activeIndex后回显当前的表单，增加表单需要的额外类型值
+    useEffect(() => {
+      if (form && activeIndex != -1) {
+        form.resetFields()
+        let actionKey =
+          data[activeIndex] &&
+          Object.keys(data[activeIndex]).find((key) =>
+            actionTypeArray.includes(key as ActionType),
+          )
+        if (actionKey) {
+          let actionVal = data[activeIndex][actionKey]
+          setInitValue(actionKey, actionVal)
+        } else {
+          form.setFieldsValue({
+            type: 'urlAction',
+            urlAction: {
+              openUrl: {
+                application: 'browser',
+                url: '',
+              },
             },
-          },
-        })
-      }
-    }
-  }, [form, activeIndex])
-
-  const setInitValue = (actionKey: string, actionVal) => {
-    switch (actionKey) {
-      case 'urlAction':
-        form.setFieldsValue({
-          type: actionKey,
-          [actionKey]: actionVal,
-        })
-        break
-      case 'dialerAction':
-        // 获取拨号方式
-        let dialerTypeKey = Object.keys(actionVal).find((key) =>
-          dialerActionTypeArray.includes(key as DialerActionType),
-        )
-        form.setFieldsValue({
-          type: actionKey,
-          [actionKey]: { ...actionVal, dialType: dialerTypeKey },
-        })
-        break
-      case 'mapAction':
-        // 地图类型 0经纬度1位置
-        let mapType = '0'
-        if (actionVal?.showLocation) {
-          mapType = Number(
-            Boolean('query' in actionVal.showLocation.location),
-          ).toString()
-        }
-
-        form.setFieldsValue({
-          type: actionKey,
-          [actionKey]: { ...actionVal, mapType: mapType },
-        })
-        break
-      case 'calendarAction':
-        let timer
-        if (
-          actionVal.createCalendarEvent.startTime &&
-          actionVal.createCalendarEvent.endTime
-        ) {
-          timer = [
-            dayjs(actionVal.createCalendarEvent.startTime),
-            dayjs(actionVal.createCalendarEvent.endTime),
-          ]
-        }
-        form.setFieldsValue({
-          type: actionKey,
-          [actionKey]: { createCalendarEvent: { ...actionVal, timer } },
-        })
-        break
-      default:
-        break
-    }
-  }
-
-  // 切换类型后初始化
-  const changeType = (val) => {
-    switch (val) {
-      case 'urlAction':
-        form.setFieldsValue({
-          urlAction: {
-            openUrl: {
-              application: 'browser',
-            },
-          },
-        })
-        break
-      case 'dialerAction':
-        form.setFieldsValue({
-          type: 'dialerAction',
-          dialerAction: {
-            dialType: 'dialPhoneNumber',
-          },
-        })
-        break
-      case 'mapAction':
-        form.setFieldsValue({
-          type: 'mapAction',
-          mapAction: {
-            mapType: '0', // 地图类型 0经纬度1位置
-          },
-        })
-        break
-      default:
-        break
-    }
-  }
-
-  // 每次字段值更新时就更新父组件传过来的值
-  const onFieldsChange = (changedFields, allFields) => {
-    // 修改事件类型时使用form.setFieldsValue了，需要在这个事件之后再获取表单值
-    setTimeout(async () => {
-      let values = await form.getFieldsValue()
-      let params = {}
-      // 剔除不要的值
-      for (const key in values) {
-        switch (key) {
-          case 'displayText':
-          case 'postback':
-          case 'urlAction':
-            params[key] = values[key]
-            break
-          case 'dialerAction':
-            delete values[key].dialType
-            params[key] = values[key]
-            break
-          case 'mapAction':
-            delete values[key].mapType
-            params[key] = values[key]
-            break
-          case 'calendarAction':
-            params[key] = {
-              createCalendarEvent: {},
-            }
-            let {
-              title = '',
-              description = '',
-              timer,
-              fallbackUrl = '',
-            } = values[key]['createCalendarEvent']
-            params[key]['createCalendarEvent']['title'] = title
-            params[key]['createCalendarEvent']['description'] = description
-            params[key]['createCalendarEvent']['fallbackUrl'] = fallbackUrl
-            if (timer) {
-              let startTime = timer[0].format('YYYY-MM-DDTHH:mm:ss[Z]')
-              let endTime = timer[1].format('YYYY-MM-DDTHH:mm:ss[Z]')
-              params[key]['createCalendarEvent']['startTime'] = startTime
-              params[key]['createCalendarEvent']['endTime'] = endTime
-            } else {
-              params[key]['createCalendarEvent']['startTime'] = ''
-              params[key]['createCalendarEvent']['endTime'] = ''
-            }
-            break
-          default:
-            break
+          })
         }
       }
-      onChange(params, activeIndex)
-    }, 0)
-  }
+    }, [form, activeIndex, cardsIndex])
 
-  return (
-    <Form
-      name={name}
-      className='rcs-action-form'
-      form={form}
-      layout='vertical'
-      autoComplete='off'
-      validateTrigger='onBlur'
-      onFieldsChange={onFieldsChange}>
-      <ActionFormItems onchangeType={changeType} />
-    </Form>
-  )
-})
+    const setInitValue = (actionKey: string, actionVal) => {
+      switch (actionKey) {
+        case 'urlAction':
+          form.setFieldsValue({
+            type: actionKey,
+            [actionKey]: actionVal,
+          })
+          break
+        case 'dialerAction':
+          // 获取拨号方式
+          let dialerTypeKey = Object.keys(actionVal).find((key) =>
+            dialerActionTypeArray.includes(key as DialerActionType),
+          )
+          form.setFieldsValue({
+            type: actionKey,
+            [actionKey]: { ...actionVal, dialType: dialerTypeKey },
+          })
+          break
+        case 'mapAction':
+          // 地图类型 0经纬度1位置
+          let mapType = '0'
+          if (actionVal?.showLocation) {
+            mapType = Number(
+              Boolean('query' in actionVal.showLocation.location),
+            ).toString()
+          }
+
+          form.setFieldsValue({
+            type: actionKey,
+            [actionKey]: { ...actionVal, mapType: mapType },
+          })
+          break
+        case 'calendarAction':
+          let timer
+          if (
+            actionVal.createCalendarEvent.startTime &&
+            actionVal.createCalendarEvent.endTime
+          ) {
+            timer = [
+              dayjs(actionVal.createCalendarEvent.startTime),
+              dayjs(actionVal.createCalendarEvent.endTime),
+            ]
+          }
+          form.setFieldsValue({
+            type: actionKey,
+            [actionKey]: { createCalendarEvent: { ...actionVal, timer } },
+          })
+          break
+        default:
+          break
+      }
+    }
+
+    // 切换类型后初始化
+    const changeType = (val) => {
+      switch (val) {
+        case 'urlAction':
+          form.setFieldsValue({
+            urlAction: {
+              openUrl: {
+                application: 'browser',
+              },
+            },
+          })
+          break
+        case 'dialerAction':
+          form.setFieldsValue({
+            type: 'dialerAction',
+            dialerAction: {
+              dialType: 'dialPhoneNumber',
+            },
+          })
+          break
+        case 'mapAction':
+          form.setFieldsValue({
+            type: 'mapAction',
+            mapAction: {
+              mapType: '0', // 地图类型 0经纬度1位置
+            },
+          })
+          break
+        default:
+          break
+      }
+    }
+
+    // 每次字段值更新时就更新父组件传过来的值
+    const onFieldsChange = (changedFields, allFields) => {
+      // 修改事件类型时使用form.setFieldsValue了，需要在这个事件之后再获取表单值
+      setTimeout(async () => {
+        let values = await form.getFieldsValue()
+        let params = {}
+        // 剔除不要的值
+        for (const key in values) {
+          switch (key) {
+            case 'displayText':
+            case 'postback':
+            case 'urlAction':
+              params[key] = values[key]
+              break
+            case 'dialerAction':
+              delete values[key].dialType
+              params[key] = values[key]
+              break
+            case 'mapAction':
+              delete values[key].mapType
+              params[key] = values[key]
+              break
+            case 'calendarAction':
+              params[key] = {
+                createCalendarEvent: {},
+              }
+              let {
+                title = '',
+                description = '',
+                timer,
+                fallbackUrl = '',
+              } = values[key]['createCalendarEvent']
+              params[key]['createCalendarEvent']['title'] = title
+              params[key]['createCalendarEvent']['description'] = description
+              params[key]['createCalendarEvent']['fallbackUrl'] = fallbackUrl
+              if (timer) {
+                let startTime = timer[0].format('YYYY-MM-DDTHH:mm:ss[Z]')
+                let endTime = timer[1].format('YYYY-MM-DDTHH:mm:ss[Z]')
+                params[key]['createCalendarEvent']['startTime'] = startTime
+                params[key]['createCalendarEvent']['endTime'] = endTime
+              } else {
+                params[key]['createCalendarEvent']['startTime'] = ''
+                params[key]['createCalendarEvent']['endTime'] = ''
+              }
+              break
+            default:
+              break
+          }
+        }
+        onChange(params, activeIndex)
+      }, 0)
+    }
+
+    return (
+      <Form
+        name={name}
+        className='rcs-action-form'
+        form={form}
+        layout='vertical'
+        autoComplete='off'
+        validateTrigger='onBlur'
+        onFieldsChange={onFieldsChange}>
+        <ActionFormItems onchangeType={changeType} />
+      </Form>
+    )
+  },
+)
 
 export default ActionForm

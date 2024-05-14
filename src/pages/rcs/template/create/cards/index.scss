@@ -1,0 +1,11 @@
+.center-content.cards-center-content {
+  // margin: 0 8px 0;
+  background-color: transparent;
+  box-sizing: border-box;
+  padding-bottom: 12px;
+  height: fit-content;
+  max-height: 100%;
+  overflow: scroll;
+  display: flex;
+  flex-wrap: nowrap;
+}

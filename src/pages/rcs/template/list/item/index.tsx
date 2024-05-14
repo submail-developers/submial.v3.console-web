@@ -9,6 +9,7 @@ import { IDIcon } from '@/components/aIcons'
 
 import TextItem from '@/pages/rcs/template/create/text/item'
 import CardItem from '@/pages/rcs/template/create/card/item'
+import CardsItem from '@/pages/rcs/template/create/cards/item'
 
 import { delRcsTemp } from '@/api'
 import { API } from 'apis'
@@ -56,12 +57,14 @@ export default function Fn({
       setType('text')
     } else if ('generalPurposeCard' in item.message.message) {
       setType('card')
+    } else if ('generalPurposeCardCarousel' in item.message.message) {
+      setType('cards')
     } else {
     }
   }, [])
   return (
     <div className='rcs-temp-item'>
-      <Tooltip title={onSelect ? '' : '审核备注'} placement='bottom'>
+      <Tooltip title={item.rejectReason || ''} placement='bottom'>
         <div
           className={`temp-item-content ${onSelect ? 'openSelect' : ''}`}
           onClick={handleItem}>
@@ -81,10 +84,11 @@ export default function Fn({
             <div className='preview-content'>
               {type == 'text' && <TextItem message={item.message.message} />}
               {type == 'card' && <CardItem message={item.message.message} />}
+              {type == 'cards' && <CardsItem message={item.message.message} />}
             </div>
 
             <Space align='center' className='float-wrap'>
-              {item.suggestions.suggestions
+              {item.suggestions?.suggestions
                 .filter((item) => Boolean(item.action))
                 .map((item, index) => (
                   <div className='float-item' key={index}>
@@ -113,9 +117,6 @@ export default function Fn({
             </Button>
             {!hiddenHandle && (
               <Space align='center' size={16}>
-                <div className='g-pointer' title='查看'>
-                  <span className='icon iconfont icon-xianshi fn18'></span>
-                </div>
                 <div className='g-pointer' title='编辑' onClick={editEvent}>
                   <span className='icon iconfont icon-bianji fn18'></span>
                 </div>

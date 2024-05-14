@@ -213,7 +213,9 @@ export default function UploadModal(props: Props) {
   }
 
   useEffect(() => {
-    getList()
+    if (props.show) {
+      getList()
+    }
   }, [currentPage, pageSize])
 
   useEffect(() => {

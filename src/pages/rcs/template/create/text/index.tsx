@@ -120,7 +120,11 @@ export default function Fn() {
           min: 1,
           max: 2000,
         })
-        setsuggestions(info.suggestions.suggestions.map((item) => item.action))
+        setsuggestions(
+          info.suggestions?.suggestions
+            ? info.suggestions?.suggestions.map((item) => item.action)
+            : [],
+        )
         setRichMsg(info.smsContent)
 
         setfloatIndex(0)
@@ -363,7 +367,7 @@ export default function Fn() {
         dataSource={suggestions}
         activeKey='index'
         active={floatIndex}
-        min={1}
+        min={0}
         max={4}
         onChange={(i) => {
           setsuggestionsIndex(i)
@@ -374,12 +378,15 @@ export default function Fn() {
         style={aNumberStyle}
         activeStyle={aNumberActiveStyle}
       />
-      <ActionForm
-        data={suggestions}
-        activeIndex={floatIndex}
-        onChange={updataSuggestions}
-        name='suggestions-form'
-      />
+
+      {suggestions.length > 0 && (
+        <ActionForm
+          data={suggestions}
+          activeIndex={floatIndex}
+          onChange={updataSuggestions}
+          name='suggestions-form'
+        />
+      )}
     </div>
   )
 
@@ -433,7 +440,9 @@ export default function Fn() {
                     textAlign: 'center',
                     borderRadius: '16px',
                     backgroundColor: '#fff',
-                    overflow: 'auto',
+                    overflowX: 'auto',
+                    wordBreak: 'break-all',
+                    wordWrap: 'normal',
                     padding: '0 16px',
                   }}
                 />

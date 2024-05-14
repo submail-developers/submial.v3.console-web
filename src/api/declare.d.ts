@@ -304,6 +304,7 @@ declare module 'apis' {
       rejectReason: string
       folder: string
       bcTemplate: null
+      rejectReason: string
     }
 
     interface GetMmsListParams {

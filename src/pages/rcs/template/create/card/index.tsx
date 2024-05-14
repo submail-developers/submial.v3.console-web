@@ -6,6 +6,7 @@ import ActionForm from '../components/actionForm'
 import MmsCallback from '../components/mmsCallback'
 import CheckContent from '../components/checkContent'
 import type { CheckStatusItem } from '../components/checkContent'
+import { imgTypes, audioTypes, videoTypes } from '../components/meteial/type'
 import Page from '../page'
 import { Media, Action, GeneralPurposeCard } from '../type'
 import RcsInput from '@/components/rcsInput'
@@ -165,9 +166,25 @@ export default function Fn() {
         signRef.current = info.sign
         const generalPurposeCard = info.message.message
           .generalPurposeCard as GeneralPurposeCard
+
+        let mediaType: '1' | '2' | '3' = '1'
+        let { mediaContentType = '' } = generalPurposeCard.content.media
+        const index = [
+          imgTypes.includes(mediaContentType),
+          audioTypes.includes(mediaContentType),
+          videoTypes.includes(mediaContentType),
+        ].findIndex((item) => Boolean(item))
+        if (index == 0) {
+          mediaType = '1'
+        } else if (index == 1) {
+          mediaType = '2'
+        } else if (index == 2) {
+          mediaType = '3'
+        } else {
+        }
         setmedia({
           ...generalPurposeCard.content.media,
-          mediaType: '1',
+          mediaType: mediaType,
         })
 
         let titleStyles = [],
@@ -200,9 +217,15 @@ export default function Fn() {
         })
         // 按钮
         setactions(
-          generalPurposeCard.content.suggestions.map((item) => item.action),
+          generalPurposeCard.content?.suggestions
+            ? generalPurposeCard.content?.suggestions.map((item) => item.action)
+            : [],
         )
-        setsuggestions(info.suggestions.suggestions.map((item) => item.action))
+        setsuggestions(
+          info.suggestions?.suggestions
+            ? info.suggestions?.suggestions.map((item) => item.action)
+            : [],
+        )
         setRichMsg(info.smsContent)
         setbtnIndex(0)
         setfloatIndex(0)
@@ -838,7 +861,9 @@ export default function Fn() {
                     textAlign: 'center',
                     borderRadius: '16px',
                     backgroundColor: '#fff',
-                    overflow: 'auto',
+                    overflowX: 'auto',
+                    wordBreak: 'break-all',
+                    wordWrap: 'normal',
                     padding: '0 16px',
                   }}
                 />
