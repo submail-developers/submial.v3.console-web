@@ -6,6 +6,7 @@ import {
   EnumTempStatusText,
 } from '@/pages/rcs/template/list/type'
 import { IDIcon } from '@/components/aIcons'
+import ACopy from '@/components/aCopy'
 
 import TextItem from '@/pages/rcs/template/create/text/item'
 import CardItem from '@/pages/rcs/template/create/card/item'
@@ -114,6 +115,7 @@ export default function Fn({
                 />
               }>
               {item.sign}
+              <ACopy text={item.sign} title='点击复制ID' />
             </Button>
             {!hiddenHandle && (
               <Space align='center' size={16}>

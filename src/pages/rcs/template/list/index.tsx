@@ -67,6 +67,10 @@ export default function Fn() {
   useEffect(() => {
     getList()
   }, [currentPage, pageSize, status])
+  const changeStatus = (value) => {
+    setcurrentPage(1)
+    setStatus(value)
+  }
 
   return (
     <PageContent extClass='template-list' xxl={1400} xl={1100}>
@@ -104,7 +108,7 @@ export default function Fn() {
                   { value: '1', label: '文本' },
                   { value: '2', label: '单卡片' },
                   { value: '3', label: '多卡片' },
-                  { value: '4', label: '文件' },
+                  // { value: '4', label: '文件' },
                 ]}
               />
             </Form.Item>
@@ -129,28 +133,28 @@ export default function Fn() {
             className={`status-item ${
               status == 'all' ? 'color-status-primary' : ''
             }`}
-            onClick={() => setStatus('all')}>
+            onClick={() => changeStatus('all')}>
             全部模版
           </div>
           <div
             className={`status-item ${
               status == '1' ? 'color-status-primary' : ''
             }`}
-            onClick={() => setStatus('1')}>
+            onClick={() => changeStatus('1')}>
             审核通过
           </div>
           <div
             className={`status-item ${
               status == '2' ? 'color-status-primary' : ''
             }`}
-            onClick={() => setStatus('2')}>
+            onClick={() => changeStatus('2')}>
             审核驳回
           </div>
           <div
             className={`status-item ${
               status == '0' ? 'color-status-primary' : ''
             }`}
-            onClick={() => setStatus('0')}>
+            onClick={() => changeStatus('0')}>
             审核中
           </div>
         </Space>
