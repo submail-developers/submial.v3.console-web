@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Input, Upload, Form, App, Flex, Space, Button } from 'antd'
 import type { UploadFile, UploadProps } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
@@ -7,9 +7,8 @@ import ADel from '@/components/aDel'
 import './index.scss'
 
 type Props = {
-  attachmentSrc: string
-  attachmentFile: UploadFile
-  onChangeFile: (file: UploadFile, fileSrc: string) => void
+  fileList: UploadFile[]
+  onChangeFile: (fileList: UploadFile[]) => void
   onDelFile: () => void
 }
 
@@ -21,22 +20,12 @@ const accept = '.pdf,.doc,.jpg,.jpeg,.gif,.docx,.rar,.zip'
 export default function Fn(props: Props) {
   const { message } = App.useApp()
   const [uploading, setUploading] = useState(false)
-  const [delLoading, setDelLoading] = useState(false)
-  const [fileList, setFileList] = useState<UploadFile[]>([])
-
-  // 删除
-  const delEvent = () => {
-    setDelLoading(true)
-    let timer = setTimeout(() => {
-      props.onDelFile()
-      setDelLoading(false)
-      clearTimeout(timer)
-    }, 300)
-  }
-
   // 选择上传文件
   const uploadProps: UploadProps = {
     accept: accept,
+    onRemove: (file) => {
+      props.onDelFile()
+    },
     beforeUpload: (file) => {
       setUploading(true)
       let img_w: number, img_h: number
@@ -54,9 +43,9 @@ export default function Fn(props: Props) {
               message.error('上传文件最大5M', 4)
               return false
             }
-            props.onChangeFile(file, e.target.result as string)
+            props.onChangeFile([file])
             setUploading(false)
-            setFileList([file])
+            // setFileList([file])
           }
         }
         reader.readAsDataURL(file)
@@ -65,7 +54,7 @@ export default function Fn(props: Props) {
       }
       return false
     },
-    fileList,
+    fileList: props.fileList,
     maxCount: 1,
   }
 

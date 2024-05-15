@@ -73,7 +73,32 @@ declare module 'apis' {
       name: string
     }
     // 创建chatbot
-    interface CreateChatbotParams {
+    interface SaveChatbotParams {
+      appid: string
+      name: string
+      bind: string
+      logo: string
+      callback: string
+      email: string
+      website: string
+      tcPage: string
+      address: string
+      colour: string
+      backgroundImage: string
+      category: string
+      provider: string
+      providerSwitchCode: string
+      description: string
+      menu: string
+      genericCssTemplate: string
+      autograph: string
+      attachment: string
+      actualIssueIndustry: string
+      debugWhiteAddress: string
+    }
+    // 保存chatbot
+    interface temporarySaveChatbotParams {
+      appid: string
       name: string
       bind: string
       logo: string
@@ -497,5 +522,38 @@ declare module 'apis' {
       appid: string
     }
     interface updateChatbotItems {}
+    interface SaveFixedMenuParams {
+      appid: string
+      message: string
+    }
+    // 获取地址簿参数
+    interface GetMobAddressbooksParams {
+      page: number
+      tag: string
+      order_by: string
+      search_type: string
+      keywords: string
+    }
+    // 获取地址簿返回值
+    interface GetMobAddressbooksItems {
+      address: string
+      folder: string
+      id: string
+      name: string
+      sign: string
+      tag: string
+    }
+    interface GetRcsTempListRes {
+      rows: number
+      addressbooks: GetMobAddressbooksItems[]
+    }
+    interface CreateAddressbooksParams {
+      name: string
+      tag: string
+    }
+    // 删除地址簿
+    interface DeleteAddressbooksParams {
+      id: string
+    }
   }
 }

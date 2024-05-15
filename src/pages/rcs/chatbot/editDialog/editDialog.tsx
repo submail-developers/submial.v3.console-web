@@ -14,21 +14,46 @@ import {
 } from 'antd'
 import type { TimePickerProps, DatePickerProps } from 'antd'
 import { ProFormDependency } from '@ant-design/pro-components'
-
+import { saveFixedMenu } from '@/api'
 import { API } from 'apis'
+import { ActionFormItems } from '@/pages/rcs/template/create/components/actionForm'
 import './editDialog.scss'
+import formRules from '@/utils/formRules'
+import type {
+  ActionType,
+  SuggestionItem,
+  DialerActionType,
+} from '@/pages/rcs/template/create/type'
+import { Action } from '@/pages/rcs/template/create/type'
 
 interface Props {
-  // onSearch: () => void
+  open: boolean
+  onCancel: () => void
 }
 interface OpenParams {}
-interface Props {
-  // onSearch: () => void
+type RichText = {
+  label?: string
+  text: string
+  b: boolean
+  i: boolean
+  u: boolean
+  min: number
+  max: number
 }
-interface OpenParams {}
 
-const Dialog = ({}: Props, ref: any) => {
+const Dialog = (props: Props, ref: any) => {
   const [form] = Form.useForm()
+  const [actions, setactions] = useState<Action[]>([
+    {
+      displayText: '按钮',
+      urlAction: {
+        openUrl: {
+          application: 'browser',
+          url: '',
+        },
+      },
+    },
+  ])
 
   const onChange: DatePickerProps['onChange'] = (date, dateString) => {
     console.log(date, dateString)
@@ -53,16 +78,40 @@ const Dialog = ({}: Props, ref: any) => {
     }
   })
   const [type, setType] = useState<PickerType>('time')
-  const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const open = (params: OpenParams) => {
-    setIsModalOpen(true)
+  const open = (params: OpenParams) => {}
+
+  // 提审
+  const submit = async () => {
+    let msg_suggestions: SuggestionItem[] = actions.map((item) => {
+      console.log(item, 'itemitemitem')
+      return { action: item }
+    })
+
+    const message = {
+      menu: {
+        entries: {
+          suggestions: msg_suggestions,
+        },
+        layout: {},
+      },
+    }
+    let params: API.SaveFixedMenuParams = {
+      appid: '111',
+      message: JSON.stringify({ message }),
+    }
+
+    console.log(params, 'paramsparamsparams')
   }
 
-  const handleOk = async () => {}
+  const handleOk = async () => {
+    // const values = await form.getFieldsValue()
+    // console.log(values, 'values')
+    submit()
+  }
 
   const handleCancel = () => {
-    setIsModalOpen(false)
+    props.onCancel()
   }
 
   useEffect(() => {
@@ -121,18 +170,51 @@ const Dialog = ({}: Props, ref: any) => {
       form.setFieldValue('detailEvent', '4')
     }
   }
+  // 切换类型后初始化
+  const changeType = (val) => {
+    switch (val) {
+      case 'urlAction':
+        form.setFieldsValue({
+          urlAction: {
+            openUrl: {
+              application: 'browser',
+            },
+          },
+        })
+        break
+      case 'dialerAction':
+        form.setFieldsValue({
+          type: 'dialerAction',
+          dialerAction: {
+            dialType: 'dialPhoneNumber',
+          },
+        })
+        break
+      case 'mapAction':
+        form.setFieldsValue({
+          type: 'mapAction',
+          mapAction: {
+            mapType: '0', // 地图类型 0经纬度1位置
+          },
+        })
+        break
+      default:
+        break
+    }
+  }
 
   return (
     <Modal
+      open={props.open}
+      onCancel={props.onCancel}
+      onOk={handleOk}
       title='编辑主菜单事件'
       width={480}
-      style={{ top: 240 }}
+      style={{ top: 200 }}
       data-class='chose-editDlog'
       closable={false}
       destroyOnClose
-      onCancel={handleCancel}
-      wrapClassName='modal-reset'
-      open={isModalOpen}>
+      wrapClassName='modal-reset'>
       <Form
         name='form-01'
         form={form}
@@ -144,7 +226,7 @@ const Dialog = ({}: Props, ref: any) => {
         autoComplete='off'>
         <Row gutter={24}>
           <Col span={24}>
-            <Form.Item label='菜单标题' name='mean-title'>
+            <Form.Item label='菜单标题' name='displayText'>
               <Input placeholder='请设置该菜单的标题文本' />
             </Form.Item>
           </Col>
@@ -178,17 +260,17 @@ const Dialog = ({}: Props, ref: any) => {
                     <Form.Item
                       hidden={meanType != '2'}
                       label='回复事件'
-                      name='huifu'
+                      name='reply'
                       required>
                       <Input placeholder='请设置该菜单的回复文本' />
                     </Form.Item>
 
                     <Form.Item
                       hidden={meanType != '3'}
-                      label='详细事件'
+                      label=''
                       validateTrigger='onSubmit'
                       name='detailEvent'>
-                      <Select
+                      {/* <Select
                         placeholder='请选择'
                         optionFilterProp='children'
                         fieldNames={{ label: 'label', value: 'value' }}
@@ -198,11 +280,12 @@ const Dialog = ({}: Props, ref: any) => {
                             .includes(input.toLowerCase())
                         }
                         options={detailEventData}
-                      />
+                      /> */}
+                      <ActionFormItems onchangeType={changeType} />
                     </Form.Item>
                   </Col>
 
-                  <ProFormDependency name={['detailEvent']}>
+                  <ProFormDependency name={['detailEvent']} hidden>
                     {({ detailEvent }) => {
                       return (
                         <>
@@ -211,7 +294,16 @@ const Dialog = ({}: Props, ref: any) => {
                               hidden={detailEvent != '4' || meanType != '3'}
                               label='链接url'
                               name='url'
-                              validateTrigger='onSubmit'>
+                              validateTrigger='onSubmit'
+                              rules={[
+                                {
+                                  required: true,
+                                  message: '请输入',
+                                },
+                                {
+                                  validator: formRules.validateUrl,
+                                },
+                              ]}>
                               <Input placeholder='请输入链接' />
                             </Form.Item>
 

@@ -115,9 +115,6 @@ export default function Fn() {
               编辑
             </NavLink>
           </Button>
-          {/* <Button type='link' style={{ paddingLeft: 0 }}>
-            删除
-          </Button> */}
           <Popconfirm
             placement='left'
             title='警告'
