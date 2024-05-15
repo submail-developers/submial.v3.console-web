@@ -36,7 +36,7 @@ request.interceptors.response.use(
         },
       })
       return Promise.reject(res.data)
-    } else if (res && res.data && res.data.status == 'success') {
+    } else if (res && res.data) {
       return res.data
     } else {
       message.error(JSON.stringify(res.data))
