@@ -44,51 +44,65 @@ export const dialerActionTypeArray: DialerActionType[] = [
 ]
 
 export type Action = {
-  displayText: string
-  // 上行文本携带的数据标识
-  postback?: {
-    data: string
+  // 回复事件
+  reply?: {
+    displayText: string
   }
-  // 链接事件
-  urlAction?: {
-    openUrl: {
-      url: string
-      application: 'browser' | 'webview' // 内置浏览器 | 默认浏览器
-      // application为webview可用，可选值：<br/>full：全屏<br/>half：半屏<br/>tall：浮屏
-      viewMode?: 'full' | 'half' | 'tall'
-      parameters?: string // url的参数 如 "visitorId=10001&code=123456"
+  // 交互事件
+  action?: {
+    displayText?: string
+    // 链接事件
+    urlAction?: {
+      openUrl: {
+        url: string
+        application: 'browser' | 'webview' // 内置浏览器 | 默认浏览器
+        // application为webview可用，可选值：<br/>full：全屏<br/>half：半屏<br/>tall：浮屏
+        viewMode?: 'full' | 'half' | 'tall'
+        parameters?: string // url的参数 如 "visitorId=10001&code=123456"
+      }
     }
-  }
-  // 拨打电话
-  dialerAction?: {
-    dialPhoneNumber?: {
-      dialPhoneNumber: string
-      fallbackUrl?: string // 话单推送地址
+    // 拨打电话
+    dialerAction?: {
+      dialPhoneNumber?: {
+        dialPhoneNumber: string
+        fallbackUrl?: string // 话单推送地址
+      }
+      // 	增强通话事件
+      dialEnrichedCall?: {
+        dialPhoneNumber: string
+        fallbackUrl?: string // 话单推送地址
+        subject?: string
+      }
+      // 视频通话
+      dialVideoCall?: {
+        dialPhoneNumber: string
+        fallbackUrl?: string // 话单推送地址
+      }
     }
-    // 	增强通话事件
-    dialEnrichedCall?: {
-      dialPhoneNumber: string
-      fallbackUrl?: string // 话单推送地址
-      subject?: string
-    }
-    // 视频通话
-    dialVideoCall?: {
-      dialPhoneNumber: string
-      fallbackUrl?: string // 话单推送地址
-    }
-  }
-  // 地图事件
-  mapAction?: {
-    // mapType: '0' ｜ "1" // 地图类型 0经纬度1位置
-    location: {
-      longitude?: number | string
-      latitude?: number | string
-      label?: string
-      query?: string
+    // 地图事件
+    mapAction?: {
+      // mapType: '0' ｜ "1" // 地图类型 0经纬度1位置
+      location: {
+        longitude?: number | string
+        latitude?: number | string
+        label?: string
+        query?: string
+      }
     }
   }
 }
 
+// 事件类型
+export const btnTypes = [
+  {
+    label: '回复事件(回复内容即是按钮名称)',
+    value: 'reply',
+  },
+  {
+    label: '交互事件',
+    value: 'action',
+  },
+]
 // 事件类型
 export const actions = [
   {
@@ -131,10 +145,7 @@ export type Reply = {
 }
 
 // 按钮｜悬浮按钮配置
-export type SuggestionItem = {
-  action?: Action
-  reply?: Reply
-}
+export type SuggestionItem = Action
 
 // 单卡片message
 export type CardMessage = {

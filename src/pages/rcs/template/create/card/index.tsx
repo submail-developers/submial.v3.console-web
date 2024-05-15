@@ -96,11 +96,13 @@ export default function Fn() {
   // 按钮
   const [actions, setactions] = useState<Action[]>([
     {
-      displayText: '按钮',
-      urlAction: {
-        openUrl: {
-          application: 'browser',
-          url: '',
+      action: {
+        displayText: '按钮',
+        urlAction: {
+          openUrl: {
+            application: 'browser',
+            url: '',
+          },
         },
       },
     },
@@ -112,11 +114,13 @@ export default function Fn() {
   // 悬浮菜单
   const [suggestions, setsuggestions] = useState<Action[]>([
     {
-      displayText: '悬浮按钮',
-      urlAction: {
-        openUrl: {
-          application: 'browser',
-          url: '',
+      action: {
+        displayText: '悬浮按钮',
+        urlAction: {
+          openUrl: {
+            application: 'browser',
+            url: '',
+          },
         },
       },
     },
@@ -219,16 +223,8 @@ export default function Fn() {
           max: 2000,
         })
         // 按钮
-        setactions(
-          generalPurposeCard.content?.suggestions
-            ? generalPurposeCard.content?.suggestions.map((item) => item.action)
-            : [],
-        )
-        setsuggestions(
-          info.suggestions?.suggestions
-            ? info.suggestions?.suggestions.map((item) => item.action)
-            : [],
-        )
+        setactions(generalPurposeCard.content?.suggestions || [])
+        setsuggestions(info.suggestions?.suggestions || [])
         setRichMsg(info.smsContent)
         setbtnIndex(0)
         setfloatIndex(0)
@@ -246,14 +242,24 @@ export default function Fn() {
   const changeBtnText = (val, index) => {
     setactions((prevActions) => {
       return prevActions.map((item, idx) => {
-        if (idx === index) {
-          return {
-            ...item,
-            displayText: val,
+        if (idx == index) {
+          if ('action' in item) {
+            item = {
+              action: {
+                ...item['action'],
+                displayText: val,
+              },
+            }
+          } else {
+            item = {
+              reply: {
+                ...item['reply'],
+                displayText: val,
+              },
+            }
           }
-        } else {
-          return item
         }
+        return item
       })
     })
   }
@@ -262,11 +268,13 @@ export default function Fn() {
       return [
         ...prevActions,
         {
-          displayText: '按钮',
-          urlAction: {
-            openUrl: {
-              application: 'browser',
-              url: '',
+          action: {
+            displayText: '按钮',
+            urlAction: {
+              openUrl: {
+                application: 'browser',
+                url: '',
+              },
             },
           },
         },
@@ -288,8 +296,27 @@ export default function Fn() {
       return [
         ...prevActions.map((item, index) => {
           if (index == idx) {
-            let { displayText } = item
-            item = { ...values, displayText }
+            let displayText = ''
+            if ('action' in item) {
+              displayText = item.action.displayText
+            } else {
+              displayText = item.reply.displayText
+            }
+            if ('action' in values) {
+              item = {
+                action: {
+                  ...values['action'],
+                  displayText,
+                },
+              }
+            } else {
+              item = {
+                reply: {
+                  ...values['reply'],
+                  displayText,
+                },
+              }
+            }
           }
           return item
         }),
@@ -301,14 +328,24 @@ export default function Fn() {
   const changeSuggestionsText = (val, index) => {
     setsuggestions((prevActions) => {
       return prevActions.map((item, idx) => {
-        if (idx === index) {
-          return {
-            ...item,
-            displayText: val,
+        if (idx == index) {
+          if ('action' in item) {
+            item = {
+              action: {
+                ...item['action'],
+                displayText: val,
+              },
+            }
+          } else {
+            item = {
+              reply: {
+                ...item['reply'],
+                displayText: val,
+              },
+            }
           }
-        } else {
-          return item
         }
+        return item
       })
     })
   }
@@ -317,11 +354,13 @@ export default function Fn() {
       return [
         ...prevActions,
         {
-          displayText: '悬浮按钮',
-          urlAction: {
-            openUrl: {
-              application: 'browser',
-              url: '',
+          action: {
+            displayText: '悬浮按钮',
+            urlAction: {
+              openUrl: {
+                application: 'browser',
+                url: '',
+              },
             },
           },
         },
@@ -343,8 +382,27 @@ export default function Fn() {
       return [
         ...prevActions.map((item, index) => {
           if (index == idx) {
-            let { displayText } = item
-            item = { ...values, displayText }
+            let displayText = ''
+            if ('action' in item) {
+              displayText = item.action.displayText
+            } else {
+              displayText = item.reply.displayText
+            }
+            if ('action' in values) {
+              item = {
+                action: {
+                  ...values['action'],
+                  displayText,
+                },
+              }
+            } else {
+              item = {
+                reply: {
+                  ...values['reply'],
+                  displayText,
+                },
+              }
+            }
           }
           return item
         }),
@@ -359,13 +417,6 @@ export default function Fn() {
     if (!checkRes) {
       return
     }
-    let _suggestions: SuggestionItem[] = suggestions.map((item) => {
-      return { action: item }
-    })
-
-    let msg_suggestions: SuggestionItem[] = actions.map((item) => {
-      return { action: item }
-    })
 
     // 标题样式，用,链接
     const titleFontStyle = [
@@ -393,7 +444,7 @@ export default function Fn() {
           media: _media,
           title: richTitle.text,
           description: richDes.text,
-          suggestions: msg_suggestions,
+          suggestions: actions,
         },
         layout: {
           cardOrientation: 'HORIZONTAL',
@@ -414,7 +465,7 @@ export default function Fn() {
       mmsTemplate: Boolean(mmsInfo) ? mmsInfo.sign : '',
       mmsSubject: Boolean(mmsInfo) ? mmsInfo.mmsSubject : '',
       suggestions: JSON.stringify({
-        suggestions: _suggestions,
+        suggestions: suggestions,
       }),
       message: JSON.stringify({ message }),
     }
@@ -534,60 +585,67 @@ export default function Fn() {
   const checkAction = (item: Action): boolean => {
     let value: boolean = true
     // 标题为空
-    if (!item.displayText) {
+    if (
+      ('action' in item && !item.action.displayText) ||
+      ('reply' in item && !item.reply.displayText)
+    ) {
       return false
     }
-    let actionKey = Object.keys(item).find((key) =>
-      actionTypeArray.includes(key as ActionType),
-    )
-    if (actionKey) {
-      let actionVal = item[actionKey]
-      switch (actionKey) {
-        // 浏览器事件验证不通过
-        case 'urlAction':
-          const urlReg = /^(https?:\/\/)?([\w.-]+\.[a-zA-Z]{2,})(\/\S*)?$/
+    if ('action' in item) {
+      let actionKey = Object.keys(item['action']).find((key) =>
+        actionTypeArray.includes(key as ActionType),
+      )
+      if (actionKey) {
+        let actionVal = item['action'][actionKey]
+        switch (actionKey) {
+          // 浏览器事件验证不通过
+          case 'urlAction':
+            const urlReg = /^(https?:\/\/)?([\w.-]+\.[a-zA-Z]{2,})(\/\S*)?$/
 
-          if (!actionVal.openUrl.url) {
-            value = false
-          } else {
-            if (!urlReg.test(actionVal.openUrl.url)) {
+            if (!actionVal.openUrl.url) {
+              value = false
+            } else {
+              if (!urlReg.test(actionVal.openUrl.url)) {
+                value = false
+              }
+            }
+            break
+          // 拨号事件验证不通过
+          case 'dialerAction':
+            // 获取拨号方式
+            let dialerTypeKey = Object.keys(actionVal).find((key) =>
+              dialerActionTypeArray.includes(key as DialerActionType),
+            )
+            if (!actionVal[dialerTypeKey]['phoneNumber']) {
               value = false
             }
-          }
-          break
-        // 拨号事件验证不通过
-        case 'dialerAction':
-          // 获取拨号方式
-          let dialerTypeKey = Object.keys(actionVal).find((key) =>
-            dialerActionTypeArray.includes(key as DialerActionType),
-          )
-          if (!actionVal[dialerTypeKey]['phoneNumber']) {
-            value = false
-          }
-          break
-        // 地图事件验证不通过
-        case 'mapAction':
-          if (
-            !(
-              (actionVal.showLocation.latitude.toString() &&
-                actionVal.showLocation.longitude.toString()) ||
-              actionVal.showLocation.query
-            )
-          ) {
-            value = false
-          }
-          break
-        // 日历事件验证不通过
-        case 'calendarAction':
-          if (
-            !actionVal.createCalendarEvent.title ||
-            !actionVal.createCalendarEvent.startTime ||
-            !actionVal.createCalendarEvent.endTime
-          ) {
-            value = false
-          }
-          break
-        default:
+            break
+          // 地图事件验证不通过
+          case 'mapAction':
+            if (
+              !(
+                (actionVal.showLocation.latitude.toString() &&
+                  actionVal.showLocation.longitude.toString()) ||
+                actionVal.showLocation.query
+              )
+            ) {
+              value = false
+            }
+            break
+          // 日历事件验证不通过
+          case 'calendarAction':
+            if (
+              !actionVal.createCalendarEvent.title ||
+              !actionVal.createCalendarEvent.startTime ||
+              !actionVal.createCalendarEvent.endTime
+            ) {
+              value = false
+            }
+            break
+          default:
+        }
+      } else {
+        value = false
       }
     }
     return value
@@ -822,7 +880,9 @@ export default function Fn() {
             {actions.map((item, index) => (
               <div className='card-btn' key={index}>
                 <RcsInput
-                  text={item.displayText}
+                  text={
+                    item.action?.displayText || item.reply?.displayText || ''
+                  }
                   onChange={(val) => changeBtnText(val, index)}
                   onFocus={() => {
                     setactionsIndex(index)
@@ -857,7 +917,9 @@ export default function Fn() {
             {suggestions.map((item, index) => (
               <div className='float-item' key={index}>
                 <RcsInput
-                  text={item.displayText}
+                  text={
+                    item.action?.displayText || item.reply?.displayText || ''
+                  }
                   onChange={(val) => changeSuggestionsText(val, index)}
                   onFocus={() => {
                     setsuggestionsIndex(index)

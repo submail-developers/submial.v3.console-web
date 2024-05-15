@@ -138,7 +138,7 @@ export default function CardItem(props: Props) {
         {props.item.suggestions.map((item, index) => (
           <div className='card-btn' key={index}>
             <RcsInput
-              text={item.displayText}
+              text={item.action?.displayText || item.reply?.displayText || ''}
               onChange={(val) => changeBtnText(val, index)}
               onFocus={() => {
                 props.onChangeActionsIndex(index)

@@ -48,7 +48,6 @@ export default function Fn({ message }: Props) {
     }
     setCards(content)
   }, [])
-  // console.log(message.generalPurposeCard)
   return (
     <Flex gap={16} className='center-content cards-center-content'>
       {cards.map((item, index) => {
@@ -71,7 +70,6 @@ type CardsItemProps = {
   desConfig: TextStyle
 }
 const CardsItem = (props: CardsItemProps) => {
-  console.log(props.item)
   const [mediaType, setMediaType] = useState<'1' | '2' | '3'>() // '1' | '2' | '3' 图片｜音频｜视频
   useEffect(() => {
     let { mediaContentType = '' } = props.item.media
@@ -138,7 +136,7 @@ const CardsItem = (props: CardsItemProps) => {
         {props.item.suggestions?.map((item, index) => (
           <div className='card-btn' key={index}>
             <div className='card-btn-input fx-center-center'>
-              {item.action.displayText}
+              {item.action?.displayText || item.reply?.displayText || ''}
             </div>
           </div>
         ))}
