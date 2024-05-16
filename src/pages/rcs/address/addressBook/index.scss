@@ -1,4 +1,10 @@
 [data-class='address-book-list'] {
+  .create-btn {
+    .ant-form-item-control-input-content {
+      text-align: -webkit-right;
+    }
+  }
+
   .trapezoid {
     margin-top: 10px;
     position: relative;

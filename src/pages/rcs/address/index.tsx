@@ -17,12 +17,14 @@ import './index.scss'
 
 export default function Fn() {
   const [activeKey, setActiveKey] = useState('1')
+  const [isVisible, setIsVisible] = useState(false)
+  const [addressInfo, setAddressInfo] = useState<any>() //地址簿的详细信息
   const onChange = (key: string) => {
     setActiveKey(key)
+    if (key == '1' || key == '2') {
+      setIsVisible(false)
+    }
   }
-  const [isVisible, setIsVisible] = useState(false)
-
-  const [addressInfo, setAddressInfo] = useState() //地址簿的详细信息
 
   const toOne = () => {
     setActiveKey('1')
@@ -45,7 +47,7 @@ export default function Fn() {
     },
     {
       key: '3',
-      label: `${isVisible ? '地址簿详情' : ''}`,
+      label: `${isVisible ? addressInfo.name : ''}`,
       children: (
         <AddressDetail onchildrenMethod={toOne} addressInfo={addressInfo} />
       ),

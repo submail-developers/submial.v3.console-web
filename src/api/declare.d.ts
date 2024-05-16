@@ -611,9 +611,24 @@ declare module 'apis' {
       sign: string
       tag: string
     }
-    interface GetRcsTempListRes {
+    interface GetAddressListRes {
       rows: number
       addressbooks: GetMobAddressbooksItems[]
+    }
+    // 获取地址簿详情参数
+    interface GetMobAddressbookDetailParams {
+      page: number
+      id: string
+      address: string
+    }
+    // 获取地址簿详情返回值
+    interface GetMobAddressbookDetailItems {
+      address: string
+      id: string
+    }
+    interface GetAddressbookDetailRes {
+      rows: number
+      addressbook: GetMobAddressbookDetailItems[]
     }
     interface CreateAddressbooksParams {
       name: string
@@ -621,6 +636,32 @@ declare module 'apis' {
     }
     // 删除地址簿
     interface DeleteAddressbooksParams {
+      id: string
+    }
+    // 添加地址簿号码
+    interface AddAddressMobileListParams {
+      id: string
+      address: string
+      data: any
+    }
+    // 上传地址簿文件
+    interface UploadAddressFileParams {
+      file: any
+    }
+    interface UploadAddressFileRes {
+      id: string
+      hascontact: number
+      status: string
+      type: string
+      file: string
+    }
+    // 删除手机号参数
+    interface DeleteAddressMobParams {
+      id: string
+      addressbook: string
+    }
+    // 清空地址簿参数
+    interface TruncateMobParams {
       id: string
     }
   }

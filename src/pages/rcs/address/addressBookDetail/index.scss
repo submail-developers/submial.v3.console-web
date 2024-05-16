@@ -2,6 +2,11 @@
   .icon-upload {
     font-size: 18px;
   }
+  .del-set {
+    .ant-form-item-control-input {
+      text-align: -webkit-right;
+    }
+  }
   .trapezoid {
     margin-top: 10px;
     position: relative;
@@ -63,6 +68,10 @@
       margin: 2px;
       border: 0;
     }
+  }
+  .batch-del {
+    color: #1764ff;
+    width: 120px;
   }
   .handle-address {
     background-color: #f6f7f9;
