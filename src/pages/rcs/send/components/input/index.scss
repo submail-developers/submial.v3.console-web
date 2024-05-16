@@ -1,0 +1,63 @@
+.send-address-input {
+  .input-item {
+    height: 65px;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.075);
+    }
+    &.header {
+      .mobile {
+        border-top: 1px solid #d9d9d9;
+        justify-content: center;
+      }
+      .add,
+      .del {
+        border-top: 1px solid #d9d9d9;
+      }
+    }
+    .mobile {
+      height: 100%;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      flex: 1;
+      flex-shrink: 0;
+      border-bottom: 1px solid #d9d9d9;
+      border-right: 1px solid #d9d9d9;
+      border-left: 1px solid #d9d9d9;
+    }
+    .add {
+      width: 74px;
+      height: 100%;
+      padding: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-right: 1px solid #d9d9d9;
+      border-bottom: 1px solid #d9d9d9;
+    }
+    .del {
+      width: 74px;
+      height: 100%;
+      padding: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-right: 1px solid #d9d9d9;
+      border-bottom: 1px solid #d9d9d9;
+    }
+
+    .handle-btn {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: transparent;
+      cursor: pointer;
+      &:hover {
+        background: #e7e7e7 linear-gradient(180deg, #ebebeb, #e7e7e7) repeat-x;
+      }
+    }
+  }
+}

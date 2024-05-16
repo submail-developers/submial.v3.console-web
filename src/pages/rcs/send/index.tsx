@@ -33,7 +33,6 @@ import CardMob from '@/pages/rcs/template/create/card/item'
 
 import { getChatbot, createRcsSend, getRcsTempList } from '@/api'
 import { API } from 'apis'
-import { Entries } from './type'
 
 import codeImg from '@/assets/rcs/send1.png'
 
@@ -52,7 +51,7 @@ export default function CreateSend() {
   const [chatbot, setChatbot] = useState<API.ChatbotItem>()
   const [tempInfo, setTempInfo] = useState<API.RcsTempListItem>()
   const [showChatbotMenu, setShowChatbotMenu] = useState(true)
-  const [entries, setentries] = useState<Entries>([])
+  const [entries, setentries] = useState<API.EntriesItem[]>([])
 
   const getChatbotList = async () => {
     try {
@@ -68,7 +67,7 @@ export default function CreateSend() {
         form.setFieldValue('appid', res.list[0].id)
         setChatbot(res.list[0])
         if (res.list[0].menu) {
-          setentries(res.list[0].menu?.menu.entries)
+          setentries(res.list[0].menu?.menu.entries || [])
         }
       }
     } catch (error) {}
@@ -78,6 +77,7 @@ export default function CreateSend() {
     const selectChatbot = chatbotList.find((item) => item.id == val)
     if (selectChatbot) {
       setChatbot(selectChatbot)
+      setentries(selectChatbot.menu?.menu.entries || [])
     }
   }
 
@@ -113,7 +113,16 @@ export default function CreateSend() {
         id: id,
       })
       if (res.list.length == 1) {
-        setTempInfo(res.list[0])
+        let checked = res.list[0].checked
+        if (checked == '0') {
+          message.error('该模版审核中，请重新选择模版')
+          nav('/console/rcs/send/0/0', { replace: true })
+        } else if (checked == '2') {
+          message.error('该模版审核失败，请重新选择模版')
+          nav('/console/rcs/send/0/0', { replace: true })
+        } else {
+          setTempInfo(res.list[0])
+        }
       } else {
         message.error('未查询到模版，请重新选择模版')
         nav('/console/rcs/send/0/0', { replace: true })
@@ -260,51 +269,41 @@ export default function CreateSend() {
                       }`}>
                       <span className='icon iconfont icon-sanjiao jiantou fn24'></span>
                       <Row gutter={24} wrap>
-                        <Col
-                          span={24}
-                          sm={12}
-                          lg={8}
-                          className='fx-center-center'>
-                          <div className='p-t-16'>
-                            <div className='menu-1'>短信菜单1</div>
-                            <div className='menu-2-wrap p-l-12 p-t-4'>
-                              <div className='menu-2'>回复消息1</div>
-                              <div className='menu-2'>回复消息1</div>
-                              <div className='menu-2'>回复消息1</div>
-                              <div className='menu-2'>回复消息1</div>
-                            </div>
-                          </div>
-                        </Col>
-                        <Col
-                          span={24}
-                          sm={12}
-                          lg={8}
-                          className='fx-center-center'>
-                          <div className='p-t-16'>
-                            <div className='menu-1'>短信菜单2</div>
-                            <div className='menu-2-wrap p-l-12 p-t-4'>
-                              <div className='menu-2'>回复消息1</div>
-                              <div className='menu-2'>回复消息1</div>
-                              <div className='menu-2'>回复消息1</div>
-                              <div className='menu-2'>回复消息1</div>
-                            </div>
-                          </div>
-                        </Col>
-                        <Col
-                          span={24}
-                          sm={12}
-                          lg={8}
-                          className='fx-center-center'>
-                          <div className='p-t-16'>
-                            <div className='menu-1'>短信菜单3</div>
-                            <div className='menu-2-wrap p-l-12 p-t-4'>
-                              <div className='menu-2'>回复消息1</div>
-                              <div className='menu-2'>回复消息1</div>
-                              <div className='menu-2'>回复消息1</div>
-                              <div className='menu-2'>回复消息1</div>
-                            </div>
-                          </div>
-                        </Col>
+                        {entries.map((item, index) => {
+                          return (
+                            <Col key={index} span={24} sm={12} lg={8}>
+                              <div className='p-t-16'>
+                                <div className='menu-1' title='一级菜单'>
+                                  {item.action?.displayText ||
+                                    item.reply?.displayText ||
+                                    item.menu?.displayText ||
+                                    ''}
+                                </div>
+                                <div className='menu-2-wrap p-l-12 p-t-4'>
+                                  {item?.menu &&
+                                    item?.menu.entries.map((itm, idx) => {
+                                      return (
+                                        <div
+                                          className='menu-2'
+                                          key={idx}
+                                          title='二级菜单'>
+                                          {itm.action?.displayText ||
+                                            itm.reply?.displayText ||
+                                            ''}
+                                        </div>
+                                      )
+                                    })}
+                                </div>
+                              </div>
+                            </Col>
+                          )
+                        })}
+
+                        {entries.length == 0 && (
+                          <Col span={24} className='p-16 fx-center-center'>
+                            <Empty description='未配置固定菜单' />
+                          </Col>
+                        )}
                       </Row>
                     </div>
                   </Col>
@@ -321,7 +320,7 @@ export default function CreateSend() {
                     <Divider className='line m-y-12'></Divider>
                   </Col>
                   <Col span={24}>
-                    <ContactsTabs name='contacts' form={form} />
+                    <ContactsTabs form={form} />
                   </Col>
 
                   <Col span={24}>

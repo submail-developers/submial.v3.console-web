@@ -5,6 +5,8 @@
     cursor: pointer;
     margin-right: 8px;
     transition: color 0.3s;
+    word-break: keep-all;
+    word-wrap: normal;
     &:after {
       content: '';
       position: absolute;
@@ -32,5 +34,11 @@
         background-color: var(--primary-color);
       }
     }
+  }
+  .contacts-content {
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    max-height: 1000px;
+    overflow-y: scroll;
   }
 }

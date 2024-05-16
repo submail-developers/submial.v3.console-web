@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "40362425",
+      "name": "减号",
+      "font_class": "jian",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "40335071",
+      "name": "演示",
+      "font_class": "yanshi1",
+      "unicode": "e656",
+      "unicode_decimal": 58966
+    },
+    {
+      "icon_id": "40335045",
+      "name": "演示",
+      "font_class": "yanshi",
+      "unicode": "e655",
+      "unicode_decimal": 58965
+    },
+    {
       "icon_id": "40219579",
       "name": "彩信",
       "font_class": "mms",

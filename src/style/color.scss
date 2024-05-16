@@ -35,6 +35,10 @@
   --table-bg: #f6f7f9;
   --table-bg-active: #e7ebf1;
   --table-bg-hover: #e7ebf1;
+  // 自定义警告-蓝色
+  --warning-blue-color: #003883;
+  --warning-blue-border: #b8d6fe;
+  --warning-blue-bg: #cce1fe linear-gradient(180deg, #d4e6fe, #cce1fe) repeat-x;
   // 自定义警告-黄色
   --warning-yellow-color: #856100;
   --warning-yellow-border: #ffecb8;
@@ -74,6 +78,18 @@
 .color-tab-active {
   color: var(--table-color-active);
   background-color: var(--table-bg-active);
+}
+// 警告-蓝色
+.color-warning-blue {
+  color: var(--warning-blue-color);
+  border: 1px solid var(--warning-blue-border);
+  background: var(--warning-blue-bg);
+}
+// 警告-黄色
+.color-warning-yellow {
+  color: var(--warning-yellow-color);
+  border: 1px solid var(--warning-yellow-border);
+  background: var(--warning-yellow-bg);
 }
 // 警告-黄色
 .color-warning-yellow {
