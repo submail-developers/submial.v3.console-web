@@ -6,9 +6,23 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "40219579",
+      "name": "彩信",
+      "font_class": "mms",
+      "unicode": "e654",
+      "unicode_decimal": 58964
+    },
+    {
+      "icon_id": "40213377",
+      "name": "提审",
+      "font_class": "tishen",
+      "unicode": "e653",
+      "unicode_decimal": 58963
+    },
+    {
       "icon_id": "40180879",
-      "name": "daoru",
-      "font_class": "congwenjiandaoru",
+      "name": "导入",
+      "font_class": "daoru",
       "unicode": "e64f",
       "unicode_decimal": 58959
     },
@@ -21,45 +35,24 @@
     },
     {
       "icon_id": "40180877",
-      "name": "手动粘贴",
-      "font_class": "shoudongniantie",
+      "name": "粘贴",
+      "font_class": "paste",
       "unicode": "e651",
       "unicode_decimal": 58961
     },
     {
       "icon_id": "40180876",
-      "name": "手动输入",
-      "font_class": "shoudongshuru",
+      "name": "输入",
+      "font_class": "input",
       "unicode": "e652",
       "unicode_decimal": 58962
     },
     {
       "icon_id": "40180850",
-      "name": "xuanze",
-      "font_class": "xuanze",
+      "name": "选择",
+      "font_class": "choose",
       "unicode": "e64e",
       "unicode_decimal": 58958
-    },
-    {
-      "icon_id": "40176810",
-      "name": "移动logo",
-      "font_class": "yidonglogo",
-      "unicode": "e64d",
-      "unicode_decimal": 58957
-    },
-    {
-      "icon_id": "40176797",
-      "name": "电信logo",
-      "font_class": "dianxinlogo",
-      "unicode": "e64b",
-      "unicode_decimal": 58955
-    },
-    {
-      "icon_id": "40176805",
-      "name": "联通logo",
-      "font_class": "liantonglogo",
-      "unicode": "e64c",
-      "unicode_decimal": 58956
     },
     {
       "icon_id": "40143566",
@@ -102,13 +95,6 @@
       "font_class": "b",
       "unicode": "e648",
       "unicode_decimal": 58952
-    },
-    {
-      "icon_id": "39998669",
-      "name": "导入",
-      "font_class": "daoru",
-      "unicode": "e632",
-      "unicode_decimal": 58930
     },
     {
       "icon_id": "39989401",

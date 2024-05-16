@@ -13,9 +13,9 @@ const { TextArea } = Input
 interface DataType extends API.GetChatbotListItem {}
 export default function Fn({ onGetStatsu }) {
   const { id } = useParams()
+  const [openTypeModal, setopenTypeModal] = useState(false)
+  const [openTypeModal2, setopenTypeModal2] = useState(false)
 
-  const addDialogRef: MutableRefObject<any> = useRef(null)
-  const secDialogRef: MutableRefObject<any> = useRef(null)
   const [detail, setDetail] = useState<API.ChatbotItem>()
   const [isVisible, setIsVisible] = useState(false)
   const getDetail = async () => {
@@ -139,7 +139,7 @@ export default function Fn({ onGetStatsu }) {
       ),
     },
     {
-      title: '下挂巧克力',
+      title: '',
       width: 160,
       className: 'paddingL20',
       dataIndex: 'secondCont',
@@ -154,7 +154,7 @@ export default function Fn({ onGetStatsu }) {
       ),
     },
     {
-      title: '菜单',
+      title: '',
       width: 160,
       className: 'paddingL20',
       dataIndex: 'mean',
@@ -174,8 +174,8 @@ export default function Fn({ onGetStatsu }) {
             <Button
               type='link'
               style={{ paddingLeft: 0 }}
-              onClick={() => mainMenu()}>
-              <i className='icon iconfont icon-bianji'></i>
+              onClick={() => setopenTypeModal(true)}>
+              <i className='icon iconfont icon-jia'></i>
             </Button>
           </Tooltip>
           <Tooltip title='重置'>
@@ -202,8 +202,8 @@ export default function Fn({ onGetStatsu }) {
                 <Button
                   type='link'
                   style={{ paddingLeft: 0 }}
-                  onClick={() => editSecMean()}>
-                  <i className='icon iconfont icon-bianji'></i>
+                  onClick={() => setopenTypeModal2(true)}>
+                  <i className='icon iconfont icon-jia'></i>
                 </Button>
               </Tooltip>
               <Tooltip title='重置'>
@@ -225,7 +225,7 @@ export default function Fn({ onGetStatsu }) {
               disabled
               type='link'
               style={{ paddingLeft: '0px' }}
-              onClick={() => addSecMean()}>
+              onClick={() => setopenTypeModal2(true)}>
               <i className='icon iconfont icon-jia'></i>
             </Button>
           )}
@@ -347,18 +347,6 @@ export default function Fn({ onGetStatsu }) {
     },
   ]
 
-  // 编辑主菜单
-  const mainMenu = () => {
-    addDialogRef.current.open()
-  }
-  // 添加二级菜单
-  const addSecMean = (isAdd: boolean = true) => {
-    secDialogRef.current.open({ isAdd })
-  }
-  // 编辑二级菜单
-  const editSecMean = (isAdd: boolean = false) => {
-    secDialogRef.current.open({ isAdd })
-  }
   const editStatus = false
 
   return (
@@ -411,8 +399,14 @@ export default function Fn({ onGetStatsu }) {
           </div>
         </Col>
       </Row>
-      <MainDialog ref={addDialogRef} />
-      <SecDialog ref={secDialogRef} />
+      <MainDialog
+        open={openTypeModal}
+        onCancel={() => setopenTypeModal(false)}
+      />
+      <SecDialog
+        open={openTypeModal2}
+        onCancel={() => setopenTypeModal2(false)}
+      />
     </div>
   )
 }

@@ -67,7 +67,7 @@
 /* 交叉轴对齐方式1 居中 */
 .fx-y-center,
 .fx-start-center {
-  display: flex;
+  display: flex !important;
   align-items: center;
 }
 

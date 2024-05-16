@@ -19,14 +19,15 @@ import { API } from 'apis'
 import './editSecDialog.scss'
 
 interface Props {
-  // onSearch: () => void
+  open: boolean
+  onCancel: () => void
 }
 interface OpenParams {}
 interface InitOpen {
   isAdd: boolean
 }
 
-const Dialog = ({}: Props, ref: any) => {
+const Dialog = (props: Props, ref: any) => {
   const [form] = Form.useForm()
   const [isAdd, setisAdd] = useState<boolean>(true)
   const onChange: DatePickerProps['onChange'] = (date, dateString) => {
@@ -58,7 +59,7 @@ const Dialog = ({}: Props, ref: any) => {
   const handleOk = async () => {}
 
   const handleCancel = () => {
-    setIsModalOpen(false)
+    props.onCancel()
   }
 
   useImperativeHandle(ref, () => {
@@ -122,15 +123,15 @@ const Dialog = ({}: Props, ref: any) => {
 
   return (
     <Modal
+      open={props.open}
+      onCancel={props.onCancel}
       title={isAdd ? '新增二级菜单事件' : '编辑二级菜单事件'}
       width={480}
       style={{ top: 240 }}
       data-class='chose-secEditDialog'
       closable={false}
       destroyOnClose
-      onCancel={handleCancel}
-      wrapClassName='modal-reset'
-      open={isModalOpen}>
+      wrapClassName='modal-reset'>
       <Form
         name='form-01'
         form={form}

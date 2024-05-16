@@ -44,12 +44,12 @@ export const login = () => {
   return request.post<any, API.Response<any>, any>(
     'console/api/account/login',
     {
-      // account: 'duanlangjd@126.com',
-      // password: 'yanzhi2010',
+      account: 'duanlangjd@126.com',
+      password: 'yanzhi2010',
       // account: '18616200024@163.com',
       // password: 'sumeng',
-      account: '514030829@qq.com',
-      password: 'yanzhi2010',
+      // account: '514030829@qq.com',
+      // password: 'yanzhi2010',
       //
     },
   )
@@ -156,10 +156,19 @@ export const delRcsMeteial = (data: { id: string }) => {
     data,
   )
 }
-// 创建chatbot
-export const createChatbot = (data: API.CreateChatbotParams) => {
-  return request.post<any, any, API.CreateChatbotParams>(
-    '/console/api/rcs/create_chatbot',
+// 提交审核chatbot
+export const saveChatbot = (data: API.SaveChatbotParams) => {
+  return request.post<any, any, API.SaveChatbotParams>(
+    '/console/api/rcs/save_chatbot',
+    {
+      ...data,
+    },
+  )
+}
+// 保存chatbot
+export const temporarySaveChatbot = (data: API.temporarySaveChatbotParams) => {
+  return request.post<any, any, API.temporarySaveChatbotParams>(
+    '/console/api/rcs/temporary_save_chatbot',
     {
       ...data,
     },
@@ -188,6 +197,15 @@ export const getChatbot = (data: API.GetChatbotParams) => {
 export const refreshAppkey = (data: API.RefreshAppkeyParams) => {
   return request.post<any, any, API.RefreshAppkeyParams>(
     '/console/api/rcs/refresh_appkey',
+    {
+      ...data,
+    },
+  )
+}
+//编辑固定菜单
+export const saveFixedMenu = (data: API.SaveFixedMenuParams) => {
+  return request.post<any, any, API.SaveFixedMenuParams>(
+    '/console/api/rcs/save_fixed_menu',
     {
       ...data,
     },
@@ -290,4 +308,32 @@ export const updateChatbot = (data: API.updateChatbotParams) => {
     API.Response<API.updateChatbotItems>,
     API.updateChatbotParams
   >('console/api/rcs/update_chatbot', { ...data })
+}
+
+// 获取地址簿
+export const getMobAddressbooks = (data: API.GetMobAddressbooksParams) => {
+  return request.post<any, API.GetRcsTempListRes, API.GetMobAddressbooksParams>(
+    '/console/api/addressbook/get_mob_addressbooks',
+    {
+      ...data,
+    },
+  )
+}
+
+// 创建地址簿
+export const createAddressbooks = (data: API.CreateAddressbooksParams) => {
+  return request.post<any, any, API.CreateAddressbooksParams>(
+    'console/api/addressbook/save_mob_addressbook',
+    { ...data },
+  )
+}
+
+// 删除地址簿
+export const deleteAddressbooks = (data: API.DeleteAddressbooksParams) => {
+  return request.post<any, any, API.DeleteAddressbooksParams>(
+    'console/api/addressbook/delete_mob_addressbook',
+    {
+      ...data,
+    },
+  )
 }
