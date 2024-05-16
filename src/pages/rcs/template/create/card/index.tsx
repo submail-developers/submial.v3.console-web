@@ -25,7 +25,6 @@ import {
 } from '@/pages/rcs/template/create/type'
 import type {
   ActionType,
-  SuggestionItem,
   DialerActionType,
 } from '@/pages/rcs/template/create/type'
 

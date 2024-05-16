@@ -33,6 +33,7 @@ import CardMob from '@/pages/rcs/template/create/card/item'
 
 import { getChatbot, createRcsSend, getRcsTempList } from '@/api'
 import { API } from 'apis'
+import { Entries } from './type'
 
 import codeImg from '@/assets/rcs/send1.png'
 
@@ -51,6 +52,7 @@ export default function CreateSend() {
   const [chatbot, setChatbot] = useState<API.ChatbotItem>()
   const [tempInfo, setTempInfo] = useState<API.RcsTempListItem>()
   const [showChatbotMenu, setShowChatbotMenu] = useState(true)
+  const [entries, setentries] = useState<Entries>([])
 
   const getChatbotList = async () => {
     try {
@@ -65,6 +67,9 @@ export default function CreateSend() {
       if (res.list.length > 0) {
         form.setFieldValue('appid', res.list[0].id)
         setChatbot(res.list[0])
+        if (res.list[0].menu) {
+          setentries(res.list[0].menu?.menu.entries)
+        }
       }
     } catch (error) {}
   }

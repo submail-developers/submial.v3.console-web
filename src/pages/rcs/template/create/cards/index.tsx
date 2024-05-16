@@ -25,10 +25,8 @@ import {
 } from '@/pages/rcs/template/create/type'
 import type {
   ActionType,
-  SuggestionItem,
   DialerActionType,
   CardsItem,
-  ContentItem,
   GeneralPurposeCards,
 } from '@/pages/rcs/template/create/type'
 

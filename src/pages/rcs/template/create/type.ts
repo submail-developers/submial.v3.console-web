@@ -1,3 +1,5 @@
+import { API } from 'apis'
+
 // 素材
 export type Media = {
   mediaUrl: string
@@ -18,18 +20,18 @@ export type ActionType =
   | 'dialerAction'
   | 'mapAction'
   | 'calendarAction'
-  | 'composeAction'
-  | 'deviceAction'
-  | 'settingsAction'
+// | 'composeAction'
+// | 'deviceAction'
+// | 'settingsAction'
 
 export const actionTypeArray: ActionType[] = [
   'urlAction',
   'dialerAction',
   'mapAction',
   'calendarAction',
-  'composeAction',
-  'deviceAction',
-  'settingsAction',
+  // 'composeAction',
+  // 'deviceAction',
+  // 'settingsAction',
 ]
 
 // 拨号类型: 普通通话 | 增强通话 | 视频通话
@@ -43,54 +45,7 @@ export const dialerActionTypeArray: DialerActionType[] = [
   'dialVideoCall',
 ]
 
-export type Action = {
-  // 回复事件
-  reply?: {
-    displayText: string
-  }
-  // 交互事件
-  action?: {
-    displayText?: string
-    // 链接事件
-    urlAction?: {
-      openUrl: {
-        url: string
-        application: 'browser' | 'webview' // 内置浏览器 | 默认浏览器
-        // application为webview可用，可选值：<br/>full：全屏<br/>half：半屏<br/>tall：浮屏
-        viewMode?: 'full' | 'half' | 'tall'
-        parameters?: string // url的参数 如 "visitorId=10001&code=123456"
-      }
-    }
-    // 拨打电话
-    dialerAction?: {
-      dialPhoneNumber?: {
-        dialPhoneNumber: string
-        fallbackUrl?: string // 话单推送地址
-      }
-      // 	增强通话事件
-      dialEnrichedCall?: {
-        dialPhoneNumber: string
-        fallbackUrl?: string // 话单推送地址
-        subject?: string
-      }
-      // 视频通话
-      dialVideoCall?: {
-        dialPhoneNumber: string
-        fallbackUrl?: string // 话单推送地址
-      }
-    }
-    // 地图事件
-    mapAction?: {
-      // mapType: '0' ｜ "1" // 地图类型 0经纬度1位置
-      location: {
-        longitude?: number | string
-        latitude?: number | string
-        label?: string
-        query?: string
-      }
-    }
-  }
-}
+export type Action = API.RcsSuggestionItem
 
 // 事件类型
 export const btnTypes = [
@@ -144,9 +99,6 @@ export type Reply = {
   }
 }
 
-// 按钮｜悬浮按钮配置
-export type SuggestionItem = Action
-
 // 单卡片message
 export type CardMessage = {
   generalPurposeCard: GeneralPurposeCard
@@ -160,7 +112,7 @@ export type CardContent = {
   title: string
   description: string
   media: Media
-  suggestions: SuggestionItem[]
+  suggestions: Action[]
 }
 // 单卡片layout
 export type CardLayout = {
@@ -170,8 +122,8 @@ export type CardLayout = {
   descriptionFontStyle?: string // 描述
   style?: string
 }
-// 多卡片 message
 
+// 多卡片 message
 export type CardsMessage = {
   generalPurposeCardCarousel: GeneralPurposeCards
 }
@@ -195,5 +147,5 @@ export type ContentItem = {
   media: Media
   title: string
   description: string
-  suggestions: SuggestionItem[]
+  suggestions: Action[]
 }

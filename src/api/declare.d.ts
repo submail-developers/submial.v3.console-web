@@ -131,7 +131,11 @@ declare module 'apis' {
       provider: string
       providerSwitchCode: '1' | '0'
       description: string
-      menu: any
+      menu: {
+        menu: {
+          entries: EntriesItem[]
+        }
+      }
       menu_status: '1' | '2' | '3' // 固定菜单审核状态 1通过  2不通过  3审核中
       genericCssTemplate: string
       autograph: string
@@ -140,6 +144,9 @@ declare module 'apis' {
       eTag: string
       debugWhiteAddress: string // 白名单
       sendApi: string
+    }
+    interface EntriesItem extends RcsSuggestionItem {
+      menu?: EntriesItem
     }
     interface GetChatbotRes {
       status: string
@@ -285,8 +292,10 @@ declare module 'apis' {
       title: string
       type: string
       contentType: string
-      message: any
-      suggestions: any
+      message?: any
+      suggestions?: {
+        suggestions: RcsSuggestionItem[]
+      }
       sms: string
       smsContent: string
       mms: string
@@ -305,6 +314,62 @@ declare module 'apis' {
       folder: string
       bcTemplate: null
       rejectReason: string
+    }
+
+    interface RcsSuggestionItem {
+      // 回复事件
+      reply?: RcsReply
+      // 交互事件
+      action?: RcsAction
+    }
+
+    interface RcsReply {
+      displayText: string
+      // 上行文本携带的数据标识
+      postback?: {
+        data: string
+      }
+    }
+    interface RcsAction {
+      displayText?: string
+      // 链接事件
+      urlAction?: {
+        openUrl: {
+          url: string
+          application: 'browser' | 'webview' // 内置浏览器 | 默认浏览器
+          // application为webview可用，可选值：<br/>full：全屏<br/>half：半屏<br/>tall：浮屏
+          viewMode?: 'full' | 'half' | 'tall'
+          parameters?: string // url的参数 如 "visitorId=10001&code=123456"
+        }
+      }
+      // 拨打电话
+      dialerAction?: {
+        dialPhoneNumber?: {
+          dialPhoneNumber: string
+          fallbackUrl?: string // 话单推送地址
+        }
+        // 	增强通话事件
+        dialEnrichedCall?: {
+          dialPhoneNumber: string
+          fallbackUrl?: string // 话单推送地址
+          subject?: string
+        }
+        // 视频通话
+        dialVideoCall?: {
+          dialPhoneNumber: string
+          fallbackUrl?: string // 话单推送地址
+        }
+      }
+      // 地图事件
+      mapAction?: {
+        // mapType: '0' ｜ "1" // 地图类型 0经纬度1位置
+        location: {
+          longitude?: number | string
+          latitude?: number | string
+          label?: string
+          query?: string
+        }
+      }
     }
 
     interface GetMmsListParams {
