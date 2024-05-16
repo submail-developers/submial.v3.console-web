@@ -44,12 +44,12 @@ export const login = () => {
   return request.post<any, API.Response<any>, any>(
     'console/api/account/login',
     {
-      account: 'duanlangjd@126.com',
-      password: 'yanzhi2010',
+      // account: 'duanlangjd@126.com',
+      // password: 'yanzhi2010',
       // account: '18616200024@163.com',
       // password: 'sumeng',
-      // account: '514030829@qq.com',
-      // password: 'yanzhi2010',
+      account: '514030829@qq.com',
+      password: 'yanzhi2010',
       //
     },
   )

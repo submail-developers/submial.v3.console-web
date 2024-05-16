@@ -46,3 +46,7 @@ export const getFileName = ({
   }
   return name
 }
+
+export const getPhoneLineBreak = (text: string): string => {
+  return text.replace(/,/g, '\n')
+}
