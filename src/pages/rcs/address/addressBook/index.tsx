@@ -24,13 +24,11 @@ import { getMobAddressbooks, deleteAddressbooks } from '@/api'
 import { API } from 'apis'
 
 import './index.scss'
-import { color } from 'echarts/core'
 import { message } from '@/components/staticFn/staticFn'
 const { Option } = Select
 
 interface Props {
-  onchildrenMethod: any
-  // : () => void
+  onchildrenMethod: (info: any) => void
 }
 
 const addresssIcon = {
@@ -193,7 +191,7 @@ export default function Fn(props: Props) {
         </Col>
 
         <Col span={6} md={4} xl={3} style={{ marginLeft: 'auto' }}>
-          <Form.Item label=' '>
+          <Form.Item label=' ' className='create-btn'>
             <Button
               type='primary'
               className='fx-start-center'

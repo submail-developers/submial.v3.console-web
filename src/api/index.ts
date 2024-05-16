@@ -312,12 +312,24 @@ export const updateChatbot = (data: API.updateChatbotParams) => {
 
 // 获取地址簿
 export const getMobAddressbooks = (data: API.GetMobAddressbooksParams) => {
-  return request.post<any, API.GetRcsTempListRes, API.GetMobAddressbooksParams>(
+  return request.post<any, API.GetAddressListRes, API.GetMobAddressbooksParams>(
     '/console/api/addressbook/get_mob_addressbooks',
     {
       ...data,
     },
   )
+}
+// 获取地址簿详情
+export const getMobAddressbookDetail = (
+  data: API.GetMobAddressbookDetailParams,
+) => {
+  return request.post<
+    any,
+    API.GetAddressbookDetailRes,
+    API.GetMobAddressbookDetailParams
+  >('/console/api/addressbook/get_mob_addressbook', {
+    ...data,
+  })
 }
 
 // 创建地址簿
@@ -332,6 +344,50 @@ export const createAddressbooks = (data: API.CreateAddressbooksParams) => {
 export const deleteAddressbooks = (data: API.DeleteAddressbooksParams) => {
   return request.post<any, any, API.DeleteAddressbooksParams>(
     'console/api/addressbook/delete_mob_addressbook',
+    {
+      ...data,
+    },
+  )
+}
+// 新增地址簿手机号码
+export const addAddressMobileList = (data: API.AddAddressMobileListParams) => {
+  return request.post<any, API.Response<any>, API.AddAddressMobileListParams>(
+    'console/api/addressbook/import_address_for_mob_addressbook',
+    { ...data },
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    },
+  )
+}
+
+// 上传地址簿文件
+export const uploadAddressFile = (data: API.UploadAddressFileParams) => {
+  return request.post<
+    any,
+    API.UploadAddressFileRes,
+    API.UploadAddressFileParams
+  >('/console/api/addressbook/upload_file_for_mob_addressbook', data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
+}
+
+// 删除手机号
+export const deleteAddressMob = (data: API.DeleteAddressMobParams) => {
+  return request.post<any, any, API.DeleteAddressMobParams>(
+    'console/api/addressbook/delete_mob_address',
+    {
+      ...data,
+    },
+  )
+}
+// 清空地址簿
+export const truncateMob = (data: API.TruncateMobParams) => {
+  return request.post<any, any, API.TruncateMobParams>(
+    'console/api/addressbook/truncate_mob_addressbook',
     {
       ...data,
     },

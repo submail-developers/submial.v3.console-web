@@ -1,21 +1,26 @@
-import { useState, useImperativeHandle, forwardRef } from 'react'
+import { useState, useImperativeHandle, forwardRef, useRef } from 'react'
 import { Modal, Form, App, Upload, Button, Input, Select } from 'antd'
+import { addAddressMobileList, uploadAddressFile } from '@/api'
 import { UploadOutlined } from '@ant-design/icons'
+import type { UploadFile, UploadProps } from 'antd/es/upload/interface'
 
 import { API } from 'apis'
 import './index.scss'
 const { Option } = Select
 
 interface Props {
+  id: string
   open: boolean
   isEdit: boolean
   onCancel: () => void
+  getAddressDetailList: () => void
 }
 
 const Dialog = (props: Props, ref: any) => {
   const [form] = Form.useForm()
   const { message } = App.useApp()
   const { TextArea } = Input
+  const [fileList, setFileList] = useState<UploadFile[]>([])
 
   const options = [
     { label: '无标签', value: 'none', color: '#282b31' },
@@ -27,11 +32,77 @@ const Dialog = (props: Props, ref: any) => {
     { label: '黄色', value: 'yellow', color: '#ffba00' },
   ]
 
-  const handleOk = () => {
-    props.onCancel()
+  const propsUpload: UploadProps = {
+    accept: '.txt, .xlsx, .xls, .csv, .vcf',
+    onRemove: (file) => {
+      const index = fileList.indexOf(file)
+      const newFileList = fileList.slice()
+      newFileList.splice(index, 1)
+      setFileList(newFileList)
+    },
+    beforeUpload: (file) => {
+      setFileList([file])
+      return false // 返回false-手动上传文件
+    },
+    fileList,
+  }
+
+  // 上传
+  const handleOk = async () => {
+    const params = await form.validateFields()
+    if (fileList.length == 0 && !Boolean(params.address)) {
+      message.warning('请输入手机号码或上传文件')
+      return
+    }
+
+    // 手机号上传
+    if (Boolean(params.address)) {
+      await addAddressMobileList({
+        ...params,
+        id: props.id,
+      })
+
+      if (fileList.length == 0) {
+        message.destroy()
+        message.success('上传成功！')
+        props.onCancel()
+        props.getAddressDetailList()
+        form.resetFields()
+        setFileList([])
+      }
+    }
+    // 文件上传
+    if (fileList.length > 0) {
+      // 上传文件
+      let res1
+      let groupedArray = []
+      res1 = await uploadAddressFile({
+        file: fileList[0],
+      })
+      groupedArray.push({
+        id: res1.id,
+        type: res1.type,
+        data: res1.file,
+      })
+
+      const res2 = await addAddressMobileList({
+        id: props.id,
+        address: '',
+        data: groupedArray,
+      })
+      if (res2.status == 'success') {
+        message.success('上传成功！')
+        props.onCancel()
+        props.getAddressDetailList()
+        form.resetFields()
+        setFileList([])
+      }
+    }
   }
 
   const handleCancel = () => {
+    form.resetFields()
+    setFileList([])
     props.onCancel()
   }
 
@@ -40,8 +111,9 @@ const Dialog = (props: Props, ref: any) => {
 
   return (
     <Modal
+      onOk={handleOk}
       open={props.open}
-      onCancel={props.onCancel}
+      onCancel={handleCancel}
       title={props.isEdit ? '编辑地址簿' : '导入联系人'}
       width={480}
       style={{ top: 240 }}
@@ -64,7 +136,7 @@ const Dialog = (props: Props, ref: any) => {
             </div>
           }
           labelCol={{ span: 24 }}
-          name='mobile'>
+          name='address'>
           <TextArea
             rows={6}
             className='color-words'
@@ -73,7 +145,7 @@ const Dialog = (props: Props, ref: any) => {
         </Form.Item>
         <Form.Item label='从文件导入'>
           <div key={Math.random()}>
-            <Upload {...props}>
+            <Upload {...propsUpload}>
               <Button icon={<UploadOutlined rev={undefined} />}>
                 选择文件
               </Button>

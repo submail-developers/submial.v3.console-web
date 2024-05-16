@@ -8,16 +8,44 @@ import {
   ConfigProvider,
   Popconfirm,
   Checkbox,
+  message,
+  Empty,
+  Select,
+  Dropdown,
+  Space,
 } from 'antd'
-import { IDIcon } from '@/components/aIcons'
+import type { MenuProps } from 'antd'
+import redImg from '@/assets/rcs/address/address_red.png'
+import purpleImg from '@/assets/rcs/address/address_purple.png'
+import cyanImg from '@/assets/rcs/address/address_cyan.png'
+import blueImg from '@/assets/rcs/address/address_blue.png'
+import greenImg from '@/assets/rcs/address/address_green.png'
+import yellowImg from '@/assets/rcs/address/address_yellow.png'
 import codeImg from '@/assets/rcs/address/blue.png'
-import CerateAddressDialog from './ImportDialog/index'
+import ImportAddressDialog from './ImportDialog/index'
 import MoveAddressDialog from './moveAddressDialog/index'
+import {
+  getMobAddressbookDetail,
+  getMobAddressbooks,
+  deleteAddressMob,
+  truncateMob,
+} from '@/api'
+import type { CheckboxValueType } from 'antd/es/checkbox/Group'
+
 import './index.scss'
 interface Props {
   onchildrenMethod: () => void
   addressInfo: any
 }
+const addresssIcon = {
+  '1': redImg,
+  '2': purpleImg,
+  '3': cyanImg,
+  '4': blueImg,
+  '5': greenImg,
+  '6': yellowImg,
+}
+const { Option } = Select
 
 export default function Fn(props: Props) {
   const [form] = Form.useForm()
@@ -25,8 +53,34 @@ export default function Fn(props: Props) {
   const [openCreateModal, setOpenCreateModal] = useState(false)
   const [openMoveModal, setOpenMoveModal] = useState(false)
   const [isEditMode, setIsEditMode] = useState(false)
+  const [currentPage, setcurrentPage] = useState<number>(1)
+  const [pageSize, setpageSize] = useState<number>(9)
+  const [total, setTotal] = useState<number>(0)
+  const [addressDetailList, setAddressDetailList] = useState([])
+  const [isVisible, setIsVisible] = useState(false)
+  const [checkValues, setCheckValues] = useState([])
   const CheckboxGroup = Checkbox.Group
 
+  // 获取地址簿详情
+  const getAddressDetailList = async () => {
+    try {
+      const formValues = await form.getFieldsValue()
+      const res = await getMobAddressbookDetail({
+        id: props.addressInfo.id,
+        address: formValues.keyword,
+        page: currentPage,
+      })
+      setAddressDetailList(res.addressbook)
+      setTotal(res.rows)
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      console.log(error)
+    }
+  }
+  useEffect(() => {
+    getAddressDetailList()
+  }, [currentPage, props.addressInfo])
   const showModal = (isEdit) => {
     setIsEditMode(isEdit)
     setOpenCreateModal(true)
@@ -41,7 +95,7 @@ export default function Fn(props: Props) {
   }
 
   const handleSearch = () => {
-    setLoading(true)
+    getAddressDetailList()
   }
 
   const mobileList = [
@@ -71,12 +125,63 @@ export default function Fn(props: Props) {
     },
   ]
 
+  const items: MenuProps['items'] = [
+    { label: '导出 TXT', key: 'txt' },
+    { label: '导出 CSV', key: 'csv' },
+    { label: '导出 EXCEL', key: 'excel' },
+    { label: '导出 JSON', key: 'json' },
+    { label: '导出 XML', key: 'xml' },
+  ]
   const showFirstTab = () => {
     props.onchildrenMethod()
   }
-  useEffect(() => {
-    console.log(props.addressInfo, '////')
-  }, [])
+
+  const onChange = (checkedValues: CheckboxValueType[]) => {
+    setCheckValues(checkedValues)
+    if (checkedValues.length > 0) {
+      setIsVisible(true)
+    } else {
+      setIsVisible(false)
+    }
+  }
+  // 删除手机号
+  const singleDeleteAddress = async (item) => {
+    try {
+      const res = await deleteAddressMob({
+        id: item.id,
+        addressbook: props.addressInfo.id,
+      })
+      if (res.status == 'success') {
+        message.success('删除成功')
+        getAddressDetailList()
+      }
+    } catch (error) {}
+  }
+  // 批量删除
+  const batchDel = async () => {
+    try {
+      const res = await deleteAddressMob({
+        id: checkValues.join(','),
+        addressbook: props.addressInfo.id,
+      })
+      if (res.status == 'success') {
+        message.success('删除成功')
+        getAddressDetailList()
+      }
+    } catch (error) {}
+  }
+  // 清空地址簿
+  const DeleteAllMob = async () => {
+    try {
+      const res = await truncateMob({
+        id: props.addressInfo.id,
+      })
+      if (res.status == 'success') {
+        message.success('删除成功')
+        getAddressDetailList()
+      }
+    } catch (error) {}
+  }
 
   return (
     <Form
@@ -99,7 +204,6 @@ export default function Fn(props: Props) {
               type='primary'
               className='w-100'
               htmlType='submit'
-              loading={loading}
               onClick={handleSearch}>
               查询
             </Button>
@@ -107,7 +211,7 @@ export default function Fn(props: Props) {
         </Col>
 
         <Col span={6} md={4} xl={3} style={{ marginLeft: 'auto' }}>
-          <Form.Item label=' '>
+          <Form.Item label=' ' className='del-set'>
             <ConfigProvider
               theme={{
                 token: {
@@ -123,7 +227,7 @@ export default function Fn(props: Props) {
                   placement='left'
                   title='警告'
                   description='确定清空地址簿吗？'
-                  // onConfirm={() => singleDeleteEvent(record.mob)}
+                  onConfirm={DeleteAllMob}
                   okText='确定'
                   cancelText='取消'
                   className='fx-y-center'>
@@ -138,36 +242,48 @@ export default function Fn(props: Props) {
 
       <div className='fx-between-center handle-address'>
         <div className='fx-start-center'>
-          <img src={codeImg} alt='' width='60' />
-          赛邮云技术部通讯录
+          <img src={addresssIcon[props.addressInfo.tag]} alt='' width='60' />
+          {props.addressInfo.name}
         </div>
-        <div className='ex-set fx-start-center'>
-          <div onClick={() => showModal(false)}>
-            <i className='icon iconfont icon-shanchu'></i>导入联系人
-          </div>
-          <div>
-            <i className='icon iconfont icon-shanchu'></i>导出为
-          </div>
-          <div onClick={showFirstTab}>
-            <i className='icon iconfont icon-shanchu'></i>返回地址簿
+        <div className='fx-between-center'>
+          {isVisible && (
+            <div className='batch-del' onClick={batchDel}>
+              <i className='icon iconfont icon-shanchu'></i> 删除
+            </div>
+          )}
+          <div className='ex-set fx-start-center'>
+            <div style={{ width: '100%' }}>
+              <div onClick={() => showModal(false)}>
+                <i className='icon iconfont icon-shanchu'></i>导入联系人
+              </div>
+              <div>
+                <Dropdown menu={{ items }} trigger={['click']}>
+                  <a onClick={(e) => e.preventDefault()}>
+                    <Space>导出</Space>
+                  </a>
+                </Dropdown>
+              </div>
+              <div onClick={showFirstTab}>
+                <i className='icon iconfont icon-shanchu'></i>返回地址簿
+              </div>
+            </div>
           </div>
         </div>
       </div>
       <CheckboxGroup
         style={{ width: '100%', marginTop: '20px' }}
         // value={selectedList}
-        // onChange={onChange}
-      >
+        onChange={onChange}>
         <Row wrap gutter={12} style={{ width: '100%' }}>
-          {mobileList.map((item) => (
+          {addressDetailList.map((item) => (
             <Col key={item.id}>
               <div className='checkbox-item fx-between-center'>
-                <Checkbox value={item.id}>{item.mob}</Checkbox>
+                <Checkbox value={item.id}>{item.address}</Checkbox>
                 <Popconfirm
                   placement='left'
                   title='警告'
-                  description='确定删除该条黑名单吗？'
-                  // onConfirm={() => singleDeleteEvent(item.id)}
+                  description='确定删除该条号码？'
+                  onConfirm={() => singleDeleteAddress(item)}
                   okText='确定'
                   cancelText='取消'>
                   <i className='icon iconfont icon-shanchu fn16'></i>
@@ -175,13 +291,18 @@ export default function Fn(props: Props) {
               </div>
             </Col>
           ))}
+          {addressDetailList.length == 0 && (
+            <Empty className='m-t-40' style={{ margin: '0 auto' }} />
+          )}
         </Row>
       </CheckboxGroup>
 
-      <CerateAddressDialog
+      <ImportAddressDialog
+        id={props.addressInfo.id}
         isEdit={isEditMode}
         open={openCreateModal}
         onCancel={handleCancel}
+        getAddressDetailList={getAddressDetailList}
       />
       <MoveAddressDialog
         open={openMoveModal}
