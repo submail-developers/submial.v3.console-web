@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Input, Form, Row, Col, List } from 'antd'
+import { Input, Row, Col } from 'antd'
 import './index.scss'
 
 type Props = {
@@ -13,19 +13,17 @@ type InputItemProps = {
 }
 const InputItem = (props: InputItemProps) => {
   const [value, setValue] = useState<string>()
-  useEffect(() => {
-    if (props.initValue) {
-      setValue(props.initValue)
-    }
-  }, [props.initValue])
+  // 输入内容
   const changeVal = (e) => {
     let val = e.target.value as string
     setValue(val)
   }
+  // 失去焦点
   const blurEvent = (e) => {
     let val = e.target.value as string
     props.onChange(val)
   }
+  // 粘贴
   const pasteVal = (event) => {
     // 取消默认粘贴行为
     event.preventDefault()
@@ -36,6 +34,12 @@ const InputItem = (props: InputItemProps) => {
     props.onChange(values)
   }
 
+  // 回显值
+  useEffect(() => {
+    if (props.initValue) {
+      setValue(props.initValue)
+    }
+  }, [props.initValue])
   return (
     <Input
       value={value}
@@ -81,11 +85,12 @@ export default function Fn(props: Props) {
       ]
     })
   }
+  // 记录编辑的值
   useEffect(() => {
     props.onChange(values.join(','))
   }, [values])
+  // 回显初始值
   useEffect(() => {
-    console.log(props.initValues)
     if (props.initValues) {
       setValues(props.initValues.split(','))
     }
