@@ -171,7 +171,7 @@ declare module 'apis' {
       sendApi: string
     }
     interface EntriesItem extends RcsSuggestionItem {
-      menu?: EntriesItem
+      menu?: EntriesItem[]
     }
     interface GetChatbotRes {
       status: string
