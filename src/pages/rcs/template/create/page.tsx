@@ -2,6 +2,7 @@ import { ReactNode, useState } from 'react'
 import { Space, Button, Tabs } from 'antd'
 import type { TabsProps } from 'antd'
 import { useSearchParams, useNavigate } from 'react-router-dom'
+import Footer from '@/components/rcsMobileFooter'
 
 import './page.scss'
 import '@/pages/rcs/template/mobile.scss'
@@ -100,6 +101,7 @@ export default function Fn(props: Props) {
             <div className='title fw-500'>{name}</div>
             <div className='temp-content'>{props.content}</div>
           </div>
+          <Footer />
         </div>
         <div className='check-tips'>{props.checkContent}</div>
       </div>

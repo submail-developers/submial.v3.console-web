@@ -27,6 +27,7 @@ import PageContent from '@/components/pageContent'
 import { usePoint } from '@/hooks'
 import { PlusOutlined, DownOutlined } from '@ant-design/icons'
 import { ProFormDependency } from '@ant-design/pro-components'
+import Footer from '@/components/rcsMobileFooter'
 import ContactsTabs from './components/contactsTabs'
 import Modal from './components/modal'
 import CardMob from '@/pages/rcs/template/create/card/item'
@@ -194,6 +195,7 @@ export default function CreateSend() {
                     )}
                   </div>
                 </div>
+                <Footer />
               </div>
               <div className='color-warning-yellow g-radius-8 p-x-16 p-y-8 fn12 m-t-24'>
                 <span className='icon iconfont icon-dengpao fn12 m-r-2'></span>

@@ -6,18 +6,32 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "40369030",
+      "name": "menu",
+      "font_class": "menu",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
+      "icon_id": "40368497",
+      "name": "设置标签",
+      "font_class": "shezhibiaoqian",
+      "unicode": "e657",
+      "unicode_decimal": 58967
+    },
+    {
+      "icon_id": "40368159",
+      "name": "移动文件夹",
+      "font_class": "yidongwenjianjia",
+      "unicode": "e656",
+      "unicode_decimal": 58966
+    },
+    {
       "icon_id": "40362425",
       "name": "减号",
       "font_class": "jian",
       "unicode": "e60e",
       "unicode_decimal": 58894
-    },
-    {
-      "icon_id": "40335071",
-      "name": "演示",
-      "font_class": "yanshi1",
-      "unicode": "e656",
-      "unicode_decimal": 58966
     },
     {
       "icon_id": "40335045",

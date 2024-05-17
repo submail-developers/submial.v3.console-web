@@ -20,7 +20,7 @@
     left: 50%;
     top: calc(50%);
     transform: translate(-50%, -50%);
-    // border: 1px solid #ccc;
+    z-index: 4;
     .title {
       position: absolute;
       top: -26px;
