@@ -1,10 +1,46 @@
 [data-class='address-book-list'] {
-  .create-btn {
+  .set-item {
+    background: #f6f7f9;
+    border-radius: 4px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 10px 15px;
+    .ant-dropdown-trigger,
+    .move-folder {
+      width: 96px;
+      opacity: 0.4;
+      pointer-events: none;
+      &.active {
+        pointer-events: auto;
+        opacity: 1;
+      }
+    }
     .ant-form-item-control-input-content {
-      text-align: -webkit-right;
+      display: flex;
+      align-items: center;
+      padding-left: 12px;
+      .icon-dizhibu1,
+      .icon-paixu {
+        color: #1764ff;
+      }
+    }
+    .ant-form-item {
+      margin-bottom: 0;
+      position: relative;
+      &::before {
+        position: absolute;
+        content: '';
+        left: 0;
+        top: 30%;
+        width: 1px;
+        height: 18px;
+        background: #d9d9d9;
+      }
+      .ant-select-selector {
+        background: none;
+      }
     }
   }
-
   .trapezoid {
     margin-top: 10px;
     position: relative;
@@ -64,7 +100,7 @@
     img {
       width: 92px;
     }
-    span {
+    .num-p {
       background-color: #e7ebf1;
       padding: 4px 18px;
       border-radius: 2px;
@@ -77,6 +113,9 @@
       justify-content: center;
       margin: 2px;
       border: 0;
+    }
+    label {
+      margin-top: 40px;
     }
   }
 }

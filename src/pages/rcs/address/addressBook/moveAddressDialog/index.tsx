@@ -1,22 +1,58 @@
-import { useState, useImperativeHandle, forwardRef } from 'react'
+import { useState, useImperativeHandle, forwardRef, useEffect } from 'react'
 import { Modal, Form, App } from 'antd'
-import codeImg from '@/assets/rcs/address/blue.png'
 
 import { API } from 'apis'
 import './index.scss'
+import redImg from '@/assets/rcs/address/folder_red.png'
+import purpleImg from '@/assets/rcs/address/folder_purple.png'
+import cyanImg from '@/assets/rcs/address/folder_cyan.png'
+import blueImg from '@/assets/rcs/address/folder_blue.png'
+import greenImg from '@/assets/rcs/address/folder_green.png'
+import yellowImg from '@/assets/rcs/address/folder_yellow.png'
 
+import { moveAddressBook } from '@/api'
 interface Props {
+  FolderList
+  ids: any
+  singleId: string
+  isSingle: boolean
   open: boolean
   onCancel: () => void
+  onSearch: () => void
+}
+
+const addresssIcon = {
+  '0': blueImg,
+  '1': redImg,
+  '2': purpleImg,
+  '3': cyanImg,
+  '4': blueImg,
+  '5': greenImg,
+  '6': yellowImg,
 }
 
 const Dialog = (props: Props, ref: any) => {
   const [form] = Form.useForm()
   const { message } = App.useApp()
   const [addressList, setAddressList] = useState()
-
-  const handleOk = () => {
-    props.onCancel()
+  const [folderId, setFolderId] = useState()
+  const handleOk = async () => {
+    try {
+      let params = {
+        ids: props.isSingle ? props.singleId : props.ids.join(','),
+        folder: folderId,
+        type: 1,
+        flag: 1,
+      }
+      const res = await moveAddressBook(params)
+      if (res.status == 'success') {
+        message.success('移动成功')
+        props.onSearch()
+        props.onCancel()
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const handleCancel = () => {
@@ -46,10 +82,12 @@ const Dialog = (props: Props, ref: any) => {
 
   const handelAddressList = (item) => {
     setAddressList(item.id)
+    setFolderId(item.id)
   }
 
   return (
     <Modal
+      onOk={handleOk}
       open={props.open}
       onCancel={props.onCancel}
       title='移动地址簿'
@@ -68,7 +106,7 @@ const Dialog = (props: Props, ref: any) => {
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete='off'>
-        <Form.Item label='当前地址簿' name='book1' validateTrigger='onSubmit'>
+        {/* <Form.Item label='当前地址簿' name='book1' validateTrigger='onSubmit'>
           <div className='now-address fx-start-center'>
             <div className='fx-start-center'>
               <img src={codeImg} alt='' />
@@ -78,8 +116,9 @@ const Dialog = (props: Props, ref: any) => {
               <span className='num-p'>99</span> 个联系人
             </div>
           </div>
-        </Form.Item>
-        {list.map((item) => (
+        </Form.Item> */}
+
+        {props.FolderList.map((item) => (
           <div
             className={`now-address2 fx-start-center ${
               addressList === item.id && 'active'
@@ -87,11 +126,11 @@ const Dialog = (props: Props, ref: any) => {
             key={item.id}
             onClick={() => handelAddressList(item)}>
             <div className='fx-start-center'>
-              <img src={codeImg} alt='' />
+              <img src={addresssIcon[item.tag]} alt='' />
               <span>{item.title}</span>
             </div>
             <div style={{ marginLeft: '40px' }}>
-              <span className='num-p'>{item.num}</span> 个联系人
+              <span className='num-p'>{item.num}</span> 个地址簿
             </div>
           </div>
         ))}

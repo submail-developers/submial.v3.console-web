@@ -44,12 +44,12 @@ export const login = () => {
   return request.post<any, API.Response<any>, any>(
     'console/api/account/login',
     {
-      // account: 'duanlangjd@126.com',
-      // password: 'yanzhi2010',
+      account: 'duanlangjd@126.com',
+      password: 'yanzhi2010',
       // account: '18616200024@163.com',
       // password: 'sumeng',
-      account: '514030829@qq.com',
-      password: 'yanzhi2010',
+      // account: '514030829@qq.com',
+      // password: 'yanzhi2010',
       //
     },
   )
@@ -393,6 +393,24 @@ export const truncateMob = (data: API.TruncateMobParams) => {
     },
   )
 }
+// 移动地址簿到文件夹
+export const moveAddressBook = (data: API.MoveAddressBookParams) => {
+  return request.post<any, any, API.MoveAddressBookParams>(
+    'console/api/addressbook/move_addressbook_to_folder',
+    {
+      ...data,
+    },
+  )
+}
+// 更新地址簿标签
+export const updateAddressBookTag = (data: API.UpdateAddressBookTagParams) => {
+  return request.post<any, any, API.UpdateAddressBookTagParams>(
+    'console/api/addressbook/update_batch_tag_folder_addressbook',
+    {
+      ...data,
+    },
+  )
+}
 
 // 获取地址簿文件夹
 export const getAddressbooksFolder = (
@@ -405,4 +423,35 @@ export const getAddressbooksFolder = (
   >('/console/api/addressbook/get_addressbook_folder', {
     ...data,
   })
+}
+
+// 创建地址簿文件夹
+export const createAddressbooksFolder = (
+  data: API.CreateAddressbooksFolderParams,
+) => {
+  return request.post<any, any, API.CreateAddressbooksFolderParams>(
+    'console/api/addressbook/submit_addressbook_folder',
+    { ...data },
+  )
+}
+// 删除地址簿文件夹
+export const deleteAddressbooksFolder = (
+  data: API.DeleteAddressbooksFolderParams,
+) => {
+  return request.post<any, any, API.DeleteAddressbooksFolderParams>(
+    'console/api/addressbook/delete_addressbook_folder',
+    {
+      ...data,
+    },
+  )
+}
+
+// 获取地址簿文件夹详情
+export const getFolderDetail = (data: API.GetFolderDetailParams) => {
+  return request.post<any, API.GetFolderDetailRes, API.GetFolderDetailParams>(
+    '/console/api/addressbook/get_folder_addressbook',
+    {
+      ...data,
+    },
+  )
 }

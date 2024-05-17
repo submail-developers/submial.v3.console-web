@@ -329,7 +329,7 @@ export const menus: RouteObject[] = [
         errorElement: <Error />,
         element: (
           <LazyImportComponent
-            lazyChildren={lazy(() => import('@/pages/rcs/address/index'))}
+            lazyChildren={lazy(() => import('@/pages/rcs/welcome'))}
           />
         ),
       },

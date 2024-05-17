@@ -6,21 +6,25 @@ import {
   Select,
   Row,
   Col,
-  Divider,
   Popconfirm,
+  message,
+  Pagination,
+  App,
+  Flex,
 } from 'antd'
 import { IDIcon } from '@/components/aIcons'
-import redImg from '@/assets/rcs/address/address_red.png'
-import purpleImg from '@/assets/rcs/address/address_purple.png'
-import cyanImg from '@/assets/rcs/address/address_cyan.png'
-import blueImg from '@/assets/rcs/address/address_blue.png'
-import greenImg from '@/assets/rcs/address/address_green.png'
-import yellowImg from '@/assets/rcs/address/address_yellow.png'
-import { getAddressbooksFolder } from '@/api'
-import CerateAddressDialog from './seeAddressFileDialog/index'
+import redImg from '@/assets/rcs/address/folder_red.png'
+import purpleImg from '@/assets/rcs/address/folder_purple.png'
+import cyanImg from '@/assets/rcs/address/folder_cyan.png'
+import blueImg from '@/assets/rcs/address/folder_blue.png'
+import greenImg from '@/assets/rcs/address/folder_green.png'
+import yellowImg from '@/assets/rcs/address/folder_yellow.png'
+import { getAddressbooksFolder, deleteAddressbooksFolder } from '@/api'
+import CerateAddressDialog from './createAddressFileDialog/index'
 import './index.scss'
 const { Option } = Select
 const addresssIcon = {
+  '0': blueImg,
   '1': redImg,
   '2': purpleImg,
   '3': cyanImg,
@@ -28,7 +32,14 @@ const addresssIcon = {
   '5': greenImg,
   '6': yellowImg,
 }
-export default function Fn() {
+const { Search } = Input
+interface Props {
+  onchildrenMethod: (info: any) => void
+}
+
+export default function Fn(props: Props) {
+  const { message } = App.useApp()
+
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
   const [openCreateModal, setOpenCreateModal] = useState(false)
@@ -38,16 +49,18 @@ export default function Fn() {
   const [pageSize, setpageSize] = useState<number>(9)
   const [total, setTotal] = useState<number>(0)
   const [addressFolderList, setAddressFolderList] = useState([])
+  const [editData, setEditData] = useState()
 
   // 获取地址簿文件夹
   const getAddressFolderList = async () => {
     try {
       const formValues = await form.getFieldsValue()
-      console.log(formValues, 'formValues')
       const res = await getAddressbooksFolder({
         ...formValues,
         id: '',
         type: 1,
+        tag: 'all',
+        order_by: 'update',
         search_type: 'all',
         page: currentPage,
       })
@@ -66,6 +79,9 @@ export default function Fn() {
   const showModal = (isEdit) => {
     setIsEditMode(isEdit)
     setOpenCreateModal(true)
+  }
+  const showFourTab = (info) => {
+    props.onchildrenMethod(info)
   }
 
   const handleOk = () => {
@@ -96,6 +112,31 @@ export default function Fn() {
     { label: '文件数升序', value: 'vol-asc' },
     { label: '文件数降序', value: 'vol-desc' },
   ]
+  // 切换页码
+  const onChangeCurrentPage = (page: number, pageSize: number) => {
+    setcurrentPage(page)
+    setpageSize(pageSize)
+  }
+
+  const folderEdit = (item) => {
+    setOpenCreateModal(true)
+    setIsEditMode(true)
+    setEditData(item)
+  }
+
+  const deleteFolder = async (id) => {
+    try {
+      const res = await deleteAddressbooksFolder({
+        id,
+        type: 1,
+      })
+      if ((res.status = 'success')) {
+        message.success('删除成功')
+        getAddressFolderList()
+      }
+    } catch (error) {}
+  }
+
   return (
     <Form
       name='address-book-file-form'
@@ -105,12 +146,26 @@ export default function Fn() {
       initialValues={{ tag: 'all', keyword: '', order_by: 'update' }}
       autoComplete='off'>
       <Row gutter={16}>
-        <Col span={10} md={10} lg={8} xl={6}>
+        <Col xl={24} className='fx-between-center' style={{ padding: '0' }}>
           <Form.Item name='keyword' label='名称'>
-            <Input placeholder='地址簿文件夹名称/ID' />
+            <Search
+              placeholder='i地址簿名称/ID'
+              allowClear
+              onSearch={handleSearch}
+              style={{ width: 300 }}
+            />
           </Form.Item>
+          <Button
+            type='primary'
+            className='fx-start-center'
+            htmlType='submit'
+            loading={loading}
+            onClick={() => showModal(false)}>
+            <i className='icon iconfont icon-jia'></i>
+            &nbsp;&nbsp;创建文件夹
+          </Button>
         </Col>
-        <Col span={8} md={8} lg={6} xl={3}>
+        {/* <Col span={8} md={8} lg={6} xl={3}>
           <Form.Item name='tag' label='标签类型'>
             <Select placeholder='选择颜色'>
               {options.map((option) => (
@@ -120,8 +175,8 @@ export default function Fn() {
               ))}
             </Select>
           </Form.Item>
-        </Col>
-        <Col span={8} md={8} lg={6} xl={3}>
+        </Col> */}
+        {/* <Col span={8} md={8} lg={6} xl={3}>
           <Form.Item name='order_by' label='排序'>
             <Select placeholder='选择排序'>
               {order.map((order) => (
@@ -131,35 +186,25 @@ export default function Fn() {
               ))}
             </Select>
           </Form.Item>
-        </Col>
-        <Col span={6} md={4} xl={3}>
-          <Form.Item label=' '>
-            <Button
-              type='primary'
-              className='w-100'
-              htmlType='submit'
-              loading={loading}
-              onClick={handleSearch}>
-              查询
-            </Button>
-          </Form.Item>
-        </Col>
+        </Col> */}
 
-        <Col span={6} md={4} xl={3} style={{ marginLeft: 'auto' }}>
+        {/* <Col span={6} md={4} xl={3} style={{ marginLeft: 'auto' }}>
           <Form.Item label=' '>
-            <Button
-              type='primary'
-              className='fx-start-center'
-              htmlType='submit'
-              loading={loading}
-              onClick={() => showModal(false)}>
-              <i className='icon iconfont icon-upload'></i>
-              &nbsp;&nbsp;创建地址簿文件夹
-            </Button>
+           
           </Form.Item>
+        </Col> */}
+        <Col xl={24} className='set-item fx-start-center'>
+          <div className='fx-start-center'>
+            <img
+              src={blueImg}
+              alt=''
+              width='40'
+              style={{ marginRight: '16px' }}
+            />
+            地址簿文件夹
+          </div>
         </Col>
       </Row>
-      <Divider className='line'></Divider>
 
       <Row gutter={[16, 16]} wrap style={{ marginTop: '24px' }}>
         {addressFolderList.map((item, index) => (
@@ -175,11 +220,8 @@ export default function Fn() {
                 <div>
                   <img src={addresssIcon[item.tag]} alt='' />
                 </div>
-                <div
-                  className='to-detail'
-                  // onClick={() => showThirdTab(item)}
-                >
-                  <div className='fn18'>{item.name}</div>
+                <div className='to-detail' onClick={() => showFourTab(item)}>
+                  <div className='fn18'>{item.title}</div>
                   <div style={{ marginTop: '10px' }}>
                     <span>{item.num}</span> 个地址簿
                   </div>
@@ -187,19 +229,14 @@ export default function Fn() {
                 <div
                   className='fx-between-center'
                   style={{ marginTop: '40px' }}>
-                  <Button onClick={() => setOpenMoveModal(true)}>
-                    <i className='icon iconfont icon-upload'></i>
-                  </Button>
-                  <Button
-                  // onClick={() => showModal(true, item)}
-                  >
+                  <Button onClick={() => folderEdit(item)}>
                     <i className='icon iconfont icon-input'></i>
                   </Button>
                   <Popconfirm
                     placement='left'
                     title='警告'
-                    description='确定删除该地址簿吗？'
-                    // onConfirm={() => deleteAddress(item.id)}
+                    description='确定删除该文件夹吗？'
+                    onConfirm={() => deleteFolder(item.id)}
                     okText='确定'
                     cancelText='取消'>
                     <Button>
@@ -212,11 +249,25 @@ export default function Fn() {
           </Col>
         ))}
       </Row>
+      <Flex justify='flex-end' align='center' style={{ marginTop: '32px' }}>
+        <Pagination
+          defaultCurrent={1}
+          current={currentPage}
+          defaultPageSize={pageSize}
+          pageSizeOptions={[]}
+          total={total}
+          showQuickJumper
+          onChange={onChangeCurrentPage}
+          showTotal={(total) => `共 ${total} 条`}
+        />
+      </Flex>
       <CerateAddressDialog
         isEdit={isEditMode}
         open={openCreateModal}
+        editData={editData}
         onOk={handleOk}
         onCancel={handleCancel}
+        onSearch={getAddressFolderList}
       />
     </Form>
   )

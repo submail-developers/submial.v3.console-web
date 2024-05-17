@@ -18,11 +18,14 @@ import './index.scss'
 export default function Fn() {
   const [activeKey, setActiveKey] = useState('1')
   const [isVisible, setIsVisible] = useState(false)
+  const [isVisible2, setIsVisible2] = useState(false)
   const [addressInfo, setAddressInfo] = useState<any>() //地址簿的详细信息
+  const [folderInfo, setFolderInfo] = useState<any>() //文件详细信息
   const onChange = (key: string) => {
     setActiveKey(key)
     if (key == '1' || key == '2') {
       setIsVisible(false)
+      setIsVisible2(false)
     }
   }
 
@@ -34,6 +37,14 @@ export default function Fn() {
     setAddressInfo(info)
     setActiveKey('3')
   }
+
+  const toFour = (info) => {
+    setIsVisible2(true)
+    setFolderInfo(info)
+    setActiveKey('4')
+  }
+  const toTWO = () => {}
+
   const items: TabsProps['items'] = [
     {
       key: '1',
@@ -43,7 +54,7 @@ export default function Fn() {
     {
       key: '2',
       label: '地址簿文件夹',
-      children: <AddressFile />,
+      children: <AddressFile onchildrenMethod={toFour} />,
     },
     {
       key: '3',
@@ -52,11 +63,13 @@ export default function Fn() {
         <AddressDetail onchildrenMethod={toOne} addressInfo={addressInfo} />
       ),
     },
-    // {
-    //   key: '4',
-    //   label: '查看地址簿文件夹',
-    //   children: <SeeAddressFile />,
-    // },
+    {
+      key: '4',
+      label: `${isVisible2 ? folderInfo.title : ''}`,
+      children: (
+        <SeeAddressFile onchildrenMethod={toTWO} folderInfo={folderInfo} />
+      ),
+    },
     // {
     //   key: '5',
     //   label: '地址簿文件夹详情',

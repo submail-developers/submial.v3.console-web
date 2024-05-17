@@ -690,5 +690,56 @@ declare module 'apis' {
       rows: number
       folders: GetMobAddressbooksFolderItems[]
     }
+
+    // 移动地址簿
+    interface MoveAddressBookParams {
+      ids: string //地址簿id
+      folder: string //文件夹id
+      type: number
+      flag: number
+    }
+    // 更新地址簿标签
+    interface UpdateAddressBookTagParams {
+      ids: string //地址簿id
+      type: number
+      tag: string
+    }
+    // 创建地址簿文件夹
+    interface CreateAddressbooksFolderParams {
+      id: string
+      title: string
+      description: string
+      type: 1
+      tag: string
+    }
+    // 删除地址簿文件夹
+    interface DeleteAddressbooksFolderParams {
+      id: string
+      type: number
+    }
+    // 获取地址簿详文件夹
+    interface GetFolderDetailParams {
+      id: string
+      type: number
+      tag: string
+      order_by: string
+      page: number
+      keywords: string
+      search_type: string
+    }
+    interface GetFolderDetailItems {
+      id: string
+      account: string
+      address: string
+      datetime: string
+      name: string
+      sign: string
+      tag: string
+      update_at: string
+    }
+    interface GetFolderDetailRes {
+      rows: number
+      addressbook: GetFolderDetailItems[]
+    }
   }
 }
