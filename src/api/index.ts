@@ -393,3 +393,16 @@ export const truncateMob = (data: API.TruncateMobParams) => {
     },
   )
 }
+
+// 获取地址簿文件夹
+export const getAddressbooksFolder = (
+  data: API.GetAddressbooksFolderParams,
+) => {
+  return request.post<
+    any,
+    API.GetAddressFolderListRes,
+    API.GetAddressbooksFolderParams
+  >('/console/api/addressbook/get_addressbook_folder', {
+    ...data,
+  })
+}

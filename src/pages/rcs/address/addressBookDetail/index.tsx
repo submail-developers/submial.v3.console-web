@@ -23,7 +23,6 @@ import greenImg from '@/assets/rcs/address/address_green.png'
 import yellowImg from '@/assets/rcs/address/address_yellow.png'
 import codeImg from '@/assets/rcs/address/blue.png'
 import ImportAddressDialog from './ImportDialog/index'
-import MoveAddressDialog from './moveAddressDialog/index'
 import {
   getMobAddressbookDetail,
   getMobAddressbooks,
@@ -303,10 +302,6 @@ export default function Fn(props: Props) {
         open={openCreateModal}
         onCancel={handleCancel}
         getAddressDetailList={getAddressDetailList}
-      />
-      <MoveAddressDialog
-        open={openMoveModal}
-        onCancel={() => setOpenMoveModal(false)}
       />
     </Form>
   )

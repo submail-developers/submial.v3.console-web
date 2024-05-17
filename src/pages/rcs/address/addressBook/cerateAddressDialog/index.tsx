@@ -35,7 +35,6 @@ const Dialog = (props: Props, ref: any) => {
   ]
 
   useEffect(() => {
-    console.log()
     form.resetFields()
     form.setFieldsValue({
       ...props.editData,

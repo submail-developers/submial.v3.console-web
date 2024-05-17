@@ -664,5 +664,31 @@ declare module 'apis' {
     interface TruncateMobParams {
       id: string
     }
+
+    // 获取地址簿文件夹参数
+    interface GetAddressbooksFolderParams {
+      id: string
+      type: number
+      page: number
+      tag: string
+      order_by: string
+      search_type: string
+      keywords: string
+    }
+    // 获取地址簿文件夹返回值
+    interface GetMobAddressbooksFolderItems {
+      create_at: string
+      description: string
+      id: string
+      num: string
+      sign: string
+      tag: string
+      title: string
+      update_at: string
+    }
+    interface GetAddressFolderListRes {
+      rows: number
+      folders: GetMobAddressbooksFolderItems[]
+    }
   }
 }
