@@ -22,6 +22,7 @@ import greenImg from '@/assets/rcs/address/address_green.png'
 import yellowImg from '@/assets/rcs/address/address_yellow.png'
 import CerateAddressDialog from './cerateAddressDialog/index'
 import MoveAddressDialog from './moveAddressDialog/index'
+import { NavLink } from 'react-router-dom'
 
 import {
   getMobAddressbooks,
@@ -51,7 +52,8 @@ const addresssIcon = {
   '6': yellowImg,
 }
 const { Search } = Input
-export default function Fn(props: Props) {
+// export default function Fn(props: Props) {
+export default function Fn() {
   const [form] = Form.useForm()
   const [currentPage, setcurrentPage] = useState<number>(1)
   const [pageSize, setpageSize] = useState<number>(9)
@@ -139,9 +141,9 @@ export default function Fn(props: Props) {
   const handleSearch = () => {
     getAddressList()
   }
-  const showThirdTab = (info) => {
-    props.onchildrenMethod(info)
-  }
+  // const showThirdTab = (info) => {
+  //   props.onchildrenMethod(info)
+  // }
   // 删除地址簿
   const deleteAddress = async (id) => {
     try {
@@ -380,42 +382,47 @@ export default function Fn(props: Props) {
                     <div className='sign'>{item.sign}</div>
                   </div>
                 </div>
-                <div className='book-list'>
-                  <div>
-                    <img src={addresssIcon[item.tag]} alt='' />
-                  </div>
-                  <div className='to-detail' onClick={() => showThirdTab(item)}>
-                    <div className='fn18'>{item.name}</div>
-                    <div style={{ marginTop: '10px' }}>
-                      <span className='num-p'>{item.address}</span> 个联系人
+                <NavLink to={`/console/rcs/address/address/detail/${item.id}`}>
+                  <div className='book-list'>
+                    <div>
+                      <img src={addresssIcon[item.tag]} alt='' />
                     </div>
-                  </div>
-                  {isVisible ? (
-                    <Checkbox value={item.id}>选择</Checkbox>
-                  ) : (
                     <div
-                      className='fx-between-center'
-                      style={{ marginTop: '40px' }}>
-                      <Button onClick={() => openSingleAddressModal(item.id)}>
-                        <i className='icon iconfont icon-yidongwenjianjia'></i>
-                      </Button>
-                      <Button onClick={() => showModal(true, item)}>
-                        <i className='icon iconfont icon-input'></i>
-                      </Button>
-                      <Popconfirm
-                        placement='left'
-                        title='警告'
-                        description='确定删除该地址簿吗？'
-                        onConfirm={() => deleteAddress(item.id)}
-                        okText='确定'
-                        cancelText='取消'>
-                        <Button>
-                          <i className='icon iconfont icon-shanchu'></i>
-                        </Button>
-                      </Popconfirm>
+                      className='to-detail'
+                      // onClick={() => showThirdTab(item)}
+                    >
+                      <div className='fn18'>{item.name}</div>
+                      <div style={{ marginTop: '10px' }}>
+                        <span className='num-p'>{item.address}</span> 个联系人
+                      </div>
                     </div>
-                  )}
-                </div>
+                    {isVisible ? (
+                      <Checkbox value={item.id}>选择</Checkbox>
+                    ) : (
+                      <div
+                        className='fx-between-center'
+                        style={{ marginTop: '40px' }}>
+                        <Button onClick={() => openSingleAddressModal(item.id)}>
+                          <i className='icon iconfont icon-yidongwenjianjia'></i>
+                        </Button>
+                        <Button onClick={() => showModal(true, item)}>
+                          <i className='icon iconfont icon-input'></i>
+                        </Button>
+                        <Popconfirm
+                          placement='left'
+                          title='警告'
+                          description='确定删除该地址簿吗？'
+                          onConfirm={() => deleteAddress(item.id)}
+                          okText='确定'
+                          cancelText='取消'>
+                          <Button>
+                            <i className='icon iconfont icon-shanchu'></i>
+                          </Button>
+                        </Popconfirm>
+                      </div>
+                    )}
+                  </div>
+                </NavLink>
               </div>
             </Col>
           ))}
@@ -454,3 +461,6 @@ export default function Fn(props: Props) {
     </Form>
   )
 }
+// export default function Fn() {
+//   return <div>test</div>
+// }

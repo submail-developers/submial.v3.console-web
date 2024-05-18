@@ -741,5 +741,11 @@ declare module 'apis' {
       rows: number
       addressbook: GetFolderDetailItems[]
     }
+    //清空地址簿中文件夹
+    interface ClearFolderAddressParams {
+      ids: string
+      folder: string
+      type: number
+    }
   }
 }

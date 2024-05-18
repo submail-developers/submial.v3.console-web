@@ -20,14 +20,17 @@ import cyanImg from '@/assets/rcs/address/address_cyan.png'
 import blueImg from '@/assets/rcs/address/address_blue.png'
 import greenImg from '@/assets/rcs/address/address_green.png'
 import yellowImg from '@/assets/rcs/address/address_yellow.png'
-// import CerateAddressDialog from './cerateAddressDialog/index'
-// import MoveAddressDialog from './moveAddressDialog/index'
+import EditAddressDialog from '../addressBook/cerateAddressDialog/index'
+import MoveAddressDialog from './moveAddressDialog/index'
+import MoveinAddressDialog from './seeAddressFileDialog/index'
 import {
   getFolderDetail,
   getMobAddressbooks,
   deleteAddressbooks,
   getAddressbooksFolder,
   updateAddressBookTag,
+  moveAddressBook,
+  clearFolderAddress,
 } from '@/api'
 import { API } from 'apis'
 import type { SearchProps } from 'antd/es/input/Search'
@@ -35,6 +38,7 @@ import './index.scss'
 import { message } from '@/components/staticFn/staticFn'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import type { CheckboxValueType } from 'antd/es/checkbox/Group'
+import { NavLink, useParams } from 'react-router-dom'
 
 const { Option } = Select
 
@@ -53,7 +57,8 @@ const addresssIcon = {
   'tag-none': blueImg,
 }
 const { Search } = Input
-export default function Fn(props: Props) {
+// export default function Fn(props: Props) {
+export default function Fn() {
   const [form] = Form.useForm()
   const [currentPage, setcurrentPage] = useState<number>(1)
   const [pageSize, setpageSize] = useState<number>(9)
@@ -64,6 +69,8 @@ export default function Fn(props: Props) {
   const [loading, setLoading] = useState(false)
   const [openCreateModal, setOpenCreateModal] = useState(false)
   const [openMoveModal, setOpenMoveModal] = useState(false)
+  const [openMoveInModal, setOpenMoveInModal] = useState(false)
+
   const [isEditMode, setIsEditMode] = useState(false)
 
   const [selectedList, setselectedList] = useState<CheckboxValueType[]>([])
@@ -79,11 +86,13 @@ export default function Fn(props: Props) {
 
   const [singleId, setSingleId] = useState() //单个地址簿id
   const [isSingle, setIsSingle] = useState(false) //单独移动地址簿
+  const [allId, setAllId] = useState([]) //所有id
+  const { id } = useParams()
   // 获取地址簿
-  const getFolderDetailList = async () => {
+  const getAddressList = async () => {
     try {
       const res = await getFolderDetail({
-        id: props.folderInfo.id,
+        id: id,
         type: 1,
         tag: 'all',
         order_by: 'create_asc',
@@ -94,6 +103,31 @@ export default function Fn(props: Props) {
       setAddressList(res.addressbook)
       setTotal(res.rows)
       setLoading(false)
+      let arr = []
+      let list = res.addressbook.map((item, index) => {
+        arr.push(item.id)
+      })
+      setAllId(arr)
+    } catch (error) {
+      setLoading(false)
+      console.log(error)
+    }
+  }
+  // 获取地址簿文件夹
+  const getAddressFolderList = async () => {
+    try {
+      const res = await getAddressbooksFolder({
+        id: '',
+        type: 1,
+        page: currentPage,
+        tag: 'all',
+        order_by: 'update',
+        search_type: 'all',
+        keywords: '',
+      })
+      setAddressFolderList(res.folders)
+      setFolderTotal(res.rows)
+      setLoading(false)
     } catch (error) {
       setLoading(false)
       console.log(error)
@@ -101,7 +135,8 @@ export default function Fn(props: Props) {
   }
 
   useEffect(() => {
-    getFolderDetailList()
+    getAddressList()
+    getAddressFolderList()
   }, [currentPage, pageSize])
 
   // 切换页码
@@ -120,18 +155,32 @@ export default function Fn(props: Props) {
   }
 
   const handleSearch = () => {
-    // getFolderDetailList()
+    getAddressList()
   }
-  const showThirdTab = (info) => {
-    props.onchildrenMethod(info)
-  }
-  // 删除地址簿
+  // const showThirdTab = (info) => {
+  //   props.onchildrenMethod(info)
+  // }
+  // // 删除地址簿
   const deleteAddress = async (id) => {
     try {
       const res = await deleteAddressbooks({ id })
       if ((res.status = 'success')) {
         message.success('删除成功')
-        // getFolderDetailList()
+        getAddressList()
+      }
+    } catch (error) {}
+  }
+  // 清空文件夹
+  const cleanAllFolders = async () => {
+    try {
+      const res = await clearFolderAddress({
+        ids: allId.join(','),
+        type: 1,
+        folder: id,
+      })
+      if ((res.status = 'success')) {
+        message.success('删除成功')
+        getAddressList()
       }
     } catch (error) {}
   }
@@ -224,9 +273,42 @@ export default function Fn(props: Props) {
       const res = await updateAddressBookTag(params)
       if ((res.status = 'success')) {
         message.success('设置成功')
-        // getFolderDetailList()
+        getAddressList()
       }
     } catch (error) {}
+  }
+
+  const items2 = [
+    {
+      label: '移出文件夹',
+      key: '0',
+    },
+    {
+      label: '移动到文件夹',
+      key: '1',
+    },
+  ]
+  const edit2 = async (e, ids) => {
+    if (e.key == '0') {
+      // 移出
+      try {
+        let params = {
+          ids: ids,
+          folder: id,
+          type: 1,
+          flag: 2,
+        }
+        const res = await moveAddressBook(params)
+        if (res.status == 'success') {
+          message.success('移出成功')
+          getAddressList()
+        }
+      } catch (error) {}
+    } else {
+      setOpenMoveModal(true)
+      setSingleId(ids)
+      console.log(singleId, '/')
+    }
   }
 
   // 打开单个地址簿 移动地址簿弹窗
@@ -269,7 +351,7 @@ export default function Fn(props: Props) {
             className='fx-start-center'
             htmlType='submit'
             loading={loading}
-            onClick={() => showModal(false, '')}>
+            onClick={() => setOpenMoveInModal(true)}>
             <i className='icon iconfont icon-jia'></i>
             &nbsp;&nbsp;移入地址簿
           </Button>
@@ -285,7 +367,7 @@ export default function Fn(props: Props) {
             地址簿
           </div>
           <div className='fx-start-center'>
-            <div className='fx-start-center' style={{ marginRight: '10px' }}>
+            <div className='fx-start-center ' style={{ marginRight: '10px' }}>
               <Switch defaultChecked={false} onChange={handelSwitchChange} />
               &nbsp; 批量操作
             </div>
@@ -318,7 +400,12 @@ export default function Fn(props: Props) {
                       selectable: true,
                       onClick: edit,
                     }}>
-                    <a className={indeterminate || isAllActive ? 'active' : ''}>
+                    <a
+                      className={
+                        indeterminate || isAllActive || isActive.length > 0
+                          ? 'active'
+                          : ''
+                      }>
                       设置标签
                     </a>
                   </Dropdown>
@@ -344,9 +431,25 @@ export default function Fn(props: Props) {
                     ))}
                   </Select>
                 </Form.Item>
-                <div>清空文件夹</div>
-                <div>
-                  <i className></i>
+                <Popconfirm
+                  placement='left'
+                  title='警告'
+                  description='确定清空文件夹吗？'
+                  onConfirm={cleanAllFolders}
+                  okText='确定'
+                  cancelText='取消'>
+                  <span style={{ color: '#ff4d4f' }}>
+                    <i className='icon iconfont icon-saozhou'></i>清空文件夹
+                  </span>
+                </Popconfirm>
+
+                <div
+                  style={{
+                    width: '100px',
+                    textAlign: 'center',
+                    color: '#1764ff',
+                  }}>
+                  <i className='icon iconfont icon-fanhuidizhibu'></i>
                 </div>
               </>
             )}
@@ -367,25 +470,41 @@ export default function Fn(props: Props) {
                     <div className='sign'>{item.sign}</div>
                   </div>
                 </div>
+
                 <div className='book-list'>
                   <div>
                     <img src={addresssIcon[item.tag]} alt='' />
                   </div>
-                  <div className='to-detail' onClick={() => showThirdTab(item)}>
-                    <div className='fn18'>{item.name}</div>
-                    <div style={{ marginTop: '10px' }}>
-                      <span className='num-p'>{item.address}</span> 个联系人
+
+                  <NavLink
+                    to={`/console/rcs/address/address/detail/${item.id}`}>
+                    <div className='to-detail'>
+                      <div className='fn18'>{item.name}</div>
+                      <div style={{ marginTop: '10px' }}>
+                        <span className='num-p'>{item.address}</span> 个联系人
+                      </div>
                     </div>
-                  </div>
+                  </NavLink>
                   {isVisible ? (
                     <Checkbox value={item.id}>选择</Checkbox>
                   ) : (
                     <div
                       className='fx-between-center'
                       style={{ marginTop: '40px' }}>
-                      <Button onClick={() => openSingleAddressModal(item.id)}>
-                        <i className='icon iconfont icon-yidongwenjianjia'></i>
+                      <Button>
+                        <Dropdown
+                          trigger={['click']}
+                          menu={{
+                            items: items2,
+                            selectable: true,
+                            onClick: (e) => edit2(e, item.id),
+                          }}>
+                          <a>
+                            <i className='icon iconfont icon-gengduocaozuo'></i>
+                          </a>
+                        </Dropdown>
                       </Button>
+
                       <Button onClick={() => showModal(true, item)}>
                         <i className='icon iconfont icon-input'></i>
                       </Button>
@@ -421,15 +540,16 @@ export default function Fn(props: Props) {
           showTotal={(total) => `共 ${total} 条`}
         />
       </Flex>
-      {/* <CerateAddressDialog
+
+      <EditAddressDialog
         isEdit={isEditMode}
         open={openCreateModal}
         editData={editData}
         onCancel={handleCancel}
         onSearch={getAddressList}
-      /> */}
+      />
 
-      {/* <MoveAddressDialog
+      <MoveAddressDialog
         singleId={singleId}
         isSingle={isSingle}
         ids={selectedList}
@@ -437,7 +557,12 @@ export default function Fn(props: Props) {
         FolderList={addressFolderList}
         onSearch={getAddressList}
         onCancel={() => setOpenMoveModal(false)}
-      /> */}
+      />
+
+      <MoveinAddressDialog
+        open={openMoveInModal}
+        foldetAddressList={addressList}
+      />
     </Form>
   )
 }

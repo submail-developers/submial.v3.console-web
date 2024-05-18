@@ -393,7 +393,7 @@ export const truncateMob = (data: API.TruncateMobParams) => {
     },
   )
 }
-// 移动地址簿到文件夹
+// 移动、移出地址簿到文件夹
 export const moveAddressBook = (data: API.MoveAddressBookParams) => {
   return request.post<any, any, API.MoveAddressBookParams>(
     'console/api/addressbook/move_addressbook_to_folder',
@@ -450,6 +450,16 @@ export const deleteAddressbooksFolder = (
 export const getFolderDetail = (data: API.GetFolderDetailParams) => {
   return request.post<any, API.GetFolderDetailRes, API.GetFolderDetailParams>(
     '/console/api/addressbook/get_folder_addressbook',
+    {
+      ...data,
+    },
+  )
+}
+
+// 清空地址簿中文件夹
+export const clearFolderAddress = (data: API.ClearFolderAddressParams) => {
+  return request.post<any, any, API.ClearFolderAddressParams>(
+    'console/api/addressbook/delete_batch_folder_addressbook',
     {
       ...data,
     },

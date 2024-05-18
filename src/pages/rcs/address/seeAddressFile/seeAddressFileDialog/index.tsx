@@ -1,20 +1,107 @@
-import { useState, useImperativeHandle, forwardRef } from 'react'
-import { Modal, Form, App, Upload, Button, Input, Select } from 'antd'
-
+import {
+  useState,
+  useImperativeHandle,
+  forwardRef,
+  useEffect,
+  useRef,
+} from 'react'
+import {
+  Modal,
+  Form,
+  App,
+  Upload,
+  Button,
+  Input,
+  Select,
+  Switch,
+  Transfer,
+} from 'antd'
+import type { TransferProps } from 'antd'
+import { getMobAddressbooks } from '@/api'
+import { divide, uniqBy } from 'lodash'
 import { API } from 'apis'
 import './index.scss'
 const { Option } = Select
 
 interface Props {
   open: boolean
-  isEdit: boolean
-  onCancel: () => void
-  onOk: () => void
+  // isEdit: boolean
+  // onCancel: () => void
+  // onOk: () => void
+  foldetAddressList: any[]
 }
+interface RecordType {
+  key: string
+  title: string
+  description: string
+  chosen: boolean
+}
+const { Search } = Input
 
 const Dialog = (props: Props, ref: any) => {
   const [form] = Form.useForm()
   const { message } = App.useApp()
+  const [currentPage, setcurrentPage] = useState<number>(1)
+  const [pageSize, setpageSize] = useState<number>(9)
+  const [total, setTotal] = useState<number>(0)
+  const [loading, setLoading] = useState(false)
+  const [oneWay, setOneWay] = useState(false)
+  const [dataSource, setdataSource] = useState([])
+  const [targetKeys, setTargetKeys] = useState<React.Key[]>([])
+  const targetItemsRef = useRef([])
+
+  useEffect(() => {
+    if (props.open) {
+      targetItemsRef.current = props.foldetAddressList
+      getAddressList()
+      let _targetKeys = []
+      props.foldetAddressList.forEach((item) => {
+        _targetKeys.push(item.id)
+      })
+      setTargetKeys(_targetKeys)
+    }
+  }, [props.open])
+  const onChange: TransferProps['onChange'] = (
+    newTargetKeys,
+    direction,
+    moveKeys,
+  ) => {
+    targetItemsRef.current = dataSource.filter((item) =>
+      newTargetKeys.includes(item.id),
+    )
+
+    setTargetKeys(newTargetKeys)
+  }
+
+  const handleSearch = () => {}
+  // 获取公共地址簿
+  const getAddressList = async () => {
+    try {
+      const formValues = await form.getFieldsValue()
+      const res = await getMobAddressbooks({
+        ...formValues,
+        page: currentPage,
+        limit: pageSize,
+      })
+
+      setdataSource(
+        uniqBy(
+          [
+            ...targetItemsRef.current,
+            ...res.addressbooks,
+            ...props.foldetAddressList,
+          ],
+          'id',
+        ),
+      )
+
+      setTotal(res.rows)
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      console.log(error)
+    }
+  }
 
   const options = [
     { label: '无标签', value: 'none', color: '#282b31' },
@@ -27,11 +114,22 @@ const Dialog = (props: Props, ref: any) => {
   ]
 
   const handleOk = () => {
-    props.onCancel()
+    // props.onCancel()
+    let propsArr: React.Key[] = []
+    props.foldetAddressList.forEach((item, index) => {
+      propsArr.push(item.id as React.Key)
+    })
+    let addArr: React.Key[] = propsArr.filter(
+      (item) => !targetKeys.includes(item),
+    )
+    let delArr: React.Key[] = targetKeys.filter(
+      (item) => !propsArr.includes(item),
+    )
+    console.log(propsArr, targetKeys, addArr, delArr)
   }
 
   const handleCancel = () => {
-    props.onCancel()
+    // props.onCancel()
   }
 
   const onFinish = () => {}
@@ -40,46 +138,58 @@ const Dialog = (props: Props, ref: any) => {
   return (
     <Modal
       open={props.open}
-      onCancel={props.onCancel}
-      title={props.isEdit ? '编辑地址簿文件夹' : '导入地址簿'}
-      onOk={props.onOk}
+      // onCancel={props.onCancel}
+      title={
+        <Form
+          form={form}
+          className='cuploadMms-form w-100'
+          name='cuploadMms-account'
+          layout='vertical'
+          autoComplete='off'>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <div className='fn18'>移入地址簿</div>
+            <div style={{ display: 'flex' }}>
+              <Form.Item
+                label=''
+                name='keywords'
+                style={{ marginRight: 14, marginBottom: '0' }}>
+                <Input placeholder='名称/ID'></Input>
+              </Form.Item>
+              <Form.Item style={{ margin: 0 }}>
+                <Button
+                  style={{ height: '38px', lineHeight: 'inherit' }}
+                  type='primary'
+                  className='w-100'
+                  htmlType='submit'
+                  onClick={handleSearch}>
+                  搜索
+                </Button>
+              </Form.Item>
+            </div>
+          </div>
+        </Form>
+      }
+      onOk={handleOk}
       width={480}
       style={{ top: 240 }}
       data-class='create-address'
       closable={false}
       wrapClassName='modal-create-address'>
-      <Form
-        name='form-create-address-file'
-        form={form}
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 24 }}
-        layout='vertical'
-        initialValues={{ type: 'none' }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete='off'>
-        <Form.Item
-          label='地址簿文件夹名称'
-          name='name'
-          validateTrigger='onSubmit'>
-          <Input
-            placeholder='请输入名称，请将名称控制在 32 个字符以内'
-            maxLength={32}
-          />
-        </Form.Item>
-        <Form.Item label='选择标签' name='type'>
-          <Select placeholder='选择颜色'>
-            {options.map((option) => (
-              <Option
-                key={option.value}
-                value={option.value}
-                style={{ color: option.color }}>
-                {option.label}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
-      </Form>
+      <>
+        <Transfer
+          rowKey={(record) => record.id}
+          dataSource={dataSource}
+          targetKeys={targetKeys}
+          onChange={onChange}
+          render={(item) => item.name}
+          oneWay={oneWay}
+        />
+      </>
     </Modal>
   )
 }

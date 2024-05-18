@@ -21,7 +21,10 @@ import greenImg from '@/assets/rcs/address/folder_green.png'
 import yellowImg from '@/assets/rcs/address/folder_yellow.png'
 import { getAddressbooksFolder, deleteAddressbooksFolder } from '@/api'
 import CerateAddressDialog from './createAddressFileDialog/index'
+import { NavLink } from 'react-router-dom'
+
 import './index.scss'
+import { constant } from 'lodash'
 const { Option } = Select
 const addresssIcon = {
   '0': blueImg,
@@ -36,8 +39,10 @@ const { Search } = Input
 interface Props {
   onchildrenMethod: (info: any) => void
 }
+// const nav = useNavigate()
 
-export default function Fn(props: Props) {
+// export default function Fn(props: Props) {
+export default function Fn() {
   const { message } = App.useApp()
 
   const [form] = Form.useForm()
@@ -79,9 +84,6 @@ export default function Fn(props: Props) {
   const showModal = (isEdit) => {
     setIsEditMode(isEdit)
     setOpenCreateModal(true)
-  }
-  const showFourTab = (info) => {
-    props.onchildrenMethod(info)
   }
 
   const handleOk = () => {
@@ -220,12 +222,14 @@ export default function Fn(props: Props) {
                 <div>
                   <img src={addresssIcon[item.tag]} alt='' />
                 </div>
-                <div className='to-detail' onClick={() => showFourTab(item)}>
-                  <div className='fn18'>{item.title}</div>
-                  <div style={{ marginTop: '10px' }}>
-                    <span>{item.num}</span> 个地址簿
+                <NavLink to={`/console/rcs/address/folder/detail/${item.id}`}>
+                  <div className='to-detail'>
+                    <div className='fn18'>{item.title}</div>
+                    <div style={{ marginTop: '10px' }}>
+                      <span>{item.num}</span> 个地址簿
+                    </div>
                   </div>
-                </div>
+                </NavLink>
                 <div
                   className='fx-between-center'
                   style={{ marginTop: '40px' }}>
