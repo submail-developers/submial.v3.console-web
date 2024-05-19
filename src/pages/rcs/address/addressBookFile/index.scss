@@ -1,4 +1,11 @@
 [data-class='address-book-file'] {
+  .set-item {
+    background: #f6f7f9;
+    border-radius: 4px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 10px 15px;
+  }
   .icon-upload {
     font-size: 18px;
   }

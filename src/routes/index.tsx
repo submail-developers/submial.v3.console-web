@@ -332,6 +332,61 @@ export const menus: RouteObject[] = [
             lazyChildren={lazy(() => import('@/pages/rcs/address/index'))}
           />
         ),
+        children: [
+          {
+            path: 'index/:id',
+            errorElement: <Error />,
+            element: (
+              <LazyImportComponent
+                lazyChildren={lazy(
+                  () => import('@/pages/rcs/address/addressBook'),
+                )}
+              />
+            ),
+          },
+          {
+            path: 'address/detail/:id',
+            loader: loaderFn({
+              breadName: '地址簿详情',
+            }),
+            errorElement: <Error />,
+            element: (
+              <LazyImportComponent
+                lazyChildren={lazy(
+                  () => import('@/pages/rcs/address/addressBookDetail'),
+                )}
+              />
+            ),
+          },
+          {
+            path: 'folder',
+            loader: loaderFn({
+              breadName: '文件夹',
+            }),
+            errorElement: <Error />,
+            element: (
+              <LazyImportComponent
+                lazyChildren={lazy(
+                  () => import('@/pages/rcs/address/addressBookFile'),
+                )}
+              />
+            ),
+          },
+          {
+            path: 'folder/detail/:id',
+            loader: loaderFn({
+              breadName: '文件夹详情',
+            }),
+            errorElement: <Error />,
+            element: (
+              <LazyImportComponent
+                lazyChildren={lazy(
+                  () => import('@/pages/rcs/address/seeAddressFile'),
+                )}
+              />
+            ),
+          },
+        ],
       },
       {
         path: 'interactive',
@@ -446,6 +501,10 @@ export const baseRouter: RouteObject[] = [
   {
     path: '/console/rcs/chatbot',
     element: <Navigate to={'/console/rcs/chatbot/index'} replace />,
+  },
+  {
+    path: '/console/rcs/address',
+    element: <Navigate to={'/console/rcs/address/index/0'} replace />,
   },
   {
     path: '/console/rcs/template',

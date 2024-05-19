@@ -1,17 +1,18 @@
-import { useState, useEffect, forwardRef } from 'react'
+import { useState, useImperativeHandle, forwardRef, useEffect } from 'react'
 import { Modal, Form, App, Upload, Button, Input, Select } from 'antd'
-import { createAddressbooks } from '@/api'
+import { createAddressbooksFolder } from '@/api'
 import { API } from 'apis'
 import './index.scss'
 const { Option } = Select
-
 interface Props {
   open: boolean
   isEdit: boolean
-  editData: any
   onCancel: () => void
+  onOk: () => void
   onSearch: () => void
+  editData
 }
+
 enum Colors {
   'tag-red' = 1,
   'tag-purple' = 2,
@@ -33,22 +34,22 @@ const Dialog = (props: Props, ref: any) => {
     { label: '绿色', color: 'tag-green', value: '5' },
     { label: '黄色', color: 'tag-yellow', value: '6' },
   ]
-
   useEffect(() => {
     form.resetFields()
     form.setFieldsValue({
       ...props.editData,
     })
   }, [props.open])
-
   const handleOk = async () => {
     if (props.isEdit) {
       // 编辑
       try {
         const formValues = await form.getFieldsValue()
-        const res = await createAddressbooks({
+        const res = await createAddressbooksFolder({
           ...formValues,
           id: props.editData.id,
+          type: 1,
+          description: '',
           tag: formValues ? Colors[formValues.tag] : '',
         })
         if (res.status == 'success') {
@@ -64,9 +65,12 @@ const Dialog = (props: Props, ref: any) => {
         const formValues = await form.getFieldsValue()
         let params = {
           ...formValues,
+          id: '',
+          type: 1,
+          description: '',
           tag: formValues ? Colors[formValues.tag] : '',
         }
-        const res = await createAddressbooks(params)
+        const res = await createAddressbooksFolder(params)
         if (res.status == 'success') {
           message.success('创建成功')
           props.onCancel()
@@ -89,7 +93,7 @@ const Dialog = (props: Props, ref: any) => {
     <Modal
       open={props.open}
       onCancel={props.onCancel}
-      title={props.isEdit ? '编辑地址簿' : '创建地址簿'}
+      title={props.isEdit ? '编辑地址簿文件夹' : '创建地址簿文件夹'}
       onOk={handleOk}
       width={480}
       style={{ top: 240 }}
@@ -97,7 +101,7 @@ const Dialog = (props: Props, ref: any) => {
       closable={false}
       wrapClassName='modal-create-address'>
       <Form
-        name='form-create-address'
+        name='form-create-address-file'
         form={form}
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 24 }}
@@ -106,7 +110,10 @@ const Dialog = (props: Props, ref: any) => {
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete='off'>
-        <Form.Item label='地址簿名称' name='name' validateTrigger='onSubmit'>
+        <Form.Item
+          label='地址簿文件夹名称'
+          name='title'
+          validateTrigger='onSubmit'>
           <Input
             placeholder='请输入名称，请将名称控制在 32 个字符以内'
             maxLength={32}

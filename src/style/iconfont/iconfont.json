@@ -6,6 +6,69 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "40382571",
+      "name": "扫帚",
+      "font_class": "saozhou",
+      "unicode": "e660",
+      "unicode_decimal": 58976
+    },
+    {
+      "icon_id": "40371229",
+      "name": "排序",
+      "font_class": "paixu",
+      "unicode": "e65f",
+      "unicode_decimal": 58975
+    },
+    {
+      "icon_id": "40370503",
+      "name": "文件夹",
+      "font_class": "wenjianjia",
+      "unicode": "e65d",
+      "unicode_decimal": 58973
+    },
+    {
+      "icon_id": "40370500",
+      "name": "地址簿",
+      "font_class": "dizhibu1",
+      "unicode": "e65e",
+      "unicode_decimal": 58974
+    },
+    {
+      "icon_id": "40370334",
+      "name": "更多操作",
+      "font_class": "gengduocaozuo",
+      "unicode": "e65c",
+      "unicode_decimal": 58972
+    },
+    {
+      "icon_id": "40370322",
+      "name": "演示",
+      "font_class": "yanshi1",
+      "unicode": "e65a",
+      "unicode_decimal": 58970
+    },
+    {
+      "icon_id": "40370320",
+      "name": "返回地址簿",
+      "font_class": "fanhuidizhibu",
+      "unicode": "e659",
+      "unicode_decimal": 58969
+    },
+    {
+      "icon_id": "40370313",
+      "name": "导入联系人",
+      "font_class": "daorulianxiren",
+      "unicode": "e658",
+      "unicode_decimal": 58968
+    },
+    {
+      "icon_id": "40370307",
+      "name": "导出为",
+      "font_class": "daochuwei",
+      "unicode": "e65b",
+      "unicode_decimal": 58971
+    },
+    {
       "icon_id": "40369030",
       "name": "menu",
       "font_class": "menu",

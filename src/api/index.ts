@@ -44,12 +44,12 @@ export const login = () => {
   return request.post<any, API.Response<any>, any>(
     'console/api/account/login',
     {
-      // account: 'duanlangjd@126.com',
-      // password: 'yanzhi2010',
+      account: 'duanlangjd@126.com',
+      password: 'yanzhi2010',
       // account: '18616200024@163.com',
       // password: 'sumeng',
-      account: '514030829@qq.com',
-      password: 'yanzhi2010',
+      // account: '514030829@qq.com',
+      // password: 'yanzhi2010',
       //
     },
   )
@@ -412,6 +412,78 @@ export const deleteAddressMob = (data: API.DeleteAddressMobParams) => {
 export const truncateMob = (data: API.TruncateMobParams) => {
   return request.post<any, any, API.TruncateMobParams>(
     'console/api/addressbook/truncate_mob_addressbook',
+    {
+      ...data,
+    },
+  )
+}
+// 移动、移出地址簿到文件夹
+export const moveAddressBook = (data: API.MoveAddressBookParams) => {
+  return request.post<any, any, API.MoveAddressBookParams>(
+    'console/api/addressbook/move_addressbook_to_folder',
+    {
+      ...data,
+    },
+  )
+}
+// 更新地址簿标签
+export const updateAddressBookTag = (data: API.UpdateAddressBookTagParams) => {
+  return request.post<any, any, API.UpdateAddressBookTagParams>(
+    'console/api/addressbook/update_batch_tag_folder_addressbook',
+    {
+      ...data,
+    },
+  )
+}
+
+// 获取地址簿文件夹
+export const getAddressbooksFolder = (
+  data: API.GetAddressbooksFolderParams,
+) => {
+  return request.post<
+    any,
+    API.GetAddressFolderListRes,
+    API.GetAddressbooksFolderParams
+  >('/console/api/addressbook/get_addressbook_folder', {
+    ...data,
+  })
+}
+
+// 创建地址簿文件夹
+export const createAddressbooksFolder = (
+  data: API.CreateAddressbooksFolderParams,
+) => {
+  return request.post<any, any, API.CreateAddressbooksFolderParams>(
+    'console/api/addressbook/submit_addressbook_folder',
+    { ...data },
+  )
+}
+// 删除地址簿文件夹
+export const deleteAddressbooksFolder = (
+  data: API.DeleteAddressbooksFolderParams,
+) => {
+  return request.post<any, any, API.DeleteAddressbooksFolderParams>(
+    'console/api/addressbook/delete_addressbook_folder',
+    {
+      ...data,
+    },
+  )
+}
+
+// 获取地址簿文件夹详情
+export const getFolderDetail = (data: API.GetFolderDetailParams) => {
+  return request.post<any, API.GetFolderDetailRes, API.GetFolderDetailParams>(
+    '/console/api/addressbook/get_folder_addressbook',
+    {
+      ...data,
+    },
+  )
+}
+
+// 清空地址簿中文件夹
+export const clearFolderAddress = (data: API.ClearFolderAddressParams) => {
+  return request.post<any, any, API.ClearFolderAddressParams>(
+    'console/api/addressbook/delete_batch_folder_addressbook',
     {
       ...data,
     },
