@@ -122,10 +122,13 @@ const Dialog = (props: Props, ref: any) => {
     let addArr: React.Key[] = propsArr.filter(
       (item) => !targetKeys.includes(item),
     )
+
     let delArr: React.Key[] = targetKeys.filter(
       (item) => !propsArr.includes(item),
     )
-    console.log(propsArr, targetKeys, addArr, delArr)
+    console.log(addArr, 'addArr')
+    console.log(delArr, 'delArr')
+    // console.log(propsArr, targetKeys, addArr, delArr)
   }
 
   const handleCancel = () => {
