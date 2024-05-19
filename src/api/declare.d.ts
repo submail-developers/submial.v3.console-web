@@ -574,7 +574,7 @@ declare module 'apis' {
       type: number
     }
     interface GetSendAddressRes {
-      addressbooks: AddressbooksObj | AddressbooksItem[][]
+      addressbooks: Addressbooks
       exportconfirm: string
       mob: string
       page: number
@@ -583,6 +583,7 @@ declare module 'apis' {
       status: number
       subaccount_sms_addressbook_shared: boolean
     }
+    type Addressbooks = AddressbooksObj | AddressbooksItem[][]
     interface AddressbooksObj {
       [key in string]: AddressbooksItem[]
     }
