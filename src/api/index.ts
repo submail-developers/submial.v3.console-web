@@ -294,6 +294,30 @@ export const saveupForCspAccount = (data: API.saveupForCspAccountParams) => {
   >('console/api/rcs/temporary_storage_csp_account', { ...data })
 }
 
+// 通过文件获取号码数据
+export const getDataFromFile = (data: API.GetDataFromFileParams) => {
+  return request.post<any, API.GetDataFromFileRes, API.GetDataFromFileParams>(
+    'console/api/rcs/import_data_from_file',
+    {
+      ...data,
+    },
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    },
+  )
+}
+// 通过文件获取号码数据
+export const getSendAddress = (data: API.GetSendAddressParams) => {
+  return request.post<any, API.GetSendAddressRes, API.GetSendAddressParams>(
+    'console/api/addressbook/get_mob_send_addressbooks',
+    {
+      ...data,
+    },
+  )
+}
+
 // 创建发送任务
 export const createRcsSend = (data: API.CreateRcsSendParams) => {
   return request.post<any, any, API.CreateRcsSendParams>(

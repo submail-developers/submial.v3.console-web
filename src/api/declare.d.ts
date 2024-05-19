@@ -556,6 +556,48 @@ declare module 'apis' {
     }
     interface saveupForCspAccountItems {}
 
+    // 通过文件获取号码数据
+    interface GetDataFromFileParams {
+      file: any
+    }
+    interface GetDataFromFileRes {
+      data: string[][]
+      org_name: string
+      oss_path: string
+      status: string
+      message?: string
+    }
+
+    // 获取发送任务地址簿
+    interface GetSendAddressParams {
+      page: number
+      type: number
+    }
+    interface GetSendAddressRes {
+      addressbooks: AddressbooksObj | AddressbooksItem[][]
+      exportconfirm: string
+      mob: string
+      page: number
+      rows: number
+      sendconfirm: string
+      status: number
+      subaccount_sms_addressbook_shared: boolean
+    }
+    interface AddressbooksObj {
+      [key in string]: AddressbooksItem[]
+    }
+    interface AddressbooksItem {
+      address: string
+      addressbook_name: string
+      folder: string
+      folder_name: string
+      folder_sign: string
+      folder_tag: string
+      id: string
+      sign: string
+      update_at: string
+    }
+
     // 创建发送任务
     interface CreateRcsSendParams {
       appid: string

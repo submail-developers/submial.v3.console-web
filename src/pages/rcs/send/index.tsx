@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useParams, useNavigate, NavLink } from 'react-router-dom'
 import {
   Input,
@@ -44,8 +44,10 @@ export default function CreateSend() {
   const { id, sign } = useParams()
   const nav = useNavigate()
   const point = usePoint('lg')
-  const [form] = Form.useForm()
+  const [form1] = Form.useForm()
+  const [form2] = Form.useForm()
   const { message } = App.useApp()
+  const tabsRef = useRef(null)
   const [showModal, setShowModal] = useState(false)
 
   const [chatbotList, setChatbotList] = useState<API.ChatbotItem[]>([])
@@ -53,6 +55,7 @@ export default function CreateSend() {
   const [tempInfo, setTempInfo] = useState<API.RcsTempListItem>()
   const [showChatbotMenu, setShowChatbotMenu] = useState(true)
   const [entries, setentries] = useState<API.EntriesItem[]>([])
+  const [varsKeys, setVarsKeys] = useState<string[]>(['test1', 'test2'])
 
   const getChatbotList = async () => {
     try {
@@ -65,7 +68,7 @@ export default function CreateSend() {
       })
       setChatbotList(res.list)
       if (res.list.length > 0) {
-        form.setFieldValue('appid', res.list[0].id)
+        form1.setFieldValue('appid', res.list[0].id)
         setChatbot(res.list[0])
         if (res.list[0].menu) {
           setentries(res.list[0].menu?.menu.entries || [])
@@ -82,28 +85,30 @@ export default function CreateSend() {
     }
   }
 
-  const onFieldsChange = (changedFields, allFields) => {
-    console.log(allFields)
-  }
-  const onFinish = async (values) => {
-    console.log(values)
-    const { appid, mms, sms, textarea } = values
-    if (!textarea) {
-      message.warning('请输入手机号')
-    }
-    const res = await createRcsSend({
-      appid: appid,
-      template_id: sign,
-      tos: textarea || '',
-      vars: '',
-      mms: mms,
-      sms: sms,
-    })
-    if (res.status == 'success') {
-      message.success('创建成功', 4, () => {
-        // nav('/console/rcs/send/0/0', { replace: true })
-      })
-    }
+  const submit = async () => {
+    const value1 = await form1.getFieldsValue()
+    const value2 = await form2.getFieldsValue()
+    const value = await tabsRef.current.getValues()
+
+    console.log(value)
+
+    // const { appid, mms, sms, textarea } = { ...value1 , ...value2}
+    // if (!textarea) {
+    //   message.warning('请输入手机号')
+    // }
+    // const res = await createRcsSend({
+    //   appid: appid,
+    //   template_id: sign,
+    //   tos: textarea || '',
+    //   vars: '',
+    //   mms: mms,
+    //   sms: sms,
+    // })
+    // if (res.status == 'success') {
+    //   message.success('创建成功', 4, () => {
+    //     // nav('/console/rcs/send/0/0', { replace: true })
+    //   })
+    // }
   }
   const getTempInfo = async () => {
     try {
@@ -133,7 +138,7 @@ export default function CreateSend() {
 
   // 是否开启回落
   const changeBack = (val) => {
-    form.setFieldsValue({
+    form2.setFieldsValue({
       mms: val ? 'true' : 'false',
       sms: val ? 'true' : 'false',
     })
@@ -148,7 +153,7 @@ export default function CreateSend() {
       getTempInfo()
       setShowModal(false)
     }
-  }, [sign, id, form])
+  }, [sign, id, form1])
 
   return (
     <>
@@ -206,12 +211,10 @@ export default function CreateSend() {
               <Form
                 name='create-send-form'
                 className='create-send-form'
-                form={form}
+                form={form1}
                 layout='vertical'
                 autoComplete='off'
-                validateTrigger='onBlur'
-                onFieldsChange={onFieldsChange}
-                onFinish={onFinish}>
+                validateTrigger='onBlur'>
                 <Row gutter={24}>
                   <Col span={24}>
                     <Flex align='center'>
@@ -309,22 +312,31 @@ export default function CreateSend() {
                       </Row>
                     </div>
                   </Col>
+                </Row>
+              </Form>
+              <Col span={24}>
+                <Flex
+                  align='center'
+                  className={`${showChatbotMenu ? 'm-t-16' : ''}`}>
+                  <div className='color-btn g-radius-50 step-number fx-center-center color fn16 '>
+                    2
+                  </div>
+                  <span className='fw-500 m-l-8 fn16'>添加联系人</span>
+                </Flex>
+                <Divider className='line m-y-12'></Divider>
+              </Col>
+              <Col span={24}>
+                <ContactsTabs vars={varsKeys} ref={tabsRef} />
+              </Col>
 
-                  <Col span={24}>
-                    <Flex
-                      align='center'
-                      className={`${showChatbotMenu ? 'm-t-16' : ''}`}>
-                      <div className='color-btn g-radius-50 step-number fx-center-center color fn16 '>
-                        2
-                      </div>
-                      <span className='fw-500 m-l-8 fn16'>添加联系人</span>
-                    </Flex>
-                    <Divider className='line m-y-12'></Divider>
-                  </Col>
-                  <Col span={24}>
-                    <ContactsTabs form={form} />
-                  </Col>
-
+              <Form
+                name='create-send-form-2'
+                className='create-send-form'
+                form={form2}
+                layout='vertical'
+                autoComplete='off'
+                validateTrigger='onBlur'>
+                <Row gutter={24}>
                   <Col span={24}>
                     <Flex
                       align='center'
@@ -426,7 +438,7 @@ export default function CreateSend() {
                                     colorPrimary: timer ? '#f19d25' : '#1764ff',
                                   },
                                 }}>
-                                <Button type='primary' htmlType='submit'>
+                                <Button type='primary' onClick={submit}>
                                   {timer ? '提交定时任务' : '提交发送任务'}
                                 </Button>
                               </ConfigProvider>

@@ -1,139 +1,154 @@
-import { useEffect, useState } from 'react'
-import { Input, Row, Col } from 'antd'
+import {
+  useEffect,
+  useState,
+  useRef,
+  forwardRef,
+  useImperativeHandle,
+} from 'react'
+import { Input, Row, Col, Table, Form } from 'antd'
 import './index.scss'
 
 type Props = {
-  initValues: string
-  onChange: (value: string) => void
+  vars: string[]
 }
 
-type InputItemProps = {
-  initValue: string
-  onChange: (data: string | string[]) => void
-}
-const InputItem = (props: InputItemProps) => {
-  const [value, setValue] = useState<string>()
-  // 输入内容
-  const changeVal = (e) => {
-    let val = e.target.value as string
-    setValue(val)
+const Fn = (props: Props, ref: any) => {
+  useImperativeHandle(ref, () => {
+    return {
+      getValues,
+    }
+  })
+  const [form] = Form.useForm()
+  const varsItemRef = useRef({})
+
+  const getValues = async () => {
+    const values = await form.getFieldsValue()
+    return values
   }
-  // 失去焦点
-  const blurEvent = (e) => {
-    let val = e.target.value as string
-    props.onChange(val)
-  }
-  // 粘贴
-  const pasteVal = (event) => {
+
+  const pasteEvent = async (event, name) => {
+    const values = await form.getFieldsValue()
     // 取消默认粘贴行为
     event.preventDefault()
     // 获取粘贴内容
-    var pastedText = (event.clipboardData || window.Clipboard).getData('text')
-    let values = pastedText.split(',')
-    setValue(values[0])
-    props.onChange(values)
-  }
-
-  // 回显值
-  useEffect(() => {
-    if (props.initValue) {
-      setValue(props.initValue)
-    }
-  }, [props.initValue])
-  return (
-    <Input
-      value={value}
-      onChange={changeVal}
-      onBlur={blurEvent}
-      onPaste={pasteVal}
-    />
-  )
-}
-
-export default function Fn(props: Props) {
-  const [values, setValues] = useState<string[]>([''])
-  const change = (val, i) => {
-    if (Array.isArray(val)) {
-      let newVal = [...values]
-      Array.prototype.splice.apply(newVal, [i, 1].concat(val))
-      setValues(newVal)
-    } else {
-      setValues((prev) => {
-        return [
-          ...prev.map((item, index) => {
-            if (i == index) {
-              item = val
-            }
-            return item
-          }),
-        ]
+    let pastedText = (event.clipboardData || window.Clipboard).getData('text')
+    let numbers = pastedText.split(',')
+    let new_address_data = []
+    numbers.forEach((item) => {
+      new_address_data.push({
+        to: item,
+        vars: { ...varsItemRef.current },
       })
-    }
-  }
-  const add = () => {
-    setValues([...values, ''])
-  }
-  const del = (i) => {
-    if (values.length == 1) return
-    setValues((prev) => {
-      return [
-        ...prev.filter((item, index) => {
-          if (i != index) {
-            return item
-          }
-        }),
-      ]
+    })
+    let newVal = [...values.address_data]
+    Array.prototype.splice.apply(newVal, [name, 1].concat(new_address_data))
+    console.log(newVal, new_address_data, 'ee')
+    form.setFieldsValue({
+      address_data: newVal,
     })
   }
-  // 记录编辑的值
+
+  const initDataSource = () => {
+    props.vars.forEach((key) => {
+      varsItemRef.current[key] = ''
+    })
+    form.setFieldsValue({
+      address_data: [{ to: '', vars: { ...varsItemRef.current } }],
+    })
+  }
   useEffect(() => {
-    props.onChange(values.join(','))
-  }, [values])
-  // 回显初始值
-  useEffect(() => {
-    if (props.initValues) {
-      setValues(props.initValues.split(','))
-    }
-  }, [])
+    initDataSource()
+  }, [props.vars])
   return (
     <>
-      <div className='p-24 contacts-content'>
-        <Row className='send-address-input'>
-          <Col span={24} lg={20} xxl={16}>
-            <div className='input-list'>
-              <div className='input-item header fx-y-center'>
-                <div className='mobile'>手机号码</div>
-                <div className='add'>添加行</div>
-                <div className='del'>减少行</div>
-              </div>
-              {values.map((item, index) => (
-                <div className='input-item fx-y-center' key={index}>
-                  <div className='mobile'>
-                    <InputItem
-                      initValue={item}
-                      onChange={(val) => change(val, index)}
-                    />
+      <div className='p-24 contacts-content input-content'>
+        <Form form={form} className='tabs'>
+          <Form.List name='address_data'>
+            {(fields, { add, remove }) => (
+              <>
+                <div className='fx tr'>
+                  <div className='tab-cell'>
+                    <Form.Item>
+                      <div className='cell-title'>手机号</div>
+                    </Form.Item>
                   </div>
-                  <div className='add'>
-                    <div className='handle-btn' onClick={add}>
-                      <span className='icon iconfont icon-jia fn18'></span>
+                  {props.vars.map((item) => (
+                    <div className='tab-cell var' key={item}>
+                      <Form.Item>
+                        <div className='cell-title'>{`${item} 变量`}</div>
+                      </Form.Item>
                     </div>
+                  ))}
+                  <div className='tab-cell var'>
+                    <Form.Item>
+                      <div className='handle'>添加行</div>
+                    </Form.Item>
                   </div>
-                  <div className='del'>
-                    <div className='handle-btn' onClick={() => del(index)}>
-                      <span className='icon iconfont icon-jian fn18'></span>
-                    </div>
+                  <div className='tab-cell var'>
+                    <Form.Item>
+                      <div className='handle'>减少行</div>
+                    </Form.Item>
                   </div>
                 </div>
-              ))}
-            </div>
-          </Col>
-        </Row>
+                {fields.map(({ key, name, ...restField }) => (
+                  <div className='fx tr' key={key}>
+                    <div className='tab-cell'>
+                      <Form.Item {...restField} name={[name, 'to']}>
+                        <Input
+                          placeholder=''
+                          onPaste={(e) => pasteEvent(e, name)}
+                        />
+                      </Form.Item>
+                    </div>
+                    {props.vars.map((item, index) => (
+                      <div className='tab-cell var' key={`${key}-${item}`}>
+                        <Form.Item {...restField} name={[name, 'vars', item]}>
+                          <Input placeholder='' />
+                        </Form.Item>
+                      </div>
+                    ))}
+                    <div className='tab-cell var'>
+                      <Form.Item>
+                        <div className='handle'>
+                          <div className='handle-btn' onClick={() => add()}>
+                            <span className='icon iconfont icon-jia'></span>
+                          </div>
+                        </div>
+                      </Form.Item>
+                    </div>
+                    <div className='tab-cell var'>
+                      <Form.Item>
+                        <div className='handle'>
+                          <div
+                            className='handle-btn'
+                            onClick={() => remove(name)}>
+                            <span className='icon iconfont icon-jian'></span>
+                          </div>
+                        </div>
+                      </Form.Item>
+                    </div>
+                  </div>
+                ))}
+                {fields.length == 0 && (
+                  <div
+                    className='fx-center-center p-t-16'
+                    onClick={() => add()}>
+                    <div className='handle-add fx-center-center color-status-primary'>
+                      <span className='icon iconfont icon-jia '></span>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+          </Form.List>
+        </Form>
       </div>
-      <div className='color-warning-blue g-radius-4 p-x-16 p-y-8 fn12 m-t-24'>
+      <div className='color-warning-blue g-radius-4 p-x-16 p-y-8 fn13 m-t-24'>
         <span className='icon iconfont icon-dengpao fn12 m-r-2'></span>
         支持复制并粘贴txt文件的号码到手动输入框，建议一次不超过1万个号码，以免造成浏览器卡顿。
       </div>
     </>
   )
 }
+
+export default forwardRef(Fn)
