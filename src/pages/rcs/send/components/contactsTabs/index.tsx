@@ -5,31 +5,23 @@ import {
   useImperativeHandle,
   forwardRef,
 } from 'react'
-import { Form, Input, Flex } from 'antd'
-import type { FormInstance } from 'antd'
-import { ProFormDependency } from '@ant-design/pro-components'
-import { usePoint } from '@/hooks'
+import { Flex } from 'antd'
 import MyAddress from '../address'
 import MyFile from '../file'
 import MyInput from '../input'
 import MyArea from '../textarea'
+import { API } from 'apis'
+import { getSendAddress } from '@/api'
 import './index.scss'
 
+// 1从地址簿导入 ｜ 2从文件导入 ｜ 3手动输入 ｜ 4手动粘贴 | 5从主账户地址簿导入
+type T = '1' | '2' | '3' | '4' | '5'
+
 type Props = {
-  // form: FormInstance<any>
   vars: string[]
 }
 
-export type Type = '1' | '2' | '3' | '4' // 1从地址簿导入 ｜ 2从文件导入 ｜ 3手动输入 ｜ 4手动粘贴
-type TabsData = {
-  address: string
-  file: string
-  input: any[]
-  textarea: string
-}
-
 function ContactsTabs(props: Props, ref: any) {
-  const [form] = Form.useForm()
   useImperativeHandle(ref, () => {
     return {
       getValues,
@@ -37,19 +29,16 @@ function ContactsTabs(props: Props, ref: any) {
   })
 
   const addressRef = useRef(null)
+  const parentRef = useRef(null)
   const fileRef = useRef(null)
   const inputRef = useRef(null)
   const areaRef = useRef(null)
-  const [type, setType] = useState<Type>('1')
-  const [tabsData, setTabsData] = useState<TabsData>({
-    address: '',
-    file: '',
-    input: [],
-    textarea: '',
-  })
+  const [type, setType] = useState<T>('1')
+  const [books, setBooks] = useState<API.AddressbooksItem[][]>([])
+  const [parentBooks, setParentBooks] = useState<API.AddressbooksItem[][]>([])
+
   const getValues = () => {
     let values
-
     switch (type) {
       case '1':
         values = addressRef.current.getValues()
@@ -63,9 +52,35 @@ function ContactsTabs(props: Props, ref: any) {
       case '4':
         values = areaRef.current.getValues()
         break
+      case '5':
+        values = parentRef.current.getValues()
+        break
     }
     return values
   }
+  const getAddress = async () => {
+    try {
+      const res = await getSendAddress({
+        page: 1,
+        type: 1,
+      })
+      if (Array.isArray(res.addressbooks)) {
+        setBooks(res.addressbooks)
+      } else {
+        setBooks(Object.values(res.addressbooks))
+      }
+      if (res.parent_addressbooks) {
+        if (Array.isArray(res.parent_addressbooks)) {
+          setParentBooks(res.parent_addressbooks)
+        } else {
+          setParentBooks(Object.values(res.parent_addressbooks))
+        }
+      }
+    } catch (error) {}
+  }
+  useEffect(() => {
+    getAddress()
+  }, [])
   return (
     <div className='contacts-tabs'>
       <Flex className='p-x-4 fx' gap={4}>
@@ -76,6 +91,15 @@ function ContactsTabs(props: Props, ref: any) {
           onClick={() => setType('1')}>
           从地址簿导入
         </div>
+        {parentBooks.length > 0 && (
+          <div
+            className={`tabs-item p-x-4 fx-center-center fn14 ${
+              type == '5' ? 'active' : ''
+            }`}
+            onClick={() => setType('5')}>
+            从主账户地址簿导入
+          </div>
+        )}
         <div
           className={`tabs-item p-x-4 fx-center-center fn14 ${
             type == '2' ? 'active' : ''
@@ -99,7 +123,8 @@ function ContactsTabs(props: Props, ref: any) {
         </div>
       </Flex>
 
-      {type == '1' && <MyAddress ref={addressRef} />}
+      {type == '1' && <MyAddress ref={addressRef} books={books} />}
+      {type == '5' && <MyAddress ref={parentRef} books={parentBooks} />}
       {type == '2' && <MyFile ref={fileRef} vars={props.vars} />}
       {type == '3' && <MyInput ref={inputRef} vars={props.vars} />}
       {type == '4' && <MyArea ref={areaRef} />}
