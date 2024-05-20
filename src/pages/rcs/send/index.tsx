@@ -135,28 +135,62 @@ export default function CreateSend() {
 
   const submit = async () => {
     const value1 = await form1.getFieldsValue()
-    const value2 = await form2.getFieldsValue()
-    const value = await tabsRef.current.getValues()
+    const { mms, sms, isTimetosend, time, timetosend_date } =
+      await form2.getFieldsValue()
+    const { address_data, addressmod } = await tabsRef.current.getValues()
 
-    console.log({ ...value1, ...value2, ...value })
+    switch (addressmod) {
+      case 'addressbook':
+      case 'parent_addressbook':
+        if (address_data.length == 0) {
+          message.warning('请选择地址簿')
+          return
+        }
+        break
+      case 'file':
+        if (address_data.length == 0) {
+          message.warning('请上传文件')
+          return
+        }
+        break
+      case 'input':
+      case 'paste':
+        if (address_data.length == 0) {
+          message.warning('请输入手机号')
+          return
+        }
+        break
+    }
 
-    // const { appid, mms, sms, textarea } = { ...value1 , ...value2}
-    // if (!textarea) {
-    //   message.warning('请输入手机号')
-    // }
-    // const res = await createRcsSend({
-    //   appid: appid,
-    //   template_id: sign,
-    //   tos: textarea || '',
-    //   vars: '',
-    //   mms: mms,
-    //   sms: sms,
-    // })
-    // if (res.status == 'success') {
-    //   message.success('创建成功', 4, () => {
-    //     // nav('/console/rcs/send/0/0', { replace: true })
-    //   })
-    // }
+    let params = {
+      ...value1,
+      address_data,
+      addressmod,
+      template_id: sign,
+      mms: mms,
+      sms: sms,
+      isTimetosend: isTimetosend.toString(),
+      timetosend_date: '2024-05-18',
+      timetosend_hour: '04',
+      timetosend_minute: '06',
+    }
+    if (isTimetosend) {
+      if (!timetosend_date || !time) {
+        message.warning('请选择定时日期和时间')
+        return
+      } else {
+        params['timetosend_date'] = timetosend_date.format('YYYY-MM-DD')
+        params['timetosend_hour'] = time.format('HH')
+        params['timetosend_minute'] = time.format('mm')
+      }
+    }
+
+    const res = await createRcsSend(params)
+    if (res.status == 'success') {
+      message.success('创建成功', 4, () => {
+        // nav('/console/rcs/send/0/0', { replace: true })
+      })
+    }
   }
   const getTempInfo = async () => {
     try {
@@ -274,7 +308,7 @@ export default function CreateSend() {
                     <Divider className='line m-y-12'></Divider>
                   </Col>
                   <Col span={24} lg={12}>
-                    <Form.Item label='任务名称（选填）' name='name'>
+                    <Form.Item label='任务名称（选填）' name='title'>
                       <Input placeholder='请输入' />
                     </Form.Item>
                   </Col>
@@ -440,8 +474,9 @@ export default function CreateSend() {
                   <Col span={24}>
                     <Space className='m-b-12'>
                       <Form.Item
+                        initialValue={false}
                         label=''
-                        name='timer'
+                        name='isTimetosend'
                         className='m-b-0'
                         valuePropName='checked'>
                         <Switch size='small' />
@@ -450,17 +485,17 @@ export default function CreateSend() {
                     </Space>
                   </Col>
 
-                  <ProFormDependency name={['timer']}>
-                    {({ timer }) => {
+                  <ProFormDependency name={['isTimetosend']}>
+                    {({ isTimetosend }) => {
                       return (
                         <>
-                          {timer && (
+                          {isTimetosend && (
                             <Col span={24}>
                               <Row gutter={16}>
                                 <Col>
                                   <Form.Item
                                     label=''
-                                    name='date'
+                                    name='timetosend_date'
                                     initialValue={dayjs().add(5, 'minute')}
                                     className='m-b-0'>
                                     <DatePicker
@@ -472,8 +507,8 @@ export default function CreateSend() {
                                     />
                                   </Form.Item>
                                 </Col>
-                                <ProFormDependency name={['date']}>
-                                  {({ date }) => {
+                                <ProFormDependency name={['timetosend_date']}>
+                                  {({ timetosend_date }) => {
                                     return (
                                       <Col>
                                         <Form.Item
@@ -487,7 +522,7 @@ export default function CreateSend() {
                                             showTime={{ format: 'HH:mm' }}
                                             format='HH:mm:ss'
                                             disabledTime={() =>
-                                              disabledDateTime(date)
+                                              disabledDateTime(timetosend_date)
                                             }
                                             mode='time'
                                             placement='topLeft'
@@ -522,11 +557,15 @@ export default function CreateSend() {
                               <ConfigProvider
                                 theme={{
                                   token: {
-                                    colorPrimary: timer ? '#f19d25' : '#1764ff',
+                                    colorPrimary: isTimetosend
+                                      ? '#f19d25'
+                                      : '#1764ff',
                                   },
                                 }}>
                                 <Button type='primary' onClick={submit}>
-                                  {timer ? '提交定时任务' : '提交发送任务'}
+                                  {isTimetosend
+                                    ? '提交定时任务'
+                                    : '提交发送任务'}
                                 </Button>
                               </ConfigProvider>
                             </Form.Item>

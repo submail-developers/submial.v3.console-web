@@ -609,6 +609,18 @@ declare module 'apis' {
       vars: string
       mms: 'true' | 'false'
       sms: 'true' | 'false'
+      addressmod:
+        | 'addressbook'
+        | 'file'
+        | 'input'
+        | 'paste'
+        | 'parent_addressbook'
+      address_data: any[] | string
+      isTimetosend: 'true' | 'false'
+      timetosend_date: string
+      timetosend_hour: string
+      timetosend_minute: string
+      title: string
     }
     // 更新chatbot信息参数
     interface updateChatbotParams {

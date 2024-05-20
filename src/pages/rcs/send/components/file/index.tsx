@@ -22,7 +22,6 @@ function Fn(props: Props, ref: any) {
       getValues,
     }
   })
-  const [form] = Form.useForm()
   const [letters, setLetters] = useState<string[]>([]) // 生成字母
   const [data, setData] = useState<string[][]>([])
   const [page, setPage] = useState(1)
@@ -40,9 +39,9 @@ function Fn(props: Props, ref: any) {
     },
     fileList: [],
   }
-  const getValues = async () => {
-    const values = await form.getFieldsValue()
-    return values
+  const getValues = () => {
+    const value = allDataRef.current
+    return value
   }
 
   const getFileData = async (file: UploadFile) => {

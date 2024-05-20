@@ -22,8 +22,8 @@ const Fn = (props: Props, ref: any) => {
   const varsItemRef = useRef({})
 
   const getValues = async () => {
-    const values = await form.getFieldsValue()
-    return values
+    const { address_data } = await form.getFieldsValue()
+    return address_data
   }
 
   const pasteEvent = async (event, name) => {

@@ -12,8 +12,8 @@ function Fn(props: Props, ref: any) {
   const [form] = Form.useForm()
   const [number, setNumber] = useState(0)
   const getValues = async () => {
-    const values = await form.getFieldsValue()
-    return values
+    const { address_data } = await form.getFieldsValue()
+    return address_data
   }
   const changeVal = (e) => {
     let value = getPhoneLineBreak(e.target.value)

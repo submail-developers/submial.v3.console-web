@@ -37,23 +37,39 @@ function ContactsTabs(props: Props, ref: any) {
   const [books, setBooks] = useState<API.AddressbooksItem[][]>([])
   const [parentBooks, setParentBooks] = useState<API.AddressbooksItem[][]>([])
 
-  const getValues = () => {
+  // addressbook地址簿,file文件,input手动输入框,paste手动粘贴,parent_addressbook主账户地址簿
+  const getValues = async () => {
     let values
     switch (type) {
       case '1':
-        values = addressRef.current.getValues()
+        values = {
+          addressmod: 'addressbook',
+          address_data: addressRef.current.getValues(),
+        }
         break
       case '2':
-        values = fileRef.current.getValues()
+        values = {
+          addressmod: 'file',
+          address_data: fileRef.current.getValues(),
+        }
         break
       case '3':
-        values = inputRef.current.getValues()
+        values = {
+          addressmod: 'input',
+          address_data: await inputRef.current.getValues(),
+        }
         break
       case '4':
-        values = areaRef.current.getValues()
+        values = {
+          addressmod: 'paste',
+          address_data: await areaRef.current.getValues(),
+        }
         break
       case '5':
-        values = parentRef.current.getValues()
+        values = {
+          addressmod: 'parent_addressbook',
+          address_data: parentRef.current.getValues(),
+        }
         break
     }
     return values
