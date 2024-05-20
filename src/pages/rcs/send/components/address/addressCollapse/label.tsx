@@ -1,6 +1,7 @@
-import { Flex, Checkbox } from 'antd'
-import type { CheckboxProps, GetProp } from 'antd'
+import { Flex, Checkbox, Space, Image } from 'antd'
+import type { CheckboxProps } from 'antd'
 import { API } from 'apis'
+import { getFolderPath } from './type'
 type ChangeProps = {
   folder: string
   checkeds: string[]
@@ -14,10 +15,12 @@ type LabelItemProps = {
 const LabelItem = (props: LabelItemProps) => {
   let name = ''
   let folder = ''
+  let tag = ''
   if (props.item.length > 0) {
     name =
       props.item[0].folder == '0' ? '所有地址簿' : props.item[0].folder_name
     folder = props.item[0].folder
+    tag = props.item[0].folder_tag
   }
   // 是否全选/一个都没选
   const checkAll = props.checkeds.length == props.item.length
@@ -37,7 +40,15 @@ const LabelItem = (props: LabelItemProps) => {
   }
   return (
     <Flex justify='space-between' align='center'>
-      <span>{name}</span>
+      <Space align='center'>
+        <Image
+          preview={false}
+          src={getFolderPath(Number(tag))}
+          width={24}
+          className='m-b-2'
+        />
+        <span>{name}</span>
+      </Space>
       <Checkbox
         indeterminate={indeterminate}
         onChange={onCheckAllChange}

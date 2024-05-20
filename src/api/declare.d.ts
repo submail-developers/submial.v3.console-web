@@ -575,6 +575,7 @@ declare module 'apis' {
     }
     interface GetSendAddressRes {
       addressbooks: Addressbooks
+      parent_addressbooks: Addressbooks
       exportconfirm: string
       mob: string
       page: number
@@ -593,9 +594,10 @@ declare module 'apis' {
       folder: string
       folder_name: string
       folder_sign: string
-      folder_tag: string
+      folder_tag: '0' | '1' | '2' | '3' | '4' | '5' | '6'
       id: string
       sign: string
+      tag: '0' | '1' | '2' | '3' | '4' | '5' | '6'
       update_at: string
     }
 

@@ -1,7 +1,7 @@
 import { Row, Col, Image } from 'antd'
 import { API } from 'apis'
-import address_blue from '@/assets/rcs/address/address_blue.png'
 import './children.scss'
+import { getAddressPath } from './type'
 type ChangeProps = {
   folder: string
   checkeds: string[]
@@ -24,7 +24,11 @@ const Item = (props: ItemProps) => {
         props.checked ? 'checked' : ''
       }`}
       onClick={() => props.onChange(!props.checked)}>
-      <Image src={address_blue} preview={false} width={60} />
+      <Image
+        src={getAddressPath(Number(props.item.tag))}
+        preview={false}
+        width={60}
+      />
       <div className='name'>{props.item.addressbook_name}</div>
       <div className='num'>{props.item.address}个联系人</div>
       <div className='check-btn fx-center-center'>
