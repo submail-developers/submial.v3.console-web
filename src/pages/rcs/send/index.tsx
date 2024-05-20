@@ -31,7 +31,7 @@ import Footer from '@/components/rcsMobileFooter'
 import ContactsTabs from './components/contactsTabs'
 import Modal from './components/modal'
 import CardMob from '@/pages/rcs/template/create/card/item'
-
+import dayjs from 'dayjs'
 import { getChatbot, createRcsSend, getRcsTempList } from '@/api'
 import { API } from 'apis'
 
@@ -39,6 +39,54 @@ import codeImg from '@/assets/rcs/send1.png'
 
 import './index.scss'
 import '@/pages/rcs/template/mobile.scss'
+
+// 定时发送，只能选择当前时间5分钟之后的时间
+function disabledDateTime(date: Dayjs) {
+  if (date) {
+    let now = dayjs().add(5, 'minute')
+    if (date.format('YYYY/MM/DD') == now.format('YYYY/MM/DD')) {
+      console.log({
+        disabledHours: () => [...Array(now.hour()).keys()],
+        disabledMinutes: (hour) => {
+          if (hour === now.hour()) {
+            return [...Array(now.minute()).keys()]
+          }
+          return []
+        },
+        disabledSeconds: (hour, minute) => {
+          if (hour === now.hour() && minute === now.minute()) {
+            return [...Array(now.second()).keys()]
+          }
+          return []
+        },
+      })
+      return {
+        disabledHours: () => [...Array(now.hour()).keys()],
+        disabledMinutes: (hour) => {
+          if (hour === now.hour()) {
+            return [...Array(now.minute()).keys()]
+          }
+          return []
+        },
+        disabledSeconds: (hour, minute) => {
+          return []
+        },
+      }
+    } else {
+      return {
+        disabledHours: () => [],
+        disabledMinutes: () => [],
+        disabledSeconds: () => [],
+      }
+    }
+  } else {
+    return {
+      disabledHours: () => [],
+      disabledMinutes: () => [],
+      disabledSeconds: () => [],
+    }
+  }
+}
 
 export default function CreateSend() {
   const { id, sign } = useParams()
@@ -90,7 +138,7 @@ export default function CreateSend() {
     const value2 = await form2.getFieldsValue()
     const value = await tabsRef.current.getValues()
 
-    console.log(value)
+    console.log({ ...value1, ...value2, ...value })
 
     // const { appid, mms, sms, textarea } = { ...value1 , ...value2}
     // if (!textarea) {
@@ -202,7 +250,7 @@ export default function CreateSend() {
                 </div>
                 <Footer />
               </div>
-              <div className='color-warning-yellow g-radius-8 p-x-16 p-y-8 fn12 m-t-24'>
+              <div className='color-warning-yellow g-radius-8 p-x-16 p-y-8 fn13 m-t-24'>
                 <span className='icon iconfont icon-dengpao fn12 m-r-2'></span>
                 如果您的短信属于群发类型，晚间22:00之后提交的群发请求，为避免对用户造成骚扰，可能会被延迟到隔天的早间8:00开始发送，未经您的用户允许，请勿发送营销类相关短信内容。
               </div>
@@ -331,7 +379,7 @@ export default function CreateSend() {
 
               <Form
                 name='create-send-form-2'
-                className='create-send-form'
+                className='create-send-form m-t-16'
                 form={form2}
                 layout='vertical'
                 autoComplete='off'
@@ -408,14 +456,53 @@ export default function CreateSend() {
                         <>
                           {timer && (
                             <Col span={24}>
-                              <Form.Item label='' name='time' className='m-b-0'>
-                                <DatePicker
-                                  showTime
-                                  needConfirm={false}
-                                  placeholder='请选择定时发送时间'
-                                />
-                              </Form.Item>
-                              <div className='color-warning-red g-radius-8 p-x-16 p-y-8 fn12 m-t-24'>
+                              <Row gutter={16}>
+                                <Col>
+                                  <Form.Item
+                                    label=''
+                                    name='date'
+                                    initialValue={dayjs().add(5, 'minute')}
+                                    className='m-b-0'>
+                                    <DatePicker
+                                      type='time'
+                                      placement='topLeft'
+                                      showNow={false}
+                                      placeholder='请选择日期'
+                                      minDate={dayjs().add(5, 'minute')}
+                                    />
+                                  </Form.Item>
+                                </Col>
+                                <ProFormDependency name={['date']}>
+                                  {({ date }) => {
+                                    return (
+                                      <Col>
+                                        <Form.Item
+                                          label=''
+                                          name='time'
+                                          initialValue={dayjs()
+                                            .add(5, 'minute')
+                                            .startOf('minute')}
+                                          className='m-b-0'>
+                                          <DatePicker
+                                            showTime={{ format: 'HH:mm' }}
+                                            format='HH:mm:ss'
+                                            disabledTime={() =>
+                                              disabledDateTime(date)
+                                            }
+                                            mode='time'
+                                            placement='topLeft'
+                                            picker='time'
+                                            showNow={false}
+                                            needConfirm={false}
+                                            placeholder='请选择时间'
+                                          />
+                                        </Form.Item>
+                                      </Col>
+                                    )
+                                  }}
+                                </ProFormDependency>
+                              </Row>
+                              <div className='color-warning-red g-radius-8 p-x-16 p-y-8 fn13 m-t-24'>
                                 <span className='icon iconfont icon-dengpao fn12 m-r-2'></span>
                                 请注意
                                 <br />
