@@ -162,8 +162,9 @@ export const menus: RouteObject[] = [
             ),
           },
           {
-            // type = 'text' | 'generalPurposeCard' | 'generalPurposeCardCarousel' 纯文本/单卡片/多卡片
-            // id = 0 为创建，否则为修改
+            // create/type/id
+            // type:1纯文本  2单卡片  3多卡片  4文件(暂未开发)
+            // id:0为创建，否则为修改
             // ?name=xxx 模版名称
             path: 'create',
             loader: loaderFn({
@@ -180,7 +181,7 @@ export const menus: RouteObject[] = [
             children: [
               // 纯文本
               {
-                path: 'text/:id',
+                path: '1/:id',
                 loader: loaderFn({}),
                 errorElement: <Error />,
                 element: (
@@ -193,7 +194,7 @@ export const menus: RouteObject[] = [
               },
               // 单卡片
               {
-                path: 'card/:id',
+                path: '2/:id',
                 loader: loaderFn({}),
                 errorElement: <Error />,
                 element: (
@@ -206,7 +207,7 @@ export const menus: RouteObject[] = [
               },
               // 多卡片
               {
-                path: 'cards/:id',
+                path: '3/:id',
                 loader: loaderFn({}),
                 errorElement: <Error />,
                 element: (

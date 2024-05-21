@@ -11,7 +11,7 @@ type Props = {
 }
 
 // 模版类型
-type T = 'text' | 'card' | 'cards'
+type T = 1 | 2 | 3 | 4
 
 type ListItem = {
   icon: string
@@ -24,19 +24,19 @@ const list: ListItem[] = [
     icon: 'icon-text',
     name: '纯文本',
     des: '模版类型描述',
-    type: 'text',
+    type: 1,
   },
   {
     icon: 'icon-card',
     name: '单卡片',
     des: '模版类型描述',
-    type: 'card',
+    type: 2,
   },
   {
     icon: 'icon-cards',
     name: '多卡片',
     des: '模版类型描述',
-    type: 'cards',
+    type: 3,
   },
 ]
 
@@ -52,7 +52,7 @@ const Extra = (props) => {
 // 选择新建-模版消息类型
 export default function Fn(props: Props) {
   const nav = useNavigate()
-  const [type, setType] = useState<T>('text')
+  const [type, setType] = useState<T>(1)
   const [form] = Form.useForm()
 
   const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
@@ -103,9 +103,7 @@ export default function Fn(props: Props) {
               validator: utils.validateBackslash,
             },
           ]}
-          extra={
-            <Extra>不可携带英文双引号、\、emoji，Chatbot名称不能为空</Extra>
-          }>
+          extra={<Extra>不可携带英文双引号、\、emoji，模版名称不能为空</Extra>}>
           <Input />
         </Form.Item>
         <Form.Item name='type' hidden>

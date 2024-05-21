@@ -31,14 +31,19 @@ export default function Fn({
 }: Props) {
   const nav = useNavigate()
   const { message } = App.useApp()
-  const [type, setType] = useState<'text' | 'card' | 'cards' | ''>('')
   // 选中该模版
   const handleItem = () => {
     if (onSelect) onSelect()
   }
   // 编辑事件
   const editEvent = () => {
-    nav(`/console/rcs/template/create/${type}/${item.id}?name=${item.title}`)
+    if (item.type == 4) {
+      message.warning('文件模版暂未开发')
+      return
+    }
+    nav(
+      `/console/rcs/template/create/${item.type}/${item.id}?name=${item.title}`,
+    )
   }
   // 删除事件
   const delEvent = async () => {
@@ -52,17 +57,6 @@ export default function Fn({
       }
     } catch (error) {}
   }
-  // 初始化获取模版类型
-  useEffect(() => {
-    if (typeof item.message.message == 'string') {
-      setType('text')
-    } else if ('generalPurposeCard' in item.message.message) {
-      setType('card')
-    } else if ('generalPurposeCardCarousel' in item.message.message) {
-      setType('cards')
-    } else {
-    }
-  }, [])
   return (
     <div className='rcs-temp-item'>
       <Tooltip title={item.rejectReason || ''} placement='bottom'>
@@ -78,14 +72,16 @@ export default function Fn({
           )}
           <div className='preview-model p-12'>
             <div className='temp-type fx-center-center p-x-16 fn12'>
-              {type == 'text' && '纯文本模版'}
-              {type == 'card' && '单卡片模版'}
-              {type == 'cards' && '多卡片模版'}
+              {item.type == 1 && '纯文本模版'}
+              {item.type == 2 && '单卡片模版'}
+              {item.type == 3 && '多卡片模版'}
+              {item.type == 4 && '文件模版'}
             </div>
             <div className='preview-content'>
-              {type == 'text' && <TextItem message={item.message.message} />}
-              {type == 'card' && <CardItem message={item.message.message} />}
-              {type == 'cards' && <CardsItem message={item.message.message} />}
+              {item.type == 1 && <TextItem message={item.message.message} />}
+              {item.type == 2 && <CardItem message={item.message.message} />}
+              {item.type == 3 && <CardsItem message={item.message.message} />}
+              {item.type == 4 && <div>文件模版暂未开发</div>}
             </div>
 
             <Space align='center' className='float-wrap'>
