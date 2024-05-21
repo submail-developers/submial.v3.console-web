@@ -150,8 +150,8 @@ const Dialog = (props: Props, ref: any) => {
                 选择文件
               </Button>
               <p
-                className='color-gray'
-                style={{ fontSize: '12px', margin: '0px' }}>
+                className='gray-color'
+                style={{ fontSize: '12px', marginTop: '10px' }}>
                 仅支持 TXT , CSV, VCF , excel 格式
                 <br />
                 超过十万条手机号建议使用CSV或TXT格式

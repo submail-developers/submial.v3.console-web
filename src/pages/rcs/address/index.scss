@@ -36,4 +36,39 @@
     font-size: 20px;
     cursor: pointer;
   }
+  .tab-address {
+    margin-top: 30px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e7e7e7;
+    div {
+      cursor: pointer;
+      color: #666666;
+      display: inline-block;
+      width: 120px;
+      padding-bottom: 10px;
+      position: relative;
+      &.active {
+        color: #282b31;
+      }
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #1764ff;
+        transition: all 0.3s;
+      }
+      &.active::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100px;
+        height: 2px;
+        background: #1764ff;
+      }
+    }
+  }
 }

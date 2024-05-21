@@ -7,48 +7,32 @@ import {
   Row,
   Col,
   Popconfirm,
-  message,
+  Tooltip,
   Pagination,
   App,
   Flex,
 } from 'antd'
 import { IDIcon } from '@/components/aIcons'
-import redImg from '@/assets/rcs/address/folder_red.png'
-import purpleImg from '@/assets/rcs/address/folder_purple.png'
-import cyanImg from '@/assets/rcs/address/folder_cyan.png'
-import blueImg from '@/assets/rcs/address/folder_blue.png'
-import greenImg from '@/assets/rcs/address/folder_green.png'
-import yellowImg from '@/assets/rcs/address/folder_yellow.png'
+import { getFolderPath } from '../type'
 import { getAddressbooksFolder, deleteAddressbooksFolder } from '@/api'
 import CerateAddressDialog from './createAddressFileDialog/index'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 
 import './index.scss'
 import { constant } from 'lodash'
 const { Option } = Select
-const addresssIcon = {
-  '0': blueImg,
-  '1': redImg,
-  '2': purpleImg,
-  '3': cyanImg,
-  '4': blueImg,
-  '5': greenImg,
-  '6': yellowImg,
-}
+
 const { Search } = Input
 interface Props {
   onchildrenMethod: (info: any) => void
 }
-// const nav = useNavigate()
 
-// export default function Fn(props: Props) {
 export default function Fn() {
+  const nav = useNavigate()
   const { message } = App.useApp()
-
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
   const [openCreateModal, setOpenCreateModal] = useState(false)
-  const [openMoveModal, setOpenMoveModal] = useState(false)
   const [isEditMode, setIsEditMode] = useState(false)
   const [currentPage, setcurrentPage] = useState<number>(1)
   const [pageSize, setpageSize] = useState<number>(9)
@@ -120,10 +104,14 @@ export default function Fn() {
     setpageSize(pageSize)
   }
 
-  const folderEdit = (item) => {
+  const folderEdit = (item, e) => {
     setOpenCreateModal(true)
     setIsEditMode(true)
     setEditData(item)
+    e.stopPropagation()
+  }
+  const stopEvent = (e) => {
+    e.stopPropagation()
   }
 
   const deleteFolder = async (id) => {
@@ -139,6 +127,20 @@ export default function Fn() {
     } catch (error) {}
   }
 
+  const toDetail = (item) => {
+    nav(
+      `/console/rcs/address/folder/detail/${item.id}?title=${item.title}&tag=${item.tag}`,
+    )
+  }
+  // 复制
+  const copy = async (sign) => {
+    try {
+      await navigator.clipboard.writeText(sign)
+      message.success('复制成功')
+    } catch (error) {
+      message.success('复制失败')
+    }
+  }
   return (
     <Form
       name='address-book-file-form'
@@ -147,11 +149,14 @@ export default function Fn() {
       layout='vertical'
       initialValues={{ tag: 'all', keyword: '', order_by: 'update' }}
       autoComplete='off'>
-      <Row gutter={16}>
-        <Col xl={24} className='fx-between-center' style={{ padding: '0' }}>
+      <Row gutter={8}>
+        <Col
+          xl={24}
+          className='search-part fx-between-center'
+          style={{ padding: '0' }}>
           <Form.Item name='keyword' label='名称'>
             <Search
-              placeholder='i地址簿名称/ID'
+              placeholder='地址簿文件夹名称/ID'
               allowClear
               onSearch={handleSearch}
               style={{ width: 300 }}
@@ -161,81 +166,54 @@ export default function Fn() {
             type='primary'
             className='fx-start-center'
             htmlType='submit'
-            loading={loading}
             onClick={() => showModal(false)}>
             <i className='icon iconfont icon-jia'></i>
             &nbsp;&nbsp;创建文件夹
           </Button>
         </Col>
-        {/* <Col span={8} md={8} lg={6} xl={3}>
-          <Form.Item name='tag' label='标签类型'>
-            <Select placeholder='选择颜色'>
-              {options.map((option) => (
-                <Option key={option.value} value={option.value}>
-                  {option.label}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-        </Col> */}
-        {/* <Col span={8} md={8} lg={6} xl={3}>
-          <Form.Item name='order_by' label='排序'>
-            <Select placeholder='选择排序'>
-              {order.map((order) => (
-                <Option key={order.value} value={order.value}>
-                  {order.label}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-        </Col> */}
 
-        {/* <Col span={6} md={4} xl={3} style={{ marginLeft: 'auto' }}>
-          <Form.Item label=' '>
-           
-          </Form.Item>
-        </Col> */}
         <Col xl={24} className='set-item fx-start-center'>
           <div className='fx-start-center'>
             <img
-              src={blueImg}
+              src={getFolderPath(Number('4'))}
               alt=''
               width='40'
               style={{ marginRight: '16px' }}
             />
-            地址簿文件夹
+
+            <span className='fn16'>地址簿文件夹</span>
           </div>
         </Col>
       </Row>
 
-      <Row gutter={[16, 16]} wrap style={{ marginTop: '24px' }}>
+      <Row gutter={[20, 16]} wrap style={{ marginTop: '24px' }}>
         {addressFolderList.map((item, index) => (
-          <Col xl={8} key={item.id}>
+          <Col span={24} lg={12} xl={10} xxl={8} key={item.id}>
             <div className='address-book-item'>
               <div>
-                <div className='trapezoid'>
+                <div className='trapezoid' onClick={() => copy(item.sign)}>
                   <IDIcon />
-                  <div className='sign'>{item.sign}</div>
+                  <div className='sign fn15'>{item.sign}</div>
                 </div>
               </div>
-              <div className='book-list'>
+              <div className='book-list' onClick={() => toDetail(item)}>
                 <div>
-                  <img src={addresssIcon[item.tag]} alt='' />
+                  <img src={getFolderPath(Number(item.tag))} alt='' />
                 </div>
-                <NavLink to={`/console/rcs/address/folder/detail/${item.id}`}>
-                  <div className='to-detail'>
-                    <div className='fn18'>{item.title}</div>
-                    <div style={{ marginTop: '10px' }}>
-                      <span>{item.num}</span> 个地址簿
-                    </div>
+                <div className='to-detail'>
+                  <div className='fn16 fw-500'>{item.title}</div>
+                  <div style={{ marginTop: '10px' }}>
+                    <span>{item.num}</span> 个地址簿
                   </div>
-                </NavLink>
+                </div>
                 <div
-                  className='fx-between-center'
-                  style={{ marginTop: '40px' }}>
-                  <Button onClick={() => folderEdit(item)}>
-                    <i className='icon iconfont icon-input'></i>
-                  </Button>
+                  className='fx-between-center handle-item'
+                  onClick={stopEvent}>
+                  <Tooltip title='编辑'>
+                    <Button onClick={(e) => folderEdit(item, e)}>
+                      <i className='icon iconfont icon-input'></i>
+                    </Button>
+                  </Tooltip>
                   <Popconfirm
                     placement='left'
                     title='警告'
@@ -243,9 +221,11 @@ export default function Fn() {
                     onConfirm={() => deleteFolder(item.id)}
                     okText='确定'
                     cancelText='取消'>
-                    <Button>
-                      <i className='icon iconfont icon-shanchu'></i>
-                    </Button>
+                    <Tooltip title='删除'>
+                      <Button>
+                        <i className='icon iconfont icon-shanchu2'></i>
+                      </Button>
+                    </Tooltip>
                   </Popconfirm>
                 </div>
               </div>

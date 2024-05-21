@@ -13,12 +13,12 @@ interface Props {
   onSearch: () => void
 }
 enum Colors {
-  'tag-red' = 1,
-  'tag-purple' = 2,
-  'tag-cyan' = 3,
-  'tag-blue' = 4,
-  'tag-green' = 5,
-  'tag-yellow' = 6,
+  'tag-red' = '1',
+  'tag-purple' = '2',
+  'tag-cyan' = '3',
+  'tag-blue' = '4',
+  'tag-green' = '5',
+  'tag-yellow' = '6',
 }
 
 const Dialog = (props: Props, ref: any) => {
@@ -38,6 +38,7 @@ const Dialog = (props: Props, ref: any) => {
     form.resetFields()
     form.setFieldsValue({
       ...props.editData,
+      tag: props.editData ? Colors[props.editData.tag] : '',
     })
   }, [props.open])
 

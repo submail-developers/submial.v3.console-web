@@ -1,10 +1,4 @@
-import {
-  useState,
-  useImperativeHandle,
-  forwardRef,
-  useEffect,
-  useRef,
-} from 'react'
+import { useState, forwardRef, useEffect, useRef } from 'react'
 import {
   Modal,
   Form,
@@ -17,17 +11,18 @@ import {
   Transfer,
 } from 'antd'
 import type { TransferProps } from 'antd'
-import { getMobAddressbooks } from '@/api'
-import { divide, uniqBy } from 'lodash'
+import { getMobAddressbooks, moveAddressBook } from '@/api'
+import { uniqBy } from 'lodash'
 import { API } from 'apis'
 import './index.scss'
 const { Option } = Select
 
 interface Props {
   open: boolean
-  // isEdit: boolean
-  // onCancel: () => void
+  onCancel: () => void
+  onSearch: () => void
   // onOk: () => void
+  folderId: string
   foldetAddressList: any[]
 }
 interface RecordType {
@@ -73,7 +68,9 @@ const Dialog = (props: Props, ref: any) => {
     setTargetKeys(newTargetKeys)
   }
 
-  const handleSearch = () => {}
+  const handleSearch = () => {
+    getAddressList()
+  }
   // 获取公共地址簿
   const getAddressList = async () => {
     try {
@@ -113,8 +110,7 @@ const Dialog = (props: Props, ref: any) => {
     { label: '黄色', value: 'yellow', color: '#ffba00' },
   ]
 
-  const handleOk = () => {
-    // props.onCancel()
+  const handleOk = async () => {
     let propsArr: React.Key[] = []
     props.foldetAddressList.forEach((item, index) => {
       propsArr.push(item.id as React.Key)
@@ -128,20 +124,44 @@ const Dialog = (props: Props, ref: any) => {
     )
     console.log(addArr, 'addArr')
     console.log(delArr, 'delArr')
+    console.log(props.folderId)
     // console.log(propsArr, targetKeys, addArr, delArr)
+    if (addArr.length > 0) {
+      // 移出
+      const res = await moveAddressBook({
+        ids: addArr.join(','),
+        folder: props.folderId,
+        type: 1,
+        flag: 2,
+      })
+      if (res.status == 'success') {
+        message.success('移出成功')
+        props.onCancel()
+        props.onSearch()
+      }
+    }
+    if (delArr.length > 0) {
+      // 移入
+      try {
+        const res = await moveAddressBook({
+          ids: delArr.join(','),
+          folder: props.folderId,
+          type: 1,
+          flag: 1,
+        })
+        if (res.status == 'success') {
+          message.success('移入成功')
+          props.onCancel()
+          props.onSearch()
+        }
+      } catch (error) {}
+    }
   }
-
-  const handleCancel = () => {
-    // props.onCancel()
-  }
-
-  const onFinish = () => {}
-  const onFinishFailed = () => {}
 
   return (
     <Modal
       open={props.open}
-      // onCancel={props.onCancel}
+      onCancel={props.onCancel}
       title={
         <Form
           form={form}
@@ -149,12 +169,7 @@ const Dialog = (props: Props, ref: any) => {
           name='cuploadMms-account'
           layout='vertical'
           autoComplete='off'>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}>
+          <div className='fx-between-center'>
             <div className='fn18'>移入地址簿</div>
             <div style={{ display: 'flex' }}>
               <Form.Item
