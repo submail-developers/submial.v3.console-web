@@ -58,6 +58,7 @@ function Fn(props: Props, ref: any) {
               index == 0 ? '手机号码' : `@var(${props.vars[index - 1]}) 值`,
             dataIndex: index == 0 ? 'to' : props.vars[index - 1],
             width: index == 0 ? 140 : 120,
+            fixed: index == 0 ? 'left' : false,
           }
           _columns.push(_columnsItem)
         })

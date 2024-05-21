@@ -105,10 +105,10 @@ export default function Fn() {
                 placeholder='请选择'
                 options={[
                   { value: 'all', label: '全部' },
-                  { value: '1', label: '文本' },
-                  { value: '2', label: '单卡片' },
-                  { value: '3', label: '多卡片' },
-                  // { value: '4', label: '文件' },
+                  { value: 1, label: '文本' },
+                  { value: 2, label: '单卡片' },
+                  { value: 3, label: '多卡片' },
+                  // { value: 4, label: '文件' },
                 ]}
               />
             </Form.Item>

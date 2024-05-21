@@ -37,6 +37,7 @@ import CardsItem from '@/pages/rcs/template/create/cards/item'
 import dayjs from 'dayjs'
 import { getChatbot, createRcsSend, getRcsTempList, getSendNumber } from '@/api'
 import { API } from 'apis'
+import { getVars } from '@/utils'
 
 import codeImg from '@/assets/rcs/send1.png'
 
@@ -107,7 +108,7 @@ export default function CreateSend() {
   const [tempInfo, setTempInfo] = useState<API.RcsTempListItem>()
   const [showChatbotMenu, setShowChatbotMenu] = useState(true)
   const [entries, setentries] = useState<API.EntriesItem[]>([])
-  const [varsKeys, setVarsKeys] = useState<string[]>(['test1', 'test2'])
+  const [varsKeys, setVarsKeys] = useState<string[]>([])
 
   const [sendNum, setSendNum] = useState(0)
   const [openConfirm, setOpenConfirm] = useState(false)
@@ -244,6 +245,41 @@ export default function CreateSend() {
           setTempInfo(res.list[0])
         }
         setType(res.list[0].type)
+        let info = res.list[0]
+        let _keys: string[] = []
+        // 获取回落短信的参数
+        switch (info.type) {
+          case 1:
+            // 获取纯文本中的参数
+            _keys = [..._keys, ...getVars(info.message.message)]
+            break
+          case 2:
+            // 获取单卡片中的参数
+            _keys = [
+              ..._keys,
+              ...getVars(
+                info.message.message?.generalPurposeCard?.content?.title || '',
+              ),
+              ...getVars(
+                info.message.message?.generalPurposeCard?.content
+                  ?.description || '',
+              ),
+            ]
+            break
+          case 3:
+            info.message.message?.generalPurposeCardCarousel?.content?.forEach(
+              (item) => {
+                _keys = [
+                  ..._keys,
+                  ...getVars(item?.title || ''),
+                  ...getVars(item?.description || ''),
+                ]
+              },
+            )
+            break
+        }
+        _keys = [..._keys, ...getVars(info?.smsContent || '')]
+        setVarsKeys(_keys)
       } else {
         message.error('未查询到模版，请重新选择模版')
         nav('/console/rcs/send/0/0', { replace: true })
@@ -300,16 +336,16 @@ export default function CreateSend() {
                   <div className='temp-content'>
                     {tempInfo && (
                       <>
-                        {type == '1' && (
+                        {type == 1 && (
                           <TextItem message={tempInfo.message.message} />
                         )}
-                        {type == '2' && (
+                        {type == 2 && (
                           <CardItem message={tempInfo.message.message} />
                         )}
-                        {type == '3' && (
+                        {type == 3 && (
                           <CardsItem message={tempInfo.message.message} />
                         )}
-                        {type == '4' && <div>文件模版暂未开发</div>}
+                        {type == 4 && <div>文件模版暂未开发</div>}
 
                         <Space align='center' className='float-wrap'>
                           {tempInfo.suggestions?.suggestions

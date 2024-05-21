@@ -37,7 +37,7 @@ export default function Fn({
   }
   // 编辑事件
   const editEvent = () => {
-    if (item.type == '4') {
+    if (item.type == 4) {
       message.warning('文件模版暂未开发')
       return
     }
@@ -72,16 +72,16 @@ export default function Fn({
           )}
           <div className='preview-model p-12'>
             <div className='temp-type fx-center-center p-x-16 fn12'>
-              {item.type == '1' && '纯文本模版'}
-              {item.type == '2' && '单卡片模版'}
-              {item.type == '3' && '多卡片模版'}
-              {item.type == '4' && '文件模版'}
+              {item.type == 1 && '纯文本模版'}
+              {item.type == 2 && '单卡片模版'}
+              {item.type == 3 && '多卡片模版'}
+              {item.type == 4 && '文件模版'}
             </div>
             <div className='preview-content'>
-              {item.type == '1' && <TextItem message={item.message.message} />}
-              {item.type == '2' && <CardItem message={item.message.message} />}
-              {item.type == '3' && <CardsItem message={item.message.message} />}
-              {item.type == '4' && <div>文件模版暂未开发</div>}
+              {item.type == 1 && <TextItem message={item.message.message} />}
+              {item.type == 2 && <CardItem message={item.message.message} />}
+              {item.type == 3 && <CardsItem message={item.message.message} />}
+              {item.type == 4 && <div>文件模版暂未开发</div>}
             </div>
 
             <Space align='center' className='float-wrap'>

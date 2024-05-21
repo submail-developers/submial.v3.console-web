@@ -313,7 +313,7 @@ declare module 'apis' {
       total: 1
       list: RcsTempListItem[]
     }
-    type RcsTempType = '1' | '2' | '3' | '4' // 1纯文本  2单卡片  3多卡片  4文件
+    type RcsTempType = 1 | 2 | 3 | 4 // 1纯文本  2单卡片  3多卡片  4文件
     interface RcsTempListItem {
       id: string
       account: string

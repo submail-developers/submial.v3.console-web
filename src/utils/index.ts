@@ -50,3 +50,14 @@ export const getFileName = ({
 export const getPhoneLineBreak = (text: string): string => {
   return text.replace(/,/g, '\n')
 }
+
+// 获取字符串中@var{value}中的value
+export const getVars = (str: string): string[] => {
+  const regex = /@var\{([^}]+)\}/g
+  let match
+  const values = []
+  while ((match = regex.exec(str)) !== null) {
+    values.push(match[1])
+  }
+  return values
+}
