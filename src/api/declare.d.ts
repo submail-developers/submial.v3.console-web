@@ -318,7 +318,7 @@ declare module 'apis' {
       account: string
       sign: string
       title: string
-      type: string
+      type: 1 | 2 | 3 | 4 // 1纯文本  2单卡片  3多卡片  4文件
       contentType: string
       message?: any
       suggestions?: {
@@ -600,6 +600,28 @@ declare module 'apis' {
       tag: '0' | '1' | '2' | '3' | '4' | '5' | '6'
       update_at: string
     }
+    type Addressmod =
+      | 'addressbook'
+      | 'file'
+      | 'input'
+      | 'paste'
+      | 'parent_addressbook'
+    type AddressDataToItem = {
+      to: string
+      var: {
+        [key in string]: string
+      }
+    }
+    type AddressData = AddressDataToItem | string[] | string
+    interface getSendNumberParams {
+      addressmod: Addressmod
+      address_data: AddressData
+    }
+    interface getSendNumberRes {
+      total: number
+      status: string
+      message?: string
+    }
 
     // 创建发送任务
     interface CreateRcsSendParams {
@@ -609,13 +631,8 @@ declare module 'apis' {
       vars: string
       mms: 'true' | 'false'
       sms: 'true' | 'false'
-      addressmod:
-        | 'addressbook'
-        | 'file'
-        | 'input'
-        | 'paste'
-        | 'parent_addressbook'
-      address_data: any[] | string
+      addressmod: Addressmod
+      address_data: AddressData
       isTimetosend: 'true' | 'false'
       timetosend_date: string
       timetosend_hour: string

@@ -20,6 +20,7 @@ import {
   Checkbox,
   Empty,
   App,
+  Popconfirm,
 } from 'antd'
 import type { DatePickerProps, FormInstance } from 'antd'
 import type { Dayjs } from 'dayjs'
@@ -30,9 +31,11 @@ import { ProFormDependency } from '@ant-design/pro-components'
 import Footer from '@/components/rcsMobileFooter'
 import ContactsTabs from './components/contactsTabs'
 import Modal from './components/modal'
-import CardMob from '@/pages/rcs/template/create/card/item'
+import TextItem from '@/pages/rcs/template/create/text/item'
+import CardItem from '@/pages/rcs/template/create/card/item'
+import CardsItem from '@/pages/rcs/template/create/cards/item'
 import dayjs from 'dayjs'
-import { getChatbot, createRcsSend, getRcsTempList } from '@/api'
+import { getChatbot, createRcsSend, getRcsTempList, getSendNumber } from '@/api'
 import { API } from 'apis'
 
 import codeImg from '@/assets/rcs/send1.png'
@@ -97,6 +100,7 @@ export default function CreateSend() {
   const { message } = App.useApp()
   const tabsRef = useRef(null)
   const [showModal, setShowModal] = useState(false)
+  const [type, setType] = useState<1 | 2 | 3 | 4 | 0>(0) // 1纯文本  2单卡片  3多卡片  4文件 0不展示
 
   const [chatbotList, setChatbotList] = useState<API.ChatbotItem[]>([])
   const [chatbot, setChatbot] = useState<API.ChatbotItem>()
@@ -104,6 +108,11 @@ export default function CreateSend() {
   const [showChatbotMenu, setShowChatbotMenu] = useState(true)
   const [entries, setentries] = useState<API.EntriesItem[]>([])
   const [varsKeys, setVarsKeys] = useState<string[]>(['test1', 'test2'])
+
+  const [sendNum, setSendNum] = useState(0)
+  const [openConfirm, setOpenConfirm] = useState(false)
+  const [confirmLoading, setConfirmLoading] = useState(false)
+  const [sendNumLoading, setSendNumLoading] = useState(false)
 
   const getChatbotList = async () => {
     try {
@@ -133,34 +142,60 @@ export default function CreateSend() {
     }
   }
 
+  const getSendNum = async (open) => {
+    if (open) {
+      try {
+        setSendNumLoading(true)
+        const { address_data, addressmod } = await tabsRef.current.getValues()
+        let flag = false
+        switch (addressmod) {
+          case 'addressbook':
+          case 'parent_addressbook':
+            if (address_data.length == 0) {
+              message.warning('请选择地址簿')
+              flag = true
+            }
+            break
+          case 'file':
+            if (address_data.length == 0) {
+              message.warning('请上传文件')
+              flag = true
+            }
+            break
+          case 'input':
+          case 'paste':
+            if (address_data.length == 0) {
+              message.warning('请输入手机号')
+              flag = true
+            }
+            break
+        }
+        if (flag) {
+          setSendNumLoading(false)
+          setOpenConfirm(false)
+          return
+        }
+        const res = await getSendNumber({
+          address_data,
+          addressmod,
+        })
+        setSendNum(res.total)
+        let timer = setTimeout(() => {
+          setSendNumLoading(false)
+          clearTimeout(timer)
+        }, 500)
+        setOpenConfirm(true)
+      } catch (error) {
+        setSendNumLoading(false)
+      }
+    }
+  }
+
   const submit = async () => {
     const value1 = await form1.getFieldsValue()
     const { mms, sms, isTimetosend, time, timetosend_date } =
       await form2.getFieldsValue()
     const { address_data, addressmod } = await tabsRef.current.getValues()
-
-    switch (addressmod) {
-      case 'addressbook':
-      case 'parent_addressbook':
-        if (address_data.length == 0) {
-          message.warning('请选择地址簿')
-          return
-        }
-        break
-      case 'file':
-        if (address_data.length == 0) {
-          message.warning('请上传文件')
-          return
-        }
-        break
-      case 'input':
-      case 'paste':
-        if (address_data.length == 0) {
-          message.warning('请输入手机号')
-          return
-        }
-        break
-    }
 
     let params = {
       ...value1,
@@ -170,9 +205,6 @@ export default function CreateSend() {
       mms: mms,
       sms: sms,
       isTimetosend: isTimetosend.toString(),
-      timetosend_date: '2024-05-18',
-      timetosend_hour: '04',
-      timetosend_minute: '06',
     }
     if (isTimetosend) {
       if (!timetosend_date || !time) {
@@ -211,6 +243,7 @@ export default function CreateSend() {
         } else {
           setTempInfo(res.list[0])
         }
+        setType(res.list[0].type)
       } else {
         message.error('未查询到模版，请重新选择模版')
         nav('/console/rcs/send/0/0', { replace: true })
@@ -267,10 +300,19 @@ export default function CreateSend() {
                   <div className='temp-content'>
                     {tempInfo && (
                       <>
-                        <CardMob message={tempInfo.message.message} />
+                        {type == 1 && (
+                          <TextItem message={tempInfo.message.message} />
+                        )}
+                        {type == 2 && (
+                          <CardItem message={tempInfo.message.message} />
+                        )}
+                        {type == 3 && (
+                          <CardsItem message={tempInfo.message.message} />
+                        )}
+                        {type == 4 && <div>文件模版暂未开发</div>}
 
                         <Space align='center' className='float-wrap'>
-                          {tempInfo.suggestions.suggestions
+                          {tempInfo.suggestions?.suggestions
                             .filter((item) => Boolean(item.action))
                             .map((item, index) => (
                               <div className='float-item' key={index}>
@@ -492,13 +534,14 @@ export default function CreateSend() {
                           {isTimetosend && (
                             <Col span={24}>
                               <Row gutter={16}>
-                                <Col>
+                                <Col span={10}>
                                   <Form.Item
                                     label=''
                                     name='timetosend_date'
                                     initialValue={dayjs().add(5, 'minute')}
                                     className='m-b-0'>
                                     <DatePicker
+                                      className='w-100'
                                       type='time'
                                       placement='topLeft'
                                       showNow={false}
@@ -510,15 +553,16 @@ export default function CreateSend() {
                                 <ProFormDependency name={['timetosend_date']}>
                                   {({ timetosend_date }) => {
                                     return (
-                                      <Col>
+                                      <Col span={10}>
                                         <Form.Item
                                           label=''
                                           name='time'
-                                          initialValue={dayjs()
-                                            .add(5, 'minute')
-                                            .startOf('minute')}
+                                          // initialValue={dayjs()
+                                          //   .add(5, 'minute')
+                                          //   .startOf('minute')}
                                           className='m-b-0'>
                                           <DatePicker
+                                            className='w-100'
                                             showTime={{ format: 'HH:mm' }}
                                             format='HH:mm:ss'
                                             disabledTime={() =>
@@ -562,11 +606,27 @@ export default function CreateSend() {
                                       : '#1764ff',
                                   },
                                 }}>
-                                <Button type='primary' onClick={submit}>
-                                  {isTimetosend
-                                    ? '提交定时任务'
-                                    : '提交发送任务'}
-                                </Button>
+                                <Popconfirm
+                                  title='此次发送任务'
+                                  description={`短信计费条数：${sendNum}`}
+                                  open={openConfirm}
+                                  onConfirm={submit}
+                                  onOpenChange={getSendNum}
+                                  okButtonProps={{ loading: confirmLoading }}
+                                  trigger='click'
+                                  onCancel={() => {
+                                    setOpenConfirm(false)
+                                    setConfirmLoading(false)
+                                  }}
+                                  overlayStyle={{ minWidth: 320 }}>
+                                  <Button
+                                    type='primary'
+                                    loading={sendNumLoading}>
+                                    {isTimetosend
+                                      ? '提交定时任务'
+                                      : '提交发送任务'}
+                                  </Button>
+                                </Popconfirm>
                               </ConfigProvider>
                             </Form.Item>
                           </Col>
