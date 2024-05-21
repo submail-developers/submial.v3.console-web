@@ -201,6 +201,7 @@ export default function CreateSend() {
         sms: sms,
         isTimetosend: isTimetosend.toString(),
       }
+      // console.log(!timetosend_date, !time)
       if (isTimetosend) {
         if (!timetosend_date || !time) {
           message.warning('请选择定时日期和时间')
@@ -215,7 +216,7 @@ export default function CreateSend() {
 
       const res = await createRcsSend(params)
       if (res.status == 'success') {
-        message.success('创建成功', 4, () => {
+        message.success('创建成功', 3, () => {
           setConfirmLoading(false)
           nav('/console/rcs/send/0/0?clear=1', { replace: true })
         })
@@ -297,7 +298,8 @@ export default function CreateSend() {
   }
 
   useEffect(() => {
-    // form.resetFields()
+    form1.resetFields()
+    form2.resetFields()
     setOpenConfirm(false)
     if (sign == '0') {
       if (clear == '1') {
