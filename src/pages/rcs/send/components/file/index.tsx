@@ -40,8 +40,27 @@ function Fn(props: Props, ref: any) {
     fileList: [],
   }
   const getValues = () => {
-    const value = allDataRef.current
-    return value
+    const result = []
+    const keyLength = props.vars.length
+    const arrLength = allDataRef.current.length
+
+    for (let i = 0; i < arrLength; i++) {
+      const obj = {
+        to: '',
+        vars: {},
+      }
+      const currentItem = allDataRef.current[i]
+      if (currentItem[0]) {
+        obj['to'] = currentItem[0]
+        for (let j = 0; j < keyLength; j++) {
+          obj.vars[props.vars[j]] = currentItem[j + 1] || ''
+        }
+        result.push(obj)
+      }
+    }
+    console.log(result)
+
+    return result
   }
 
   const getFileData = async (file: UploadFile) => {

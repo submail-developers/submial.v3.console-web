@@ -169,7 +169,7 @@ export default function CreateSend() {
           return
         }
         const res = await getSendNumber({
-          address_data,
+          address_data: JSON.stringify(address_data),
           addressmod,
         })
         setSendNum(res.total)

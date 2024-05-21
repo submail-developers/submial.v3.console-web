@@ -48,7 +48,7 @@ export const getFileName = ({
 }
 
 export const getPhoneLineBreak = (text: string): string => {
-  return text.replace(/,/g, '\n')
+  return text.replace(/，|,/g, '\n')
 }
 
 // 获取字符串中@var{value}中的value

@@ -322,6 +322,11 @@ export const getSendNumber = (data: API.getSendNumberParams) => {
   return request.post<any, API.getSendNumberRes, API.getSendNumberParams>(
     'console/api/rcs/statistical_billing',
     { ...data },
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    },
   )
 }
 // 创建发送任务
