@@ -1,7 +1,6 @@
 import address_blue from '@/assets/rcs/address/address_blue.png'
 import address_cyan from '@/assets/rcs/address/address_cyan.png'
 import address_green from '@/assets/rcs/address/address_green.png'
-import address_icon from '@/assets/rcs/address/address_icon.png'
 import address_purple from '@/assets/rcs/address/address_purple.png'
 import address_red from '@/assets/rcs/address/address_red.png'
 import address_yellow from '@/assets/rcs/address/address_yellow.png'

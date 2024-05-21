@@ -1,5 +1,10 @@
 import { useEffect, useState, useRef } from 'react'
-import { useParams, useNavigate, NavLink } from 'react-router-dom'
+import {
+  useParams,
+  useNavigate,
+  NavLink,
+  useSearchParams,
+} from 'react-router-dom'
 import {
   Input,
   Image,
@@ -10,23 +15,19 @@ import {
   Col,
   Form,
   Select,
-  Upload,
-  Tree,
   ConfigProvider,
   Switch,
   Space,
-  Radio,
   DatePicker,
   Checkbox,
   Empty,
   App,
   Popconfirm,
 } from 'antd'
-import type { DatePickerProps, FormInstance } from 'antd'
 import type { Dayjs } from 'dayjs'
 import PageContent from '@/components/pageContent'
 import { usePoint } from '@/hooks'
-import { PlusOutlined, DownOutlined } from '@ant-design/icons'
+import { PlusOutlined } from '@ant-design/icons'
 import { ProFormDependency } from '@ant-design/pro-components'
 import Footer from '@/components/rcsMobileFooter'
 import ContactsTabs from './components/contactsTabs'
@@ -49,21 +50,6 @@ function disabledDateTime(date: Dayjs) {
   if (date) {
     let now = dayjs().add(5, 'minute')
     if (date.format('YYYY/MM/DD') == now.format('YYYY/MM/DD')) {
-      console.log({
-        disabledHours: () => [...Array(now.hour()).keys()],
-        disabledMinutes: (hour) => {
-          if (hour === now.hour()) {
-            return [...Array(now.minute()).keys()]
-          }
-          return []
-        },
-        disabledSeconds: (hour, minute) => {
-          if (hour === now.hour() && minute === now.minute()) {
-            return [...Array(now.second()).keys()]
-          }
-          return []
-        },
-      })
       return {
         disabledHours: () => [...Array(now.hour()).keys()],
         disabledMinutes: (hour) => {
@@ -93,28 +79,32 @@ function disabledDateTime(date: Dayjs) {
 }
 
 export default function CreateSend() {
+  // 模版id和sign
   const { id, sign } = useParams()
+  const [params] = useSearchParams()
+  const clear = params.get('clear') // sign=0&&clear=1时不展示模版弹框
   const nav = useNavigate()
   const point = usePoint('lg')
   const [form1] = Form.useForm()
   const [form2] = Form.useForm()
   const { message } = App.useApp()
-  const tabsRef = useRef(null)
-  const [showModal, setShowModal] = useState(false)
+  const tabsRef = useRef(null) // 添加联系人tab
+  const [showModal, setShowModal] = useState(false) // 选择模版
   const [type, setType] = useState<API.RcsTempType>() // 1纯文本  2单卡片  3多卡片  4文件 0不展示
 
-  const [chatbotList, setChatbotList] = useState<API.ChatbotItem[]>([])
-  const [chatbot, setChatbot] = useState<API.ChatbotItem>()
-  const [tempInfo, setTempInfo] = useState<API.RcsTempListItem>()
-  const [showChatbotMenu, setShowChatbotMenu] = useState(true)
-  const [entries, setentries] = useState<API.EntriesItem[]>([])
-  const [varsKeys, setVarsKeys] = useState<string[]>([])
+  const [chatbotList, setChatbotList] = useState<API.ChatbotItem[]>([]) // chatbot列表
+  const [chatbot, setChatbot] = useState<API.ChatbotItem>() // 选中的chatbot
+  const [tempInfo, setTempInfo] = useState<API.RcsTempListItem>() // 模版详情
+  const [showChatbotMenu, setShowChatbotMenu] = useState(true) // 固定菜单列表-显示与隐藏
+  const [entries, setentries] = useState<API.EntriesItem[]>([]) // 固定菜单列表
+  const [varsKeys, setVarsKeys] = useState<string[]>([]) // 模版的参数
 
-  const [sendNum, setSendNum] = useState(0)
-  const [openConfirm, setOpenConfirm] = useState(false)
-  const [confirmLoading, setConfirmLoading] = useState(false)
-  const [sendNumLoading, setSendNumLoading] = useState(false)
+  const [sendNum, setSendNum] = useState(0) // 发送数量
+  const [openConfirm, setOpenConfirm] = useState(false) // 显示数量弹框
+  const [confirmLoading, setConfirmLoading] = useState(false) // 数量弹框-确定的loading
+  const [sendNumLoading, setSendNumLoading] = useState(false) // 获取数量弹框的loading
 
+  // 获取chatbot列表
   const getChatbotList = async () => {
     try {
       const res = await getChatbot({
@@ -135,6 +125,7 @@ export default function CreateSend() {
     } catch (error) {}
   }
 
+  // 切换chatbot
   const changeChatbot = (val) => {
     const selectChatbot = chatbotList.find((item) => item.id == val)
     if (selectChatbot) {
@@ -143,6 +134,7 @@ export default function CreateSend() {
     }
   }
 
+  // 获取发送数量
   const getSendNum = async (open) => {
     if (open) {
       try {
@@ -192,39 +184,48 @@ export default function CreateSend() {
     }
   }
 
+  // 提交审核
   const submit = async () => {
-    const value1 = await form1.getFieldsValue()
-    const { mms, sms, isTimetosend, time, timetosend_date } =
-      await form2.getFieldsValue()
-    const { address_data, addressmod } = await tabsRef.current.getValues()
+    try {
+      const value1 = await form1.getFieldsValue()
+      const { mms, sms, isTimetosend, time, timetosend_date } =
+        await form2.getFieldsValue()
+      const { address_data, addressmod } = await tabsRef.current.getValues()
 
-    let params = {
-      ...value1,
-      address_data,
-      addressmod,
-      template_id: sign,
-      mms: mms,
-      sms: sms,
-      isTimetosend: isTimetosend.toString(),
-    }
-    if (isTimetosend) {
-      if (!timetosend_date || !time) {
-        message.warning('请选择定时日期和时间')
-        return
-      } else {
-        params['timetosend_date'] = timetosend_date.format('YYYY-MM-DD')
-        params['timetosend_hour'] = time.format('HH')
-        params['timetosend_minute'] = time.format('mm')
+      let params = {
+        ...value1,
+        address_data,
+        addressmod,
+        template_id: sign,
+        mms: mms,
+        sms: sms,
+        isTimetosend: isTimetosend.toString(),
       }
-    }
+      if (isTimetosend) {
+        if (!timetosend_date || !time) {
+          message.warning('请选择定时日期和时间')
+          return
+        } else {
+          params['timetosend_date'] = timetosend_date.format('YYYY-MM-DD')
+          params['timetosend_hour'] = time.format('HH')
+          params['timetosend_minute'] = time.format('mm')
+        }
+      }
+      setConfirmLoading(true)
 
-    const res = await createRcsSend(params)
-    if (res.status == 'success') {
-      message.success('创建成功', 4, () => {
-        // nav('/console/rcs/send/0/0', { replace: true })
-      })
+      const res = await createRcsSend(params)
+      if (res.status == 'success') {
+        message.success('创建成功', 4, () => {
+          setConfirmLoading(false)
+          nav('/console/rcs/send/0/0?clear=1', { replace: true })
+        })
+      }
+    } catch (error) {
+      setConfirmLoading(false)
     }
   }
+
+  // 获取模版详情
   const getTempInfo = async () => {
     try {
       const res = await getRcsTempList({
@@ -297,14 +298,19 @@ export default function CreateSend() {
 
   useEffect(() => {
     // form.resetFields()
+    setOpenConfirm(false)
     if (sign == '0') {
-      setShowModal(true)
+      if (clear == '1') {
+        setShowModal(false)
+      } else {
+        setShowModal(true)
+      }
     } else {
       getChatbotList()
       getTempInfo()
       setShowModal(false)
     }
-  }, [sign, id, form1])
+  }, [sign, id, form1, clear])
 
   return (
     <>
@@ -652,7 +658,6 @@ export default function CreateSend() {
                                   trigger='click'
                                   onCancel={() => {
                                     setOpenConfirm(false)
-                                    setConfirmLoading(false)
                                   }}
                                   overlayStyle={{ minWidth: 320 }}>
                                   <Button

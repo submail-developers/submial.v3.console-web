@@ -116,7 +116,7 @@ export default function Fn(props: Props) {
           <Pagination
             defaultCurrent={1}
             current={currentPage}
-            defaultPageSize={pageSize}
+            pageSize={pageSize}
             pageSizeOptions={[]}
             size={point ? 'default' : 'small'}
             total={total}

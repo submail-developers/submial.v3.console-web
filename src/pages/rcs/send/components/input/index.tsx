@@ -1,11 +1,5 @@
-import {
-  useEffect,
-  useState,
-  useRef,
-  forwardRef,
-  useImperativeHandle,
-} from 'react'
-import { Input, Row, Col, Table, Form } from 'antd'
+import { useEffect, useRef, forwardRef, useImperativeHandle } from 'react'
+import { Input, Form } from 'antd'
 import './index.scss'
 
 type Props = {
@@ -62,7 +56,7 @@ const Fn = (props: Props, ref: any) => {
   return (
     <>
       <div className='p-24 contacts-content input-content'>
-        <Form form={form} className='tabs'>
+        <Form form={form} className='tabs' autoComplete='off'>
           <Form.List name='address_data'>
             {(fields, { add, remove }) => (
               <>

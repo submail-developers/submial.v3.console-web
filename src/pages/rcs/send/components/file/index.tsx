@@ -6,8 +6,8 @@ import {
   useEffect,
   useRef,
 } from 'react'
-import { Table, Row, Col, Form, Upload, Button, Pagination, Flex } from 'antd'
-import type { GetProp, UploadFile, UploadProps } from 'antd'
+import { Table, Row, Col, Upload, Button, Pagination, Flex } from 'antd'
+import type { UploadFile } from 'antd'
 import { getDataFromFile } from '@/api'
 import { LoadingOutlined, UploadOutlined } from '@ant-design/icons'
 
