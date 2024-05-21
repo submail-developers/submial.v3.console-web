@@ -301,7 +301,7 @@ declare module 'apis' {
       page: number
       limit: number
       keyword?: string
-      type?: 'all' | '1' | '2' | '3' | '4' // 默认all  1 文本,2 单卡片,3 多卡片,4 文件
+      type?: 'all' | RcsTempType
       status?: 'all' | '0' | '1' | '2' // 默认all    0等待审核，1通过，2驳回
     }
     interface DelRcsTempParams {
@@ -313,12 +313,13 @@ declare module 'apis' {
       total: 1
       list: RcsTempListItem[]
     }
+    type RcsTempType = '1' | '2' | '3' | '4' // 1纯文本  2单卡片  3多卡片  4文件
     interface RcsTempListItem {
       id: string
       account: string
       sign: string
       title: string
-      type: 1 | 2 | 3 | 4 // 1纯文本  2单卡片  3多卡片  4文件
+      type: RcsTempType
       contentType: string
       message?: any
       suggestions?: {

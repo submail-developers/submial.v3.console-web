@@ -100,7 +100,7 @@ export default function CreateSend() {
   const { message } = App.useApp()
   const tabsRef = useRef(null)
   const [showModal, setShowModal] = useState(false)
-  const [type, setType] = useState<1 | 2 | 3 | 4 | 0>(0) // 1纯文本  2单卡片  3多卡片  4文件 0不展示
+  const [type, setType] = useState<API.RcsTempType>() // 1纯文本  2单卡片  3多卡片  4文件 0不展示
 
   const [chatbotList, setChatbotList] = useState<API.ChatbotItem[]>([])
   const [chatbot, setChatbot] = useState<API.ChatbotItem>()
@@ -300,16 +300,16 @@ export default function CreateSend() {
                   <div className='temp-content'>
                     {tempInfo && (
                       <>
-                        {type == 1 && (
+                        {type == '1' && (
                           <TextItem message={tempInfo.message.message} />
                         )}
-                        {type == 2 && (
+                        {type == '2' && (
                           <CardItem message={tempInfo.message.message} />
                         )}
-                        {type == 3 && (
+                        {type == '3' && (
                           <CardsItem message={tempInfo.message.message} />
                         )}
-                        {type == 4 && <div>文件模版暂未开发</div>}
+                        {type == '4' && <div>文件模版暂未开发</div>}
 
                         <Space align='center' className='float-wrap'>
                           {tempInfo.suggestions?.suggestions
