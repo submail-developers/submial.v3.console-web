@@ -15,13 +15,6 @@ import {
   Space,
 } from 'antd'
 import type { MenuProps } from 'antd'
-import redImg from '@/assets/rcs/address/address_red.png'
-import purpleImg from '@/assets/rcs/address/address_purple.png'
-import cyanImg from '@/assets/rcs/address/address_cyan.png'
-import blueImg from '@/assets/rcs/address/address_blue.png'
-import greenImg from '@/assets/rcs/address/address_green.png'
-import yellowImg from '@/assets/rcs/address/address_yellow.png'
-import codeImg from '@/assets/rcs/address/blue.png'
 import ImportAddressDialog from './ImportDialog/index'
 import {
   getMobAddressbookDetail,
@@ -29,30 +22,22 @@ import {
   deleteAddressMob,
   truncateMob,
 } from '@/api'
-import { useSearchParams, useParams } from 'react-router-dom'
+import { useNavigate, useSearchParams, useParams } from 'react-router-dom'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import type { CheckboxValueType } from 'antd/es/checkbox/Group'
+import { getAddressPath } from '../type'
 import './index.scss'
 interface Props {
   onchildrenMethod: () => void
   addressInfo: any
 }
-const addresssIcon = {
-  '1': redImg,
-  '2': purpleImg,
-  '3': cyanImg,
-  '4': blueImg,
-  '5': greenImg,
-  '6': yellowImg,
-}
-const { Option } = Select
 
-// export default function Fn(props: Props) {
+const { Option } = Select
 export default function Fn() {
+  const nav = useNavigate()
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
   const [openCreateModal, setOpenCreateModal] = useState(false)
-  const [openMoveModal, setOpenMoveModal] = useState(false)
   const [isEditMode, setIsEditMode] = useState(false)
   const [currentPage, setcurrentPage] = useState<number>(1)
   const [pageSize, setpageSize] = useState<number>(9)
@@ -62,16 +47,21 @@ export default function Fn() {
 
   // 全选
   const [selectedList, setselectedList] = useState<CheckboxValueType[]>([])
-  const [isVisible, setIsVisible] = useState(false)
   const [indeterminate, setIndeterminate] = useState(false) //控制半选状态
   const [checkAll, setCheckAll] = useState(false) //控制全选状态
   const CheckboxGroup = Checkbox.Group
-  const [isActive, setIsActive] = useState([])
-  const [isAllActive, setIsAllActive] = useState(false)
 
   const { Search } = Input
-  const [params] = useSearchParams()
   const { id } = useParams()
+
+  const [searchParams, setSearchParams] = useSearchParams()
+  const name = searchParams.get('name')
+  const title = searchParams.get('title')
+  const tag = searchParams.get('tag')
+
+  const oldTitle = searchParams.get('oldTitle')
+  const oldTag = searchParams.get('oldTag')
+  const folderId = searchParams.get('folderId')
   // 获取地址簿详情
   const getAddressDetailList = async () => {
     try {
@@ -109,33 +99,6 @@ export default function Fn() {
     getAddressDetailList()
   }
 
-  const mobileList = [
-    {
-      id: '1',
-      mob: '13770372676',
-    },
-    {
-      id: '2',
-      mob: '13770372672',
-    },
-    {
-      id: '3',
-      mob: '13770372673',
-    },
-    {
-      id: '4',
-      mob: '13770372674',
-    },
-    {
-      id: '5',
-      mob: '13770372675',
-    },
-    {
-      id: '6',
-      mob: '13770372671',
-    },
-  ]
-
   const items: MenuProps['items'] = [
     { label: '导出 TXT', key: 'txt' },
     { label: '导出 CSV', key: 'csv' },
@@ -143,9 +106,6 @@ export default function Fn() {
     { label: '导出 JSON', key: 'json' },
     { label: '导出 XML', key: 'xml' },
   ]
-  // const showFirstTab = () => {
-  //   props.onchildrenMethod()
-  // }
 
   // 删除手机号
   const singleDeleteAddress = async (item) => {
@@ -216,11 +176,6 @@ export default function Fn() {
   }
   // 全选点击
   const onCheckAllChange = (e: CheckboxChangeEvent) => {
-    if (e.target.checked) {
-      setIsAllActive(e.target.checked)
-    } else {
-      setIsAllActive(false)
-    }
     setCheckAll(e.target.checked)
     if (e.target.checked) {
       let _select = []
@@ -234,7 +189,15 @@ export default function Fn() {
   }
 
   // 返回
-  const toBack = () => {}
+  const toBack = () => {
+    if (name == 'folder') {
+      nav(
+        `/console/rcs/address/folder/detail/${folderId}?title=${oldTitle}&tag=${oldTag}`,
+      )
+    } else {
+      nav('/console/rcs/address/index/0')
+    }
+  }
 
   return (
     <Form
@@ -244,48 +207,41 @@ export default function Fn() {
       layout='vertical'
       initialValues={{ type: 'all', keyword: '' }}
       autoComplete='off'>
-      <Row gutter={16}>
-        <Col span={10} md={10} lg={8} xl={6}>
+      <Row gutter={8}>
+        <Col xl={24} className='search-part fx-between-center'>
           <Form.Item name='keyword' label='联系人手机号'>
             <Search
-              placeholder='i地址簿名称/ID'
+              placeholder='地址簿名称/ID'
               allowClear
               onSearch={handleSearch}
               style={{ width: 300 }}
             />
           </Form.Item>
-        </Col>
-
-        <Col span={6} md={4} xl={3} style={{ marginLeft: 'auto' }}>
-          <Form.Item label=' ' className='del-set'>
-            <Button
-              type='primary'
-              className='fx-start-center '
-              htmlType='submit'
-              loading={loading}
-              onClick={() => showModal(false)}>
-              <i
-                className='icon iconfont icon-daorulianxiren'
-                style={{ marginRight: '10px' }}></i>
-              导入联系人
-            </Button>
-          </Form.Item>
+          <Button
+            type='primary'
+            className='fx-start-center '
+            htmlType='submit'
+            onClick={() => showModal(false)}>
+            <i
+              className='icon iconfont icon-daorulianxiren'
+              style={{ marginRight: '10px' }}></i>
+            导入联系人
+          </Button>
         </Col>
       </Row>
 
       <Col xl={24} className='set-item fx-start-center'>
         <div className='fx-start-center'>
           <img
-            src={blueImg}
+            src={getAddressPath(Number(tag))}
             alt=''
             width='40'
             style={{ marginRight: '16px' }}
           />
-          地址簿
+          <span className='fn16'>{title}</span>
         </div>
         <div className='dea-set fx-between-center'>
           <Checkbox
-            className='primary-color'
             style={{ width: '90px' }}
             indeterminate={indeterminate}
             onChange={onCheckAllChange}
@@ -294,13 +250,13 @@ export default function Fn() {
           </Checkbox>
           <div onClick={batchDel}>
             <span
-              className={`batch-del-address ${
-                indeterminate || isAllActive ? 'active' : ''
+              className={`batch-del-address fx-center-center ${
+                indeterminate || checkAll ? 'active' : ''
               }`}>
-              <i className='icon iconfont icon-shanchu'></i>删除
+              <i className='icon iconfont icon-shanchu2'></i>删除
             </span>
           </div>
-          <div>
+          <div className='clear-address'>
             <Popconfirm
               placement='left'
               title='警告'
@@ -308,9 +264,9 @@ export default function Fn() {
               onConfirm={DeleteAllMob}
               okText='确定'
               cancelText='取消'
-              className='fx-y-center'>
-              &nbsp;&nbsp;<i className='icon iconfont icon-saozhou'></i>
-              <span style={{ color: '#ff4d4f' }}> 清空地址簿</span>
+              className='fx-center-center'>
+              <i className='icon iconfont icon-saozhou'></i>
+              <span> 清空地址簿</span>
             </Popconfirm>
           </div>
           <div>
@@ -320,7 +276,7 @@ export default function Fn() {
               </a>
             </Dropdown>
           </div>
-          <div onClick={toBack}>
+          <div onClick={toBack} style={{ width: '60px' }}>
             <i className='icon iconfont icon-fanhuidizhibu primary-color'></i>
           </div>
         </div>
@@ -329,11 +285,13 @@ export default function Fn() {
         style={{ width: '100%', marginTop: '20px' }}
         value={selectedList}
         onChange={onChange}>
-        <Row wrap gutter={12} style={{ width: '100%' }}>
+        <Row wrap gutter={8} style={{ width: '100%' }}>
           {addressDetailList.map((item) => (
             <Col key={item.id}>
               <div className='checkbox-item fx-between-center'>
-                <Checkbox value={item.id}>{item.address}</Checkbox>
+                <Checkbox value={item.id} className='fn16'>
+                  {item.address}
+                </Checkbox>
                 <Popconfirm
                   placement='left'
                   title='警告'
@@ -341,7 +299,7 @@ export default function Fn() {
                   onConfirm={() => singleDeleteAddress(item)}
                   okText='确定'
                   cancelText='取消'>
-                  <i className='icon iconfont icon-shanchu fn16'></i>
+                  <i className='icon iconfont icon-shanchu2'></i>
                 </Popconfirm>
               </div>
             </Col>

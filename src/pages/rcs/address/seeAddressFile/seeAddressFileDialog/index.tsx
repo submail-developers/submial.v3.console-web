@@ -1,10 +1,4 @@
-import {
-  useState,
-  useImperativeHandle,
-  forwardRef,
-  useEffect,
-  useRef,
-} from 'react'
+import { useState, forwardRef, useEffect, useRef } from 'react'
 import {
   Modal,
   Form,
@@ -17,17 +11,19 @@ import {
   Transfer,
 } from 'antd'
 import type { TransferProps } from 'antd'
-import { getMobAddressbooks } from '@/api'
-import { divide, uniqBy } from 'lodash'
+import { getMobAddressbooks, moveAddressBook } from '@/api'
+import { uniqBy } from 'lodash'
 import { API } from 'apis'
 import './index.scss'
+import { getAddressPath } from '../../type'
 const { Option } = Select
 
 interface Props {
   open: boolean
-  // isEdit: boolean
-  // onCancel: () => void
-  // onOk: () => void
+  onCancel: () => void
+  onSearch: () => void
+  folderTitle: string
+  folderId: string
   foldetAddressList: any[]
 }
 interface RecordType {
@@ -50,6 +46,16 @@ const Dialog = (props: Props, ref: any) => {
   const [targetKeys, setTargetKeys] = useState<React.Key[]>([])
   const targetItemsRef = useRef([])
 
+  const options = [
+    { label: '全部标签', value: 'all', color: '#1764ff' },
+    { label: '默认标签', value: 'tag-blue', color: '#1764ff' },
+    { label: '红色标签', value: 'tag-red', color: '#ff4446' },
+    { label: '紫色标签', value: 'tag-purple', color: '#6f42c1' },
+    { label: '青色标签', value: 'tag-cyan', color: '#17a2b8' },
+    { label: '绿色标签', value: 'tag-green', color: '#17c13d' },
+    { label: '黄色标签', value: 'tag-yellow', color: '#ffba00' },
+  ]
+
   useEffect(() => {
     if (props.open) {
       targetItemsRef.current = props.foldetAddressList
@@ -61,6 +67,7 @@ const Dialog = (props: Props, ref: any) => {
       setTargetKeys(_targetKeys)
     }
   }, [props.open])
+
   const onChange: TransferProps['onChange'] = (
     newTargetKeys,
     direction,
@@ -73,7 +80,31 @@ const Dialog = (props: Props, ref: any) => {
     setTargetKeys(newTargetKeys)
   }
 
-  const handleSearch = () => {}
+  const renderItem = (item: any) => {
+    const customLabel = (
+      <div className='custom-item fx-y-center'>
+        <img
+          className='m-r-10'
+          width='32'
+          src={getAddressPath(Number(item.tag))}
+          alt=''
+        />
+        <span className='fw-500'>{item.name}</span>
+        <span className='num-p m-l-10 m-r-10 fn14 gray-color'>
+          {' '}
+          {item.address} 个联系人
+        </span>{' '}
+      </div>
+    )
+    return {
+      label: customLabel,
+      value: item.id,
+    }
+  }
+
+  const handleSearch = () => {
+    getAddressList()
+  }
   // 获取公共地址簿
   const getAddressList = async () => {
     try {
@@ -103,18 +134,7 @@ const Dialog = (props: Props, ref: any) => {
     }
   }
 
-  const options = [
-    { label: '无标签', value: 'none', color: '#282b31' },
-    { label: '红色', value: 'red', color: '#ff4446' },
-    { label: '紫色', value: 'purple', color: '#6f42c1' },
-    { label: '青色', value: 'cyan', color: '#17a2b8' },
-    { label: '蓝色', value: 'blue', color: '#1764ff' },
-    { label: '绿色', value: 'green', color: '#17c13d' },
-    { label: '黄色', value: 'yellow', color: '#ffba00' },
-  ]
-
-  const handleOk = () => {
-    // props.onCancel()
+  const handleOk = async () => {
     let propsArr: React.Key[] = []
     props.foldetAddressList.forEach((item, index) => {
       propsArr.push(item.id as React.Key)
@@ -128,20 +148,44 @@ const Dialog = (props: Props, ref: any) => {
     )
     console.log(addArr, 'addArr')
     console.log(delArr, 'delArr')
+    console.log(props.folderId)
     // console.log(propsArr, targetKeys, addArr, delArr)
+    if (addArr.length > 0) {
+      // 移出
+      const res = await moveAddressBook({
+        ids: addArr.join(','),
+        folder: props.folderId,
+        type: 1,
+        flag: 2,
+      })
+      if (res.status == 'success') {
+        message.success('移出成功')
+        props.onCancel()
+        props.onSearch()
+      }
+    }
+    if (delArr.length > 0) {
+      // 移入
+      try {
+        const res = await moveAddressBook({
+          ids: delArr.join(','),
+          folder: props.folderId,
+          type: 1,
+          flag: 1,
+        })
+        if (res.status == 'success') {
+          message.success('移入成功')
+          props.onCancel()
+          props.onSearch()
+        }
+      } catch (error) {}
+    }
   }
-
-  const handleCancel = () => {
-    // props.onCancel()
-  }
-
-  const onFinish = () => {}
-  const onFinishFailed = () => {}
 
   return (
     <Modal
       open={props.open}
-      // onCancel={props.onCancel}
+      onCancel={props.onCancel}
       title={
         <Form
           form={form}
@@ -149,48 +193,63 @@ const Dialog = (props: Props, ref: any) => {
           name='cuploadMms-account'
           layout='vertical'
           autoComplete='off'>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}>
+          <div className='fx-between-center'>
             <div className='fn18'>移入地址簿</div>
             <div style={{ display: 'flex' }}>
+              <Form.Item name='tag' style={{ margin: 0, width: '120px' }}>
+                <Select placeholder='所有标签'>
+                  {options.map((option) => (
+                    <Option key={option.value} value={option.value}>
+                      {option.label}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+
               <Form.Item
                 label=''
                 name='keywords'
-                style={{ marginRight: 14, marginBottom: '0' }}>
-                <Input placeholder='名称/ID'></Input>
+                className='m-l-10 m-r-10'
+                style={{ marginBottom: '0' }}>
+                <Input placeholder='地址簿名称' allowClear></Input>
               </Form.Item>
-              <Form.Item style={{ margin: 0 }}>
-                <Button
-                  style={{ height: '38px', lineHeight: 'inherit' }}
-                  type='primary'
-                  className='w-100'
-                  htmlType='submit'
-                  onClick={handleSearch}>
-                  搜索
-                </Button>
-              </Form.Item>
+              <Button
+                style={{
+                  width: '100px',
+                  height: '38px',
+                  lineHeight: 'inherit',
+                }}
+                type='primary'
+                className='w-100'
+                htmlType='submit'
+                onClick={handleSearch}>
+                搜索
+              </Button>
             </div>
           </div>
         </Form>
       }
       onOk={handleOk}
-      width={480}
+      width={680}
       style={{ top: 240 }}
       data-class='create-address'
       closable={false}
       wrapClassName='modal-create-address'>
       <>
         <Transfer
+          listStyle={{
+            height: 400,
+            width: 360,
+            margin: '0 auto',
+          }}
+          titles={['地址簿公海', props.folderTitle]}
           rowKey={(record) => record.id}
           dataSource={dataSource}
           targetKeys={targetKeys}
           onChange={onChange}
-          render={(item) => item.name}
+          // render={(item) => item.name}
           oneWay={oneWay}
+          render={renderItem}
         />
       </>
     </Modal>

@@ -12,22 +12,17 @@ import {
   Switch,
   Checkbox,
   Dropdown,
+  Tooltip,
 } from 'antd'
 import { IDIcon } from '@/components/aIcons'
-import redImg from '@/assets/rcs/address/address_red.png'
-import purpleImg from '@/assets/rcs/address/address_purple.png'
-import cyanImg from '@/assets/rcs/address/address_cyan.png'
-import blueImg from '@/assets/rcs/address/address_blue.png'
-import greenImg from '@/assets/rcs/address/address_green.png'
-import yellowImg from '@/assets/rcs/address/address_yellow.png'
+
 import CerateAddressDialog from './cerateAddressDialog/index'
 import MoveAddressDialog from './moveAddressDialog/index'
-import { NavLink } from 'react-router-dom'
-
+import { useNavigate } from 'react-router-dom'
+import { getAddressPath } from '../type'
 import {
   getMobAddressbooks,
   deleteAddressbooks,
-  getAddressbooksFolder,
   updateAddressBookTag,
 } from '@/api'
 import { API } from 'apis'
@@ -43,17 +38,9 @@ interface Props {
   onchildrenMethod: (info: any) => void
 }
 
-const addresssIcon = {
-  '1': redImg,
-  '2': purpleImg,
-  '3': cyanImg,
-  '4': blueImg,
-  '5': greenImg,
-  '6': yellowImg,
-}
 const { Search } = Input
-// export default function Fn(props: Props) {
 export default function Fn() {
+  const nav = useNavigate()
   const [form] = Form.useForm()
   const [currentPage, setcurrentPage] = useState<number>(1)
   const [pageSize, setpageSize] = useState<number>(9)
@@ -71,11 +58,6 @@ export default function Fn() {
   const [indeterminate, setIndeterminate] = useState(false) //控制半选状态
   const [checkAll, setCheckAll] = useState(false) //控制全选状态
   const CheckboxGroup = Checkbox.Group
-
-  const [isActive, setIsActive] = useState([])
-  const [isAllActive, setIsAllActive] = useState(false)
-  const [addressFolderList, setAddressFolderList] = useState([])
-  const [folderTotal, setFolderTotal] = useState<number>(0)
 
   const [singleId, setSingleId] = useState() //单个地址簿id
   const [isSingle, setIsSingle] = useState(false) //单独移动地址簿
@@ -97,30 +79,8 @@ export default function Fn() {
     }
   }
 
-  // 获取地址簿文件夹
-  const getAddressFolderList = async () => {
-    try {
-      const res = await getAddressbooksFolder({
-        id: '',
-        type: 1,
-        page: currentPage,
-        tag: 'all',
-        order_by: 'update',
-        search_type: 'all',
-        keywords: '',
-      })
-      setAddressFolderList(res.folders)
-      setFolderTotal(res.rows)
-      setLoading(false)
-    } catch (error) {
-      setLoading(false)
-      console.log(error)
-    }
-  }
-
   useEffect(() => {
     getAddressList()
-    getAddressFolderList()
   }, [currentPage, pageSize])
 
   // 切换页码
@@ -141,9 +101,7 @@ export default function Fn() {
   const handleSearch = () => {
     getAddressList()
   }
-  // const showThirdTab = (info) => {
-  //   props.onchildrenMethod(info)
-  // }
+
   // 删除地址簿
   const deleteAddress = async (id) => {
     try {
@@ -161,23 +119,18 @@ export default function Fn() {
 
   const options = [
     { label: '全部标签', value: 'all', color: '#1764ff' },
-    { label: '无标签', value: 'tag-blue', color: '#1764ff' },
-    { label: '红色', value: 'tag-red', color: '#ff4446' },
-    { label: '紫色', value: 'tag-purple', color: '#6f42c1' },
-    { label: '青色', value: 'tag-cyan', color: '#17a2b8' },
-    { label: '绿色', value: 'tag-green', color: '#17c13d' },
-    { label: '黄色', value: 'tag-yellow', color: '#ffba00' },
+    { label: '默认标签', value: 'tag-blue', color: '#1764ff' },
+    { label: '红色标签', value: 'tag-red', color: '#ff4446' },
+    { label: '紫色标签', value: 'tag-purple', color: '#6f42c1' },
+    { label: '青色标签', value: 'tag-cyan', color: '#17a2b8' },
+    { label: '绿色标签', value: 'tag-green', color: '#17c13d' },
+    { label: '黄色标签', value: 'tag-yellow', color: '#ffba00' },
   ]
   const order = [
     { label: '创建日期升序', value: 'create_ascall' },
     { label: '创建日期降序', value: 'create_desc' },
     { label: '联系人数升序', value: 'address_asc' },
     { label: '联系人数降序', value: 'address_desc' },
-  ]
-  const searchType = [
-    { label: '全部', value: 'all' },
-    { label: '名称', value: 'title' },
-    { label: '地址簿 ID', value: 'id' },
   ]
 
   useEffect(() => {
@@ -201,16 +154,10 @@ export default function Fn() {
 
   // 单个checkbox点击
   const onChange = (checkedValues: CheckboxValueType[]) => {
-    setIsActive(checkedValues)
     setselectedList(checkedValues)
   }
   // 全选点击
   const onCheckAllChange = (e: CheckboxChangeEvent) => {
-    if (e.target.checked) {
-      setIsAllActive(e.target.checked)
-    } else {
-      setIsAllActive(false)
-    }
     setCheckAll(e.target.checked)
     if (e.target.checked) {
       let _select = []
@@ -223,14 +170,15 @@ export default function Fn() {
     }
   }
 
+  // 设置标签
   const items = [
     { label: '全部标签', key: 'all' },
     { label: '无标签', key: 'tag-blue' },
-    { label: '红色', key: 'tag-red' },
-    { label: '紫色', key: 'tag-purple' },
-    { label: '青色', key: 'tag-cyan' },
-    { label: '绿色', key: 'tag-green' },
-    { label: '黄色', key: 'tag-yellow' },
+    { label: '红色标签', key: 'tag-red' },
+    { label: '紫色标签', key: 'tag-purple' },
+    { label: '青色标签', key: 'tag-cyan' },
+    { label: '绿色标签', key: 'tag-green' },
+    { label: '黄色标签', key: 'tag-yellow' },
   ]
 
   const edit = async (e) => {
@@ -248,6 +196,15 @@ export default function Fn() {
     } catch (error) {}
   }
 
+  const toDetail = (item) => {
+    nav(
+      `/console/rcs/address/address/detail/${item.id}?title=${item.name}&tag=${item.tag}`,
+    )
+  }
+  const stopEvent = (e) => {
+    e.stopPropagation()
+  }
+
   // 打开单个地址簿 移动地址簿弹窗
   const openSingleAddressModal = (id) => {
     setSingleId(id)
@@ -258,6 +215,15 @@ export default function Fn() {
   const moveFolder = () => {
     setIsSingle(false)
     setOpenMoveModal(true)
+  }
+  // 复制
+  const copy = async (sign) => {
+    try {
+      await navigator.clipboard.writeText(sign)
+      message.success('复制成功')
+    } catch (error) {
+      message.success('复制失败')
+    }
   }
 
   return (
@@ -272,11 +238,14 @@ export default function Fn() {
         order_by: 'create_desc',
       }}
       autoComplete='off'>
-      <Row gutter={16}>
-        <Col xl={24} className='fx-between-center' style={{ padding: '0' }}>
+      <Row gutter={6}>
+        <Col
+          xl={24}
+          className='search-part fx-between-center'
+          style={{ padding: '0' }}>
           <Form.Item name='keyword' label='名称'>
             <Search
-              placeholder='i地址簿名称/ID'
+              placeholder='地址簿名称/ID'
               allowClear
               onSearch={handleSearch}
               style={{ width: 300 }}
@@ -288,7 +257,7 @@ export default function Fn() {
             className='fx-start-center'
             htmlType='submit'
             loading={loading}
-            onClick={() => showModal(false, '')}>
+            onClick={(e) => showModal(false, '')}>
             <i className='icon iconfont icon-jia'></i>
             &nbsp;&nbsp;创建地址簿
           </Button>
@@ -296,22 +265,26 @@ export default function Fn() {
         <Col xl={24} className='set-item fx-start-center'>
           <div className='fx-start-center'>
             <img
-              src={blueImg}
+              src={getAddressPath(Number('4'))}
               alt=''
               width='40'
               style={{ marginRight: '16px' }}
             />
-            地址簿
+            <span className='fn16'>地址簿</span>
           </div>
-          <div className='fx-start-center'>
-            <div className='fx-start-center' style={{ marginRight: '10px' }}>
-              <Switch defaultChecked={false} onChange={handelSwitchChange} />
-              &nbsp; 批量操作
+          <div className='fx-start-center batch'>
+            <div className='fx-start-center switch m-r-20'>
+              <Switch
+                size='small'
+                defaultChecked={false}
+                onChange={handelSwitchChange}
+              />{' '}
+              <span style={{ marginLeft: '8px' }}>批量操作</span>
             </div>
 
             {isVisible ? (
               <>
-                <div>
+                <div className='m-r-20'>
                   <Checkbox
                     indeterminate={indeterminate}
                     onChange={onCheckAllChange}
@@ -322,10 +295,11 @@ export default function Fn() {
 
                 <Form.Item name='move' label=''>
                   <div
-                    className={`primary-color move-folder ${
-                      indeterminate || isAllActive ? 'active' : ''
+                    className={`primary-color move-folder m-r-20 ${
+                      indeterminate || checkAll ? 'active' : ''
                     }`}
                     onClick={moveFolder}>
+                    <i className='icon iconfont icon-yidongwenjianjia'></i>
                     移动到文件夹
                   </div>
                 </Form.Item>
@@ -337,7 +311,8 @@ export default function Fn() {
                       selectable: true,
                       onClick: edit,
                     }}>
-                    <a className={indeterminate || isAllActive ? 'active' : ''}>
+                    <a className={indeterminate || checkAll ? 'active' : ''}>
+                      <i className='icon iconfont icon-shezhibiaoqian'></i>
                       设置标签
                     </a>
                   </Dropdown>
@@ -345,24 +320,30 @@ export default function Fn() {
               </>
             ) : (
               <>
-                <Form.Item name='tag' label=''>
-                  <Select placeholder='选择颜色'>
-                    {options.map((option) => (
-                      <Option key={option.value} value={option.value}>
-                        {option.label}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-                <Form.Item name='order_by' label=''>
-                  <Select placeholder='选择排序'>
-                    {order.map((order) => (
-                      <Option key={order.value} value={order.value}>
-                        {order.label}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
+                <div className='fx-center-center batch-item1 m-r-10 m-l-10'>
+                  <i className='icon iconfont icon-dizhibu1 primary-color'></i>
+                  <Form.Item name='tag' label=''>
+                    <Select placeholder='所有标签' popupMatchSelectWidth={120}>
+                      {options.map((option) => (
+                        <Option key={option.value} value={option.value}>
+                          {option.label}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </div>
+                <div className='fx-center-center batch-item2'>
+                  <i className='icon iconfont icon-paixu primary-color fn14'></i>
+                  <Form.Item name='order_by' label=''>
+                    <Select placeholder='选择排序' popupMatchSelectWidth={120}>
+                      {order.map((order) => (
+                        <Option key={order.value} value={order.value}>
+                          {order.label}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </div>
               </>
             )}
           </div>
@@ -372,57 +353,64 @@ export default function Fn() {
         style={{ width: '100%', marginTop: '10px' }}
         value={selectedList}
         onChange={onChange}>
-        <Row gutter={[16, 16]} wrap style={{ marginTop: '24px' }}>
+        <Row gutter={[20, 16]} style={{ marginTop: '24px' }}>
           {addressList.map((item) => (
-            <Col xl={8} key={item.id}>
+            <Col span={24} lg={12} xl={10} xxl={6} key={item.id}>
               <div className='address-book-item'>
                 <div>
-                  <div className='trapezoid'>
+                  <div className='trapezoid' onClick={() => copy(item.sign)}>
                     <IDIcon />
-                    <div className='sign'>{item.sign}</div>
+                    <div className='sign fn15'>{item.sign}</div>
                   </div>
                 </div>
-                <NavLink to={`/console/rcs/address/address/detail/${item.id}`}>
-                  <div className='book-list'>
+                <div className='book-list' onClick={() => toDetail(item)}>
+                  <div className='fx-y-center'>
                     <div>
-                      <img src={addresssIcon[item.tag]} alt='' />
+                      <img src={getAddressPath(Number(item.tag))} alt='' />
                     </div>
-                    <div
-                      className='to-detail'
-                      // onClick={() => showThirdTab(item)}
-                    >
-                      <div className='fn18'>{item.name}</div>
+                    <div className='to-detail'>
+                      <div className='fn16 fw-500'>{item.name}</div>
                       <div style={{ marginTop: '10px' }}>
                         <span className='num-p'>{item.address}</span> 个联系人
                       </div>
                     </div>
-                    {isVisible ? (
-                      <Checkbox value={item.id}>选择</Checkbox>
-                    ) : (
-                      <div
-                        className='fx-between-center'
-                        style={{ marginTop: '40px' }}>
+                  </div>
+
+                  {isVisible ? (
+                    <Checkbox
+                      value={item.id}
+                      className='choose-address fx-x-end'
+                      onClick={stopEvent}>
+                      选择
+                    </Checkbox>
+                  ) : (
+                    <div className='fx-x-end handle-item' onClick={stopEvent}>
+                      <Tooltip title='移入文件夹'>
                         <Button onClick={() => openSingleAddressModal(item.id)}>
                           <i className='icon iconfont icon-yidongwenjianjia'></i>
                         </Button>
+                      </Tooltip>
+                      <Tooltip title='编辑'>
                         <Button onClick={() => showModal(true, item)}>
                           <i className='icon iconfont icon-input'></i>
                         </Button>
-                        <Popconfirm
-                          placement='left'
-                          title='警告'
-                          description='确定删除该地址簿吗？'
-                          onConfirm={() => deleteAddress(item.id)}
-                          okText='确定'
-                          cancelText='取消'>
+                      </Tooltip>
+                      <Popconfirm
+                        placement='left'
+                        title='警告'
+                        description='确定删除该地址簿吗？'
+                        onConfirm={() => deleteAddress(item.id)}
+                        okText='确定'
+                        cancelText='取消'>
+                        <Tooltip title='删除'>
                           <Button>
-                            <i className='icon iconfont icon-shanchu'></i>
+                            <i className='icon iconfont icon-shanchu2'></i>
                           </Button>
-                        </Popconfirm>
-                      </div>
-                    )}
-                  </div>
-                </NavLink>
+                        </Tooltip>
+                      </Popconfirm>
+                    </div>
+                  )}
+                </div>
               </div>
             </Col>
           ))}
@@ -454,13 +442,10 @@ export default function Fn() {
         isSingle={isSingle}
         ids={selectedList}
         open={openMoveModal}
-        FolderList={addressFolderList}
+        // FolderList={addressFolderList}
         onSearch={getAddressList}
         onCancel={() => setOpenMoveModal(false)}
       />
     </Form>
   )
 }
-// export default function Fn() {
-//   return <div>test</div>
-// }

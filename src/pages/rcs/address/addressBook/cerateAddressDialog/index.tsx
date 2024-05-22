@@ -13,12 +13,12 @@ interface Props {
   onSearch: () => void
 }
 enum Colors {
-  'tag-red' = 1,
-  'tag-purple' = 2,
-  'tag-cyan' = 3,
-  'tag-blue' = 4,
-  'tag-green' = 5,
-  'tag-yellow' = 6,
+  'tag-red' = '1',
+  'tag-purple' = '2',
+  'tag-cyan' = '3',
+  'tag-blue' = '4',
+  'tag-green' = '5',
+  'tag-yellow' = '6',
 }
 
 const Dialog = (props: Props, ref: any) => {
@@ -26,19 +26,22 @@ const Dialog = (props: Props, ref: any) => {
   const { message } = App.useApp()
 
   const options = [
-    { label: '无标签', color: 'tag-blue', value: '4' },
-    { label: '红色', color: 'tag-red', value: '1' },
-    { label: '紫色', color: 'tag-purple', value: '2' },
-    { label: '青色', color: 'tag-cyan', value: '3' },
-    { label: '绿色', color: 'tag-green', value: '5' },
-    { label: '黄色', color: 'tag-yellow', value: '6' },
+    { label: '默认标签', color: 'tag-blue', value: '4' },
+    { label: '红色标签', color: 'tag-red', value: '1' },
+    { label: '紫色标签', color: 'tag-purple', value: '2' },
+    { label: '青色标签', color: 'tag-cyan', value: '3' },
+    { label: '绿色标签', color: 'tag-green', value: '5' },
+    { label: '黄色标签', color: 'tag-yellow', value: '6' },
   ]
 
   useEffect(() => {
-    form.resetFields()
-    form.setFieldsValue({
-      ...props.editData,
-    })
+    if (props.isEdit) {
+      form.resetFields()
+      form.setFieldsValue({
+        ...props.editData,
+        // tag: props.editData ? Colors[props.editData.tag] : '',
+      })
+    }
   }, [props.open])
 
   const handleOk = async () => {

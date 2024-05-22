@@ -38,7 +38,8 @@ import './index.scss'
 import { message } from '@/components/staticFn/staticFn'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import type { CheckboxValueType } from 'antd/es/checkbox/Group'
-import { NavLink, useParams } from 'react-router-dom'
+import { useSearchParams, useParams, useNavigate } from 'react-router-dom'
+import { getAddressPath, getFolderPath } from '../type'
 
 const { Option } = Select
 
@@ -56,9 +57,18 @@ const addresssIcon = {
   'tag-yellow': yellowImg,
   'tag-none': blueImg,
 }
+const addresssIcon2 = {
+  'tag-red': '1',
+  'tag-purple': '2',
+  'tag-cyan': '3',
+  'tag-blue': '4',
+  'tag-green': '5',
+  'tag-yellow': '6',
+}
 const { Search } = Input
-// export default function Fn(props: Props) {
+
 export default function Fn() {
+  const nav = useNavigate()
   const [form] = Form.useForm()
   const [currentPage, setcurrentPage] = useState<number>(1)
   const [pageSize, setpageSize] = useState<number>(9)
@@ -88,6 +98,12 @@ export default function Fn() {
   const [isSingle, setIsSingle] = useState(false) //单独移动地址簿
   const [allId, setAllId] = useState([]) //所有id
   const { id } = useParams()
+  const [folderId, setFolderId] = useState('')
+
+  const [searchParams, setSearchParams] = useSearchParams()
+  const title = searchParams.get('title')
+  const tag = searchParams.get('tag')
+
   // 获取地址簿
   const getAddressList = async () => {
     try {
@@ -135,6 +151,7 @@ export default function Fn() {
   }
 
   useEffect(() => {
+    setFolderId(id)
     getAddressList()
     getAddressFolderList()
   }, [currentPage, pageSize])
@@ -153,13 +170,13 @@ export default function Fn() {
   const handleCancel = () => {
     setOpenCreateModal(false)
   }
+  const handleCancleMoveIn = () => {
+    setOpenMoveInModal(false)
+  }
 
   const handleSearch = () => {
     getAddressList()
   }
-  // const showThirdTab = (info) => {
-  //   props.onchildrenMethod(info)
-  // }
   // // 删除地址簿
   const deleteAddress = async (id) => {
     try {
@@ -191,23 +208,18 @@ export default function Fn() {
 
   const options = [
     { label: '全部标签', value: 'all', color: '#1764ff' },
-    { label: '无标签', value: 'tag-blue', color: '#1764ff' },
-    { label: '红色', value: 'tag-red', color: '#ff4446' },
-    { label: '紫色', value: 'tag-purple', color: '#6f42c1' },
-    { label: '青色', value: 'tag-cyan', color: '#17a2b8' },
-    { label: '绿色', value: 'tag-green', color: '#17c13d' },
-    { label: '黄色', value: 'tag-yellow', color: '#ffba00' },
+    { label: '默认标签', value: 'tag-blue', color: '#1764ff' },
+    { label: '红色标签', value: 'tag-red', color: '#ff4446' },
+    { label: '紫色标签', value: 'tag-purple', color: '#6f42c1' },
+    { label: '青色标签', value: 'tag-cyan', color: '#17a2b8' },
+    { label: '绿色标签', value: 'tag-green', color: '#17c13d' },
+    { label: '黄色标签', value: 'tag-yellow', color: '#ffba00' },
   ]
   const order = [
     { label: '创建日期升序', value: 'create_ascall' },
     { label: '创建日期降序', value: 'create_desc' },
     { label: '联系人数升序', value: 'address_asc' },
     { label: '联系人数降序', value: 'address_desc' },
-  ]
-  const searchType = [
-    { label: '全部', value: 'all' },
-    { label: '名称', value: 'title' },
-    { label: '地址簿 ID', value: 'id' },
   ]
 
   useEffect(() => {
@@ -307,7 +319,7 @@ export default function Fn() {
     } else {
       setOpenMoveModal(true)
       setSingleId(ids)
-      console.log(singleId, '/')
+      setIsSingle(true)
     }
   }
 
@@ -321,6 +333,23 @@ export default function Fn() {
   const moveFolder = () => {
     setIsSingle(false)
     setOpenMoveModal(true)
+  }
+  const toDetail = (item) => {
+    nav(
+      `/console/rcs/address/address/detail/${
+        item.id
+      }?name=folder&folderId=${folderId}&title=${item.name}&tag=${
+        addresssIcon2[item.tag]
+      }&oldTitle=${title}&oldTag=${tag}`,
+    )
+  }
+  const stopEvent = (e) => {
+    e.stopPropagation()
+  }
+
+  // 返回
+  const toBack = () => {
+    nav('/console/rcs/address/folder')
   }
 
   return (
@@ -336,10 +365,13 @@ export default function Fn() {
       }}
       autoComplete='off'>
       <Row gutter={16}>
-        <Col xl={24} className='fx-between-center' style={{ padding: '0' }}>
+        <Col
+          xl={24}
+          className='search-part fx-between-center'
+          style={{ padding: '0' }}>
           <Form.Item name='keyword' label='名称'>
             <Search
-              placeholder='i地址簿名称/ID'
+              placeholder='地址簿名称/ID'
               allowClear
               onSearch={handleSearch}
               style={{ width: 300 }}
@@ -359,22 +391,27 @@ export default function Fn() {
         <Col xl={24} className='set-item fx-start-center'>
           <div className='fx-start-center'>
             <img
-              src={blueImg}
+              src={getFolderPath(Number(tag))}
               alt=''
               width='40'
               style={{ marginRight: '16px' }}
             />
-            地址簿
+
+            <span className='fn16'>{title}</span>
           </div>
-          <div className='fx-start-center'>
-            <div className='fx-start-center ' style={{ marginRight: '10px' }}>
-              <Switch defaultChecked={false} onChange={handelSwitchChange} />
-              &nbsp; 批量操作
+          <div className='fx-start-center batch-set'>
+            <div className='fx-start-center switch m-r-20'>
+              <Switch
+                defaultChecked={false}
+                size='small'
+                onChange={handelSwitchChange}
+              />
+              <span style={{ marginLeft: '8px' }}>批量操作</span>
             </div>
 
             {isVisible ? (
               <>
-                <div>
+                <div className='m-r-20'>
                   <Checkbox
                     indeterminate={indeterminate}
                     onChange={onCheckAllChange}
@@ -385,10 +422,11 @@ export default function Fn() {
 
                 <Form.Item name='move' label=''>
                   <div
-                    className={`primary-color move-folder ${
-                      indeterminate || isAllActive ? 'active' : ''
+                    className={`primary-color move-folder m-r-20 ${
+                      indeterminate || checkAll ? 'active' : ''
                     }`}
                     onClick={moveFolder}>
+                    <i className='icon iconfont icon-yidongwenjianjia p-r-8'></i>
                     移动到文件夹
                   </div>
                 </Form.Item>
@@ -401,55 +439,66 @@ export default function Fn() {
                       onClick: edit,
                     }}>
                     <a
-                      className={
-                        indeterminate || isAllActive || isActive.length > 0
-                          ? 'active'
-                          : ''
-                      }>
+                      className={`set-ico ${
+                        indeterminate || checkAll ? 'active' : ''
+                      }`}>
+                      <i className='icon iconfont icon-shezhibiaoqian p-r-8'></i>
                       设置标签
                     </a>
                   </Dropdown>
                 </Form.Item>
+                <div
+                  onClick={toBack}
+                  style={{ width: '60px' }}
+                  className='bactch-item '>
+                  <i className='icon iconfont icon-fanhuidizhibu primary-color p-l-24'></i>
+                </div>
               </>
             ) : (
               <>
-                <Form.Item name='tag' label=''>
-                  <Select placeholder='所有标签'>
-                    {options.map((option) => (
-                      <Option key={option.value} value={option.value}>
-                        {option.label}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-                <Form.Item name='order_by' label=''>
-                  <Select placeholder='选择排序'>
-                    {order.map((order) => (
-                      <Option key={order.value} value={order.value}>
-                        {order.label}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-                <Popconfirm
-                  placement='left'
-                  title='警告'
-                  description='确定清空文件夹吗？'
-                  onConfirm={cleanAllFolders}
-                  okText='确定'
-                  cancelText='取消'>
-                  <span style={{ color: '#ff4d4f' }}>
-                    <i className='icon iconfont icon-saozhou'></i>清空文件夹
-                  </span>
-                </Popconfirm>
-
+                <div className='fx-center-center batch-item1 m-r-10 m-l-10'>
+                  <i className='icon iconfont icon-dizhibu1 primary-color'></i>
+                  <Form.Item name='tag' label='' className='bactch-item'>
+                    <Select placeholder='所有标签' popupMatchSelectWidth={120}>
+                      {options.map((option) => (
+                        <Option key={option.value} value={option.value}>
+                          {option.label}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </div>
+                <div className='fx-center-center batch-item2 '>
+                  <i className='icon iconfont icon-paixu primary-color fn14'></i>
+                  <Form.Item name='order_by' label='' className='bactch-item'>
+                    <Select placeholder='选择排序' popupMatchSelectWidth={120}>
+                      {order.map((order) => (
+                        <Option key={order.value} value={order.value}>
+                          {order.label}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </div>
+                <div className='clear-address p-x-16'>
+                  <Popconfirm
+                    placement='left'
+                    title='警告'
+                    description='确定清空文件夹吗？'
+                    onConfirm={cleanAllFolders}
+                    okText='确定'
+                    cancelText='取消'>
+                    <span>
+                      <i className='icon iconfont icon-saozhou p-r-8'></i>
+                      清空文件夹
+                    </span>
+                  </Popconfirm>
+                </div>
                 <div
-                  style={{
-                    width: '100px',
-                    textAlign: 'center',
-                    color: '#1764ff',
-                  }}>
-                  <i className='icon iconfont icon-fanhuidizhibu'></i>
+                  onClick={toBack}
+                  style={{ width: '60px' }}
+                  className='bactch-item'>
+                  <i className='icon iconfont icon-fanhuidizhibu primary-color'></i>
                 </div>
               </>
             )}
@@ -460,9 +509,9 @@ export default function Fn() {
         style={{ width: '100%', marginTop: '10px' }}
         value={selectedList}
         onChange={onChange}>
-        <Row gutter={[16, 16]} wrap style={{ marginTop: '24px' }}>
+        <Row gutter={[20, 16]} style={{ marginTop: '24px' }}>
           {addressList.map((item) => (
-            <Col xl={8} key={item.id}>
+            <Col span={24} lg={12} xl={10} xxl={6} key={item.id}>
               <div className='address-book-item'>
                 <div>
                   <div className='trapezoid'>
@@ -471,26 +520,28 @@ export default function Fn() {
                   </div>
                 </div>
 
-                <div className='book-list'>
-                  <div>
-                    <img src={addresssIcon[item.tag]} alt='' />
-                  </div>
+                <div className='book-list' onClick={() => toDetail(item)}>
+                  <div className='fx-y-center'>
+                    <div>
+                      <img src={addresssIcon[item.tag]} alt='' />
+                    </div>
 
-                  <NavLink
-                    to={`/console/rcs/address/address/detail/${item.id}`}>
                     <div className='to-detail'>
                       <div className='fn18'>{item.name}</div>
                       <div style={{ marginTop: '10px' }}>
                         <span className='num-p'>{item.address}</span> 个联系人
                       </div>
                     </div>
-                  </NavLink>
+                  </div>
                   {isVisible ? (
-                    <Checkbox value={item.id}>选择</Checkbox>
+                    <Checkbox
+                      value={item.id}
+                      className='choose-address fx-x-end'
+                      onClick={stopEvent}>
+                      选择
+                    </Checkbox>
                   ) : (
-                    <div
-                      className='fx-between-center'
-                      style={{ marginTop: '40px' }}>
+                    <div className='fx-x-end handle-item' onClick={stopEvent}>
                       <Button>
                         <Dropdown
                           trigger={['click']}
@@ -516,7 +567,7 @@ export default function Fn() {
                         okText='确定'
                         cancelText='取消'>
                         <Button>
-                          <i className='icon iconfont icon-shanchu'></i>
+                          <i className='icon iconfont icon-shanchu2'></i>
                         </Button>
                       </Popconfirm>
                     </div>
@@ -548,8 +599,9 @@ export default function Fn() {
         onCancel={handleCancel}
         onSearch={getAddressList}
       />
-
+      {/*  移出*/}
       <MoveAddressDialog
+        oldFolderId={id}
         singleId={singleId}
         isSingle={isSingle}
         ids={selectedList}
@@ -559,9 +611,14 @@ export default function Fn() {
         onCancel={() => setOpenMoveModal(false)}
       />
 
+      {/* 移入移出 */}
       <MoveinAddressDialog
+        folderId={id}
+        folderTitle={title}
         open={openMoveInModal}
         foldetAddressList={addressList}
+        onCancel={handleCancleMoveIn}
+        onSearch={getAddressList}
       />
     </Form>
   )

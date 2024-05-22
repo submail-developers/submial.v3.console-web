@@ -5,12 +5,12 @@
     border-radius: 4px;
     padding: 4px 0px 4px 8px;
     img {
-      width: 40px;
+      width: 36px;
       margin-right: 10px;
     }
     .num-p {
       background-color: #e7ebf1;
-      padding: 4px 18px;
+      padding: 2px 14px;
       border-radius: 18px;
       margin-right: 6px;
     }
@@ -21,6 +21,30 @@
     background-color: #f6f7f9;
     &.active {
       background-color: #e7ebf1;
+    }
+  }
+  .btn-ok {
+    position: relative;
+    display: inline-block;
+    font-weight: 400;
+    white-space: nowrap;
+    text-align: center;
+    background-image: none;
+    background: transparent;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+    user-select: none;
+    touch-action: manipulation;
+    color: #282b31;
+    outline: none;
+    background: #1764ff;
+    color: #fff;
+    margin-left: 10px;
+    box-shadow: 0 2px 0 rgba(5, 125, 255, 0.1);
+    &:hover {
+      color: #fff !important;
+      background: #568bf3 !important;
     }
   }
 }

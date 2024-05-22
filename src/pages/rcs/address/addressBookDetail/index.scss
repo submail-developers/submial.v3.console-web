@@ -1,8 +1,7 @@
 [data-class='address-book-detail'] {
-  .ant-form-item-control-input {
-    .ant-btn {
-      border-left: 0;
-    }
+  .ant-checkbox-inner {
+    width: 18px;
+    height: 18px;
   }
   .set-item {
     background: #f6f7f9;
@@ -11,7 +10,7 @@
     flex-wrap: wrap;
     padding: 10px 15px;
     i {
-      margin-right: 10px;
+      margin-right: 8px;
     }
     .dea-set {
       label {
@@ -27,7 +26,7 @@
         }
       }
       div {
-        width: 100px;
+        padding: 0 16px;
         text-align: center;
         position: relative;
         &:nth-child(2):after,
@@ -41,6 +40,10 @@
           height: 18px;
           background: #d9d9d9;
         }
+      }
+      .clear-address {
+        color: #ff4d4f;
+        width: 130px !important;
       }
       .primary-color {
         .ant-checkbox-inner {
@@ -131,7 +134,7 @@
   }
   .checkbox-item {
     margin-bottom: 12px;
-    padding: 4px 6px;
+    padding: 18px 10px;
     border-radius: 4px;
     border: 1px solid #e7e7e7;
     min-width: fit-content;
@@ -144,11 +147,31 @@
     }
   }
   .batch-del-address {
+    color: #ff4d4f;
     opacity: 0.4;
     pointer-events: none;
     &.active {
       pointer-events: auto;
       opacity: 1;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .search-part {
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .dea-set {
+      flex-wrap: wrap;
+      margin-top: 10px;
+      justify-content: flex-start;
+      div {
+        padding: 0 !important;
+      }
+      label::after,
+      div:after {
+        width: 0 !important;
+      }
     }
   }
 }

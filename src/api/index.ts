@@ -44,12 +44,12 @@ export const login = () => {
   return request.post<any, API.Response<any>, any>(
     'console/api/account/login',
     {
-      // account: 'duanlangjd@126.com',
-      // password: 'yanzhi2010',
+      account: 'duanlangjd@126.com',
+      password: 'yanzhi2010',
       // account: '18616200024@163.com',
       // password: 'sumeng',
-      account: '514030829@qq.com',
-      password: 'yanzhi2010',
+      // account: '514030829@qq.com',
+      // password: 'yanzhi2010',
       //
     },
   )
@@ -329,6 +329,7 @@ export const getSendNumber = (data: API.getSendNumberParams) => {
     },
   )
 }
+
 // 创建发送任务
 export const createRcsSend = (data: API.CreateRcsSendParams) => {
   return request.post<any, any, API.CreateRcsSendParams>(
@@ -336,7 +337,6 @@ export const createRcsSend = (data: API.CreateRcsSendParams) => {
     { ...data },
   )
 }
-
 // 更新chatbot信息
 export const updateChatbot = (data: API.updateChatbotParams) => {
   return request.post<
@@ -496,6 +496,24 @@ export const getFolderDetail = (data: API.GetFolderDetailParams) => {
 export const clearFolderAddress = (data: API.ClearFolderAddressParams) => {
   return request.post<any, any, API.ClearFolderAddressParams>(
     'console/api/addressbook/delete_batch_folder_addressbook',
+    {
+      ...data,
+    },
+  )
+}
+// 批量删除文件夹
+export const batchDeleteFolder = (data: API.BatchDeleteFolderParams) => {
+  return request.post<any, any, API.BatchDeleteFolderParams>(
+    'console/api/addressbook/batch_delete_addressbook_folder',
+    {
+      ...data,
+    },
+  )
+}
+// 批量更新文件夹颜色标签
+export const batchUpdateFolderTag = (data: API.BatchUpdateFolderTagParams) => {
+  return request.post<any, any, API.BatchUpdateFolderTagParams>(
+    'console/api/addressbook/batch_update_addressbook_folder_tag',
     {
       ...data,
     },
