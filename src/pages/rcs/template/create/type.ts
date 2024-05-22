@@ -48,7 +48,26 @@ export const dialerActionTypeArray: DialerActionType[] = [
 export type Action = API.RcsSuggestionItem
 
 // 事件类型
+export const menuTypes = [
+  {
+    label: '菜单',
+    value: 'menu',
+  },
+  {
+    label: '回复事件(回复内容即是按钮名称)',
+    value: 'reply',
+  },
+  {
+    label: '交互事件',
+    value: 'action',
+  },
+]
+// 事件类型
 export const btnTypes = [
+  {
+    label: '菜单',
+    value: 'menu',
+  },
   {
     label: '回复事件(回复内容即是按钮名称)',
     value: 'reply',

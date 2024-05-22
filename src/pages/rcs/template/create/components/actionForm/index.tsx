@@ -13,6 +13,7 @@ import dayjs from 'dayjs'
 import { ProFormDependency } from '@ant-design/pro-components'
 import {
   btnTypes,
+  menuTypes,
   actions,
   actionTypeArray,
   dialerActionTypeArray,
@@ -37,12 +38,13 @@ const { RangePicker } = DatePicker
 
 type ActionFormItemsParams = {
   onchangeType: (e) => void
+  isMenuConfig?: boolean
 }
 export const ActionFormItems = (props: ActionFormItemsParams) => {
   return (
     <>
       <Form.Item name='btntype' label='按钮类型' initialValue={'reply'}>
-        <Select options={btnTypes} />
+        <Select options={props.isMenuConfig ? menuTypes : btnTypes} />
       </Form.Item>
       <ProFormDependency name={['btntype']}>
         {({ btntype }) => {
