@@ -27,13 +27,12 @@ const Dialog = (props: Props, ref: any) => {
   const { message } = App.useApp()
 
   const options = [
-    { label: '无标签', color: 'tag-blue', value: '4' },
-    { label: '无标签', color: 'tag-blue', value: '0' },
-    { label: '红色', color: 'tag-red', value: '1' },
-    { label: '紫色', color: 'tag-purple', value: '2' },
-    { label: '青色', color: 'tag-cyan', value: '3' },
-    { label: '绿色', color: 'tag-green', value: '5' },
-    { label: '黄色', color: 'tag-yellow', value: '6' },
+    { label: '默认标签', color: 'tag-blue', value: '4' },
+    { label: '红色标签', color: 'tag-red', value: '1' },
+    { label: '紫色标签', color: 'tag-purple', value: '2' },
+    { label: '青色标签', color: 'tag-cyan', value: '3' },
+    { label: '绿色标签', color: 'tag-green', value: '5' },
+    { label: '黄色标签', color: 'tag-yellow', value: '6' },
   ]
   useEffect(() => {
     form.resetFields()

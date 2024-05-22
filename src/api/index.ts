@@ -489,3 +489,21 @@ export const clearFolderAddress = (data: API.ClearFolderAddressParams) => {
     },
   )
 }
+// 批量删除文件夹
+export const batchDeleteFolder = (data: API.BatchDeleteFolderParams) => {
+  return request.post<any, any, API.BatchDeleteFolderParams>(
+    'console/api/addressbook/batch_delete_addressbook_folder',
+    {
+      ...data,
+    },
+  )
+}
+// 批量更新文件夹颜色标签
+export const batchUpdateFolderTag = (data: API.BatchUpdateFolderTagParams) => {
+  return request.post<any, any, API.BatchUpdateFolderTagParams>(
+    'console/api/addressbook/batch_update_addressbook_folder_tag',
+    {
+      ...data,
+    },
+  )
+}

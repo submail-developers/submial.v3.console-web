@@ -208,12 +208,12 @@ export default function Fn() {
 
   const options = [
     { label: '全部标签', value: 'all', color: '#1764ff' },
-    { label: '无标签', value: 'tag-blue', color: '#1764ff' },
-    { label: '红色', value: 'tag-red', color: '#ff4446' },
-    { label: '紫色', value: 'tag-purple', color: '#6f42c1' },
-    { label: '青色', value: 'tag-cyan', color: '#17a2b8' },
-    { label: '绿色', value: 'tag-green', color: '#17c13d' },
-    { label: '黄色', value: 'tag-yellow', color: '#ffba00' },
+    { label: '默认标签', value: 'tag-blue', color: '#1764ff' },
+    { label: '红色标签', value: 'tag-red', color: '#ff4446' },
+    { label: '紫色标签', value: 'tag-purple', color: '#6f42c1' },
+    { label: '青色标签', value: 'tag-cyan', color: '#17a2b8' },
+    { label: '绿色标签', value: 'tag-green', color: '#17c13d' },
+    { label: '黄色标签', value: 'tag-yellow', color: '#ffba00' },
   ]
   const order = [
     { label: '创建日期升序', value: 'create_ascall' },
@@ -371,7 +371,7 @@ export default function Fn() {
           style={{ padding: '0' }}>
           <Form.Item name='keyword' label='名称'>
             <Search
-              placeholder='i地址簿名称/ID'
+              placeholder='地址簿名称/ID'
               allowClear
               onSearch={handleSearch}
               style={{ width: 300 }}
@@ -401,7 +401,11 @@ export default function Fn() {
           </div>
           <div className='fx-start-center batch-set'>
             <div className='fx-start-center switch m-r-20'>
-              <Switch defaultChecked={false} onChange={handelSwitchChange} />
+              <Switch
+                defaultChecked={false}
+                size='small'
+                onChange={handelSwitchChange}
+              />
               <span style={{ marginLeft: '8px' }}>批量操作</span>
             </div>
 
@@ -455,7 +459,7 @@ export default function Fn() {
                 <div className='fx-center-center batch-item1 m-r-10 m-l-10'>
                   <i className='icon iconfont icon-dizhibu1 primary-color'></i>
                   <Form.Item name='tag' label='' className='bactch-item'>
-                    <Select placeholder='所有标签'>
+                    <Select placeholder='所有标签' popupMatchSelectWidth={120}>
                       {options.map((option) => (
                         <Option key={option.value} value={option.value}>
                           {option.label}
@@ -467,7 +471,7 @@ export default function Fn() {
                 <div className='fx-center-center batch-item2 '>
                   <i className='icon iconfont icon-paixu primary-color fn14'></i>
                   <Form.Item name='order_by' label='' className='bactch-item'>
-                    <Select placeholder='选择排序'>
+                    <Select placeholder='选择排序' popupMatchSelectWidth={120}>
                       {order.map((order) => (
                         <Option key={order.value} value={order.value}>
                           {order.label}
@@ -507,7 +511,7 @@ export default function Fn() {
         onChange={onChange}>
         <Row gutter={[20, 16]} style={{ marginTop: '24px' }}>
           {addressList.map((item) => (
-            <Col span={24} lg={12} xl={10} xxl={8} key={item.id}>
+            <Col span={24} lg={12} xl={10} xxl={6} key={item.id}>
               <div className='address-book-item'>
                 <div>
                   <div className='trapezoid'>
@@ -517,27 +521,27 @@ export default function Fn() {
                 </div>
 
                 <div className='book-list' onClick={() => toDetail(item)}>
-                  <div>
-                    <img src={addresssIcon[item.tag]} alt='' />
-                  </div>
+                  <div className='fx-y-center'>
+                    <div>
+                      <img src={addresssIcon[item.tag]} alt='' />
+                    </div>
 
-                  <div className='to-detail'>
-                    <div className='fn18'>{item.name}</div>
-                    <div style={{ marginTop: '10px' }}>
-                      <span className='num-p'>{item.address}</span> 个联系人
+                    <div className='to-detail'>
+                      <div className='fn18'>{item.name}</div>
+                      <div style={{ marginTop: '10px' }}>
+                        <span className='num-p'>{item.address}</span> 个联系人
+                      </div>
                     </div>
                   </div>
                   {isVisible ? (
                     <Checkbox
                       value={item.id}
-                      className='choose-address'
+                      className='choose-address fx-x-end'
                       onClick={stopEvent}>
                       选择
                     </Checkbox>
                   ) : (
-                    <div
-                      className='fx-between-center handle-item'
-                      onClick={stopEvent}>
+                    <div className='fx-x-end handle-item' onClick={stopEvent}>
                       <Button>
                         <Dropdown
                           trigger={['click']}
@@ -610,6 +614,7 @@ export default function Fn() {
       {/* 移入移出 */}
       <MoveinAddressDialog
         folderId={id}
+        folderTitle={title}
         open={openMoveInModal}
         foldetAddressList={addressList}
         onCancel={handleCancleMoveIn}

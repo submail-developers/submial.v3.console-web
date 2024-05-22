@@ -822,5 +822,16 @@ declare module 'apis' {
       folder: string
       type: number
     }
+    //批量删除文件夹
+    interface BatchDeleteFolderParams {
+      id: string
+      type: number
+    }
+    //批量更新文件夹颜色标签
+    interface BatchUpdateFolderTagParams {
+      id: string
+      type: number
+      tag: string
+    }
   }
 }

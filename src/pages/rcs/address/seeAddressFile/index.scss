@@ -128,7 +128,7 @@
   .trapezoid {
     margin-top: 10px;
     position: relative;
-    height: 30px;
+    height: 34px;
     width: 120px;
     border-left: 1px solid #e6e6e6;
     overflow: hidden;
@@ -140,6 +140,7 @@
     .anticon {
       margin-right: 4px;
       position: relative;
+      font-size: 18px;
     }
     .sign {
       position: relative;
@@ -154,16 +155,14 @@
       width: 120px;
       border: 1px solid #e6e6e6;
       transform-origin: 0 100%;
-      transform: skewX(45deg);
+      transform: skewX(34deg);
       border-bottom: none;
       background: #f6f7f9;
     }
   }
 
   .book-list {
-    display: flex;
-    align-items: center;
-    padding: 20px 16px 10px 16px;
+    padding: 16px 16px 10px 16px;
     border: 1px solid #e6e6e6;
     border-top-right-radius: 4px;
     border-bottom-left-radius: 4px;
@@ -173,22 +172,11 @@
     transition: all 0.2s;
     &:hover {
       background: #e7ebf1;
-      .handle-item {
-        opacity: 1;
-      }
     }
     .choose-address {
-      position: absolute;
-      bottom: 8px;
-      right: 6px;
+      margin: 4px 0;
     }
-    .handle-item {
-      position: absolute;
-      bottom: 8px;
-      right: 6px;
-      // opacity: 0;
-      transition: all 0.3s;
-    }
+
     .to-detail {
       padding-left: 16px;
     }
@@ -197,7 +185,7 @@
     }
     .num-p {
       background-color: #e7ebf1;
-      padding: 4px 18px;
+      padding: 2px 14px;
       border-radius: 2px;
     }
     button {
@@ -206,8 +194,10 @@
       line-height: 15px;
       display: flex;
       justify-content: center;
-      margin: 2px;
       border: 0;
+      &:nth-child(2) {
+        margin: 0 6px;
+      }
     }
     label {
       margin-top: 40px;
