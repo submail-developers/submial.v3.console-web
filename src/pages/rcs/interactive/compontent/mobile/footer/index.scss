@@ -1,0 +1,114 @@
+.rcs-interactive-mobile-footer {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  z-index: 2;
+  transform: translateX(-50%);
+  background-image: url('@/assets/rcs/mobileFooter.png');
+  background-position: top left;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border-radius: 0 0 50px 50px;
+  box-shadow: 0 0 50px #aaa;
+  &.showMenu {
+    &.cube {
+      transform: rotateX(-90deg);
+    }
+  }
+
+  .cube {
+    width: 100%;
+    height: 28px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: all 0.3s ease-out;
+    transform: rotateX(0deg);
+    .face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      &.front {
+        transform: translateZ(14px);
+        .input {
+          width: 126px;
+          border: none;
+          outline: none;
+          background-color: #dee1e6;
+          height: 28px;
+          border-radius: 14px;
+          padding: 0 12px;
+        }
+        .handle-item {
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          background-color: #dee1e6;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          .icon {
+            color: #767578;
+            &.icon-fasong {
+              color: var(--primary-color);
+            }
+          }
+        }
+      }
+      &.top {
+        transform: rotateX(90deg) translateZ(14px);
+        .handle-item {
+          width: 28px;
+          height: 28px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+        .menu-list {
+          flex: 1;
+          overflow-x: scroll;
+          .menu-item {
+            flex: 1;
+            text-align: center;
+            min-width: 60px;
+            .menu-item-text {
+              word-wrap: normal;
+              word-break: keep-all;
+            }
+            .menus-line {
+              width: 5px;
+              height: 1px;
+              position: relative;
+              background-color: var(--gray-color-sub);
+              &::before,
+              &::after {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 1px;
+                left: 0;
+                background-color: var(--gray-color-sub);
+              }
+              &::before {
+                top: 2px;
+              }
+              &::after {
+                bottom: 2px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .line {
+    width: 50%;
+    height: 4px;
+    border-radius: 2px;
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #707070;
+  }
+}

@@ -88,7 +88,7 @@ const InsetParam = ({ onInsert, onOpen }) => {
       okText='插入变量'
       okButtonProps={{ type: 'text' }}
       cancelText=''
-      trigger={['click', 'hover']}
+      trigger={['click']}
       icon={null}
       onConfirm={insert}
       onOpenChange={onOpenChange}

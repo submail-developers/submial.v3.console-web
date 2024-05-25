@@ -173,7 +173,9 @@ function Fn(props: Props, ref: any) {
         <Col span={24}>
           {props.vars.length > 0 && (
             <p>
-              您的短信模板中包含
+              您的
+              <strong>模板</strong>及<strong>短信回落</strong>
+              中包含
               <strong className='error-color'> {props.vars.length}</strong>{' '}
               个文本变量，请在{' '}
               <strong className='error-color'>CSV 或 Excel</strong> 文件中，将

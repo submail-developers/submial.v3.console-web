@@ -171,7 +171,7 @@ declare module 'apis' {
       sendApi: string
     }
     interface EntriesItem extends RcsSuggestionItem {
-      menu: {
+      menu?: {
         displayText: string
         entries?: EntriesItem[]
       }
@@ -361,6 +361,10 @@ declare module 'apis' {
     }
     interface RcsAction {
       displayText?: string
+      postback?: {
+        data?: string
+      }
+
       // 链接事件
       urlAction?: {
         openUrl: {
@@ -832,6 +836,47 @@ declare module 'apis' {
       id: string
       type: number
       tag: string
+    }
+    //获取上行交互列表
+    interface GetRcsInteractiveListParams {
+      appid?: string // chatbot id
+      template_id?: string // 模版id
+      id?: string
+    }
+    interface GetRcsInteractiveListResItem {
+      card_id: string // 模版的信息
+      card_template_sign: string
+      card_template_title: string
+      card_button: string // 模版对应的按钮的信息(模版按钮/悬浮按钮)
+      card_button_action: string
+      card_button_title: string
+      chatbotId: string
+      create_at: string
+      fixed_button: string // chatbot的固定菜单信息
+      fixed_button_action: string
+      fixed_button_title: string
+      id: string
+      keywords: string
+      match_type: string
+      reply_id: string // 下行模版信息
+      reply_sign: string
+      reply_title: string
+      title: string
+      type: '1' | '2' | '3' //  1chatbot固定菜单  2模板-悬浮菜单和message交互按键  3纯文字消息
+      update_at: string
+      enabled: '0' | '1' // 0关闭1开启
+    }
+    //创建上行交互
+    interface CreateRcsInteractiveParams {
+      id?: string
+      title?: string
+      type?: '1' | '2' | '3' //  1chatbot固定菜单  2模板-悬浮菜单和message交互按键  3纯文字消息
+      reply_message?: string // 模版id
+      chatbotId?: string // type 1/3必传
+      card_id?: string // 模版id // type 2必传
+      match_type?: '1' | '2' | '3' // 1全文匹配  2关键字包含  3正则表达式
+      keywords?: string // 关键字/正则
+      button_data?: string
     }
   }
 }

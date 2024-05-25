@@ -403,6 +403,41 @@ export const menus: RouteObject[] = [
             lazyChildren={lazy(() => import('@/pages/rcs/interactive'))}
           />
         ),
+        children: [
+          {
+            path: 'chatbot/:id',
+            loader: loaderFn({
+              // breadName: 'Chatbot 交互',
+            }),
+            errorElement: <Error />,
+            element: (
+              <LazyImportComponent
+                lazyChildren={lazy(
+                  () => import('@/pages/rcs/interactive/chatbot'),
+                )}
+              />
+            ),
+          },
+          {
+            path: 'template/:id',
+            loader: loaderFn({
+              breadName: '模版交互',
+            }),
+            errorElement: <Error />,
+            element: (
+              <LazyImportComponent
+                lazyChildren={lazy(
+                  () => import('@/pages/rcs/interactive/template'),
+                )}
+              />
+            ),
+          },
+        ],
+        // element: (
+        //   <LazyImportComponent
+        //     lazyChildren={lazy(() => import('@/pages/rcs/interactive'))}
+        //   />
+        // ),
       },
       {
         path: 'sandbox',
@@ -514,6 +549,10 @@ export const baseRouter: RouteObject[] = [
   {
     path: '/console/rcs/send',
     element: <Navigate to={'/console/rcs/send/0/0'} replace />,
+  },
+  {
+    path: '/console/rcs/interactive',
+    element: <Navigate to={'/console/rcs/interactive/chatbot/0'} replace />,
   },
   {
     path: '/console/aim',

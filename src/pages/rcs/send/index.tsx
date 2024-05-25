@@ -298,8 +298,8 @@ export default function CreateSend() {
   }
 
   useEffect(() => {
-    form1.resetFields()
-    form2.resetFields()
+    form1 && form1.resetFields()
+    form2 && form2.resetFields()
     setOpenConfirm(false)
     if (sign == '0') {
       if (clear == '1') {
@@ -312,7 +312,7 @@ export default function CreateSend() {
       getTempInfo()
       setShowModal(false)
     }
-  }, [sign, id, form1, clear])
+  }, [sign, id, form1, form2, clear])
 
   return (
     <>
@@ -338,9 +338,11 @@ export default function CreateSend() {
               <div className='gray-color'>5g消息余额</div>
               <div className='fn20 fw-500'>9,912</div>
               <div className='gray-color m-t-12'>5g模版</div>
-              <div className='rcs-mobile m-t-8' style={{ marginBottom: 0 }}>
+              <div
+                className='rcs-mobile small m-t-8'
+                style={{ marginBottom: 0 }}>
                 <div className='mobile-content'>
-                  <div className='title fw-500'>测试</div>
+                  <div className='title fw-500'>{tempInfo?.title || ''}</div>
                   <div className='temp-content'>
                     {tempInfo && (
                       <>

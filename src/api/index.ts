@@ -44,12 +44,12 @@ export const login = () => {
   return request.post<any, API.Response<any>, any>(
     'console/api/account/login',
     {
-      account: 'duanlangjd@126.com',
-      password: 'yanzhi2010',
+      // account: 'duanlangjd@126.com',
+      // password: 'yanzhi2010',
       // account: '18616200024@163.com',
       // password: 'sumeng',
-      // account: '514030829@qq.com',
-      // password: 'yanzhi2010',
+      account: '514030829@qq.com',
+      password: 'yanzhi2010',
       //
     },
   )
@@ -514,6 +514,48 @@ export const batchDeleteFolder = (data: API.BatchDeleteFolderParams) => {
 export const batchUpdateFolderTag = (data: API.BatchUpdateFolderTagParams) => {
   return request.post<any, any, API.BatchUpdateFolderTagParams>(
     'console/api/addressbook/batch_update_addressbook_folder_tag',
+    {
+      ...data,
+    },
+  )
+}
+// 获取交互列表
+export const getRcsInteractiveList = (
+  data: API.GetRcsInteractiveListParams,
+) => {
+  return request.post<
+    any,
+    API.Response<API.GetRcsInteractiveListResItem[]>,
+    API.GetRcsInteractiveListParams
+  >('console/api/rcs/get_interactive_list', {
+    ...data,
+  })
+}
+// 创建上行交互
+export const createRcsInteractive = (data: API.CreateRcsInteractiveParams) => {
+  return request.post<any, any, API.CreateRcsInteractiveParams>(
+    'console/api/rcs/save_interactive',
+    {
+      ...data,
+    },
+  )
+}
+// 删除交互配置
+export const delRcsInteractive = (data: { id: string }) => {
+  return request.post<any, any, { id: string }>(
+    'console/api/rcs/delete_interactive',
+    {
+      ...data,
+    },
+  )
+}
+// 切换交互配置开关
+export const changeRcsInteractiveStatus = (data: {
+  id: string
+  status: boolean
+}) => {
+  return request.post<any, any, { id: string; status: boolean }>(
+    'console/api/rcs/interactive_status',
     {
       ...data,
     },
