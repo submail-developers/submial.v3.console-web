@@ -89,12 +89,7 @@ export default function Fn() {
         </span>
       ),
     },
-    {
-      title: '上架状态',
-      width: 100,
-      dataIndex: 'status',
-      render: (_, record) => <span className='warning-color'>调试中</span>,
-    },
+
     {
       title: '更新时间',
       width: 180,
@@ -227,20 +222,6 @@ export default function Fn() {
                   { value: '2', label: '审核通过' },
                   { value: '3', label: '审核驳回' },
                   { value: '4', label: '未上传' },
-                ]}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8} md={8} lg={6} xl={4}>
-            <Form.Item name='status3' label='上架状态'>
-              <Select
-                placeholder='请选择'
-                options={[
-                  { value: 'all', label: '全部' },
-                  { value: '1', label: '上架' },
-                  { value: '3', label: '调试中' },
-                  { value: '3', label: '未上架' },
                 ]}
               />
             </Form.Item>
