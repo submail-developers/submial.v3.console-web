@@ -4,20 +4,29 @@ import { Row, Col, Button, Input, Table, Popconfirm, Tooltip } from 'antd'
 import { API } from 'apis'
 import { useParams } from 'react-router-dom'
 import { getChatbot } from '@/api'
-import MainDialog from '../editDialog/editDialog'
-import SecDialog from '../editSecDialog/editSecDialog'
+import MainDialog from './editDialog/editDialog'
+import SecDialog from './editSecDialog/editSecDialog'
 
 import './index.scss'
 
 const { TextArea } = Input
 interface DataType extends API.GetChatbotListItem {}
-export default function Fn({ onGetStatsu }) {
+
+interface Props {
+  onGetStatsu: any
+}
+
+export default function Fn(props: Props) {
   const { id } = useParams()
   const [openTypeModal, setopenTypeModal] = useState(false)
   const [openTypeModal2, setopenTypeModal2] = useState(false)
 
-  const [detail, setDetail] = useState<API.ChatbotItem>()
+  const [editList, setEditList] = useState<API.ChatbotItem>()
   const [isVisible, setIsVisible] = useState(false)
+  const [chatbotId, setChatbotId] = useState('')
+  const [tip, setTip] = useState()
+  //
+
   const getDetail = async () => {
     try {
       const res = await getChatbot({
@@ -27,9 +36,17 @@ export default function Fn({ onGetStatsu }) {
         status: 'all',
       })
       if (res.list.length == 1) {
-        setDetail(res.list[0])
+        setEditList(res.list[0])
+        setChatbotId(res.list[0].id)
       }
     } catch (error) {}
+  }
+  const addSecMenu = () => {
+    setopenTypeModal(true)
+  }
+  const updateMenu = (tip) => {
+    setopenTypeModal(true)
+    setTip(tip)
   }
 
   useEffect(() => {
@@ -198,11 +215,11 @@ export default function Fn({ onGetStatsu }) {
         <div>
           {record.secondCont != '' ? (
             <div>
-              <Tooltip title='编辑'>
+              <Tooltip title='编辑1'>
                 <Button
                   type='link'
                   style={{ paddingLeft: 0 }}
-                  onClick={() => setopenTypeModal2(true)}>
+                  onClick={addSecMenu}>
                   <i className='icon iconfont icon-jia'></i>
                 </Button>
               </Tooltip>
@@ -351,27 +368,30 @@ export default function Fn({ onGetStatsu }) {
 
   return (
     <div className='chatbot-edit' style={{ marginTop: '40px' }}>
-      <div className='info-title'>固定菜单</div>
+      <div className='info-title'>固定菜单2</div>
       <Row style={{ marginTop: '16px' }} gutter={24}>
         <Col span={24}>
-          <Table
-            rowClassName='table-row'
-            className='tbale2'
-            columns={columns}
-            dataSource={list}
-            pagination={false}
-            rowKey={'id'}
-            scroll={{ x: 'max-content' }}
-          />
-          <Table
-            style={{ marginTop: '20px', marginBottom: '20px' }}
-            className='tbale2'
-            columns={columns2}
-            dataSource={list2}
-            pagination={false}
-            rowKey={'id'}
-            scroll={{ x: 'max-content' }}
-          />
+          <div style={{ border: '1px solid', height: '600px' }}>
+            <div>
+              主菜单1
+              <Button onClick={() => updateMenu('Mainmenu1')}>
+                <i className='icon iconfont icon-jia'></i>
+              </Button>
+            </div>
+            <div>
+              主菜单2
+              <Button onClick={() => updateMenu('Mainmenu2')}>
+                <i className='icon iconfont icon-jia'></i>
+              </Button>
+            </div>
+            <div>
+              主菜单3
+              <Button onClick={() => updateMenu('Mainmenu3')}>
+                <i className='icon iconfont icon-jia'></i>
+              </Button>
+            </div>
+          </div>
+
           <Table
             className='tbale2'
             columns={columns2}
@@ -386,7 +406,7 @@ export default function Fn({ onGetStatsu }) {
               type='primary'
               size='large'
               style={{ width: 120, marginRight: '12px' }}
-              onClick={() => onGetStatsu(editStatus)}>
+              onClick={() => props.onGetStatsu(editStatus)}>
               取消编辑
             </Button>
             <Button
@@ -399,8 +419,12 @@ export default function Fn({ onGetStatsu }) {
           </div>
         </Col>
       </Row>
+
       <MainDialog
+        tip={tip}
+        chatbotId={chatbotId}
         open={openTypeModal}
+        editList={editList}
         onCancel={() => setopenTypeModal(false)}
       />
       <SecDialog

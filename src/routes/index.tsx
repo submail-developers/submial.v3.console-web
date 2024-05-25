@@ -315,7 +315,7 @@ export const menus: RouteObject[] = [
         errorElement: <Error />,
         element: (
           <LazyImportComponent
-            lazyChildren={lazy(() => import('@/pages/rcs/welcome'))}
+            lazyChildren={lazy(() => import('@/pages/rcs/erroslogs'))}
           />
         ),
       },

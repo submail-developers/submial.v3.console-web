@@ -44,42 +44,8 @@ export default function Fn() {
   const [isVisible, setIsVisible] = useState(false)
   const [isVisible2, setIsVisible2] = useState(true)
   const [isVisibleAppkey, setIsVisibleAppkey] = useState(false)
-
-  const columns: ColumnsType<DataType> = [
-    {
-      title: '版本',
-      className: 'paddingL30',
-      width: 80,
-      render: (_, record) => <span>1</span>,
-    },
-    {
-      title: '操作人',
-      className: 'paddingL30',
-      width: 100,
-      render: (_, record) => <span>张涟云</span>,
-    },
-    {
-      title: '操作时间',
-      width: 160,
-      render: (_, record) => <span>2024-04-09 21:19:08</span>,
-    },
-    {
-      title: '操作类型',
-      width: 100,
-      render: (_, record) => <span>新增</span>,
-    },
-    {
-      title: '操作结果',
-      width: 100,
-      render: (_, record) => <span>通过</span>,
-    },
-    {
-      title: '意见',
-      width: 160,
-      render: (_, record) => <span>全国下Chatbot调试号码审核免审通过</span>,
-    },
-  ]
-
+  const [eventType, setEventType] = useState('')
+  const [menuTitle, setMenuTitle] = useState('')
   const getDetail = async () => {
     try {
       const res = await getChatbot({
@@ -91,6 +57,11 @@ export default function Fn() {
 
       if (res.list.length == 1) {
         setDetail(res.list[0])
+
+        if (res.list[0].menu.menu.entries[0].reply) {
+          setEventType('回复事件')
+          setMenuTitle(res.list[0].menu.menu.entries[0].reply.displayText)
+        }
       }
     } catch (error) {}
   }
@@ -122,7 +93,8 @@ export default function Fn() {
     {
       title: (
         <>
-          <i className='icon iconfont icon-jianpan'></i> 主菜单一
+          <i className='icon iconfont icon-jianpan'></i>
+          {menuTitle}
         </>
       ),
       width: 80,
@@ -135,7 +107,7 @@ export default function Fn() {
       ),
     },
     {
-      title: '下挂巧克力',
+      title: '',
       width: 120,
       className: 'paddingL20',
       dataIndex: 'secondCont',
@@ -150,7 +122,7 @@ export default function Fn() {
       ),
     },
     {
-      title: '菜单',
+      title: <>{eventType}</>,
       width: 100,
       className: 'paddingL20',
       dataIndex: 'mean',
@@ -354,6 +326,7 @@ export default function Fn() {
                 rowKey={'id'}
                 scroll={{ x: 'max-content' }}
               />
+
               <div className='mean-botm'>
                 <Button type='primary' onClick={handleVisibility}>
                   编辑菜单

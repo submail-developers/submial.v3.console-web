@@ -833,5 +833,26 @@ declare module 'apis' {
       type: number
       tag: string
     }
+
+    // 获取错误日志
+    interface GetErrorLogsParams {
+      page: number
+      start: string
+      end: string
+    }
+    // 获取地址簿文件夹返回值
+    interface GetErrorLogsItems {
+      api: string
+      appid: string
+      code: string
+      date: string
+      description: string
+      ip: string
+      message: string
+    }
+    interface GetErrorLogsRes {
+      rows: number
+      errors: GetErrorLogsItems[]
+    }
   }
 }
