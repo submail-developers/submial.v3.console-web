@@ -22,7 +22,9 @@ const expandIcon = (panelProps) => {
         className={`g-transition-300 ${
           panelProps.isActive ? 'g-rotate-180' : 'g-rotate-0'
         }`}>
-        <span className='icon iconfont icon-xiangxia fn12'></span>
+        <span
+          className='icon iconfont icon-xiangxia'
+          style={{ fontSize: 7 }}></span>
       </div>
       <span className='fn14'>{panelProps.isActive ? '收起' : '展开'}</span>
     </Space>

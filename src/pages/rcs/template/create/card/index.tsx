@@ -692,7 +692,7 @@ export default function Fn() {
           }`}
           style={{ width: 36, height: 36 }}
           onClick={() => setRichTitle({ ...richTitle, b: !richTitle.b })}>
-          <span className='icon iconfont icon-b fn18'></span>
+          <span className='icon iconfont icon-b fn14'></span>
         </div>
         <div
           className={`fx-center-center g-radius-4 g-pointer g-transition-300 ${
@@ -700,7 +700,7 @@ export default function Fn() {
           }`}
           style={{ width: 36, height: 36 }}
           onClick={() => setRichTitle({ ...richTitle, i: !richTitle.i })}>
-          <span className='icon iconfont icon-i fn18'></span>
+          <span className='icon iconfont icon-i fn14'></span>
         </div>
         <div
           className={`fx-center-center g-radius-4 g-pointer g-transition-300 ${
@@ -708,7 +708,7 @@ export default function Fn() {
           }`}
           style={{ width: 36, height: 36 }}
           onClick={() => setRichTitle({ ...richTitle, u: !richTitle.u })}>
-          <span className='icon iconfont icon-u fn18'></span>
+          <span className='icon iconfont icon-u fn14'></span>
         </div>
       </Space>
       <div className='fn14 gray-color' style={{ marginTop: '8px' }}>
@@ -721,7 +721,7 @@ export default function Fn() {
           }`}
           style={{ width: 36, height: 36 }}
           onClick={() => setRichDes({ ...richDes, b: !richDes.b })}>
-          <span className='icon iconfont icon-b fn18'></span>
+          <span className='icon iconfont icon-b fn14'></span>
         </div>
         <div
           className={`fx-center-center g-radius-4 g-pointer g-transition-300 ${
@@ -729,7 +729,7 @@ export default function Fn() {
           }`}
           style={{ width: 36, height: 36 }}
           onClick={() => setRichDes({ ...richDes, i: !richDes.i })}>
-          <span className='icon iconfont icon-i fn18'></span>
+          <span className='icon iconfont icon-i fn14'></span>
         </div>
         <div
           className={`fx-center-center g-radius-4 g-pointer g-transition-300 ${
@@ -737,7 +737,7 @@ export default function Fn() {
           }`}
           style={{ width: 36, height: 36 }}
           onClick={() => setRichDes({ ...richDes, u: !richDes.u })}>
-          <span className='icon iconfont icon-u fn18'></span>
+          <span className='icon iconfont icon-u fn14'></span>
         </div>
       </Space>
       <Divider className='m-y-12' />

@@ -838,7 +838,7 @@ export default function Fn() {
           onClick={() =>
             setRichTitleConfig({ ...richTitleConfig, b: !richTitleConfig.b })
           }>
-          <span className='icon iconfont icon-b fn18'></span>
+          <span className='icon iconfont icon-b fn14'></span>
         </div>
         <div
           className={`fx-center-center g-radius-4 g-pointer g-transition-300 ${
@@ -848,7 +848,7 @@ export default function Fn() {
           onClick={() =>
             setRichTitleConfig({ ...richTitleConfig, i: !richTitleConfig.i })
           }>
-          <span className='icon iconfont icon-i fn18'></span>
+          <span className='icon iconfont icon-i fn14'></span>
         </div>
         <div
           className={`fx-center-center g-radius-4 g-pointer g-transition-300 ${
@@ -858,7 +858,7 @@ export default function Fn() {
           onClick={() =>
             setRichTitleConfig({ ...richTitleConfig, u: !richTitleConfig.u })
           }>
-          <span className='icon iconfont icon-u fn18'></span>
+          <span className='icon iconfont icon-u fn14'></span>
         </div>
       </Space>
       <div className='fn14 gray-color' style={{ marginTop: '8px' }}>
@@ -873,7 +873,7 @@ export default function Fn() {
           onClick={() =>
             setRichDesConfig({ ...richDesConfig, b: !richDesConfig.b })
           }>
-          <span className='icon iconfont icon-b fn18'></span>
+          <span className='icon iconfont icon-b fn14'></span>
         </div>
         <div
           className={`fx-center-center g-radius-4 g-pointer g-transition-300 ${
@@ -883,7 +883,7 @@ export default function Fn() {
           onClick={() =>
             setRichDesConfig({ ...richDesConfig, i: !richDesConfig.i })
           }>
-          <span className='icon iconfont icon-i fn18'></span>
+          <span className='icon iconfont icon-i fn14'></span>
         </div>
         <div
           className={`fx-center-center g-radius-4 g-pointer g-transition-300 ${
@@ -893,7 +893,7 @@ export default function Fn() {
           onClick={() =>
             setRichDesConfig({ ...richDesConfig, u: !richDesConfig.u })
           }>
-          <span className='icon iconfont icon-u fn18'></span>
+          <span className='icon iconfont icon-u fn14'></span>
         </div>
       </Space>
       <Divider className='m-y-12' />

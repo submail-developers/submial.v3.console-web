@@ -21,7 +21,7 @@
 * fn(10,30) 字号(10-30)
 */
 @mixin create-fn() {
-  @for $i from 10 through 30 {
+  @for $i from 6 through 30 {
     $value: $i + px;
     .fn#{$i} {
       font-size: $value;

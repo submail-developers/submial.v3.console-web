@@ -95,14 +95,14 @@ export default function RcsMobileFooter() {
           <div
             className='handle-item g-pointer'
             onClick={() => setShowMenu(true)}>
-            <span className='icon iconfont icon-menu fw-500'></span>
+            <span className='icon iconfont icon-menu fw-500 fn10'></span>
           </div>
           <div className='handle-item'>
             <span className='icon iconfont icon-jia fn12 fw-600'></span>
           </div>
           <input type='text' className='input' />
           <div className='handle-item g-pointer'>
-            <span className='icon iconfont icon-fasong fw-500'></span>
+            <span className='icon iconfont icon-fasong fw-500 fn13'></span>
           </div>
         </Space>
         <Flex className='p-x-8 w-100 face top' align='center'>

@@ -101,11 +101,11 @@ export default function Item(props: Props) {
       <div className='right-config'>
         <Space size={0} align='center'>
           <div className='handle-item fx-center-center' onClick={addChats}>
-            <span className='icon iconfont icon-yanshi1'></span>
+            <span className='icon iconfont icon-yanshi'></span>
           </div>
           <Divider type='vertical' />
           <div className='handle-item fx-center-center' onClick={props.onEdit}>
-            <span className='icon iconfont icon-bianji fn18'></span>
+            <span className='icon iconfont icon-bianji'></span>
           </div>
           <Divider type='vertical' />
 
@@ -117,7 +117,7 @@ export default function Item(props: Props) {
             okText='确定'
             cancelText='取消'>
             <div className='handle-item fx-center-center'>
-              <span className='icon iconfont icon-shanchu2'></span>
+              <span className='icon iconfont icon-shanchu'></span>
             </div>
           </Popconfirm>
         </Space>

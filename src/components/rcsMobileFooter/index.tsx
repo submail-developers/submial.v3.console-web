@@ -6,14 +6,14 @@ export default function RcsMobileFooter() {
     <div className='rcs-mobile-footer p-t-16'>
       <Space className='p-x-12 w-100' align='center'>
         <div className='handle-item'>
-          <span className='icon iconfont icon-menu fw-500'></span>
+          <span className='icon iconfont icon-menu fw-500 fn10'></span>
         </div>
         <div className='handle-item'>
           <span className='icon iconfont icon-jia fn12 fw-600'></span>
         </div>
         <input type='text' className='input' />
         <div className='handle-item'>
-          <span className='icon iconfont icon-fasong fw-500'></span>
+          <span className='icon iconfont icon-fasong fw-500 fn13'></span>
         </div>
       </Space>
       <div className='line'></div>

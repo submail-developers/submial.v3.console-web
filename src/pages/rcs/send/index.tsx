@@ -391,9 +391,9 @@ export default function CreateSend() {
                     <Input
                       value={`${
                         tempInfo.mmsSubject
-                          ? '【' + tempInfo.mmsSubject + '】'
+                          ? '【' + tempInfo?.mmsSubject + '】'
                           : ''
-                      }${tempInfo.mmsTemplate}`}
+                      }${tempInfo?.mmsTemplate || ''}`}
                       disabled
                     />
                   </>
@@ -438,7 +438,7 @@ export default function CreateSend() {
                         </Form.Item>
                       </Col>
                       <Col span={12}>
-                        <Flex gap={0} className='m-t-10'>
+                        <Flex gap={0} className='m-t-10' align='center'>
                           <Button
                             type='link'
                             className={`${point ? 'p-x-24' : 'p-x-8'}`}
@@ -456,8 +456,12 @@ export default function CreateSend() {
                               point ? 'p-x-24' : 'p-x-8'
                             }`}>
                             <NavLink to='/console/rcs/chatbot/index'>
-                              管理 Chatbot{' '}
-                              <span className='icon iconfont icon-xiangxia fn12 m-l-4'></span>
+                              <Space align='center' size={2}>
+                                <span>管理 Chatbot</span>
+                                <span
+                                  className='icon iconfont icon-xiangxia m-b-8'
+                                  style={{ fontSize: '7px' }}></span>
+                              </Space>
                             </NavLink>
                           </Button>
                         </Flex>
@@ -469,7 +473,7 @@ export default function CreateSend() {
                       className={`color-tab p-b-16 p-x-24 g-radius-4 create-send-menu g-transition-500 ${
                         showChatbotMenu && chatbot ? 'show' : 'hide'
                       }`}>
-                      <span className='icon iconfont icon-sanjiao jiantou fn24'></span>
+                      <span className='icon iconfont icon-sanjiao jiantou fn14'></span>
                       <Row gutter={24} wrap>
                         {entries.map((item, index) => {
                           return (

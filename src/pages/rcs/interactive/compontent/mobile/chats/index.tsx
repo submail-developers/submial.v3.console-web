@@ -46,7 +46,7 @@ const ChatItem = (props: ChatItemProps) => {
     <div>
       {props.item.type == '3' && (
         <div className='fx-col fx-y-end p-y-8'>
-          <span className='icon iconfont icon-user color fn24 fw-500'></span>
+          <span className='icon iconfont icon-user color fn20 fw-500'></span>
           <span>{props.item.keywords}</span>
         </div>
       )}
