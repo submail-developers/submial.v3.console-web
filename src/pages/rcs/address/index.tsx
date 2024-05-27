@@ -2,25 +2,24 @@ import { useEffect, useState } from 'react'
 import { Flex, Image, Space, Tabs } from 'antd'
 import PageContent from '@/components/pageContent'
 import codeImg from '@/assets/rcs/address/address_icon.png'
-import { Outlet, useNavigate, NavLink } from 'react-router-dom'
+import { Outlet, useNavigate, NavLink, useLocation } from 'react-router-dom'
 import './index.scss'
 
 export default function Fn() {
   const nav = useNavigate()
-  const [activeId, setActiveId] = useState('0')
+  const loc = useLocation()
+  const [isIndex, setIsIndex] = useState(0)
 
   useEffect(() => {
-    const value = window.localStorage.getItem('count')
-    const valueParse = JSON.parse(value) ? JSON.parse(value) : 0
-    setActiveId(valueParse)
-  }, [])
-
-  useEffect(() => {
-    window.localStorage.setItem('count', activeId)
-  }, [activeId])
+    if (loc.pathname.includes('index')) {
+      setIsIndex(0)
+    } else if (loc.pathname.includes('folder')) {
+      setIsIndex(1)
+    } else {
+    }
+  }, [loc])
 
   const toNext = (item) => {
-    setActiveId(item.id)
     nav(item.url)
   }
   const navList = [
@@ -49,10 +48,10 @@ export default function Fn() {
         </Space>
       </Flex>
       <div className='tab-address fx'>
-        {navList.map((item) => (
+        {navList.map((item, index) => (
           <div
             key={item.id}
-            className={`fn16 ${activeId == item.id ? 'active' : ''}`}
+            className={`fn16 ${isIndex == index ? 'active' : ''}`}
             onClick={() => toNext(item)}>
             {item.name}
           </div>
