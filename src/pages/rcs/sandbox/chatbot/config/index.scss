@@ -1,0 +1,17 @@
+.sandbox-config {
+  flex: 1;
+  .config-list {
+    .config-header {
+      background-color: var(--btn-bg);
+      height: 40px;
+      .add-btn {
+        height: 40px;
+        width: 40px;
+        cursor: pointer;
+        &:hover {
+          color: var(--primary-color);
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+.sandbox-mob {
+  width: 288px;
+  flex-shrink: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  .rcs-mobile {
+    .temp-content {
+      padding-top: 0 !important;
+      overflow-y: hidden !important;
+      .chat-container {
+        padding-top: 16px;
+        width: 100%;
+        height: 100%;
+        overflow-y: scroll;
+        scroll-behavior: smooth; /* 启用平滑滚动效果 */
+      }
+      .float-skeleton {
+        position: absolute;
+        bottom: 0;
+        height: 48px;
+        width: 100%;
+      }
+    }
+  }
+}

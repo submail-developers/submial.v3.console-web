@@ -332,7 +332,7 @@ declare module 'apis' {
       mmsFilePath: string
       mmsFileSize: string
       mmsFileExpired: string
-      mmsTemplate: string
+      mmsTemplate?: string
       createAt: string
       updateAt: string
       del: string

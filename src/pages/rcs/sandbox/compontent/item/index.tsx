@@ -2,10 +2,7 @@ import { useEffect, useState } from 'react'
 import { Flex, Space, Switch, Divider, Popconfirm } from 'antd'
 import { API } from 'apis'
 import { changeRcsInteractiveStatus } from '@/api'
-import {
-  useStateDispatch,
-  useStateStore,
-} from '@/pages/rcs/interactive/reducer'
+import { useStateDispatch, useStateStore } from '@/pages/rcs/sandbox/reducer'
 import './index.scss'
 
 enum MatchType {
@@ -55,7 +52,7 @@ export default function Item(props: Props) {
   }, [props.item.enabled])
 
   return (
-    <Flex className='interactive-config-item m-t-24' gap={16}>
+    <Flex className='sandbox-config-item m-t-24' gap={16}>
       <div className='left-config'>
         <Switch
           size='small'
