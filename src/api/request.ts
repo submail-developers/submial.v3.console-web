@@ -40,11 +40,13 @@ request.interceptors.response.use(
       return res.data
     } else {
       message.error(JSON.stringify(res.data))
-      console.error(res.data)
       return Promise.reject(res)
     }
   },
   (error) => {
+    if (error.response) {
+      message.error(error.response?.data?.error)
+    }
     return Promise.reject(error)
   },
 )

@@ -178,24 +178,26 @@ export default function Config() {
     suggestions: API.RcsSuggestionItem[],
   ): Options[] => {
     let arr: Options[] = []
-    suggestions.forEach((item: API.RcsSuggestionItem) => {
-      if (item.action) {
-        arr.push({
-          label: `${item.action.displayText}`,
-          value: item.action?.postback?.data || '',
-          disabled: false,
-          item: item,
-        })
-      } else if (item.reply) {
-        arr.push({
-          label: `${item.reply.displayText}`,
-          value: item.reply?.postback?.data || '',
-          disabled: false,
-          item: item,
-        })
-      } else {
-      }
-    })
+    if (Array.isArray(suggestions)) {
+      suggestions.forEach((item: API.RcsSuggestionItem) => {
+        if (item.action) {
+          arr.push({
+            label: `${item.action.displayText}`,
+            value: item.action?.postback?.data || '',
+            disabled: false,
+            item: item,
+          })
+        } else if (item.reply) {
+          arr.push({
+            label: `${item.reply.displayText}`,
+            value: item.reply?.postback?.data || '',
+            disabled: false,
+            item: item,
+          })
+        } else {
+        }
+      })
+    }
     return arr
   }
 
