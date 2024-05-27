@@ -643,6 +643,7 @@ declare module 'apis' {
       timetosend_hour: string
       timetosend_minute: string
       title: string
+      addressfile_oss_path?: string // 文件导入时传递文件的路径
     }
     // 更新chatbot信息参数
     interface updateChatbotParams {

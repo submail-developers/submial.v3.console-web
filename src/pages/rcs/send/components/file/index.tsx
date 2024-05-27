@@ -28,6 +28,7 @@ function Fn(props: Props, ref: any) {
   const [pageSize, setPageSize] = useState(1000)
   const [total, setTotal] = useState(0)
   const allDataRef = useRef<string[][]>([])
+  const fildPath = useRef('')
   const [uploadLoading, setuploadLoading] = useState(false)
 
   const [columns, setcolumns] = useState([])
@@ -58,9 +59,10 @@ function Fn(props: Props, ref: any) {
         result.push(obj)
       }
     }
-    console.log(result)
-
-    return result
+    return {
+      address_data: result,
+      addressfile_oss_path: fildPath.current,
+    }
   }
 
   const getFileData = async (file: UploadFile) => {
@@ -83,6 +85,7 @@ function Fn(props: Props, ref: any) {
         })
         setcolumns(_columns)
         allDataRef.current = res.data
+        fildPath.current = res.oss_path
         insertData(1)
         setPage(1)
         setTotal(res.data.length)

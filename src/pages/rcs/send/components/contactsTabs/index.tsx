@@ -48,9 +48,12 @@ function ContactsTabs(props: Props, ref: any) {
         }
         break
       case '2':
+        const { address_data, addressfile_oss_path } =
+          fileRef.current.getValues()
         values = {
           addressmod: 'file',
-          address_data: fileRef.current.getValues(),
+          address_data,
+          addressfile_oss_path,
         }
         break
       case '3':

@@ -190,7 +190,11 @@ export default function CreateSend() {
       const value1 = await form1.getFieldsValue()
       const { mms, sms, isTimetosend, time, timetosend_date } =
         await form2.getFieldsValue()
-      const { address_data, addressmod } = await tabsRef.current.getValues()
+      const {
+        address_data,
+        addressmod,
+        addressfile_oss_path = '',
+      } = await tabsRef.current.getValues()
 
       let params = {
         ...value1,
@@ -200,8 +204,8 @@ export default function CreateSend() {
         mms: mms,
         sms: sms,
         isTimetosend: isTimetosend.toString(),
+        addressfile_oss_path,
       }
-      // console.log(!timetosend_date, !time)
       if (isTimetosend) {
         if (!timetosend_date || !time) {
           message.warning('请选择定时日期和时间')
@@ -371,6 +375,29 @@ export default function CreateSend() {
                   </div>
                 </div>
                 <Footer />
+              </div>
+              <div>
+                {tempInfo && (
+                  <>
+                    <div className='m-b-8 m-t-24' style={{ color: '#666d7a' }}>
+                      回落短信
+                    </div>
+                    <Input.TextArea
+                      autoSize={{ minRows: 1, maxRows: 4 }}
+                      value={tempInfo?.smsContent || ''}
+                      disabled
+                    />
+                    <div className='label m-b-8 m-t-16'>回落彩信</div>
+                    <Input
+                      value={`${
+                        tempInfo.mmsSubject
+                          ? '【' + tempInfo.mmsSubject + '】'
+                          : ''
+                      }${tempInfo.mmsTemplate}`}
+                      disabled
+                    />
+                  </>
+                )}
               </div>
               <div className='color-warning-yellow g-radius-8 p-x-16 p-y-8 fn13 m-t-24'>
                 <span className='icon iconfont icon-dengpao fn12 m-r-2'></span>
