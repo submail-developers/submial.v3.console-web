@@ -253,11 +253,34 @@ export const menus: RouteObject[] = [
           menuName: '批量任务发送报告',
         }),
         errorElement: <Error />,
-        element: (
-          <LazyImportComponent
-            lazyChildren={lazy(() => import('@/pages/rcs/welcome'))}
-          />
-        ),
+        children: [
+          {
+            path: 'index',
+            loader: loaderFn({
+              breadName: '批量发送报告详情',
+            }),
+            errorElement: <Error />,
+            element: (
+              <LazyImportComponent
+                lazyChildren={lazy(() => import('@/pages/rcs/batchreport'))}
+              />
+            ),
+          },
+          {
+            path: 'detail/:id',
+            loader: loaderFn({
+              breadName: '批量发送报告详情',
+            }),
+            errorElement: <Error />,
+            element: (
+              <LazyImportComponent
+                lazyChildren={lazy(
+                  () => import('@/pages/rcs/batchreport/batchreportDetail'),
+                )}
+              />
+            ),
+          },
+        ],
       },
       {
         path: 'analysis',
@@ -270,7 +293,7 @@ export const menus: RouteObject[] = [
         errorElement: <Error />,
         element: (
           <LazyImportComponent
-            lazyChildren={lazy(() => import('@/pages/rcs/welcome'))}
+            lazyChildren={lazy(() => import('@/pages/rcs/apiAnalysis'))}
           />
         ),
       },
@@ -285,7 +308,7 @@ export const menus: RouteObject[] = [
         errorElement: <Error />,
         element: (
           <LazyImportComponent
-            lazyChildren={lazy(() => import('@/pages/rcs/welcome'))}
+            lazyChildren={lazy(() => import('@/pages/rcs/apiHistory'))}
           />
         ),
       },
@@ -300,7 +323,7 @@ export const menus: RouteObject[] = [
         errorElement: <Error />,
         element: (
           <LazyImportComponent
-            lazyChildren={lazy(() => import('@/pages/rcs/welcome'))}
+            lazyChildren={lazy(() => import('@/pages/rcs/subhook'))}
           />
         ),
       },
@@ -315,7 +338,7 @@ export const menus: RouteObject[] = [
         errorElement: <Error />,
         element: (
           <LazyImportComponent
-            lazyChildren={lazy(() => import('@/pages/rcs/erroslogs'))}
+            lazyChildren={lazy(() => import('@/pages/rcs/apiErroslogs'))}
           />
         ),
       },
@@ -495,7 +518,7 @@ export const menus: RouteObject[] = [
         errorElement: <Error />,
         element: (
           <LazyImportComponent
-            lazyChildren={lazy(() => import('@/pages/rcs/welcome'))}
+            lazyChildren={lazy(() => import('@/pages/rcs/setting'))}
           />
         ),
       },
@@ -541,6 +564,10 @@ export const baseRouter: RouteObject[] = [
   {
     path: '/console/rcs/address',
     element: <Navigate to={'/console/rcs/address/index/0'} replace />,
+  },
+  {
+    path: '/console/rcs/batchreport',
+    element: <Navigate to={'/console/rcs/batchreport/index'} replace />,
   },
   {
     path: '/console/rcs/template',

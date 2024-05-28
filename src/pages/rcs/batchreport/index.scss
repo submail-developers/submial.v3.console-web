@@ -1,0 +1,32 @@
+.batchreport {
+  padding: 48px 16px;
+  height: auto;
+  .line {
+    margin: 30px 0 24px;
+  }
+  .ant-table-tbody tr {
+    td {
+      padding: 21px 0 !important;
+    }
+  }
+  .order-by {
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    height: 40px;
+    margin-top: 30px;
+    justify-content: center;
+    .ant-select-selector {
+      background: none;
+      padding: 0;
+      outline: none;
+    }
+    .ant-form-item-label {
+      display: none;
+    }
+  }
+  .batch-item2 {
+    .ant-select-selector {
+      background: none;
+    }
+  }
+}
