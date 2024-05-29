@@ -1,4 +1,4 @@
-import { CSSProperties, useEffect, memo } from 'react'
+import { useEffect, memo } from 'react'
 import {
   Input,
   Form,
@@ -38,30 +38,44 @@ const { RangePicker } = DatePicker
 
 type ActionFormItemsParams = {
   onchangeType: (e) => void
-  isMenuConfig?: boolean
+  isMainMenuConfig?: boolean // 是否为主菜单
 }
 export const ActionFormItems = (props: ActionFormItemsParams) => {
   return (
     <>
-      <Form.Item name='btntype' label='按钮类型' initialValue={'reply'}>
-        <Select options={props.isMenuConfig ? menuTypes : btnTypes} />
+      <Form.Item name='btntype' label='按钮类型'>
+        <Radio.Group
+          options={props.isMainMenuConfig ? menuTypes : btnTypes}></Radio.Group>
       </Form.Item>
       <ProFormDependency name={['btntype']}>
         {({ btntype }) => {
           return (
             <>
+              {btntype == 'menu' && (
+                <>
+                  <Form.Item
+                    hidden
+                    label='菜单名称'
+                    name={[btntype, 'displayText']}>
+                    <Input placeholder='请输入' />
+                  </Form.Item>
+                </>
+              )}
               {btntype == 'reply' && (
-                <Form.Item
-                  hidden
-                  label='回复内容'
-                  name={[btntype, 'displayText']}
-                  rules={[
-                    {
-                      required: true,
-                    },
-                  ]}>
-                  <Input placeholder='请输入' />
-                </Form.Item>
+                <>
+                  <Form.Item
+                    hidden
+                    label='回复内容'
+                    name={[btntype, 'displayText']}>
+                    <Input placeholder='请输入' />
+                  </Form.Item>
+                  <Form.Item
+                    hidden
+                    label='postback'
+                    name={[btntype, 'postback', 'data']}>
+                    <Input placeholder='' />
+                  </Form.Item>
+                </>
               )}
 
               {btntype == 'action' && (
@@ -71,6 +85,12 @@ export const ActionFormItems = (props: ActionFormItemsParams) => {
                     label='交互类型'
                     initialValue={'urlAction'}>
                     <Select options={actions} onChange={props.onchangeType} />
+                  </Form.Item>
+                  <Form.Item
+                    hidden
+                    label='postback'
+                    name={[btntype, 'postback', 'data']}>
+                    <Input placeholder='' />
                   </Form.Item>
 
                   <ProFormDependency name={['type']}>
@@ -418,6 +438,7 @@ export const ActionFormItems = (props: ActionFormItemsParams) => {
                                 ]}>
                                 <RangePicker
                                   showTime={true}
+                                  className='w-100'
                                   format='YYYY-MM-DD HH:mm:ss'
                                   placeholder={['开始时间', '结束时间']}
                                 />
@@ -678,6 +699,9 @@ const ActionForm = memo(
         layout='vertical'
         autoComplete='off'
         validateTrigger='onBlur'
+        initialValues={{
+          btntype: 'reply',
+        }}
         onFieldsChange={onFieldsChange}>
         <ActionFormItems onchangeType={changeType} />
       </Form>

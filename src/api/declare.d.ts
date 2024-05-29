@@ -173,6 +173,9 @@ declare module 'apis' {
     interface EntriesItem extends RcsSuggestionItem {
       menu?: {
         displayText: string
+        postback?: {
+          data?: string
+        }
         entries?: EntriesItem[]
       }
     }
@@ -378,29 +381,40 @@ declare module 'apis' {
       // 拨打电话
       dialerAction?: {
         dialPhoneNumber?: {
-          dialPhoneNumber: string
+          phoneNumber: string
           fallbackUrl?: string // 话单推送地址
         }
         // 	增强通话事件
         dialEnrichedCall?: {
-          dialPhoneNumber: string
+          phoneNumber: string
           fallbackUrl?: string // 话单推送地址
           subject?: string
         }
         // 视频通话
         dialVideoCall?: {
-          dialPhoneNumber: string
+          phoneNumber: string
           fallbackUrl?: string // 话单推送地址
         }
       }
       // 地图事件
       mapAction?: {
         // mapType: '0' ｜ "1" // 地图类型 0经纬度1位置
-        location: {
-          longitude?: number | string
-          latitude?: number | string
-          label?: string
-          query?: string
+        showLocation: {
+          location: {
+            longitude?: number | string
+            latitude?: number | string
+            label?: string
+            query?: string
+          }
+        }
+      }
+      calendarAction?: {
+        createCalendarEvent?: {
+          title?: string
+          description?: string
+          startTime?: string
+          endTime?: string
+          fallbackUrl?: string
         }
       }
     }

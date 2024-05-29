@@ -54,7 +54,7 @@ export const menuTypes = [
     value: 'menu',
   },
   {
-    label: '回复事件(回复内容即是按钮名称)',
+    label: '回复事件',
     value: 'reply',
   },
   {
@@ -65,7 +65,7 @@ export const menuTypes = [
 // 事件类型
 export const btnTypes = [
   {
-    label: '回复事件(回复内容即是按钮名称)',
+    label: '回复事件',
     value: 'reply',
   },
   {
