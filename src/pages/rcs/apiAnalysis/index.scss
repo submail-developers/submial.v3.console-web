@@ -1,0 +1,92 @@
+.api-analysis {
+  padding: 48px 16px;
+  height: auto;
+  .line {
+    margin: 30px 0 24px;
+  }
+  .ant-picker {
+    padding-right: 15px;
+    .ant-picker-input > input {
+      color: #666d7a;
+    }
+  }
+
+  .top-part {
+    border: 1px solid #d9d9d9;
+    padding: 20px 24px;
+    border-radius: 4px;
+    .api-info {
+      flex-wrap: wrap;
+      .api-info-item {
+        border: 1px solid #d9d9d9;
+        width: 270px;
+        padding: 12px 14px;
+        border-radius: 4px;
+        margin-bottom: 10px;
+      }
+    }
+  }
+  .middle-part {
+    .middle-part-item1 {
+      .yuan {
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        margin-right: 10px;
+        border-radius: 50%;
+      }
+      .tip {
+        flex-wrap: wrap;
+      }
+      .boder {
+        border: 1px solid #d9d9d9;
+        padding: 20px 10px 20px 24px;
+        border-radius: 4px;
+        .flex-wrap {
+          flex-wrap: wrap;
+        }
+        .title {
+          width: 120px;
+        }
+      }
+    }
+  }
+  .bottom-part {
+    .ant-col {
+      border: 1px solid #d9d9d9;
+      padding: 20px 24px;
+      border-radius: 4px;
+    }
+    .flex-wrap {
+      flex-wrap: wrap;
+    }
+    .legend-content {
+      width: 318px;
+      margin-top: 10px;
+    }
+    .legend-table {
+      border-collapse: collapse;
+      td {
+        height: 36px;
+        padding: 0 10px;
+      }
+      .sticky-top {
+        td {
+          border-bottom: 1px solid #d9d9d9;
+        }
+      }
+      .progress {
+        width: 90%;
+        background-color: #e7e7e7;
+        height: 5px;
+        border-radius: 4px;
+        .progress-bar {
+          height: 5px;
+          background-color: #1764ff;
+          width: 0%;
+          border-radius: 4px;
+        }
+      }
+    }
+  }
+}

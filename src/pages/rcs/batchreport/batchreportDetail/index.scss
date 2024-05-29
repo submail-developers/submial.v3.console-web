@@ -1,0 +1,140 @@
+.batchreport-detail {
+  padding: 48px 16px;
+  height: auto;
+  .line {
+    margin: 30px 0 24px;
+  }
+  .tem-view {
+    border: 1px solid #e6e6e6;
+    border-radius: 4px;
+    padding: 10px;
+  }
+  .view-cont {
+    background: #ededed;
+    height: 330px;
+    border-radius: 4px;
+    margin-top: 10px;
+  }
+  .sign {
+    display: flex;
+    align-items: center;
+    color: #fd29a4;
+    border: 1px solid #e6e6e6;
+    width: 90px;
+    height: 30px;
+    border-radius: 4px;
+    justify-content: center;
+    margin-top: 10px;
+    span {
+      margin-left: 6px;
+    }
+  }
+  .table-info {
+    width: 100%;
+    border: 1px solid #e6e6e6;
+    border-radius: 4px;
+    border-collapse: collapse;
+    border-style: hidden;
+    box-shadow: 0 0 0 1px #e6e6e6;
+    font-size: 15px;
+    tr > td:first-child,
+    tr > td:nth-child(3) {
+      color: #4f4f4f;
+      width: 180px;
+      background-color: #f3f6f9;
+    }
+    tr > td:nth-child(2),
+    tr > td:nth-child(4) {
+      font-weight: 500;
+    }
+    td {
+      height: 56px;
+      padding-left: 20px;
+      border: 1px solid #e6e6e6;
+    }
+  }
+  .api-info-item {
+    border: 1px solid #d9d9d9;
+    width: 270px;
+    padding: 12px 14px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  .middle-part {
+    .middle-part-item1 {
+      .yuan {
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        margin-right: 10px;
+        border-radius: 50%;
+      }
+      .tip {
+        flex-wrap: wrap;
+      }
+      .boder {
+        border: 1px solid #d9d9d9;
+        padding: 20px 10px 20px 24px;
+        border-radius: 4px;
+        .flex-wrap {
+          flex-wrap: wrap;
+        }
+        .title {
+          width: 120px;
+        }
+      }
+    }
+  }
+  .bottom-part {
+    .border {
+      border: 1px solid #d9d9d9;
+      padding: 20px 24px;
+      border-radius: 4px;
+    }
+
+    .flex-wrap {
+      flex-wrap: wrap;
+    }
+    .legend-content {
+      width: 318px;
+      margin-top: 10px;
+    }
+    .legend-table {
+      border-collapse: collapse;
+      td {
+        height: 36px;
+        padding: 0 10px;
+      }
+      .sticky-top {
+        td {
+          border-bottom: 1px solid #d9d9d9;
+        }
+      }
+      .progress {
+        width: 90%;
+        background-color: #e7e7e7;
+        height: 5px;
+        border-radius: 4px;
+        .progress-bar {
+          height: 5px;
+          background-color: #1764ff;
+          width: 0%;
+          border-radius: 4px;
+        }
+      }
+    }
+    .address-info {
+      position: relative;
+      margin-left: 10px;
+      &::before {
+        position: absolute;
+        content: '';
+        top: 0;
+        left: -15px;
+        width: 1px;
+        height: 48px;
+        background: #e6e6e6;
+      }
+    }
+  }
+}
