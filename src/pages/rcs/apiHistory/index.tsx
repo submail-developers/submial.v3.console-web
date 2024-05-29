@@ -12,42 +12,97 @@ import {
   Select,
   Dropdown,
   Space,
+  Input,
 } from 'antd'
 import PageContent from '@/components/pageContent'
 import { DownOutlined } from '@ant-design/icons'
-
-// import { getErrorLogs } from '@/api'
+import { getChatbot, getHistory, verifyCodeSms } from '@/api'
 import { API } from 'apis'
 import topIco from '@/assets/rcs/history/history_ico.png'
 import './index.scss'
-
+import VerifyCode from './verifyCodeDialog/index'
 import { useSize, usePoint } from '@/hooks'
 import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
 const { Option } = Select
-
 const { RangePicker } = DatePicker
-interface FormValues {
-  chatbot: any
-  sendStatus: any
-  time: [Dayjs, Dayjs] | null
+
+const allChatBot = {
+  id: 'all',
+  name: '全部ChatBot',
+} as API.ChatbotItem
+
+enum statusNum {
+  '无状态' = 0,
+  '成功',
+  '失败',
+  '已撤回',
+}
+enum statusStyle {
+  'text-color' = 0,
+  'success-color',
+  'error-color',
+  'gray-color',
 }
 
 export default function Fn() {
+  const [form] = Form.useForm()
   const size = useSize()
   const point = usePoint('lg')
+  const [loading, setLoading] = useState(false)
+  const [currentPage, setcurrentPage] = useState<number>(1)
+  const [pageSize, setpageSize] = useState<number>(40)
+  const [total, setTotal] = useState<number>(0)
+  const [historyList, setHistoryList] = useState<API.GetHistoryItems[]>()
+  const [chatBotList, setChatBotList] = useState<API.ChatbotItem[]>([
+    allChatBot,
+  ])
+  // 导出
+  const [isOpenModal, setIsOpenModal] = useState(false)
+  const [exportconfirm, setExportconfirm] = useState(false)
+  const [veriyed, setVeriyed] = useState(false)
 
-  const [form] = Form.useForm()
-  const [getErrorList, setGetErrorList] = useState()
+  // 获取chatbot
+  const getChatbotList = async () => {
+    setLoading(true)
+    try {
+      const res = await getChatbot({
+        page: currentPage,
+        limit: pageSize,
+        appid: '',
+        keywords: '',
+        status: 'all',
+      })
+      setChatBotList([...chatBotList, ...res.list])
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+    }
+  }
 
-  // 获取错误日志
-  // const getList = async () => {
-  //   const res = await getErrorLogs({
-  //     page: 1,
-  //     start: '2022-05-20',
-  //     end: '2024-05-22',
-  //   })
-  // }
+  // 获取历史明细
+  const getList = async () => {
+    const formValues = form.getFieldsValue()
+    const start = '2022-05-29'
+    // (formValues.time && formValues.time[0].format('YYYY-MM-DD')) || ''
+    const end = '2024-05-29'
+    // (formValues.time && formValues.time[1].format('YYYY-MM-DD')) || ''
+
+    let params = {
+      page: currentPage,
+      limit: pageSize,
+      start,
+      end,
+      appid: formValues.appid,
+      status: formValues.status,
+      send_id: formValues.send_id,
+      to: formValues.to,
+      content: formValues.content,
+    }
+    const res = await getHistory(params)
+    setHistoryList(res.history)
+    setTotal(res.row)
+  }
 
   const onRangeChange = (dates, dateStrings) => {
     if (dates) {
@@ -59,37 +114,14 @@ export default function Fn() {
   }
 
   useEffect(() => {
-    // getList()
+    getList()
+    getChatbotList()
   }, [])
-
-  const dataSource = [
-    {
-      key: '1',
-      mob: '15900898337',
-      mobDedail: '中国移动/安徽/合肥',
-      tempId: '12332233',
-      sendTime: '2023-03-12 17:00',
-      endTime: '2023-03-12 17:00',
-      fee: '0',
-      status: '发送完成',
-    },
-    {
-      key: '1',
-      mob: '15900898337',
-      mobDedail: '中国移动/安徽/合肥',
-      tempId: '12332233',
-      sendTime: '2023-03-12 17:00',
-      endTime: '2023-03-12 17:00',
-      fee: '0',
-      status: '发送完成',
-    },
-  ]
 
   const columns = [
     {
       title: '手机号',
-      dataIndex: 'mob',
-      key: 'mob',
+      dataIndex: 'to',
       fixed: true,
       width: size == 'small' ? 150 : 200,
       className: size == 'small' ? 'paddingL20' : 'paddingL30',
@@ -98,37 +130,43 @@ export default function Fn() {
       title: '号码详情',
       dataIndex: 'mobDedail',
       key: 'mobDedail',
-      width: 180,
+      width: 200,
+      render: (_, record) => (
+        <div>
+          {record.mobileType}/{record.mobileArea}
+        </div>
+      ),
     },
     {
-      title: '模板id',
-      dataIndex: 'tempId',
-      key: 'tempId',
+      title: '模板ID',
+      dataIndex: 'sign',
       width: 120,
     },
     {
       title: '发送时间',
-      dataIndex: 'sendTime',
-      key: 'sendTime',
+      dataIndex: 'send',
       width: 200,
     },
     {
       title: '送达时间',
-      dataIndex: 'endTime',
-      key: 'endTime',
+      dataIndex: 'sent',
       width: 200,
     },
     {
       title: '计费(元)',
       dataIndex: 'fee',
-      key: 'fee',
       width: 100,
+      render: (_, record) => <div>1</div>,
     },
     {
       title: '送达状态',
       dataIndex: 'status',
-      key: 'status',
       width: 200,
+      render: (_, record) => (
+        <div className={statusStyle[record.status]}>
+          {statusNum[record.status]}
+        </div>
+      ),
     },
   ]
 
@@ -178,12 +216,6 @@ export default function Fn() {
     },
   ]
 
-  const chatOptions = [
-    {
-      value: 0,
-      label: '全部ChatBot',
-    },
-  ]
   const sendOptions = [
     {
       value: 'all',
@@ -197,15 +229,24 @@ export default function Fn() {
       value: 'dropped',
       label: '发送失败',
     },
+    {
+      value: 'pending',
+      label: '等待中',
+    },
   ]
-  const initFormValues: FormValues = {
-    sendStatus: sendOptions[0],
-    chatbot: chatOptions[0],
-    time: [dayjs().add(-1, 'd'), dayjs().add(0, 'd')],
+
+  const handleCancel = () => {
+    setIsOpenModal(false)
   }
   const edit = async (e) => {
-    console.log(e)
+    setIsOpenModal(true)
+    if (exportconfirm) {
+    }
   }
+
+  //
+  const sendVerifyCodeBySms = (cb) => {}
+
   return (
     <PageContent extClass='api-history'>
       <Form
@@ -214,14 +255,17 @@ export default function Fn() {
         name='api-history'
         layout='vertical'
         autoComplete='off'
-        initialValues={initFormValues}>
+        initialValues={{
+          chatbot: 'all',
+          sendStatus: 'all',
+          time: [dayjs().add(-1, 'd'), dayjs().add(0, 'd')],
+        }}>
         <Image src={topIco} preview={false} width={72}></Image>
         <Flex
           justify='space-between'
           align='center'
           style={{ marginTop: '4px' }}>
           <div className='fn22 fw-500'>API历史明细</div>
-
           <Button type='primary' size={point ? 'large' : 'middle'}>
             <Dropdown
               className='export'
@@ -237,24 +281,24 @@ export default function Fn() {
         <Divider className='line'></Divider>
 
         <Row gutter={16} className='m-b-20'>
-          <Col span={8} md={8} lg={6} xl={6}>
+          <Col>
             <Form.Item
-              label='全部ChatBot'
+              label='ChatBot选择'
               name='chatbot'
-              style={{ marginBottom: '0px' }}>
+              style={{ width: '140px', marginBottom: '0px' }}>
               <Select placeholder='所有标签' popupMatchSelectWidth={120}>
-                {chatOptions.map((option) => (
-                  <Option key={option.value} value={option.value}>
-                    {option.label}
+                {chatBotList.map((option) => (
+                  <Option key={option.id} value={option.id}>
+                    {option.name}
                   </Option>
                 ))}
               </Select>
             </Form.Item>
           </Col>
-          <Col span={8} md={8} lg={6} xl={6}>
+          <Col span={8} md={8} lg={6} xl={3}>
             <Form.Item
               label='发送状态'
-              name='sendStatus'
+              name='status'
               style={{ marginBottom: '0px' }}>
               <Select placeholder='所有标签' popupMatchSelectWidth={120}>
                 {sendOptions.map((option) => (
@@ -265,13 +309,37 @@ export default function Fn() {
               </Select>
             </Form.Item>
           </Col>
-          <Col span={8} md={8} lg={6} xl={7}>
+          <Col span={24} md={8} lg={6} xl={3}>
+            <Form.Item
+              label='SEND ID'
+              name='send_id'
+              style={{ marginBottom: '0px' }}>
+              <Input placeholder='请输入sendid' />
+            </Form.Item>
+          </Col>
+          <Col span={24} md={8} lg={6} xl={3}>
+            <Form.Item
+              label='手机号码'
+              name='to'
+              style={{ marginBottom: '0px' }}>
+              <Input placeholder='请输入手机号码' />
+            </Form.Item>
+          </Col>
+
+          <Col span={24} md={8} lg={6} xl={3}>
+            <Form.Item
+              label='短信内容'
+              name='content'
+              style={{ marginBottom: '0px' }}>
+              <Input placeholder='请输入短信内容' />
+            </Form.Item>
+          </Col>
+          <Col>
             <Form.Item
               label='时间范围'
               name='time'
               style={{ marginBottom: '0px' }}>
               <RangePicker
-                size={size}
                 clearIcon={false}
                 presets={rangePresets}
                 onChange={onRangeChange}
@@ -279,12 +347,12 @@ export default function Fn() {
             </Form.Item>
           </Col>
           <Col span={6} md={4} xl={3}>
-            <Form.Item label=' ' style={{ marginBottom: '0px' }}>
+            <Form.Item label=' '>
               <Button
                 type='primary'
-                style={{ width: '120px' }}
-                // onClick={() => getList()}
-              >
+                className='w-100'
+                htmlType='submit'
+                onClick={() => getList()}>
                 查询
               </Button>
             </Form.Item>
@@ -294,8 +362,8 @@ export default function Fn() {
         <Table
           className='theme-cell reset-table'
           columns={columns}
-          dataSource={dataSource}
-          rowKey={'key'}
+          dataSource={historyList}
+          rowKey={'sendID'}
           sticky
           pagination={{
             position: ['bottomRight'],
@@ -305,6 +373,7 @@ export default function Fn() {
           scroll={{ x: 'max-content' }}
         />
       </Form>
+      <VerifyCode open={isOpenModal} onCancel={handleCancel} />
     </PageContent>
   )
 }

@@ -914,5 +914,92 @@ declare module 'apis' {
       rows: number
       errors: GetErrorLogsItems[]
     }
+    // 获取错误日志
+    interface GetErrorsLogsParams {
+      appid: string
+      page: number
+      limit: number
+      start: string
+      end: string
+    }
+    // 获取api错误日志返回值
+    interface GetErrorsLogsItems {
+      account: string
+      api: string
+      appid: string
+      code: string
+      datetime: string
+      error_key: string
+      message: string
+      id: string
+      ip: string
+      msg: string
+      product: string
+    }
+    interface GetErrorsLogsRes {
+      rows: number
+      data: GetErrorsLogsItems[]
+    }
+    // 获取批量任务发送报告
+    interface GetSendlistsParams {
+      page: number
+      limit: number
+      start: string
+      end: string
+      status: string
+      type: string
+      order_by: string
+      keywords: string
+    }
+    // 获取批量任务发送报告返回值
+    interface GetSendlistsItems {
+      account: string
+      api: string
+      appid: string
+      code: string
+      datetime: string
+      error_key: string
+      message: string
+      id: string
+      ip: string
+      msg: string
+      product: string
+    }
+    interface GetSendlistsRes {
+      rows: number
+      data: GetSendlistsItems[]
+    }
+    // 获取api历史明细
+    interface GetHistoryParams {
+      page: number
+      limit: number
+      start: string
+      end: string
+      appid: string
+      status: string
+      send_id: string
+      to: string
+      content: string
+    }
+    // 获取api历史明细返回值
+    interface GetHistoryItems {
+      account: string
+      api: string
+      appid: string
+      code: string
+      datetime: string
+      error_key: string
+      message: string
+      id: string
+      ip: string
+      msg: string
+      product: string
+    }
+    interface GetHistoryRes {
+      row: number
+      history: GetHistoryItems[]
+    }
+    // 短信验证
+    interface VerifyCodeSmsParams {}
   }
 }

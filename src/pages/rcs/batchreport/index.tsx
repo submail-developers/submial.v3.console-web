@@ -18,7 +18,7 @@ import PageContent from '@/components/pageContent'
 import { DownOutlined } from '@ant-design/icons'
 import { Outlet, useNavigate } from 'react-router-dom'
 
-// import { getErrorLogs } from '@/api'
+import { getSendlists } from '@/api'
 import { API } from 'apis'
 import topIco from '@/assets/rcs/batchreport/batchreport_ico.png'
 import './index.scss'
@@ -30,21 +30,53 @@ const { Option } = Select
 
 const { RangePicker } = DatePicker
 
+enum statusNum {
+  '发送完成' = 1,
+  '尚未开始' = 0,
+  '已撤销' = 9,
+}
+enum statusStyle {
+  'success-color' = 1,
+  'text-color' = 0,
+  'error-colo' = 9,
+}
+
 export default function Fn() {
   const size = useSize()
   const point = usePoint('lg')
 
+  const [currentPage, setcurrentPage] = useState<number>(1)
+  const [pageSize, setpageSize] = useState<number>(40)
+  const [total, setTotal] = useState<number>(0)
+  const [getSendList, setGetSendList] = useState<API.GetSendlistsItems[]>()
   const [form] = Form.useForm()
-  const [getErrorList, setGetErrorList] = useState()
+
   const nav = useNavigate()
-  // 获取错误日志
-  // const getList = async () => {
-  //   const res = await getErrorLogs({
-  //     page: 1,
-  //     start: '2022-05-20',
-  //     end: '2024-05-22',
-  //   })
-  // }
+  // 获取任务发送报告
+  const getList = async () => {
+    const fromValues = await form.getFieldsValue()
+    const start =
+      (fromValues.time && fromValues.time[0].format('YYYY-MM-DD')) || ''
+    const end =
+      (fromValues.time && fromValues.time[1].format('YYYY-MM-DD')) || ''
+    let params = {
+      start,
+      end,
+      keywords: fromValues.keywords,
+      status: fromValues.status,
+      order_by: fromValues.order_by,
+      type: fromValues.type,
+      page: currentPage,
+      limit: pageSize,
+    }
+    const res = await getSendlists(params)
+    setGetSendList(res.data)
+    setTotal(res.rows)
+    try {
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const onRangeChange = (dates, dateStrings) => {
     if (dates) {
@@ -56,72 +88,63 @@ export default function Fn() {
   }
 
   useEffect(() => {
-    // getList()
+    getList()
   }, [])
-
-  const dataSource = [
-    {
-      key: '1',
-      name: '【4399游戏盒】',
-      tempId: 'UG1233',
-      chatname: '演示文字',
-      person: '李三',
-      type: '及时',
-      status: '发送完成',
-      snedtime: '2023-03-12 17:00',
-      date: '2023-03-12 17:00',
-    },
-  ]
 
   const columns = [
     {
       title: '任务名称',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'title',
       fixed: true,
       width: size == 'small' ? 150 : 200,
       className: size == 'small' ? 'paddingL20' : 'paddingL30',
     },
     {
       title: '模板ID',
-      dataIndex: 'tempId',
-      key: 'tempId',
+      dataIndex: 'project',
+      key: 'project',
       width: 120,
     },
     {
       title: 'ChatBot名称',
-      dataIndex: 'chatname',
-      key: 'chatname',
+      dataIndex: 'chatbot_name',
       width: 200,
     },
     {
-      title: '联系人',
-      dataIndex: 'person',
-      key: 'person',
-      width: 200,
+      title: '联系人(数量)',
+      dataIndex: 'address',
+      width: 120,
     },
     {
       title: '类型',
       dataIndex: 'type',
       key: 'type',
-      width: 100,
+      width: 120,
+      render: (_, record) => (
+        <span className='send-type'>
+          {record.type == '1' ? '普通发送' : '定时发送'}
+        </span>
+      ),
     },
     {
       title: '状态',
       dataIndex: 'status',
       key: 'status',
-      width: 100,
+      width: 120,
+      render: (_, record) => (
+        <div className={statusStyle[record.status]}>
+          {statusNum[record.status]}
+        </div>
+      ),
     },
     {
       title: '提交时间',
-      dataIndex: 'snedtime',
-      key: 'snedtime',
+      dataIndex: 'send',
       width: 200,
     },
     {
       title: '完成日期',
-      dataIndex: 'date',
-      key: 'date',
+      dataIndex: 'sent',
       width: 200,
     },
     {
@@ -131,7 +154,10 @@ export default function Fn() {
       render: (_, record) => (
         <>
           <span>
-            <Button type='link' style={{ paddingLeft: 0 }} onClick={toDetail}>
+            <Button
+              type='link'
+              style={{ paddingLeft: 0 }}
+              onClick={() => toDetail(record.id)}>
               查看
             </Button>
           </span>
@@ -164,10 +190,6 @@ export default function Fn() {
 
   const items = [
     {
-      label: '导出 TXT (仅手机号码)',
-      key: '0',
-    },
-    {
       label: '导出 CSV',
       key: '1',
     },
@@ -175,14 +197,6 @@ export default function Fn() {
     {
       label: '导出 EXCEL',
       key: '2',
-    },
-    {
-      label: '导出 JSON',
-      key: '3',
-    },
-    {
-      label: '导出 XML',
-      key: '4',
     },
   ]
 
@@ -196,11 +210,11 @@ export default function Fn() {
     },
     {
       value: '1',
-      label: '即时发送',
+      label: '普通发送',
     },
     {
       value: '2',
-      label: '定时任务',
+      label: '定时发送',
     },
   ]
   const sendOptions = [
@@ -226,8 +240,8 @@ export default function Fn() {
     { label: '完成日期', value: 'sent' },
   ]
 
-  const toDetail = () => {
-    nav('/console/rcs/batchreport/detail/111')
+  const toDetail = (id) => {
+    nav(`/console/rcs/batchreport/detail/${id}`)
   }
   return (
     <PageContent extClass='batchreport'>
@@ -239,7 +253,7 @@ export default function Fn() {
         autoComplete='off'
         initialValues={{
           type: 'all',
-          sendStatus: 'all',
+          status: 'all',
           order_by: 'send',
           time: [dayjs().add(-1, 'd'), dayjs().add(0, 'd')],
         }}>
@@ -265,12 +279,12 @@ export default function Fn() {
         <Divider className='line'></Divider>
 
         <Row gutter={16} className='m-b-20'>
-          <Col span={8} md={4} lg={3} xl={3}>
+          <Col span={12} md={4} lg={3} xl={3}>
             <Form.Item
               label='任务类型'
               name='type'
               style={{ marginBottom: '0px' }}>
-              <Select placeholder='所有标签' popupMatchSelectWidth={120}>
+              <Select placeholder='全部类型' popupMatchSelectWidth={120}>
                 {typeOptions.map((option) => (
                   <Option key={option.value} value={option.value}>
                     {option.label}
@@ -279,12 +293,12 @@ export default function Fn() {
               </Select>
             </Form.Item>
           </Col>
-          <Col span={8} md={4} lg={3} xl={3}>
+          <Col span={12} md={4} lg={3} xl={3}>
             <Form.Item
               label='发送状态'
-              name='sendStatus'
+              name='status'
               style={{ marginBottom: '0px' }}>
-              <Select placeholder='所有标签' popupMatchSelectWidth={120}>
+              <Select placeholder='全部标签' popupMatchSelectWidth={120}>
                 {sendOptions.map((option) => (
                   <Option key={option.value} value={option.value}>
                     {option.label}
@@ -293,21 +307,23 @@ export default function Fn() {
               </Select>
             </Form.Item>
           </Col>
-          <Col span={8} md={8} lg={6} xl={5}>
+          <Col>
             <Form.Item
               label='时间范围'
               name='time'
               style={{ marginBottom: '0px' }}>
               <RangePicker
-                size={size}
                 clearIcon={false}
                 presets={rangePresets}
                 onChange={onRangeChange}
-                style={{ width: size == 'small' ? 190 : 240 }}></RangePicker>
+                style={{ width: '240px' }}></RangePicker>
             </Form.Item>
           </Col>
-          <Col span={6} md={4} xl={6} className='m-l-6'>
-            <Form.Item label='搜索' style={{ marginBottom: '0px' }}>
+          <Col span={24} md={4} xl={6}>
+            <Form.Item
+              label='搜索'
+              name='keywords'
+              style={{ marginBottom: '0px' }}>
               <Input placeholder='请输入关键词' />
             </Form.Item>
           </Col>
@@ -315,14 +331,14 @@ export default function Fn() {
             <Form.Item label=' ' style={{ marginBottom: '0px' }}>
               <Button
                 type='primary'
-                style={{ width: '120px' }}
-                // onClick={() => getList()}
-              >
+                className='w-100'
+                htmlType='submit'
+                onClick={() => getList()}>
                 查询
               </Button>
             </Form.Item>
           </Col>
-          <Col span={6} md={4} xl={3} className='order-by fx-y-center'>
+          <Col span={12} md={4} xl={3} className='order-by fx-y-center'>
             <i className='icon iconfont icon-paixu color fn14 m-r-10'></i>
             <Form.Item
               name='order_by'
@@ -345,8 +361,8 @@ export default function Fn() {
         <Table
           className='theme-cell reset-table'
           columns={columns}
-          dataSource={dataSource}
-          rowKey={'key'}
+          dataSource={getSendList}
+          rowKey={'id'}
           sticky
           pagination={{
             position: ['bottomRight'],
