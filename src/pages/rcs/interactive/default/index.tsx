@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Input } from 'antd'
 import ChatbotList from './chatbotList'
 import TempList from './tempList'
+import { usePoint } from '@/hooks'
 
 import './index.scss'
 
@@ -9,6 +10,7 @@ export default function Fn() {
   const chatbotRef = useRef(null)
   const tempRef = useRef(null)
   const [keyword, setKeyword] = useState('')
+  const size = usePoint('xl')
 
   const searchEvent = (isInit = false) => {
     chatbotRef.current.search(keyword, isInit)
@@ -25,7 +27,7 @@ export default function Fn() {
     searchEvent(true)
   }, [])
   return (
-    <div className='interactive-default'>
+    <div className='interactive-default' style={{ paddingTop: size ? 60 : 44 }}>
       <div className='left-content fx-col'>
         <Input.Search
           className='top-search'
