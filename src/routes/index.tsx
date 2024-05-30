@@ -1,7 +1,6 @@
 import { lazy } from 'react'
 import {
   RouteObject,
-  createHashRouter,
   createBrowserRouter,
   redirect,
   Navigate,
@@ -9,7 +8,6 @@ import {
 import Layout from '@/layout/index'
 import Error from '@/pages/error'
 import LazyImportComponent from './lazyConfig'
-import TestDnd from '@/pages/test-dnd'
 
 /**
  * handle中拿到的参数
