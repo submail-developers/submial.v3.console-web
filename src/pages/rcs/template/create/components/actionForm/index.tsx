@@ -481,6 +481,10 @@ const ActionForm = memo(
         let itemAction = dataItem['action']
         let replyAction = dataItem['reply']
         if (itemAction) {
+          form.setFieldValue(
+            ['action', 'postback', 'data'],
+            itemAction?.postback?.data || '',
+          )
           let actionKey = Object.keys(itemAction).find((key) =>
             actionTypeArray.includes(key as ActionType),
           )
@@ -627,6 +631,7 @@ const ActionForm = memo(
         if (values.btntype == 'action') {
           let action = values['action']
           let params = {}
+          console.log(action, 'action')
           // 剔除不要的值
           if (action) {
             for (const key in action) {

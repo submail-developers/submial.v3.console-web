@@ -48,7 +48,7 @@ function Fn(props, ref: any) {
       const res = await getRcsTempList({
         page: page,
         limit: pageSize,
-        status: 'all',
+        status: '1',
         keyword: keywordsRef.current,
       })
       setList(res.list)
