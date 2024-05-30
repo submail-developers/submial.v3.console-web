@@ -25,7 +25,7 @@ export default function MobMenu() {
         <div
           className={`mob-menu-btn ${open ? 'active' : ''}`}
           onClick={() => setOpen(!open)}>
-          <span className='icon iconfont icon-xiangxia fn14'></span>
+          <span className='icon iconfont icon-xiangxia fn8'></span>
         </div>
       </Flex>
       <Drawer

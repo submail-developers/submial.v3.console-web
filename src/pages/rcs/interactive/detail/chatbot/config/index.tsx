@@ -6,7 +6,11 @@ import Modal from '@/pages/rcs/interactive/compontent/modal'
 import Item from '@/pages/rcs/interactive/compontent/item'
 import { useStateStore } from '@/pages/rcs/interactive/reducer'
 import { API } from 'apis'
-import { getRcsInteractiveList, delRcsInteractive } from '@/api'
+import {
+  getRcsInteractiveList,
+  delRcsInteractive,
+  changeRcsInteractiveAllStatus,
+} from '@/api'
 
 import './index.scss'
 
@@ -23,6 +27,12 @@ export default function Config() {
   const { id } = useParams()
   const modalRef = useRef(null)
   const [loading, setLoading] = useState(false)
+  const [switchLoading, setSwitchLoading] = useState(false)
+  const [allStatus, setAllStatus] = useState(false)
+  const menuOptionsRef = useRef<Options[]>([])
+  const [allInteractiveList, setallInteractiveList] = useState<
+    API.GetRcsInteractiveListResItem[]
+  >([])
   // 固定菜单按钮列表
   const [chatbotInteractiveList, setchatbotInteractiveList] = useState<
     API.GetRcsInteractiveListResItem[]
@@ -66,21 +76,39 @@ export default function Config() {
     })
     return arr
   }
+  // 生成modal中的options
+  const filterOptionsEvent = (suggestions: API.EntriesItem[]): Options[] => {
+    let arr: Options[] = []
+    if (Array.isArray(suggestions)) {
+      suggestions.forEach((item: API.EntriesItem) => {
+        if (item.action) {
+          arr.push({
+            label: `${item.action.displayText}`,
+            value: item.action?.postback?.data || '',
+            disabled: false,
+            item: item,
+          })
+        } else if (item.reply) {
+          arr.push({
+            label: `${item.reply.displayText}`,
+            value: item.reply?.postback?.data || '',
+            disabled: false,
+            item: item,
+          })
+        } else {
+        }
+      })
+    }
+    return arr
+  }
 
+  // 新增
   const onAdd = (type: '1' | '3') => {
     if (type == '1') {
-      let options: Options[] = []
-      let disabledList: string[] = []
-      chatbotInteractiveList.forEach((item) => {
-        disabledList.push(item.fixed_button)
-      })
-      if (state.chatbot) {
-        let entries: API.EntriesItem[] = state.chatbot.menu?.menu?.entries || []
-        options = [...filterOptions(entries, disabledList)]
-      }
+      console.log(menuOptionsRef.current, 'op')
       modalRef.current.openEvent({
         title: '新增固定菜单交互',
-        options,
+        options: menuOptionsRef.current,
         initValues: {
           type,
           chatbotId: id,
@@ -96,19 +124,23 @@ export default function Config() {
       })
     }
   }
+
+  // 编辑
   const onEdit = (item: API.GetRcsInteractiveListResItem) => {
     if (item.type == '1') {
       let options: Options[] = []
-      let disabledList: string[] = []
-      chatbotInteractiveList.forEach((im) => {
-        if (im.id != item.id) {
-          disabledList.push(im.fixed_button)
+      menuOptionsRef.current.forEach((im) => {
+        if (im.value == item.fixed_button) {
+          options.push({
+            ...im,
+            disabled: false,
+          })
+        } else {
+          options.push(im)
         }
       })
-      if (state.chatbot) {
-        let entries: API.EntriesItem[] = state.chatbot.menu?.menu?.entries || []
-        options = [...filterOptions(entries, disabledList)]
-      }
+      console.log(options, 'op')
+
       modalRef.current.openEvent({
         title: '编辑固定菜单交互',
         options,
@@ -137,6 +169,8 @@ export default function Config() {
     } else {
     }
   }
+
+  // 删除
   const onDel = async (id: string) => {
     const res = await delRcsInteractive({
       id: id,
@@ -147,12 +181,12 @@ export default function Config() {
     }
   }
 
+  // 获取列表
   const getList = async () => {
     try {
       const res = await getRcsInteractiveList({ appid: id })
       if (res.data) {
-        setchatbotInteractiveList(res.data.filter((item) => item.type == '1'))
-        settextInteractiveList(res.data.filter((item) => item.type == '3'))
+        setallInteractiveList(res.data)
       }
       setLoading(false)
     } catch (error) {
@@ -160,22 +194,97 @@ export default function Config() {
     }
   }
 
+  // 一键开启/关闭
+  const changeAllStatus = async (checked) => {
+    setSwitchLoading(true)
+    const res = await changeRcsInteractiveAllStatus({
+      appid: id,
+      status: checked,
+    })
+    if (res.status == 'success') {
+      getList()
+    }
+
+    setSwitchLoading(false)
+  }
+
   useEffect(() => {
     setLoading(true)
     if (id != '0') getList()
   }, [id])
+
+  useEffect(() => {
+    // chatbot的menu列表 -> Options[]
+    if (state.chatbot && state.chatbot.menu) {
+      menuOptionsRef.current = filterOptionsEvent(
+        state.chatbot?.menu?.menu?.entries || [],
+      )
+    }
+
+    // menu列表的postback?.data
+    let menuIds: string[] = []
+    menuOptionsRef.current.forEach((item) => menuIds.push(item.value))
+    let menuInteractives: API.GetRcsInteractiveListResItem[] = [] // 可以使用的菜单配置
+    let menuInteractivesValues: string[] = [] // 被使用使用的菜单
+    let desabledMenuInteractives: API.GetRcsInteractiveListResItem[] = [] // 已失效的菜单配置
+    let textInteractives: API.GetRcsInteractiveListResItem[] = [] // 已失效的菜单配置
+
+    allInteractiveList.forEach((item) => {
+      // 菜单
+      if (item.type == '1') {
+        if (menuIds.includes(item.fixed_button)) {
+          menuInteractives.push(item)
+          menuInteractivesValues.push(item.fixed_button)
+        } else {
+          desabledMenuInteractives.push(item)
+        }
+        // 纯文字
+      } else if (item.type == '3') {
+        textInteractives.push(item)
+      } else {
+      }
+    })
+    menuOptionsRef.current = menuOptionsRef.current.map((item) => {
+      item.disabled = menuInteractivesValues.includes(item.value)
+      return item
+    })
+    setchatbotInteractiveList(menuInteractives)
+    settextInteractiveList(textInteractives)
+    setAllStatus(
+      [...menuInteractives, ...textInteractives].some(
+        (item) => item.enabled == '1',
+      ),
+    )
+  }, [allInteractiveList, state.chatbot])
+
+  useEffect(() => {
+    if (state.chatbot && state.chatbot.menu) {
+      menuOptionsRef.current = filterOptionsEvent(
+        state.chatbot?.menu?.menu?.entries || [],
+      )
+    }
+  }, [state.chatbot])
 
   return (
     <div className='interactive-config p-r-40'>
       <Flex justify='space-between' align='center'>
         <Space align='center'>
           <Image src={folder_blue} preview={false} width={32} />
-          <span className='fn18 fw-500'>微服务架构模版</span>
+          {state.chatbot && (
+            <span className='fn18 fw-500'>{state.chatbot.name}</span>
+          )}
         </Space>
-        <Space align='center'>
-          <Switch size='small' />
-          <span>已启用</span>
-        </Space>
+        {allInteractiveList.length > 0 && (
+          <Space align='center'>
+            <Switch
+              value={allStatus}
+              size='small'
+              loading={switchLoading}
+              onChange={changeAllStatus}
+            />
+            <span>{allStatus ? '全部禁用' : '全部启用'}</span>
+          </Space>
+        )}
       </Flex>
 
       {loading ? (

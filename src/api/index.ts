@@ -561,3 +561,14 @@ export const changeRcsInteractiveStatus = (data: {
     },
   )
 }
+// 切换交互配置开关
+export const changeRcsInteractiveAllStatus = (
+  data: API.ChangeRcsInteractiveAllStatusParams,
+) => {
+  return request.post<any, any, API.ChangeRcsInteractiveAllStatusParams>(
+    'console/api/rcs/interactive_all_status',
+    {
+      ...data,
+    },
+  )
+}

@@ -417,7 +417,7 @@ export const menus: RouteObject[] = [
         loader: loaderFn({
           groupName: '智能交互',
           groupIcon: 'icon-jiaohu',
-          breadName: 'Chatbot 交互',
+          breadName: '上行交互',
           menuName: 'Chatbot 交互',
         }),
         errorElement: <Error />,
@@ -429,38 +429,55 @@ export const menus: RouteObject[] = [
         children: [
           {
             path: 'chatbot/:id',
-            loader: loaderFn({
-              // breadName: 'Chatbot 交互',
-            }),
             errorElement: <Error />,
             element: (
               <LazyImportComponent
                 lazyChildren={lazy(
-                  () => import('@/pages/rcs/interactive/chatbot'),
+                  () => import('@/pages/rcs/interactive/default'),
                 )}
               />
             ),
           },
           {
             path: 'template/:id',
+            errorElement: <Error />,
+            element: (
+              <LazyImportComponent
+                lazyChildren={lazy(
+                  () => import('@/pages/rcs/interactive/default'),
+                )}
+              />
+            ),
+          },
+          {
+            path: 'detail/chatbot/:id',
             loader: loaderFn({
-              breadName: '模版交互',
+              breadName: '交互详情',
             }),
             errorElement: <Error />,
             element: (
               <LazyImportComponent
                 lazyChildren={lazy(
-                  () => import('@/pages/rcs/interactive/template'),
+                  () => import('@/pages/rcs/interactive/detail/chatbot'),
+                )}
+              />
+            ),
+          },
+          {
+            path: 'detail/template/:id',
+            loader: loaderFn({
+              breadName: '交互详情',
+            }),
+            errorElement: <Error />,
+            element: (
+              <LazyImportComponent
+                lazyChildren={lazy(
+                  () => import('@/pages/rcs/interactive/detail/template'),
                 )}
               />
             ),
           },
         ],
-        // element: (
-        //   <LazyImportComponent
-        //     lazyChildren={lazy(() => import('@/pages/rcs/interactive'))}
-        //   />
-        // ),
       },
       {
         path: 'sandbox',

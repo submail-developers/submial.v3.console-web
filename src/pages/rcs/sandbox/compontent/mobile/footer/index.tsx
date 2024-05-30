@@ -26,10 +26,15 @@ const DropMenu = ({ menuItem }: DropMenuProps) => {
   return (
     <>
       {items.length > 0 ? (
-        <Dropdown menu={{ items }} placement='top' arrow trigger={['click']}>
+        <Dropdown
+          menu={{ items }}
+          placement='top'
+          arrow
+          trigger={['click']}
+          className='fn13'>
           <div className='menu-item g-pointer fx-center-center'>
             <span className='menus-line m-r-4'></span>
-            <span className='fn13 menu-item-text'>
+            <span className='fn12 menu-item-text'>
               {menuItem.action?.displayText ||
                 menuItem.reply?.displayText ||
                 menuItem.menu?.displayText}
@@ -38,7 +43,7 @@ const DropMenu = ({ menuItem }: DropMenuProps) => {
         </Dropdown>
       ) : (
         <div className='menu-item g-pointer fx-center-center'>
-          <span className='fn13 menu-item-text'>
+          <span className='fn12 menu-item-text'>
             {menuItem.action?.displayText ||
               menuItem.reply?.displayText ||
               menuItem.menu?.displayText}

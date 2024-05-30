@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Flex, Space, Switch, Divider, Popconfirm } from 'antd'
+import ACopy from '@/components/aCopy'
 import { API } from 'apis'
 import { changeRcsInteractiveStatus } from '@/api'
 import {
@@ -18,6 +19,26 @@ type Props = {
   onEdit: () => void
   onDel: () => void
   onChangeStatus: () => void
+}
+
+const Keywords = ({ text, isReg }: { text: string; isReg: boolean }) => {
+  let list = text.split('\n').filter((item) => item)
+
+  return (
+    <>
+      {isReg ? (
+        <span className='color'>{text}</span>
+      ) : (
+        <Space wrap align='center'>
+          {list.map((item, index) => (
+            <div className='keyword-item fn13' key={index}>
+              {item}
+            </div>
+          ))}
+        </Space>
+      )}
+    </>
+  )
 }
 
 export default function Item(props: Props) {
@@ -67,36 +88,44 @@ export default function Item(props: Props) {
       <div className='center-config fx-col p-b-4'>
         <div className='fn16 fw-500'>{props.item.title}</div>
         {['1', '2'].includes(props.item.type) && (
-          <Space className='p-y-4' size={32}>
-            <span className='gray-color'>绑定按键</span>
+          <Flex className='p-y-4' gap={32}>
+            <span className='gray-color fx-shrink'>绑定按键</span>
             <span className='color'>
               {props.item.fixed_button_title || props.item.card_button_title}
             </span>
-          </Space>
+          </Flex>
         )}
         {props.item.type == '3' && (
           <>
-            <Space className='p-y-4' size={32}>
-              <span className='gray-color' style={{ marginRight: '1em' }}>
+            <Flex className='p-y-4' gap={32}>
+              <span
+                className='gray-color fx-shrink'
+                style={{ paddingRight: '1em' }}>
                 关键字
               </span>
-              <span className='color'>{props.item.keywords}</span>
-            </Space>
-            <Space className='p-y-4' size={32}>
-              <span className='gray-color'>触发规则</span>
+              <Keywords
+                text={props.item.keywords}
+                isReg={props.item.match_type == '3'}
+              />
+            </Flex>
+            <Flex className='p-y-4' gap={32}>
+              <span className='gray-color fx-shrink'>触发规则</span>
               <span className='color g-ellipsis'>
                 {MatchType[props.item.match_type]}
               </span>
-            </Space>
+            </Flex>
           </>
         )}
-        <Space className='p-y-4' size={32}>
-          <span className='gray-color'>下行模版</span>
-          <span className='color g-ellipsis'>
-            <span>【{props.item.reply_sign}】</span>
+        <Flex className='p-y-4' gap={32}>
+          <span className='gray-color fx-shrink'>下行模版</span>
+          <span className='color g-ellipsis' title={props.item.reply_title}>
+            <span style={{ position: 'relative' }}>
+              【{props.item.reply_sign}】
+              <ACopy text={props.item.reply_sign} />
+            </span>
             {props.item.reply_title}
           </span>
-        </Space>
+        </Flex>
       </div>
       <div className='right-config'>
         <Space size={0} align='center'>

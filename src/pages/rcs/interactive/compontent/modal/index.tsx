@@ -21,7 +21,7 @@ import { ProFormDependency } from '@ant-design/pro-components'
 import { getRcsTempList, createRcsInteractive } from '@/api'
 import { API } from 'apis'
 import { debounce } from 'lodash'
-import type { Options } from '../../chatbot/config/index'
+import type { Options } from '../../detail/chatbot/config/index'
 
 type Props = {
   onOk: () => void
@@ -238,7 +238,7 @@ function Fn(props: Props, ref: MutableRefObject<any>) {
                       }>
                       <Input.TextArea
                         placeholder='请输入'
-                        autoSize={{ minRows: 4, maxRows: 4 }}
+                        autoSize={{ minRows: 4, maxRows: 10 }}
                       />
                     </Form.Item>
                     <Form.Item

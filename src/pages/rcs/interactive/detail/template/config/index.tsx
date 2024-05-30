@@ -5,7 +5,11 @@ import folder_blue from '@/assets/rcs/address/folder_blue.png'
 import Item from '@/pages/rcs/interactive/compontent/item'
 import Modal from '@/pages/rcs/interactive/compontent/modal'
 import { useStateStore } from '@/pages/rcs/interactive/reducer'
-import { getRcsInteractiveList, delRcsInteractive } from '@/api'
+import {
+  getRcsInteractiveList,
+  delRcsInteractive,
+  changeRcsInteractiveAllStatus,
+} from '@/api'
 import { API } from 'apis'
 
 import './index.scss'
@@ -28,6 +32,8 @@ export default function Config() {
   // 弹框的ref
   const modalRef = useRef(null)
   const [loading, setLoading] = useState(true)
+  const [switchLoading, setSwitchLoading] = useState(false)
+  const [allStatus, setAllStatus] = useState(false)
   // 所有列表
   const [list, setList] = useState<API.GetRcsInteractiveListResItem[]>([])
   // 固定菜单按钮列表
@@ -201,6 +207,20 @@ export default function Config() {
     return arr
   }
 
+  // 一键开启/关闭
+  const changeAllStatus = async (checked) => {
+    setSwitchLoading(true)
+
+    const res = await changeRcsInteractiveAllStatus({
+      template_id: id,
+      status: checked,
+    })
+    if (res.status == 'success') {
+      getList()
+    }
+    setSwitchLoading(false)
+  }
+
   // 获取模版按钮/悬浮按钮的列表
   useEffect(() => {
     if (state.template) {
@@ -247,6 +267,14 @@ export default function Config() {
     }
   }, [state.template, list])
 
+  useEffect(() => {
+    setAllStatus(
+      [...floatInteractiveList, ...sugInteractiveList].some(
+        (item) => item.enabled == '1',
+      ),
+    )
+  }, [floatInteractiveList, sugInteractiveList])
+
   // 获取列表
   useEffect(() => {
     setLoading(true)
@@ -258,12 +286,22 @@ export default function Config() {
       <Flex justify='space-between' align='center'>
         <Space align='center'>
           <Image src={folder_blue} preview={false} width={32} />
-          <span className='fn18 fw-500'>微服务架构模版</span>
+          {state.template && (
+            <span className='fn18 fw-500'>{state.template.title}</span>
+          )}
         </Space>
-        <Space align='center'>
-          <Switch size='small' />
-          <span>已启用</span>
-        </Space>
+
+        {list.length > 0 && (
+          <Space align='center'>
+            <Switch
+              value={allStatus}
+              size='small'
+              loading={switchLoading}
+              onChange={changeAllStatus}
+            />
+            <span>{allStatus ? '全部禁用' : '全部启用'}</span>
+          </Space>
+        )}
       </Flex>
 
       {loading ? (

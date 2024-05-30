@@ -118,13 +118,15 @@ export default function Fn(props: Props) {
               key={item.type}
               onClick={() => setType(item.type)}>
               <Space size={6}>
-                <span
-                  className={`icon iconfont ${item.icon} fn18 fw-500`}></span>
+                <div className='fx-y-center' style={{ width: 28 }}>
+                  <span
+                    className={`icon iconfont ${item.icon} fn16 fw-500`}></span>
+                </div>
                 <span className='fw-500'>{item.name}</span>
                 <span className='des'>{item.des}</span>
               </Space>
               <div>
-                <span className='icon iconfont icon-jia fn12 fw-500'></span>
+                <span className='icon iconfont icon-jia fn13 fw-500'></span>
               </div>
             </div>
           ))}

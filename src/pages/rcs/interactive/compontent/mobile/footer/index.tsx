@@ -16,20 +16,29 @@ const DropMenu = ({ menuItem }: DropMenuProps) => {
     menuItem?.menu.entries.forEach((item, index) => {
       items.push({
         key: index,
-        label:
-          item.action?.displayText ||
-          item.reply?.displayText ||
-          item.menu?.displayText,
+        label: (
+          <span className='fn13'>
+            {item.action?.displayText ||
+              item.reply?.displayText ||
+              item.menu?.displayText}
+          </span>
+        ),
       })
     })
   }
   return (
     <>
       {items.length > 0 ? (
-        <Dropdown menu={{ items }} placement='top' arrow trigger={['click']}>
+        <Dropdown
+          menu={{
+            items,
+          }}
+          placement='top'
+          arrow
+          trigger={['click']}>
           <div className='menu-item g-pointer fx-center-center'>
             <span className='menus-line m-r-4'></span>
-            <span className='fn13 menu-item-text'>
+            <span className='fn12 menu-item-text'>
               {menuItem.action?.displayText ||
                 menuItem.reply?.displayText ||
                 menuItem.menu?.displayText}
@@ -38,7 +47,7 @@ const DropMenu = ({ menuItem }: DropMenuProps) => {
         </Dropdown>
       ) : (
         <div className='menu-item g-pointer fx-center-center'>
-          <span className='fn13 menu-item-text'>
+          <span className='fn12 menu-item-text'>
             {menuItem.action?.displayText ||
               menuItem.reply?.displayText ||
               menuItem.menu?.displayText}
@@ -112,7 +121,7 @@ export default function RcsMobileFooter() {
             <span className='icon iconfont icon-jianpan fn16 fw-500'></span>
           </div>
           <Flex
-            className='menu-list hide-scrollbar p-r-8'
+            className='menu-list hide-scrollbar'
             align='center'
             wrap='nowrap'>
             {entries.map((item, index) => (

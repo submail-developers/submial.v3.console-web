@@ -872,7 +872,7 @@ declare module 'apis' {
       fixed_button_title: string
       id: string
       keywords: string
-      match_type: string
+      match_type: '1' | '2' | '3' // 1全文匹配  2关键字包含  3正则表达式
       reply_id: string // 下行模版信息
       reply_sign: string
       reply_title: string
@@ -892,6 +892,12 @@ declare module 'apis' {
       match_type?: '1' | '2' | '3' // 1全文匹配  2关键字包含  3正则表达式
       keywords?: string // 关键字/正则
       button_data?: string
+    }
+
+    interface ChangeRcsInteractiveAllStatusParams {
+      appid?: string
+      template_id?: string
+      status: boolean
     }
 
     // 获取错误日志

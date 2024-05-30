@@ -16,10 +16,13 @@ const DropMenu = ({ menuItem }: DropMenuProps) => {
     menuItem?.menu.entries.forEach((item, index) => {
       items.push({
         key: index,
-        label:
-          item.action?.displayText ||
-          item.reply?.displayText ||
-          item.menu?.displayText,
+        label: (
+          <span className='fn13'>
+            {item.action?.displayText ||
+              item.reply?.displayText ||
+              item.menu?.displayText}
+          </span>
+        ),
       })
     })
   }
@@ -29,7 +32,7 @@ const DropMenu = ({ menuItem }: DropMenuProps) => {
         <Dropdown menu={{ items }} placement='top' arrow trigger={['click']}>
           <div className='menu-item g-pointer fx-center-center'>
             <span className='menus-line m-r-4'></span>
-            <span className='fn13 menu-item-text'>
+            <span className='fn12 menu-item-text'>
               {menuItem.action?.displayText ||
                 menuItem.reply?.displayText ||
                 menuItem.menu?.displayText}
@@ -39,7 +42,7 @@ const DropMenu = ({ menuItem }: DropMenuProps) => {
       ) : (
         <div className='menu-item g-pointer fx-center-center'>
           {menuItem.menu && <span className='menus-line m-r-4'></span>}
-          <span className='fn13 menu-item-text'>
+          <span className='fn12 menu-item-text'>
             {menuItem.action?.displayText ||
               menuItem.reply?.displayText ||
               menuItem.menu?.displayText}

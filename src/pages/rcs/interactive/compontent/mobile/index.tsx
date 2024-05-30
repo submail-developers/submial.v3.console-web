@@ -50,23 +50,23 @@ export default function Mobile() {
             {isChatbot && chatbot && (
               <>
                 <div className='chat-container' ref={ref}>
-                  <div className='skeleton-wrap p-x-8 p-t-8 p-b-16 g-radius-8'>
-                    <Skeleton.Node style={{ width: 224 }}>
-                      <div style={{ width: 224 }}></div>
+                  <div className='skeleton-wrap p-b-16 g-radius-8'>
+                    <Skeleton.Node style={{ width: 240 }}>
+                      <div style={{ width: 240 }}></div>
                     </Skeleton.Node>
                     <Skeleton.Node
-                      style={{ width: 224, height: 32 }}
+                      style={{ width: 240, height: 32 }}
                       className='m-t-4'>
-                      <div style={{ width: 224 }}></div>
+                      <div style={{ width: 240 }}></div>
                     </Skeleton.Node>
                     <Skeleton.Node
-                      style={{ width: 224, height: 60 }}
+                      style={{ width: 240, height: 60 }}
                       className='m-t-4'>
-                      <div style={{ width: 224 }}></div>
+                      <div style={{ width: 240 }}></div>
                     </Skeleton.Node>
                     <Skeleton.Button
                       shape='round'
-                      style={{ width: 224, height: 32 }}
+                      style={{ width: 240, height: 32 }}
                       className='m-t-8'></Skeleton.Button>
                   </div>
 

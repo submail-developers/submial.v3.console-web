@@ -14,6 +14,7 @@
   --error-color: #f00011; // 错误色
   --warning-color: #ff4d4f; // 警告色
   --waiting-color: #f19d25; // 审核中
+  --tag-color: #5068a6; // 文字高亮色
   --black-color: #1a1c1f; // 黑色
   --white-color: #fff; // 白色
 
@@ -169,6 +170,10 @@
 // 等待字体色
 .waiting-color {
   color: var(--warning-color);
+}
+// 文字高亮色
+.tag-color {
+  color: var(--tag-color);
 }
 // 深黑色
 .black-color {
