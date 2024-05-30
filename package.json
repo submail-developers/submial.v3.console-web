@@ -13,7 +13,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/charts": "^2.1.1",
     "@ant-design/icons": "^5.2.6",
+    "@ant-design/plots": "^2.2.2",
     "@ant-design/pro-components": "^2.6.33",
     "@reduxjs/toolkit": "^1.9.5",
     "@types/react-dnd-multi-backend": "^6.0.6",
@@ -26,6 +28,7 @@
     "cropperjs": "^1.6.1",
     "dayjs": "^1.11.10",
     "echarts": "^5.5.0",
+    "echarts-for-react": "^3.0.2",
     "is-hotkey": "^0.2.0",
     "lodash": "^4.17.21",
     "normalize.css": "^8.0.1",
