@@ -23,7 +23,7 @@ import apiIco3 from '@/assets/rcs/analysis/apiInfo3.png'
 import apiIco4 from '@/assets/rcs/analysis/apiInfo4.png'
 import apiIco5 from '@/assets/rcs/analysis/apiInfo5.png'
 import apiIco6 from '@/assets/rcs/analysis/apiInfo6.png'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import ReactEcharts from 'echarts-for-react'
 import type { CollapseProps } from 'antd'
 // import { getErrorLogs } from '@/api'
@@ -37,23 +37,14 @@ import { useSize, usePoint } from '@/hooks'
 const { Option } = Select
 const { Panel } = Collapse
 export default function Fn() {
+  const { id } = useParams()
   const size = useSize()
   const point = usePoint('lg')
-
   const [form] = Form.useForm()
-  const [getErrorList, setGetErrorList] = useState()
-  const nav = useNavigate()
-  // 获取错误日志
-  // const getList = async () => {
-  //   const res = await getErrorLogs({
-  //     page: 1,
-  //     start: '2022-05-20',
-  //     end: '2024-05-22',
-  //   })
-  // }
 
   useEffect(() => {
     // getList()
+    console.log(id, '////')
   }, [])
 
   const dataSource = [
@@ -241,6 +232,45 @@ export default function Fn() {
     },
     {
       id: 5,
+      name: '上海市',
+      count: '2134',
+      zhanbi: '24%',
+    },
+  ]
+
+  const cityList = [
+    {
+      value: 0,
+      name: '福建省',
+      count: '2134',
+      zhanbi: '24%',
+    },
+    {
+      value: 1,
+      name: '广东省',
+      count: '134',
+      zhanbi: '14%',
+    },
+    {
+      value: 2,
+      name: '湖北省',
+      count: '12234',
+      zhanbi: '34%',
+    },
+    {
+      value: 3,
+      name: '江苏省',
+      count: '1134',
+      zhanbi: '34%',
+    },
+    {
+      value: 4,
+      name: '安徽省',
+      count: '34',
+      zhanbi: '4%',
+    },
+    {
+      value: 5,
       name: '上海市',
       count: '2134',
       zhanbi: '24%',
@@ -464,7 +494,7 @@ export default function Fn() {
                         <td className='gray-color'>占比</td>
                       </tr>
                       {tableList.map((item, index) => (
-                        <tr>
+                        <tr key={item.id}>
                           <td className='gray-color'>{item.name}</td>
                           <td width='45%;'>
                             <div className='progress'>
@@ -489,8 +519,8 @@ export default function Fn() {
                         <td className='gray-color'>数量</td>
                         <td className='gray-color'>占比</td>
                       </tr>
-                      {tableList.map((item, index) => (
-                        <tr>
+                      {cityList.map((item, index) => (
+                        <tr key={item.value}>
                           <td className='gray-color'>{item.name}</td>
                           <td width='45%;'>
                             <div className='progress'>
@@ -546,7 +576,6 @@ export default function Fn() {
           </Panel>
         </Collapse>
       </Form>
-      <Outlet />
     </PageContent>
   )
 }

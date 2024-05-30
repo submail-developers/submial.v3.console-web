@@ -13,7 +13,7 @@ import {
 } from 'antd'
 import PageContent from '@/components/pageContent'
 
-// import { getErrorLogs } from '@/api'
+import { getErrorsLogs, getChatbot } from '@/api'
 import { API } from 'apis'
 import topIco from '@/assets/rcs/errorlogs/err_ico.png'
 import './index.scss'
@@ -23,24 +23,67 @@ import type { Dayjs } from 'dayjs'
 const { Option } = Select
 
 const { RangePicker } = DatePicker
-interface FormValues {
-  chatbot: any
-  time: [Dayjs, Dayjs] | null
-}
+const allChatBot = {
+  id: 'all',
+  name: '全部ChatBot',
+} as API.ChatbotItem
 
 export default function Fn() {
   const size = useSize()
   const [form] = Form.useForm()
-  const [getErrorList, setGetErrorList] = useState()
+  const [loading, setLoading] = useState(false)
+  const [currentPage, setcurrentPage] = useState<number>(1)
+  const [pageSize, setpageSize] = useState<number>(40)
+  const [total, setTotal] = useState<number>(0)
+  const [getErrorList, setGetErrorList] = useState<API.GetErrorsLogsItems[]>()
+  const [chatBotList, setChatBotList] = useState<API.ChatbotItem[]>([
+    allChatBot,
+  ])
+
+  // 获取chatbot
+  const getChatbotList = async () => {
+    setLoading(true)
+    try {
+      const res = await getChatbot({
+        page: currentPage,
+        limit: pageSize,
+        appid: '',
+        keywords: '',
+        status: 'all',
+      })
+      setChatBotList([...chatBotList, ...res.list])
+
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+    }
+  }
 
   // 获取错误日志
-  // const getList = async () => {
-  //   const res = await getErrorLogs({
-  //     page: 1,
-  //     start: '2022-05-20',
-  //     end: '2024-05-22',
-  //   })
-  // }
+  const getList = async () => {
+    setLoading(true)
+    try {
+      const formValues = await form.getFieldsValue()
+      const start =
+        (formValues.time && formValues.time[0].format('YYYY-MM-DD')) || ''
+      const end =
+        (formValues.time && formValues.time[1].format('YYYY-MM-DD')) || ''
+      let params = {
+        appid: formValues.chatbot,
+        start,
+        end,
+        page: currentPage,
+        limit: pageSize,
+      }
+
+      const res = await getErrorsLogs(params)
+      setGetErrorList(res.data)
+      setTotal(res.rows)
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+    }
+  }
 
   const onRangeChange = (dates, dateStrings) => {
     if (dates) {
@@ -52,70 +95,45 @@ export default function Fn() {
   }
 
   useEffect(() => {
-    // getList()
+    getList()
+    getChatbotList()
   }, [])
-
-  const dataSource = [
-    {
-      key: '1',
-      name: 'ChatBot1',
-      api: '5grcs/template_put',
-      code: '329',
-      date: '2023-03-12 17:00',
-      ip: '124.25.15.262',
-      detail: '缺号参数12123123131231231',
-    },
-    {
-      key: '2',
-      name: 'ChatBot1',
-      api: '5grcs/template_put',
-      code: '329',
-      date: '2023-03-12 17:00',
-      ip: '124.25.15.262',
-      detail: '缺号参数12123123131231231',
-    },
-  ]
 
   const columns = [
     {
       title: 'ChatBot',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'chatbot_name',
       fixed: true,
-      width: size == 'small' ? 100 : 150,
+      width: size == 'small' ? 150 : 240,
       className: size == 'small' ? 'paddingL20' : 'paddingL30',
     },
     {
       title: 'API',
       dataIndex: 'api',
-      key: 'api',
       width: 180,
     },
     {
       title: '错误码',
       dataIndex: 'code',
-      key: 'code',
       width: 120,
     },
     {
       title: '日期',
-      dataIndex: 'date',
-      key: 'date',
+      dataIndex: 'datetime',
       width: 200,
     },
     {
       title: 'IP来源',
       dataIndex: 'ip',
-      key: 'ip',
-      width: 200,
+      width: 160,
     },
     {
       title: '详情',
       dataIndex: 'detail',
       key: 'detail',
       render: (_, record) => (
-        <div className='g-ellipsis-2' style={{ width: '200px' }}>
-          缺号参数12123123131231231缺号参数12123123131231231缺号参数12123123131231231
+        <div className='g-ellipsis-2' style={{ width: '240px' }}>
+          {record.msg}
         </div>
       ),
     },
@@ -143,16 +161,6 @@ export default function Fn() {
     },
   ]
 
-  const chatOptions = [
-    {
-      value: 0,
-      label: '全部ChatBot',
-    },
-  ]
-  const initFormValues: FormValues = {
-    chatbot: chatOptions[0],
-    time: [dayjs().add(-1, 'd'), dayjs().add(0, 'd')],
-  }
   return (
     <PageContent extClass='api-errorlogs'>
       <Form
@@ -161,7 +169,10 @@ export default function Fn() {
         name='api-errorlogs'
         layout='vertical'
         autoComplete='off'
-        initialValues={initFormValues}>
+        initialValues={{
+          chatbot: 'all',
+          time: [dayjs().add(-1, 'd'), dayjs().add(0, 'd')],
+        }}>
         <Image src={topIco} preview={false} width={72}></Image>
         <Flex
           justify='space-between'
@@ -172,31 +183,42 @@ export default function Fn() {
         <Divider className='line'></Divider>
 
         <Row gutter={16}>
-          <Col className='m-b-20'>
+          <Col className='top-item m-b-20'>
             <Form.Item
-              label='全部ChatBot'
+              label='ChatBot选择'
               name='chatbot'
-              style={{ marginBottom: '0px' }}>
+              style={{ width: '140px', marginBottom: '0px' }}>
               <Select placeholder='所有标签' popupMatchSelectWidth={120}>
-                {chatOptions.map((option) => (
-                  <Option key={option.value} value={option.value}>
-                    {option.label}
+                {chatBotList?.map((option) => (
+                  <Option key={option.id} value={option.id}>
+                    {option.name}
                   </Option>
                 ))}
               </Select>
             </Form.Item>
           </Col>
-          <Col className='m-b-20'>
+          <Col className='top-item m-b-20'>
             <Form.Item
               label='时间范围'
               name='time'
               style={{ marginBottom: '0px' }}>
               <RangePicker
-                size={size}
                 clearIcon={false}
                 presets={rangePresets}
                 onChange={onRangeChange}
                 style={{ width: size == 'small' ? 190 : 240 }}></RangePicker>
+            </Form.Item>
+          </Col>
+
+          <Col span={6} md={4} xl={3}>
+            <Form.Item label=' '>
+              <Button
+                type='primary'
+                className='w-100'
+                htmlType='submit'
+                onClick={() => getList()}>
+                查询
+              </Button>
             </Form.Item>
           </Col>
         </Row>
@@ -204,8 +226,8 @@ export default function Fn() {
         <Table
           className='theme-cell reset-table'
           columns={columns}
-          dataSource={dataSource}
-          rowKey={'key'}
+          dataSource={getErrorList}
+          rowKey={'id'}
           sticky
           pagination={{
             position: ['bottomRight'],

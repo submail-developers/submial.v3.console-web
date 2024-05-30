@@ -14,7 +14,6 @@ import {
   Space,
 } from 'antd'
 import PageContent from '@/components/pageContent'
-import MyFormItem from '@/components/myFormItem/myFormItem'
 import { DownOutlined } from '@ant-design/icons'
 // import { getErrorLogs } from '@/api'
 import { API } from 'apis'
@@ -25,6 +24,8 @@ import apiIco3 from '@/assets/rcs/analysis/apiInfo3.png'
 import apiIco4 from '@/assets/rcs/analysis/apiInfo4.png'
 import apiIco5 from '@/assets/rcs/analysis/apiInfo5.png'
 import apiIco6 from '@/assets/rcs/analysis/apiInfo6.png'
+import { getApiIcoPath } from './type'
+
 import './index.scss'
 import { useSize, usePoint } from '@/hooks'
 import dayjs from 'dayjs'
@@ -41,16 +42,6 @@ export default function Fn() {
   const size = useSize()
   const point = usePoint('lg')
   const [form] = Form.useForm()
-  const [getErrorList, setGetErrorList] = useState()
-
-  // 获取错误日志
-  // const getList = async () => {
-  //   const res = await getErrorLogs({
-  //     page: 1,
-  //     start: '2022-05-20',
-  //     end: '2024-05-22',
-  //   })
-  // }
 
   const onRangeChange = (dates, dateStrings) => {
     if (dates) {
@@ -123,19 +114,85 @@ export default function Fn() {
   const edit = async (e) => {
     console.log(e)
   }
+  const aplList = [
+    {
+      id: 1,
+      name: 'API请求',
+      num: '99',
+    },
+    {
+      id: 2,
+      name: '发送成功',
+      num: '1199',
+    },
+    {
+      id: 3,
+      name: '实际收费',
+      num: '929',
+    },
+    {
+      id: 4,
+      name: '发送失败',
+      num: '9',
+    },
+    {
+      id: 5,
+      name: '消息上行',
+      num: '199',
+    },
+    {
+      id: 6,
+      name: '联系人',
+      num: '212',
+    },
+  ]
   // 折线
   const getLineOption = () => ({
+    tooltip: {
+      trigger: 'axis',
+    },
+    color: ['#1764ff', '#00a97b', '#f00011', '#f19d25'],
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true,
+    },
+    toolbox: {
+      feature: {},
+    },
     xAxis: {
       type: 'category',
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      boundaryGap: false,
+      data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
     },
     yAxis: {
       type: 'value',
     },
     series: [
       {
-        data: [820, 932, 901, 934, 1290, 1330, 1320],
+        name: '发送',
         type: 'line',
+        stack: 'Total',
+        data: [120, 132, 101, 134, 90, 230, 210],
+      },
+      {
+        name: '成功',
+        type: 'line',
+        stack: 'Total',
+        data: [220, 182, 191, 234, 290, 330, 310],
+      },
+      {
+        name: '失败',
+        type: 'line',
+        stack: 'Total',
+        data: [150, 232, 201, 154, 190, 330, 410],
+      },
+      {
+        name: '计费',
+        type: 'line',
+        stack: 'Total',
+        data: [320, 332, 301, 334, 390, 330, 320],
       },
     ],
   })
@@ -145,8 +202,8 @@ export default function Fn() {
       trigger: 'item',
     },
     title: {
-      text: '成功率 ',
-      left: '32%',
+      text: '成功率：88%',
+      left: '24%',
       top: '46%',
       textStyle: {
         color: '#282b31',
@@ -294,7 +351,7 @@ export default function Fn() {
         <Row gutter={16}>
           <Col className='m-b-20' span={8} md={8} lg={6} xl={4}>
             <Form.Item
-              label='全部ChatBot'
+              label='ChatBot选择'
               name='chatbot'
               style={{ marginBottom: '0px' }}>
               <Select placeholder='所有标签' popupMatchSelectWidth={120}>
@@ -312,7 +369,6 @@ export default function Fn() {
               name='time'
               style={{ marginBottom: '0px' }}>
               <RangePicker
-                size={size}
                 clearIcon={false}
                 presets={rangePresets}
                 onChange={onRangeChange}
@@ -321,59 +377,25 @@ export default function Fn() {
           </Col>
         </Row>
 
-        <Row className='top-part'>
+        <Row gutter={16} className='top-part'>
           <Col span={24} md={24} xl={12}>
             <div className='fn18'>API发送概览</div>
             <ReactEcharts
               option={getLineOption()}
               style={{ height: '300px', width: '100%' }}
-              // 其他需要的属性
             />
           </Col>
           <Col span={24} md={24} xl={12}>
             <div className='api-info fx-between-center'>
-              <div className='api-info-item fx-y-center'>
-                <img width='40' src={apiIco1} alt='' />
-                <div className='m-l-20'>
-                  <span className='gray-color-sub'>API请求</span>
-                  <div>99</div>
+              {aplList.map((item) => (
+                <div key={item.id} className='api-info-item fx-y-center'>
+                  <img width='40' src={getApiIcoPath(Number(item.id))} alt='' />
+                  <div className='m-l-20'>
+                    <span className='gray-color-sub'>{item.name}</span>
+                    <div>{item.num}</div>
+                  </div>
                 </div>
-              </div>
-              <div className='api-info-item fx-y-center'>
-                <img width='40' src={apiIco2} alt='' />
-                <div className='m-l-20'>
-                  <span className='gray-color-sub'>发送成功</span>
-                  <div>1233</div>
-                </div>
-              </div>
-              <div className='api-info-item fx-y-center'>
-                <img width='40' src={apiIco3} alt='' />
-                <div className='m-l-20'>
-                  <span className='gray-color-sub'>实际收费</span>
-                  <div>1</div>
-                </div>
-              </div>
-              <div className='api-info-item fx-y-center'>
-                <img width='40' src={apiIco4} alt='' />
-                <div className='m-l-20'>
-                  <span className='gray-color-sub'>发送失败</span>
-                  <div>1</div>
-                </div>
-              </div>
-              <div className='api-info-item fx-y-center'>
-                <img width='40' src={apiIco5} alt='' />
-                <div className='m-l-20'>
-                  <span className='gray-color-sub'>消息上行</span>
-                  <div>1</div>
-                </div>
-              </div>
-              <div className='api-info-item fx-y-center'>
-                <img width='40' src={apiIco6} alt='' />
-                <div className='m-l-20'>
-                  <span className='gray-color-sub'>联系人</span>
-                  <div>1</div>
-                </div>
-              </div>
+              ))}
             </div>
           </Col>
         </Row>

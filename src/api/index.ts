@@ -567,6 +567,41 @@ export const changeRcsInteractiveAllStatus = (
 ) => {
   return request.post<any, any, API.ChangeRcsInteractiveAllStatusParams>(
     'console/api/rcs/interactive_all_status',
+  )
+}
+// 获取api错误日志
+export const getErrorsLogs = (data: API.GetErrorsLogsParams) => {
+  return request.post<any, API.GetErrorsLogsRes, API.GetErrorsLogsParams>(
+    '/console/api/rcs/get_errors',
+    {
+      ...data,
+    },
+  )
+}
+// 获取api历史明细
+export const getHistory = (data: API.GetHistoryParams) => {
+  return request.post<any, API.GetHistoryRes, API.GetHistoryParams>(
+    '/console/api/rcs/get_history',
+    {
+      ...data,
+    },
+  )
+}
+
+// 获取批量任务发送报告
+export const getSendlists = (data: API.GetSendlistsParams) => {
+  return request.post<any, API.GetSendlistsRes, API.GetSendlistsParams>(
+    '/console/api/rcs/get_sendlists',
+    {
+      ...data,
+    },
+  )
+}
+
+// 导出文件 短信验证
+export const verifyCodeSms = (data: API.VerifyCodeSmsParams) => {
+  return request.post<any, any, API.VerifyCodeSmsParams>(
+    '/console/api/account/send_verify_code_by_sms',
     {
       ...data,
     },
