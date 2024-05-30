@@ -567,6 +567,9 @@ export const changeRcsInteractiveAllStatus = (
 ) => {
   return request.post<any, any, API.ChangeRcsInteractiveAllStatusParams>(
     'console/api/rcs/interactive_all_status',
+    {
+      ...data,
+    },
   )
 }
 // 获取api错误日志
