@@ -23,7 +23,6 @@ type Props = {
 
 const Keywords = ({ text, isReg }: { text: string; isReg: boolean }) => {
   let list = text.split('\n').filter((item) => item)
-
   return (
     <>
       {isReg ? (
@@ -50,7 +49,6 @@ export default function Item(props: Props) {
   const changeState = async (_: any, event: any) => {
     event.stopPropagation()
     setLoading(true)
-
     const res = await changeRcsInteractiveStatus({
       id: props.item.id,
       status: !(props.item.enabled == '1'),
@@ -59,7 +57,6 @@ export default function Item(props: Props) {
       setStatus(!(props.item.enabled == '1'))
       props.onChangeStatus()
     }
-
     setLoading(false)
   }
 

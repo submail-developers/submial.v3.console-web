@@ -34,7 +34,6 @@ export default function Fn() {
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
           onSearch={handleSearch}
-          // onPressEnter={() => searchEvent(false)}
           allowClear
           placeholder='chatbot名称/模版名称'
         />

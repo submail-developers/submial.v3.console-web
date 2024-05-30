@@ -21,7 +21,8 @@ import { ProFormDependency } from '@ant-design/pro-components'
 import { getRcsTempList, createRcsInteractive } from '@/api'
 import { API } from 'apis'
 import { debounce } from 'lodash'
-import type { Options } from '../../detail/chatbot/config/index'
+
+import type { Options } from '@/pages/rcs/interactive/type'
 
 type Props = {
   onOk: () => void

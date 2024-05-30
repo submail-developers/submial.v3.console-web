@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
-import { Flex, Space, Switch, Image, App, Empty, Spin, Typography } from 'antd'
+import { Flex, Space, Switch, Image, App, Empty, Spin } from 'antd'
 import folder_blue from '@/assets/rcs/address/folder_blue.png'
 import Modal from '@/pages/rcs/interactive/compontent/modal'
 import Item from '@/pages/rcs/interactive/compontent/item'
@@ -11,15 +11,9 @@ import {
   delRcsInteractive,
   changeRcsInteractiveAllStatus,
 } from '@/api'
+import type { Options } from '@/pages/rcs/interactive/type'
 
 import './index.scss'
-
-export type Options = {
-  label: string
-  value: string
-  disabled: boolean
-  item: API.EntriesItem | API.RcsSuggestionItem
-}
 
 export default function Config() {
   const { message } = App.useApp()
@@ -105,7 +99,6 @@ export default function Config() {
   // 新增
   const onAdd = (type: '1' | '3') => {
     if (type == '1') {
-      console.log(menuOptionsRef.current, 'op')
       modalRef.current.openEvent({
         title: '新增固定菜单交互',
         options: menuOptionsRef.current,
@@ -139,7 +132,6 @@ export default function Config() {
           options.push(im)
         }
       })
-      console.log(options, 'op')
 
       modalRef.current.openEvent({
         title: '编辑固定菜单交互',

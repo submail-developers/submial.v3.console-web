@@ -12,7 +12,6 @@ import {
   useStateDispatch,
   useStateStore,
 } from '@/pages/rcs/interactive/reducer'
-import ACopy from '@/components/aCopy'
 import { API } from 'apis'
 import type { ColumnsType } from 'antd/es/table'
 import './index.scss'

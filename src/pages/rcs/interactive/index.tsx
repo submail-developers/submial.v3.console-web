@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import codeImg from '@/assets/rcs/send1.png'
 import { Image, Flex, Divider, Button, Space } from 'antd'
@@ -11,24 +10,10 @@ import './index.scss'
 
 const pageW = {
   lg: '100%',
-  // xl: '100%',
-  // xxl: '100%',
 }
 export default function Fn() {
   const nav = useNavigate()
   const location = useLocation()
-  const chatbotRef = useRef(null)
-  const tempRef = useRef(null)
-  const [keyword, setKeyword] = useState('')
-
-  const [container, setContainer] = useState<HTMLDivElement | null>(null)
-  // const searchEvent = (isInit = false) => {
-  //   chatbotRef.current.search(keyword, isInit)
-  //   tempRef.current.search(keyword)
-  // }
-  // useEffect(() => {
-  //   searchEvent(true)
-  // }, [])
   return (
     <div className='interactive-container'>
       <PageContent extClass='interactive p-16' {...pageW}>
