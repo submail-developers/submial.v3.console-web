@@ -1018,10 +1018,20 @@ declare module 'apis' {
     // api分析报告返回值
     interface GetUnionAnalysisitems {
       analysis: {
-        city: []
+        city: [
+          {
+            city: string
+            cnt: string
+          },
+        ]
         dropreason: []
         points: {}
-        province: []
+        province: [
+          {
+            city: string
+            cnt: string
+          },
+        ]
         rate: {}
         successreason: []
       }

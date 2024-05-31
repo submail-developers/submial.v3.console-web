@@ -50,15 +50,18 @@ export default function Fn() {
   const [chatBotList, setChatBotList] = useState<API.ChatbotItem[]>([
     allChatBot,
   ])
-
-  const [rate, setRate] = useState()
+  const [rate, setRate] = useState([])
+  const [city, setCity] = useState([])
+  const [cityTotal, setCityTotal] = useState([])
+  const [province, setProvince] = useState([])
+  const [provinceTotal, setProvinceTotal] = useState([])
 
   const onRangeChange = (dates, dateStrings) => {
     if (dates) {
-      console.log('From: ', dates[0], ', to: ', dates[1])
-      console.log('From: ', dateStrings[0], ', to: ', dateStrings[1])
+      // console.log('From: ', dates[0], ', to: ', dates[1])
+      // console.log('From: ', dateStrings[0], ', to: ', dateStrings[1])
     } else {
-      console.log('Clear')
+      // console.log('Clear')
     }
   }
   // 获取chatbot
@@ -79,22 +82,57 @@ export default function Fn() {
   const getList = async () => {
     try {
       const formValues = form.getFieldsValue()
-
       const start =
         (formValues.time && formValues.time[0].format('YYYY-MM-DD')) || ''
       const end =
         (formValues.time && formValues.time[1].format('YYYY-MM-DD')) || ''
-      let arr = []
-      arr.push(start, end)
       const res = await getUnionAnalysis({
         appid: formValues.chatbot,
         start,
         end,
       })
+      let arr = []
+      arr.push(res.analysis.rate)
+      setRate(arr)
 
-      // setRate(res.analysis.rate)
       // console.log(res.analysis.points)
+      let cityToalArr = []
+      let _cityData = res.analysis.city.map((item, index) => {
+        cityToalArr.push(item.cnt)
+        let obj = { ...item, index: `${index}` }
+        return obj
+      })
+      setCity(_cityData)
+      setCityTotal(cityToalArr)
+
+      let provinceTotalArr = []
+      let _provinceData = res.analysis.province.map((item, index) => {
+        provinceTotalArr.push(item.cnt)
+        let obj = { ...item, index: `${index}` }
+        return obj
+      })
+      setProvince(_provinceData)
+      setProvinceTotal(provinceTotalArr)
     } catch (error) {}
+  }
+
+  const totalCity = cityTotal.reduce(
+    (acc, curr) => parseInt(acc) + parseInt(curr),
+    0,
+  )
+  const totalProvince = provinceTotal.reduce(
+    (acc, curr) => parseInt(acc) + parseInt(curr),
+    0,
+  )
+
+  const calculatePercentageCity = (number) => {
+    if (totalCity === 0) return 0
+    return ((number / totalCity) * 100).toFixed(2)
+  }
+
+  const calculatePercentagePro = (number) => {
+    if (totalProvince === 0) return 0
+    return ((number / totalProvince) * 100).toFixed(2)
   }
 
   useEffect(() => {
@@ -150,38 +188,7 @@ export default function Fn() {
   const edit = async (e) => {
     console.log(e)
   }
-  const aplList = [
-    {
-      id: 1,
-      name: 'API请求',
-      num: '99',
-    },
-    {
-      id: 2,
-      name: '发送成功',
-      num: '1199',
-    },
-    {
-      id: 3,
-      name: '实际收费',
-      num: '929',
-    },
-    {
-      id: 4,
-      name: '发送失败',
-      num: '9',
-    },
-    {
-      id: 5,
-      name: '消息上行',
-      num: '199',
-    },
-    {
-      id: 6,
-      name: '联系人',
-      num: '212',
-    },
-  ]
+
   // 折线
   const getLineOption = () => ({
     tooltip: {
@@ -316,45 +323,6 @@ export default function Fn() {
     ],
   }
 
-  const tableList = [
-    {
-      id: 0,
-      name: '福建省',
-      count: '2134',
-      zhanbi: '24%',
-    },
-    {
-      id: 1,
-      name: '广东省',
-      count: '134',
-      zhanbi: '14%',
-    },
-    {
-      id: 2,
-      name: '湖北省',
-      count: '12234',
-      zhanbi: '34%',
-    },
-    {
-      id: 3,
-      name: '江苏省',
-      count: '1134',
-      zhanbi: '34%',
-    },
-    {
-      id: 4,
-      name: '安徽省',
-      count: '34',
-      zhanbi: '4%',
-    },
-    {
-      id: 5,
-      name: '上海市',
-      count: '2134',
-      zhanbi: '24%',
-    },
-  ]
-
   return (
     <PageContent extClass='api-analysis'>
       <Form
@@ -437,15 +405,41 @@ export default function Fn() {
           </Col>
           <Col span={24} md={24} xl={12}>
             <div className='api-info fx-between-center'>
-              {/* {aplList.map((item) => (
-                <div key={item.id} className='api-info-item fx-y-center'>
-                  <img width='40' src={getApiIcoPath(Number(item.id))} alt='' />
-                  <div className='m-l-20'>
-                    <span className='gray-color-sub'>{item.name}</span>
-                    <div>{item.num}</div>
-                  </div>
+              <div className='api-info-item fx-y-center'>
+                <img width='40' src={apiIco1} alt='' />
+                <div className='m-l-20'>
+                  <span className='gray-color-sub'>API请求</span>
+                  <div>{rate.length > 0 && rate[0].request}</div>
                 </div>
-              ))} */}
+              </div>
+              <div className='api-info-item fx-y-center'>
+                <img width='40' src={apiIco2} alt='' />
+                <div className='m-l-20'>
+                  <span className='gray-color-sub'>发送成功</span>
+                  <div>{rate.length > 0 && rate[0].deliveryed}</div>
+                </div>
+              </div>
+              <div className='api-info-item fx-y-center'>
+                <img width='40' src={apiIco4} alt='' />
+                <div className='m-l-20'>
+                  <span className='gray-color-sub'>发送失败</span>
+                  <div>{rate.length > 0 && rate[0].dropped} </div>
+                </div>
+              </div>
+              <div className='api-info-item fx-y-center'>
+                <img width='40' src={apiIco3} alt='' />
+                <div className='m-l-20'>
+                  <span className='gray-color-sub'>实际收费</span>
+                  <div>{rate.length > 0 && rate[0].fee}</div>
+                </div>
+              </div>
+              <div className='api-info-item fx-y-center'>
+                <img width='40' src={apiIco6} alt='' />
+                <div className='m-l-20'>
+                  <span className='gray-color-sub'>联系人</span>
+                  <div>{rate.length > 0 && rate[0].address}</div>
+                </div>
+              </div>
             </div>
           </Col>
         </Row>
@@ -527,18 +521,22 @@ export default function Fn() {
                       <td className='gray-color'>数量</td>
                       <td className='gray-color'>占比</td>
                     </tr>
-                    {tableList.map((item, index) => (
-                      <tr>
-                        <td className='gray-color'>{item.name}</td>
+                    {province.map((item, index) => (
+                      <tr key={item.index}>
+                        <td className='gray-color'>{item.province}</td>
                         <td width='45%;'>
                           <div className='progress'>
                             <div
                               className='progress-bar'
-                              style={{ width: item.zhanbi }}></div>
+                              style={{
+                                width: calculatePercentagePro(item.cnt) + '%',
+                              }}></div>
                           </div>
                         </td>
-                        <td className='gray-color'>{item.count}</td>
-                        <td className='gray-color'>{item.zhanbi}</td>
+                        <td className='gray-color'>{item.cnt}</td>
+                        <td className='gray-color'>
+                          {calculatePercentagePro(item.cnt)}%
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -553,21 +551,23 @@ export default function Fn() {
                       <td className='gray-color'>数量</td>
                       <td className='gray-color'>占比</td>
                     </tr>
-                    {tableList.map((item, index) => (
-                      <tr>
-                        <td className='gray-color'>{item.name}</td>
+                    {city.map((item, index) => (
+                      <tr key={item.index}>
+                        <td className='gray-color'>{item.city}</td>
                         <td width='45%;'>
                           <div className='progress'>
                             <div
                               className='progress-bar'
                               style={{
-                                width: item.zhanbi,
+                                width: calculatePercentageCity(item.cnt) + '%',
                                 backgroundColor: '#47d1cb',
                               }}></div>
                           </div>
                         </td>
-                        <td className='gray-color'>{item.count}</td>
-                        <td className='gray-color'>{item.zhanbi}</td>
+                        <td className='gray-color'>{item.cnt}</td>
+                        <td className='gray-color'>
+                          {calculatePercentageCity(item.cnt)}%
+                        </td>
                       </tr>
                     ))}
                   </tbody>
