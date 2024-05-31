@@ -601,7 +601,18 @@ export const getSendlists = (data: API.GetSendlistsParams) => {
   )
 }
 
-// 导出文件 短信验证
+// 获取api分析报告
+export const getUnionAnalysis = (data: API.GetUnionAnalysisParams) => {
+  return request.post<
+    any,
+    API.GetUnionAnalysisitems,
+    API.GetUnionAnalysisParams
+  >('/console/api/rcs/get_union_analysis', {
+    ...data,
+  })
+}
+
+// 导出文件 发送短信
 export const verifyCodeSms = (data: API.VerifyCodeSmsParams) => {
   return request.post<any, any, API.VerifyCodeSmsParams>(
     '/console/api/account/send_verify_code_by_sms',
@@ -609,4 +620,36 @@ export const verifyCodeSms = (data: API.VerifyCodeSmsParams) => {
       ...data,
     },
   )
+}
+// 验证
+export const smsCodeVerify = (data: { code: string }) => {
+  return request.post<any, any, { code: string }>(
+    '/console/api/account/sms_code_verify',
+    {
+      ...data,
+    },
+  )
+}
+// 导出地址簿
+export const exportAddress = (data: { id: string; type: string }) => {
+  return request.post<any, any, { id: string; type: string }>(
+    '/console/api/addressbook/export_mob_addressbook',
+    {
+      ...data,
+    },
+  )
+}
+
+// 导出历史明细
+export const exportHistory = (data: API.ExportHistoryParams) => {
+  return request.post<any, any, API.ExportHistoryParams>(
+    '/console/api/rcs/export_history',
+    {
+      ...data,
+    },
+  )
+}
+// 下载文件
+export const downLaodFile = (data: '') => {
+  return request.post<any, any, ''>('/onsole/api/services/download_export_file')
 }

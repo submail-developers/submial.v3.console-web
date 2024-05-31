@@ -21,12 +21,15 @@ import {
   getMobAddressbooks,
   deleteAddressMob,
   truncateMob,
+  exportAddress,
+  downLaodFile,
 } from '@/api'
 import { useNavigate, useSearchParams, useParams } from 'react-router-dom'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import type { CheckboxValueType } from 'antd/es/checkbox/Group'
 import { getAddressPath } from '../type'
 import './index.scss'
+import VerifyCode from './verifyCodeDialog/index'
 interface Props {
   onchildrenMethod: () => void
   addressInfo: any
@@ -62,6 +65,13 @@ export default function Fn() {
   const oldTitle = searchParams.get('oldTitle')
   const oldTag = searchParams.get('oldTag')
   const folderId = searchParams.get('folderId')
+
+  // 导出
+  const exportconfirm = searchParams.get('exportconfirm')
+  const [isOpenModal, setIsOpenModal] = useState(false)
+  const [fileType, setFileType] = useState()
+  const [exportParams, setExportParams] = useState([])
+
   // 获取地址簿详情
   const getAddressDetailList = async () => {
     try {
@@ -93,6 +103,7 @@ export default function Fn() {
 
   const handleCancel = () => {
     setOpenCreateModal(false)
+    setIsOpenModal(false)
   }
 
   const handleSearch = () => {
@@ -199,6 +210,23 @@ export default function Fn() {
     }
   }
 
+  const edit = async (e) => {
+    if (exportconfirm == '1') {
+      setFileType(e.key)
+      setIsOpenModal(true)
+    } else {
+      const res = await exportAddress({
+        id: id,
+        type: e.key,
+      })
+      if (res.status == 'success') {
+        downLaodFile('')
+      } else {
+        message.error(res.message)
+      }
+    }
+  }
+
   return (
     <Form
       name='address-book-detail-form'
@@ -253,7 +281,7 @@ export default function Fn() {
               className={`batch-del-address fx-center-center ${
                 indeterminate || checkAll ? 'active' : ''
               }`}>
-              <i className='icon iconfont icon-shanchu2'></i>删除
+              <i className='icon iconfont icon-shanchu'></i>删除
             </span>
           </div>
           <div className='clear-address'>
@@ -270,14 +298,16 @@ export default function Fn() {
             </Popconfirm>
           </div>
           <div>
-            <Dropdown menu={{ items }} trigger={['click']}>
-              <a onClick={(e) => e.preventDefault()}>
+            <Dropdown
+              menu={{ items, selectable: true, onClick: edit }}
+              trigger={['click']}>
+              <a>
                 <i className='icon iconfont icon-daochuwei fn14'></i>导出为
               </a>
             </Dropdown>
           </div>
           <div onClick={toBack} style={{ width: '60px' }}>
-            <i className='icon iconfont icon-fanhuidizhibu primary-color'></i>
+            <i className='icon iconfont icon-fanhui primary-color'></i>
           </div>
         </div>
       </Col>
@@ -299,7 +329,7 @@ export default function Fn() {
                   onConfirm={() => singleDeleteAddress(item)}
                   okText='确定'
                   cancelText='取消'>
-                  <i className='icon iconfont icon-shanchu2'></i>
+                  <i className='icon iconfont icon-shanchu'></i>
                 </Popconfirm>
               </div>
             </Col>
@@ -316,6 +346,14 @@ export default function Fn() {
         open={openCreateModal}
         onCancel={handleCancel}
         getAddressDetailList={getAddressDetailList}
+      />
+
+      <VerifyCode
+        exportId={id}
+        fileType={fileType}
+        exportParams={exportParams}
+        open={isOpenModal}
+        onCancel={handleCancel}
       />
     </Form>
   )

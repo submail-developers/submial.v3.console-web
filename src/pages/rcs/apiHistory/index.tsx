@@ -13,10 +13,11 @@ import {
   Dropdown,
   Space,
   Input,
+  message,
 } from 'antd'
 import PageContent from '@/components/pageContent'
 import { DownOutlined } from '@ant-design/icons'
-import { getChatbot, getHistory, verifyCodeSms } from '@/api'
+import { getChatbot, getHistory, exportHistory, downLaodFile } from '@/api'
 import { API } from 'apis'
 import topIco from '@/assets/rcs/history/history_ico.png'
 import './index.scss'
@@ -44,6 +45,13 @@ enum statusStyle {
   'error-color',
   'gray-color',
 }
+enum ExportType {
+  'txt' = 0,
+  'csv' = 1,
+  'excel' = 2,
+  'jso' = 3,
+  'xml' = 4,
+}
 
 export default function Fn() {
   const [form] = Form.useForm()
@@ -60,8 +68,8 @@ export default function Fn() {
   // 导出
   const [isOpenModal, setIsOpenModal] = useState(false)
   const [exportconfirm, setExportconfirm] = useState(false)
-  const [veriyed, setVeriyed] = useState(false)
-
+  const [exportParams, setExportParams] = useState([])
+  const [fileType, setFileType] = useState()
   // 获取chatbot
   const getChatbotList = async () => {
     setLoading(true)
@@ -83,10 +91,10 @@ export default function Fn() {
   // 获取历史明细
   const getList = async () => {
     const formValues = form.getFieldsValue()
-    const start = '2022-05-29'
-    // (formValues.time && formValues.time[0].format('YYYY-MM-DD')) || ''
-    const end = '2024-05-29'
-    // (formValues.time && formValues.time[1].format('YYYY-MM-DD')) || ''
+    const start =
+      (formValues.time && formValues.time[0].format('YYYY-MM-DD')) || ''
+    const end =
+      (formValues.time && formValues.time[1].format('YYYY-MM-DD')) || ''
 
     let params = {
       page: currentPage,
@@ -99,7 +107,16 @@ export default function Fn() {
       to: formValues.to,
       content: formValues.content,
     }
+    let arr = []
+
+    arr.push(params)
+    setExportParams(arr)
     const res = await getHistory(params)
+    if (res.exportconfirm == '1') {
+      setExportconfirm(true)
+    } else {
+      setExportconfirm(false)
+    }
     setHistoryList(res.history)
     setTotal(res.row)
   }
@@ -239,13 +256,33 @@ export default function Fn() {
     setIsOpenModal(false)
   }
   const edit = async (e) => {
-    setIsOpenModal(true)
     if (exportconfirm) {
+      setIsOpenModal(true)
+      setFileType(e.key)
+    } else {
+      const formValues = form.getFieldsValue()
+      const start =
+        (formValues.time && formValues.time[0].format('YYYY-MM-DD')) || ''
+      const end =
+        (formValues.time && formValues.time[1].format('YYYY-MM-DD')) || ''
+
+      const res = await exportHistory({
+        start,
+        end,
+        appid: formValues.appid,
+        status: formValues.status,
+        send_id: formValues.send_id,
+        to: formValues.to,
+        content: formValues.content,
+        type: ExportType[e.key],
+      })
+      if (res.status == 'success') {
+        downLaodFile('')
+      } else {
+        message.error(res.message)
+      }
     }
   }
-
-  //
-  const sendVerifyCodeBySms = (cb) => {}
 
   return (
     <PageContent extClass='api-history'>
@@ -373,7 +410,12 @@ export default function Fn() {
           scroll={{ x: 'max-content' }}
         />
       </Form>
-      <VerifyCode open={isOpenModal} onCancel={handleCancel} />
+      <VerifyCode
+        fileType={fileType}
+        exportParams={exportParams}
+        open={isOpenModal}
+        onCancel={handleCancel}
+      />
     </PageContent>
   )
 }

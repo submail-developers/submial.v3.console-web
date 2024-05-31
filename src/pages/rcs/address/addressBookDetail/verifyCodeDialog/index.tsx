@@ -3,7 +3,7 @@ import { Modal, Form, App, Row, Col, Button, Input, Select } from 'antd'
 import {
   verifyCodeSms,
   smsCodeVerify,
-  exportHistory,
+  exportAddress,
   downLaodFile,
 } from '@/api'
 import { API } from 'apis'
@@ -12,20 +12,13 @@ const { Option } = Select
 
 interface Props {
   open: boolean
-  fileType: number
+  fileType: string
   exportParams: any[]
-
+  exportId: string
   onCancel: () => void
   // onSearch: () => void
 }
 
-enum ExportType {
-  'txt' = 0,
-  'csv' = 1,
-  'excel' = 2,
-  'jso' = 3,
-  'xml' = 4,
-}
 const Dialog = (props: Props, ref: any) => {
   const [form] = Form.useForm()
   const { message } = App.useApp()
@@ -73,9 +66,9 @@ const Dialog = (props: Props, ref: any) => {
   }
 
   const exportFile = async () => {
-    const res = await exportHistory({
-      ...props.exportParams[0],
-      type: ExportType[props.fileType],
+    const res = await exportAddress({
+      id: props.exportId,
+      type: props.fileType,
     })
     if (res.status == 'success') {
       downLaodFile('')

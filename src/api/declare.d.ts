@@ -706,6 +706,7 @@ declare module 'apis' {
       tag: string
     }
     interface GetAddressListRes {
+      exportconfirm: string
       rows: number
       addressbooks: GetMobAddressbooksItems[]
     }
@@ -1002,10 +1003,43 @@ declare module 'apis' {
       product: string
     }
     interface GetHistoryRes {
+      exportconfirm: sting
       row: number
       history: GetHistoryItems[]
     }
     // 短信验证
     interface VerifyCodeSmsParams {}
+    // api分析报告参数
+    interface GetUnionAnalysisParams {
+      start: string
+      end: string
+      appid: string
+    }
+    // api分析报告返回值
+    interface GetUnionAnalysisitems {
+      analysis: {
+        city: []
+        dropreason: []
+        points: {}
+        province: []
+        rate: {}
+        successreason: []
+      }
+    }
+
+    // 短信验证
+    interface VerifyCodeSmsParams {}
+
+    // 导出历史明细
+    interface ExportHistoryParams {
+      start: string
+      end: string
+      appid: string
+      status: string
+      send_id: string
+      to: string
+      content: string
+      type: string
+    }
   }
 }

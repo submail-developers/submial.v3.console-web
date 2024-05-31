@@ -307,7 +307,7 @@ export default function Fn() {
                     className={`batch-del-address fx-center-center ${
                       indeterminate || checkAll ? 'active' : ''
                     }`}>
-                    <i className='icon iconfont icon-shanchu2'></i>删除
+                    <i className='icon iconfont icon-shanchu'></i>删除
                   </span>
                 </div>
                 {/* <Form.Item name='tag' label=''> */}
@@ -406,7 +406,7 @@ export default function Fn() {
                         cancelText='取消'>
                         <Tooltip title='删除'>
                           <Button>
-                            <i className='icon iconfont icon-shanchu2'></i>
+                            <i className='icon iconfont icon-shanchu'></i>
                           </Button>
                         </Tooltip>
                       </Popconfirm>

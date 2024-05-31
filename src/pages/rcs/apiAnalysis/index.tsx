@@ -15,7 +15,7 @@ import {
 } from 'antd'
 import PageContent from '@/components/pageContent'
 import { DownOutlined } from '@ant-design/icons'
-// import { getErrorLogs } from '@/api'
+import { getUnionAnalysis, getChatbot } from '@/api'
 import { API } from 'apis'
 import topIco from '@/assets/rcs/analysis/analysis_ico.png'
 import apiIco1 from '@/assets/rcs/analysis/apiInfo1.png'
@@ -31,17 +31,27 @@ import { useSize, usePoint } from '@/hooks'
 import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
 import ReactEcharts from 'echarts-for-react'
+import moment from 'moment'
 const { Option } = Select
 const { RangePicker } = DatePicker
-interface FormValues {
-  chatbot: any
-  time: [Dayjs, Dayjs] | null
-}
+
+const allChatBot = {
+  id: 'all',
+  name: '全部ChatBot',
+} as API.ChatbotItem
 
 export default function Fn() {
   const size = useSize()
   const point = usePoint('lg')
   const [form] = Form.useForm()
+  const [currentPage, setcurrentPage] = useState<number>(1)
+  const [pageSize, setpageSize] = useState<number>(40)
+  const [total, setTotal] = useState<number>(0)
+  const [chatBotList, setChatBotList] = useState<API.ChatbotItem[]>([
+    allChatBot,
+  ])
+
+  const [rate, setRate] = useState()
 
   const onRangeChange = (dates, dateStrings) => {
     if (dates) {
@@ -51,9 +61,45 @@ export default function Fn() {
       console.log('Clear')
     }
   }
+  // 获取chatbot
+  const getChatbotList = async () => {
+    try {
+      const res = await getChatbot({
+        page: currentPage,
+        limit: pageSize,
+        appid: '',
+        keywords: '',
+        status: 'all',
+      })
+      setChatBotList([...chatBotList, ...res.list])
+    } catch (error) {}
+  }
+
+  // 获取分析报告
+  const getList = async () => {
+    try {
+      const formValues = form.getFieldsValue()
+
+      const start =
+        (formValues.time && formValues.time[0].format('YYYY-MM-DD')) || ''
+      const end =
+        (formValues.time && formValues.time[1].format('YYYY-MM-DD')) || ''
+      let arr = []
+      arr.push(start, end)
+      const res = await getUnionAnalysis({
+        appid: formValues.chatbot,
+        start,
+        end,
+      })
+
+      // setRate(res.analysis.rate)
+      // console.log(res.analysis.points)
+    } catch (error) {}
+  }
 
   useEffect(() => {
-    // getList()
+    getList()
+    getChatbotList()
   }, [])
 
   const rangePresets: {
@@ -78,16 +124,6 @@ export default function Fn() {
     },
   ]
 
-  const chatOptions = [
-    {
-      value: 0,
-      label: '全部ChatBot',
-    },
-  ]
-  const initFormValues: FormValues = {
-    chatbot: chatOptions[0],
-    time: [dayjs().add(-1, 'd'), dayjs().add(0, 'd')],
-  }
   const items = [
     {
       label: '导出 TXT (仅手机号码)',
@@ -327,7 +363,10 @@ export default function Fn() {
         name='api-analysis'
         layout='vertical'
         autoComplete='off'
-        initialValues={initFormValues}>
+        initialValues={{
+          chatbot: 'all',
+          time: [dayjs().add(-1, 'd'), dayjs().add(0, 'd')],
+        }}>
         <Image src={topIco} preview={false} width={72}></Image>
         <Flex
           justify='space-between'
@@ -355,9 +394,9 @@ export default function Fn() {
               name='chatbot'
               style={{ marginBottom: '0px' }}>
               <Select placeholder='所有标签' popupMatchSelectWidth={120}>
-                {chatOptions.map((option) => (
-                  <Option key={option.value} value={option.value}>
-                    {option.label}
+                {chatBotList.map((option) => (
+                  <Option key={option.id} value={option.id}>
+                    {option.name}
                   </Option>
                 ))}
               </Select>
@@ -375,6 +414,17 @@ export default function Fn() {
                 style={{ width: size == 'small' ? 190 : 240 }}></RangePicker>
             </Form.Item>
           </Col>
+          <Col span={6} md={4} xl={3}>
+            <Form.Item label=' '>
+              <Button
+                type='primary'
+                className='w-100'
+                htmlType='submit'
+                onClick={() => getList()}>
+                查询
+              </Button>
+            </Form.Item>
+          </Col>
         </Row>
 
         <Row gutter={16} className='top-part'>
@@ -387,7 +437,7 @@ export default function Fn() {
           </Col>
           <Col span={24} md={24} xl={12}>
             <div className='api-info fx-between-center'>
-              {aplList.map((item) => (
+              {/* {aplList.map((item) => (
                 <div key={item.id} className='api-info-item fx-y-center'>
                   <img width='40' src={getApiIcoPath(Number(item.id))} alt='' />
                   <div className='m-l-20'>
@@ -395,7 +445,7 @@ export default function Fn() {
                     <div>{item.num}</div>
                   </div>
                 </div>
-              ))}
+              ))} */}
             </div>
           </Col>
         </Row>
