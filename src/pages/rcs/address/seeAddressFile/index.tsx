@@ -426,7 +426,7 @@ export default function Fn() {
                       indeterminate || checkAll ? 'active' : ''
                     }`}
                     onClick={moveFolder}>
-                    <i className='icon iconfont icon-yidongwenjianjia p-r-8'></i>
+                    <i className='icon iconfont icon-move p-r-8'></i>
                     移动到文件夹
                   </div>
                 </Form.Item>
@@ -451,7 +451,7 @@ export default function Fn() {
                   onClick={toBack}
                   style={{ width: '60px' }}
                   className='bactch-item '>
-                  <i className='icon iconfont icon-fanhuidizhibu primary-color p-l-24'></i>
+                  <i className='icon iconfont icon-fanhui primary-color p-l-24'></i>
                 </div>
               </>
             ) : (
@@ -498,7 +498,7 @@ export default function Fn() {
                   onClick={toBack}
                   style={{ width: '60px' }}
                   className='bactch-item'>
-                  <i className='icon iconfont icon-fanhuidizhibu primary-color'></i>
+                  <i className='icon iconfont icon-fanhui primary-color'></i>
                 </div>
               </>
             )}
@@ -567,7 +567,7 @@ export default function Fn() {
                         okText='确定'
                         cancelText='取消'>
                         <Button>
-                          <i className='icon iconfont icon-shanchu2'></i>
+                          <i className='icon iconfont icon-shanchu'></i>
                         </Button>
                       </Popconfirm>
                     </div>

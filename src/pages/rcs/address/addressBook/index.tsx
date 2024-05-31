@@ -48,7 +48,6 @@ export default function Fn() {
   const [addressList, setAddressList] = useState([])
   const [editData, setEditData] = useState()
 
-  const [loading, setLoading] = useState(false)
   const [openCreateModal, setOpenCreateModal] = useState(false)
   const [openMoveModal, setOpenMoveModal] = useState(false)
   const [isEditMode, setIsEditMode] = useState(false)
@@ -61,6 +60,9 @@ export default function Fn() {
 
   const [singleId, setSingleId] = useState() //单个地址簿id
   const [isSingle, setIsSingle] = useState(false) //单独移动地址簿
+
+  const [exportconfirm, setExportconfirm] = useState('')
+
   // 获取地址簿
   const getAddressList = async () => {
     try {
@@ -70,11 +72,10 @@ export default function Fn() {
         page: currentPage,
         limit: pageSize,
       })
+      setExportconfirm(res.exportconfirm)
       setAddressList(res.addressbooks)
       setTotal(res.rows)
-      setLoading(false)
     } catch (error) {
-      setLoading(false)
       console.log(error)
     }
   }
@@ -198,7 +199,7 @@ export default function Fn() {
 
   const toDetail = (item) => {
     nav(
-      `/console/rcs/address/address/detail/${item.id}?title=${item.name}&tag=${item.tag}`,
+      `/console/rcs/address/address/detail/${item.id}?title=${item.name}&tag=${item.tag}&exportconfirm=${exportconfirm}`,
     )
   }
   const stopEvent = (e) => {
@@ -256,7 +257,6 @@ export default function Fn() {
             type='primary'
             className='fx-start-center'
             htmlType='submit'
-            loading={loading}
             onClick={(e) => showModal(false, '')}>
             <i className='icon iconfont icon-jia'></i>
             &nbsp;&nbsp;创建地址簿
@@ -299,7 +299,7 @@ export default function Fn() {
                       indeterminate || checkAll ? 'active' : ''
                     }`}
                     onClick={moveFolder}>
-                    <i className='icon iconfont icon-yidongwenjianjia'></i>
+                    <i className='icon iconfont icon-move'></i>
                     移动到文件夹
                   </div>
                 </Form.Item>
@@ -387,7 +387,7 @@ export default function Fn() {
                     <div className='fx-x-end handle-item' onClick={stopEvent}>
                       <Tooltip title='移入文件夹'>
                         <Button onClick={() => openSingleAddressModal(item.id)}>
-                          <i className='icon iconfont icon-yidongwenjianjia'></i>
+                          <i className='icon iconfont icon-move'></i>
                         </Button>
                       </Tooltip>
                       <Tooltip title='编辑'>
@@ -404,7 +404,7 @@ export default function Fn() {
                         cancelText='取消'>
                         <Tooltip title='删除'>
                           <Button>
-                            <i className='icon iconfont icon-shanchu2'></i>
+                            <i className='icon iconfont icon-shanchu'></i>
                           </Button>
                         </Tooltip>
                       </Popconfirm>
