@@ -5,7 +5,7 @@
   }
   .tr:first-child {
     .tab-cell {
-      border-top: 1px solid #d9d9d9;
+      border-top: 1px solid #e6e6e6;
     }
   }
   .tr {
@@ -13,13 +13,13 @@
       background-color: rgba(0, 0, 0, 0.075);
     }
     .tab-cell:first-child {
-      border-left: 1px solid #d9d9d9;
+      border-left: 1px solid #e6e6e6;
     }
   }
   .tab-cell {
     padding: 12px;
-    border-right: 1px solid #d9d9d9;
-    border-bottom: 1px solid #d9d9d9;
+    border-right: 1px solid #e6e6e6;
+    border-bottom: 1px solid #e6e6e6;
     .cell-title {
       text-align: center;
     }

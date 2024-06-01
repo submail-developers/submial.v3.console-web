@@ -31,7 +31,6 @@ import { useSize, usePoint } from '@/hooks'
 import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
 import ReactEcharts from 'echarts-for-react'
-import moment from 'moment'
 const { Option } = Select
 const { RangePicker } = DatePicker
 
@@ -56,14 +55,96 @@ export default function Fn() {
   const [province, setProvince] = useState([])
   const [provinceTotal, setProvinceTotal] = useState([])
 
-  const onRangeChange = (dates, dateStrings) => {
-    if (dates) {
-      // console.log('From: ', dates[0], ', to: ', dates[1])
-      // console.log('From: ', dateStrings[0], ', to: ', dateStrings[1])
-    } else {
-      // console.log('Clear')
+  const [pointsData, setPointsData] = useState(null)
+
+  const [selectedRange, setSelectedRange] = useState([])
+  const [chartData, setChartData] = useState({
+    request: [],
+    deliveryed: [],
+    dropped: [],
+    fee: [],
+  })
+
+  useEffect(() => {
+    if (selectedRange.length === 2) {
+      const startDate = selectedRange[0]
+      const endDate = selectedRange[1]
+
+      const allDates = []
+      for (
+        let date = new Date(startDate);
+        date <= new Date(endDate);
+        date.setDate(date.getDate() + 1)
+      ) {
+        allDates.push(date.toISOString().split('T')[0])
+      }
+
+      const alignedData = {
+        request: alignSeries(pointsData.request, allDates),
+        deliveryed: alignSeries(pointsData.deliveryed, allDates),
+        dropped: alignSeries(pointsData.dropped, allDates),
+        fee: alignSeries(pointsData.fee, allDates),
+      }
+
+      setChartData(alignedData)
     }
+  }, [selectedRange, pointsData])
+  const alignSeries = (series, dates) => {
+    return dates.map((date) => {
+      const match = series.find((item) => item.dateflg === date)
+      return match ? match.cnt : 0
+    })
   }
+
+  const onRangeChange = (dates) => {
+    getList()
+    setSelectedRange(dates)
+  }
+  const getOption = () => {
+    const option = {
+      tooltip: {
+        trigger: 'axis',
+      },
+      color: ['#1764ff', '#00a97b', '#f00011', '#f19d25'],
+      xAxis: {
+        type: 'category',
+        data: chartData.request.map((_, index) =>
+          selectedRange[0]
+            ? new Date(selectedRange[0]).toLocaleDateString() +
+              '-' +
+              (new Date(selectedRange[0]).getDate() + index)
+            : '',
+        ),
+      },
+      yAxis: {
+        type: 'value',
+      },
+      series: [
+        {
+          name: '发送',
+          data: chartData.request,
+          type: 'line',
+        },
+        {
+          name: '成功',
+          data: chartData.deliveryed,
+          type: 'line',
+        },
+        {
+          name: '失败',
+          data: chartData.dropped,
+          type: 'line',
+        },
+        {
+          name: '计费',
+          data: chartData.fee,
+          type: 'line',
+        },
+      ],
+    }
+    return option
+  }
+
   // 获取chatbot
   const getChatbotList = async () => {
     try {
@@ -94,8 +175,8 @@ export default function Fn() {
       let arr = []
       arr.push(res.analysis.rate)
       setRate(arr)
+      setPointsData(res.analysis.points)
 
-      // console.log(res.analysis.points)
       let cityToalArr = []
       let _cityData = res.analysis.city.map((item, index) => {
         cityToalArr.push(item.cnt)
@@ -189,56 +270,6 @@ export default function Fn() {
     console.log(e)
   }
 
-  // 折线
-  const getLineOption = () => ({
-    tooltip: {
-      trigger: 'axis',
-    },
-    color: ['#1764ff', '#00a97b', '#f00011', '#f19d25'],
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      containLabel: true,
-    },
-    toolbox: {
-      feature: {},
-    },
-    xAxis: {
-      type: 'category',
-      boundaryGap: false,
-      data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
-    },
-    yAxis: {
-      type: 'value',
-    },
-    series: [
-      {
-        name: '发送',
-        type: 'line',
-        stack: 'Total',
-        data: [120, 132, 101, 134, 90, 230, 210],
-      },
-      {
-        name: '成功',
-        type: 'line',
-        stack: 'Total',
-        data: [220, 182, 191, 234, 290, 330, 310],
-      },
-      {
-        name: '失败',
-        type: 'line',
-        stack: 'Total',
-        data: [150, 232, 201, 154, 190, 330, 410],
-      },
-      {
-        name: '计费',
-        type: 'line',
-        stack: 'Total',
-        data: [320, 332, 301, 334, 390, 330, 320],
-      },
-    ],
-  })
   // 环装
   const getHuanSucOption = {
     tooltip: {
@@ -399,7 +430,7 @@ export default function Fn() {
           <Col span={24} md={24} xl={12}>
             <div className='fn18'>API发送概览</div>
             <ReactEcharts
-              option={getLineOption()}
+              option={getOption()}
               style={{ height: '300px', width: '100%' }}
             />
           </Col>
