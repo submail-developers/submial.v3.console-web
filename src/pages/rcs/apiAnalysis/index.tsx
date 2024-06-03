@@ -64,8 +64,34 @@ export default function Fn() {
     dropped: [],
     fee: [],
   })
+  const [dates, setDates] = useState([])
+
+  const [deliveryed, setDeliveryed] = useState('') //成功率
+  const [dropped, setDropped] = useState('') //失败率
+
+  const [fiveg, setFiveg] = useState('') //5g
+  const [sms, setSms] = useState('') //短信
+  const [mms, setMms] = useState('') //彩信
+
+  const [fivegNum, setFivegNum] = useState('') //5gnum
+  const [smsNum, setSmsNum] = useState('') //短信num
+  const [mmsNum, setMmsNum] = useState('') //彩信num
+
+  // 理由
+  const [noNewsReason, setNoNewsReason] = useState('')
+  const [noSignReason, setNoSignReason] = useState('')
+  const [netBlackReason, setNetBlackReason] = useState('')
+  //数量
+  const [noNewsNum, setNoNewsNum] = useState('')
+  const [noSignNum, setNoSignNum] = useState('')
+  const [netBlackNum, setNetBlackNum] = useState('')
+  //
+  const [noNews, setNoNews] = useState('') //无法投递消息
+  const [noSign, setNoSign] = useState('') //短信签名受限
+  const [netBlack, setNetBlack] = useState('') //网关黑名单
 
   useEffect(() => {
+    console.log(selectedRange)
     if (selectedRange.length === 2) {
       const startDate = selectedRange[0]
       const endDate = selectedRange[1]
@@ -77,6 +103,7 @@ export default function Fn() {
         date.setDate(date.getDate() + 1)
       ) {
         allDates.push(date.toISOString().split('T')[0])
+        setDates(allDates)
       }
 
       const alignedData = {
@@ -85,17 +112,16 @@ export default function Fn() {
         dropped: alignSeries(pointsData.dropped, allDates),
         fee: alignSeries(pointsData.fee, allDates),
       }
-
       setChartData(alignedData)
     }
   }, [selectedRange, pointsData])
+
   const alignSeries = (series, dates) => {
     return dates.map((date) => {
       const match = series.find((item) => item.dateflg === date)
       return match ? match.cnt : 0
     })
   }
-
   const onRangeChange = (dates) => {
     getList()
     setSelectedRange(dates)
@@ -108,13 +134,7 @@ export default function Fn() {
       color: ['#1764ff', '#00a97b', '#f00011', '#f19d25'],
       xAxis: {
         type: 'category',
-        data: chartData.request.map((_, index) =>
-          selectedRange[0]
-            ? new Date(selectedRange[0]).toLocaleDateString() +
-              '-' +
-              (new Date(selectedRange[0]).getDate() + index)
-            : '',
-        ),
+        data: dates,
       },
       yAxis: {
         type: 'value',
@@ -172,28 +192,93 @@ export default function Fn() {
         start,
         end,
       })
-      let arr = []
-      arr.push(res.analysis.rate)
-      setRate(arr)
-      setPointsData(res.analysis.points)
+      if (res.status == 'success') {
+        let arr = []
+        arr.push(res.analysis.rate)
+        setRate(arr)
+        setPointsData(res.analysis.points)
 
-      let cityToalArr = []
-      let _cityData = res.analysis.city.map((item, index) => {
-        cityToalArr.push(item.cnt)
-        let obj = { ...item, index: `${index}` }
-        return obj
-      })
-      setCity(_cityData)
-      setCityTotal(cityToalArr)
+        // 总数
+        let totalCount =
+          parseInt(res.analysis.rate.deliveryed) +
+          parseInt(res.analysis.rate.dropped)
 
-      let provinceTotalArr = []
-      let _provinceData = res.analysis.province.map((item, index) => {
-        provinceTotalArr.push(item.cnt)
-        let obj = { ...item, index: `${index}` }
-        return obj
-      })
-      setProvince(_provinceData)
-      setProvinceTotal(provinceTotalArr)
+        // 成功率
+        let _suc = (
+          (parseInt(res.analysis.rate.deliveryed) / totalCount) *
+          100
+        ).toFixed(2)
+        setDeliveryed(_suc)
+        // 失败率
+        let _fail = (
+          (parseInt(res.analysis.rate.dropped) / totalCount) *
+          100
+        ).toFixed(2)
+        setDropped(_fail)
+
+        // 总数 -5g sms mms
+        let total5gsms = res.analysis.successreason.reduce(
+          (sum, item) => sum + parseInt(item.cnt),
+          0,
+        )
+
+        let fiveg = res.analysis.successreason[0].cnt
+        let sms = res.analysis.successreason[1].cnt
+        let mms = res.analysis.successreason[2].cnt
+        setFivegNum(fiveg)
+        setSmsNum(sms)
+        setMmsNum(mms)
+
+        let _fiveg = ((parseInt(fiveg) / total5gsms) * 100).toFixed(2)
+        let _sms = ((parseInt(sms) / total5gsms) * 100).toFixed(2)
+        let _mms = ((parseInt(mms) / total5gsms) * 100).toFixed(2)
+        setFiveg(_fiveg)
+        setSms(_sms)
+        setMms(_mms)
+
+        let totalFail = res.analysis.dropreason.reduce(
+          (sum, item) => sum + parseInt(item.cnt),
+          0,
+        )
+        let _noNewsReason = res.analysis.dropreason[0].reason
+        let _noNews = res.analysis.dropreason[0].cnt
+        setNoNewsReason(_noNewsReason)
+        setNoNewsNum(_noNews)
+        let noNews = ((parseInt(_noNews) / totalFail) * 100).toFixed(2)
+        setNoNews(noNews)
+
+        let _noSignReason = res.analysis.dropreason[1].reason
+        let _noSign = res.analysis.dropreason[1].cnt
+        setNoSignReason(_noSignReason)
+        setNoSignNum(_noSign)
+        let noSign = ((parseInt(_noSign) / totalFail) * 100).toFixed(2)
+        setNoSign(noNews)
+
+        let _netBlackReason = res.analysis.dropreason[2].reason
+        let _netBlackNum = res.analysis.dropreason[2].cnt
+        setNetBlackReason(_netBlackReason)
+        setNetBlackNum(_netBlackNum)
+        let netBlack = ((parseInt(_netBlackNum) / totalFail) * 100).toFixed(2)
+        setNetBlack(netBlack)
+
+        let cityToalArr = []
+        let _cityData = res.analysis.city.map((item, index) => {
+          cityToalArr.push(item.cnt)
+          let obj = { ...item, index: `${index}` }
+          return obj
+        })
+        setCity(_cityData)
+        setCityTotal(cityToalArr)
+
+        let provinceTotalArr = []
+        let _provinceData = res.analysis.province.map((item, index) => {
+          provinceTotalArr.push(item.cnt)
+          let obj = { ...item, index: `${index}` }
+          return obj
+        })
+        setProvince(_provinceData)
+        setProvinceTotal(provinceTotalArr)
+      }
     } catch (error) {}
   }
 
@@ -274,22 +359,22 @@ export default function Fn() {
   const getHuanSucOption = {
     tooltip: {
       trigger: 'item',
+      formatter: '{b}: {c} ({d}%)',
     },
     title: {
-      text: '成功率：88%',
-      left: '24%',
+      text: `成功率：${deliveryed}%`,
+      left: '21%',
       top: '46%',
       textStyle: {
         color: '#282b31',
-        fontSize: 14,
+        fontSize: 13,
         align: 'center',
       },
     },
 
-    color: ['#C6CDCC', '#EFF9B4', '#0698EC'],
+    color: ['#0698EC', '#47D1CB', '#9DF3FF'],
     series: [
       {
-        name: 'Access From',
         type: 'pie',
         radius: ['40%', '60%'],
         avoidLabelOverlap: false,
@@ -298,39 +383,38 @@ export default function Fn() {
           show: false,
           position: 'left',
         },
-        emphasis: {
-          label: {
-            show: true,
-            fontSize: 12,
-            fontWeight: 'bold',
-          },
-        },
+
         labelLine: {
           show: false,
         },
-        data: [{ value: 1048 }, { value: 735 }, { value: 580 }],
+
+        data: [
+          { name: '下发为5G消息', value: fivegNum },
+          { name: '回落为短信', value: smsNum },
+          { name: '回落为彩信', value: mmsNum },
+        ],
       },
     ],
   }
   const getHuanFailOption = {
     tooltip: {
       trigger: 'item',
+      formatter: '{b}: {c} ({d}%)',
     },
     title: {
-      text: '失败率 ',
-      left: '32%',
+      text: `失败率 ${dropped}%`,
+      left: '22%',
       top: '46%',
       textStyle: {
         color: '#282b31',
-        fontSize: 14,
+        fontSize: 13,
         align: 'center',
       },
     },
 
-    color: ['#EFF9B4', '#FF4D4F'],
+    color: ['#FF4D4F', '#ffba00', '#fd7e14'],
     series: [
       {
-        name: 'Access From',
         type: 'pie',
         radius: ['40%', '60%'],
         avoidLabelOverlap: false,
@@ -339,17 +423,14 @@ export default function Fn() {
           show: false,
           position: 'left',
         },
-        emphasis: {
-          label: {
-            show: true,
-            fontSize: 12,
-            fontWeight: 'bold',
-          },
-        },
         labelLine: {
           show: false,
         },
-        data: [{ value: 1048 }, { value: 735 }],
+        data: [
+          { name: noNewsReason, value: noNewsNum },
+          { name: noSignReason, value: noSignNum },
+          { name: netBlackReason, value: netBlackNum },
+        ],
       },
     ],
   }
@@ -364,7 +445,7 @@ export default function Fn() {
         autoComplete='off'
         initialValues={{
           chatbot: 'all',
-          time: [dayjs().add(-1, 'd'), dayjs().add(0, 'd')],
+          time: [dayjs().add(-15, 'd'), dayjs().add(0, 'd')],
         }}>
         <Image src={topIco} preview={false} width={72}></Image>
         <Flex
@@ -488,19 +569,21 @@ export default function Fn() {
                     <span
                       className='yuan'
                       style={{ background: '#0698EC' }}></span>
-                    <span className='title'>下发为5G消息</span> 54 (12%)
+                    <span className='title'>下发为5G消息</span> {fivegNum} (
+                    {fiveg}%)
                   </div>
                   <div className='fx-y-center m-t-12 m-b-12'>
                     <span
                       className='yuan'
-                      style={{ background: '#C6CDCC' }}></span>
-                    <span className='title'>回落为彩信</span> 54 (12%)
+                      style={{ background: '#47D1CB' }}></span>
+                    <span className='title'>回落为短信</span> {smsNum} ({sms}%)
                   </div>
                   <div className='fx-y-center'>
                     <span
                       className='yuan'
-                      style={{ background: '#EFF9B4' }}></span>
-                    <span className='title'>回落为彩信</span>54 (12%)
+                      style={{ background: '#9DF3FF' }}></span>
+                    <span className='title'>回落为彩信</span>
+                    {mmsNum} ({mms}%)
                   </div>
                 </div>
               </div>
@@ -519,19 +602,28 @@ export default function Fn() {
                     <span
                       className='yuan'
                       style={{ background: '#FF4D4F' }}></span>
-                    <span className='title' style={{ width: '170px' }}>
-                      网关黑名单
-                    </span>{' '}
-                    54 (12%)
+                    <span className='title' style={{ width: '120px' }}>
+                      {noNewsReason}
+                    </span>
+                    {noNewsNum} ({noNews}%)
                   </div>
                   <div className='fx-y-center m-t-12'>
                     <span
                       className='yuan'
-                      style={{ background: '#EFF9B4' }}></span>
-                    <span className='title' style={{ width: '170px' }}>
-                      空号/停机/关机/无法接通
+                      style={{ background: '#ffba00' }}></span>
+                    <span className='title' style={{ width: '120px' }}>
+                      {noSignReason}
                     </span>{' '}
-                    54 (12%)
+                    {noSignNum} ({noSign}%)
+                  </div>
+                  <div className='fx-y-center m-t-12'>
+                    <span
+                      className='yuan'
+                      style={{ background: '#fd7e14' }}></span>
+                    <span className='title' style={{ width: '120px' }}>
+                      {netBlackReason}
+                    </span>{' '}
+                    {netBlackNum} ({netBlack}%)
                   </div>
                 </div>
               </div>
