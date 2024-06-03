@@ -16,7 +16,7 @@ import PageContent from '@/components/pageContent'
 
 // import { getErrorLogs } from '@/api'
 import { API } from 'apis'
-import topIco from '@/assets/rcs/errorlogs/err_ico.png'
+import topIco from '@/assets/rcs/setting/set_ico.png'
 import './index.scss'
 import { useSize } from '@/hooks'
 import dayjs from 'dayjs'
