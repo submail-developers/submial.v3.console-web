@@ -26,14 +26,30 @@ import apiIco6 from '@/assets/rcs/analysis/apiInfo6.png'
 import { useParams } from 'react-router-dom'
 import ReactEcharts from 'echarts-for-react'
 import type { CollapseProps } from 'antd'
-// import { getErrorLogs } from '@/api'
+import {
+  getSendlistReport,
+  getSndlistSendanalysisreport,
+  getSendlistDeepAnalysisReport,
+  getSendlistLogs,
+} from '@/api'
 import { API } from 'apis'
 import topIco from '@/assets/rcs/batchreport/batchreport_ico.png'
 import address from '@/assets/rcs/batchreport/address.png'
 import './index.scss'
 
 import { useSize, usePoint } from '@/hooks'
-
+enum statusNum {
+  '无状态' = 0,
+  '成功',
+  '失败',
+  '已撤回',
+}
+enum statusStyle {
+  'text-color' = 0,
+  'success-color',
+  'error-color',
+  'gray-color',
+}
 const { Option } = Select
 const { Panel } = Collapse
 export default function Fn() {
@@ -41,40 +57,104 @@ export default function Fn() {
   const size = useSize()
   const point = usePoint('lg')
   const [form] = Form.useForm()
+  const [detailList, setDetailList] = useState(null)
+  const [analysisDetailList, setAnalysisDetailList] = useState(null)
 
+  const [currentPage, setcurrentPage] = useState<number>(1)
+  const [pageSize, setpageSize] = useState<number>(40)
+  const [total, setTotal] = useState<number>(0)
+  const [historyList, setHistoryList] = useState<API.GetSendlistLogsItems[]>()
+
+  const [city, setCity] = useState([])
+  const [cityTotal, setCityTotal] = useState([])
+  const [province, setProvince] = useState([])
+  const [provinceTotal, setProvinceTotal] = useState([])
+
+  // 获取报告详情
+  const getDetailList = async () => {
+    try {
+      const res = await getSendlistReport({
+        sendlist: id,
+      })
+      setDetailList(res.sendlist)
+    } catch (error) {}
+  }
+  // 获取概览详情
+  const getAnalysisDetailList = async () => {
+    try {
+      const res = await getSndlistSendanalysisreport({
+        sendlist: id,
+      })
+      setAnalysisDetailList(res.data)
+    } catch (error) {}
+  }
+  // 概览数据分析
+  const getDeepAnalysisReport = async () => {
+    try {
+      const res = await getSendlistDeepAnalysisReport({
+        sendlist: id,
+      })
+
+      let cityToalArr = []
+      let _cityData = res.data.city.map((item, index) => {
+        cityToalArr.push(item.cnt)
+        let obj = { ...item, index: `${index}` }
+        return obj
+      })
+
+      setCity(_cityData)
+      setCityTotal(cityToalArr)
+
+      let provinceTotalArr = []
+      let _provinceData = res.data.province.map((item, index) => {
+        provinceTotalArr.push(item.cnt)
+        let obj = { ...item, index: `${index}` }
+        return obj
+      })
+      setProvince(_provinceData)
+      setProvinceTotal(provinceTotalArr)
+    } catch (error) {}
+  }
+  // 获取发送明细
+  const getSendlistLogsList = async () => {
+    try {
+      const res = await getSendlistLogs({
+        sendlist: id,
+      })
+      setHistoryList(res.history)
+      setTotal(res.row)
+    } catch (error) {}
+  }
   useEffect(() => {
-    // getList()
-    console.log(id, '////')
+    getDetailList()
+    getAnalysisDetailList()
+    getDeepAnalysisReport()
+    getSendlistLogsList()
   }, [])
 
-  const dataSource = [
-    {
-      key: '1',
-      mob: '15900898337',
-      mobDedail: '中国移动/安徽/合肥',
-      tempId: '12332233',
-      sendTime: '2023-03-12 17:00',
-      endTime: '2023-03-12 17:00',
-      fee: '0',
-      status: '发送完成',
-    },
-    {
-      key: '1',
-      mob: '15900898337',
-      mobDedail: '中国移动/安徽/合肥',
-      tempId: '12332233',
-      sendTime: '2023-03-12 17:00',
-      endTime: '2023-03-12 17:00',
-      fee: '0',
-      status: '发送完成',
-    },
-  ]
+  const totalCity = cityTotal.reduce(
+    (acc, curr) => parseInt(acc) + parseInt(curr),
+    0,
+  )
+  const totalProvince = provinceTotal.reduce(
+    (acc, curr) => parseInt(acc) + parseInt(curr),
+    0,
+  )
+
+  const calculatePercentageCity = (number) => {
+    if (totalCity === 0) return 0
+    return ((number / totalCity) * 100).toFixed(2)
+  }
+
+  const calculatePercentagePro = (number) => {
+    if (totalProvince === 0) return 0
+    return ((number / totalProvince) * 100).toFixed(2)
+  }
 
   const columns = [
     {
       title: '手机号',
-      dataIndex: 'mob',
-      key: 'mob',
+      dataIndex: 'to',
       fixed: true,
       width: size == 'small' ? 150 : 200,
       className: size == 'small' ? 'paddingL20' : 'paddingL30',
@@ -83,37 +163,43 @@ export default function Fn() {
       title: '号码详情',
       dataIndex: 'mobDedail',
       key: 'mobDedail',
-      width: 180,
+      width: 200,
+      render: (_, record) => (
+        <div>
+          {record.mobileType}/{record.mobileArea}
+        </div>
+      ),
     },
     {
-      title: '模板id',
-      dataIndex: 'tempId',
-      key: 'tempId',
+      title: '模板ID',
+      dataIndex: 'sign',
       width: 120,
     },
     {
       title: '发送时间',
-      dataIndex: 'sendTime',
-      key: 'sendTime',
+      dataIndex: 'send',
       width: 200,
     },
     {
       title: '送达时间',
-      dataIndex: 'endTime',
-      key: 'endTime',
+      dataIndex: 'sent',
       width: 200,
     },
     {
       title: '计费(元)',
       dataIndex: 'fee',
-      key: 'fee',
       width: 100,
+      render: (_, record) => <div>1</div>,
     },
     {
       title: '送达状态',
       dataIndex: 'status',
-      key: 'status',
       width: 200,
+      render: (_, record) => (
+        <div className={statusStyle[record.status]}>
+          {statusNum[record.status]}
+        </div>
+      ),
     },
   ]
   // 环装
@@ -199,83 +285,6 @@ export default function Fn() {
       },
     ],
   }
-  const tableList = [
-    {
-      id: 0,
-      name: '福建省',
-      count: '2134',
-      zhanbi: '24%',
-    },
-    {
-      id: 1,
-      name: '广东省',
-      count: '134',
-      zhanbi: '14%',
-    },
-    {
-      id: 2,
-      name: '湖北省',
-      count: '12234',
-      zhanbi: '34%',
-    },
-    {
-      id: 3,
-      name: '江苏省',
-      count: '1134',
-      zhanbi: '34%',
-    },
-    {
-      id: 4,
-      name: '安徽省',
-      count: '34',
-      zhanbi: '4%',
-    },
-    {
-      id: 5,
-      name: '上海市',
-      count: '2134',
-      zhanbi: '24%',
-    },
-  ]
-
-  const cityList = [
-    {
-      value: 0,
-      name: '福建省',
-      count: '2134',
-      zhanbi: '24%',
-    },
-    {
-      value: 1,
-      name: '广东省',
-      count: '134',
-      zhanbi: '14%',
-    },
-    {
-      value: 2,
-      name: '湖北省',
-      count: '12234',
-      zhanbi: '34%',
-    },
-    {
-      value: 3,
-      name: '江苏省',
-      count: '1134',
-      zhanbi: '34%',
-    },
-    {
-      value: 4,
-      name: '安徽省',
-      count: '34',
-      zhanbi: '4%',
-    },
-    {
-      value: 5,
-      name: '上海市',
-      count: '2134',
-      zhanbi: '24%',
-    },
-  ]
 
   return (
     <PageContent extClass='batchreport-detail'>
@@ -322,37 +331,51 @@ export default function Fn() {
               <tbody>
                 <tr>
                   <td>任务名称</td>
-                  <td>1212</td>
+                  <td>{detailList?.title}</td>
                 </tr>
 
                 <tr>
                   <td>联系人</td>
-                  <td>张胜男</td>
+                  <td>{detailList?.address}</td>
                 </tr>
                 <tr>
                   <td>短信回落</td>
-                  <td>1212</td>
+                  <td>
+                    {detailList && detailList.shortMessageSupported
+                      ? '支持'
+                      : '否'}
+                  </td>
                 </tr>
 
                 <tr>
                   <td>彩信回落</td>
-                  <td>1212</td>
+                  <td>
+                    {detailList && detailList.multimediaMessageSupported
+                      ? '支持'
+                      : '否'}
+                  </td>
                 </tr>
                 <tr>
                   <td>任务状态</td>
-                  <td>发送成功</td>
+                  <td>
+                    {detailList && detailList.status == '1'
+                      ? '发送完成'
+                      : detailList && detailList.status == '0'
+                      ? '尚未开始'
+                      : '已撤销'}
+                  </td>
                 </tr>
                 <tr>
                   <td>ChatBot名称</td>
-                  <td>ChatBot1</td>
+                  <td>{detailList?.chatbot_name}</td>
                 </tr>
                 <tr>
                   <td>提交任务时间</td>
-                  <td>2024-05-12</td>
+                  <td>{detailList?.send}</td>
                 </tr>
                 <tr>
                   <td>任务完成时间</td>
-                  <td>2024-05-13</td>
+                  <td>{detailList?.sent}</td>
                 </tr>
               </tbody>
             </table>
@@ -364,52 +387,49 @@ export default function Fn() {
               <img width='40' src={apiIco1} alt='' />
               <div className='m-l-20'>
                 <span className='gray-color-sub'>API请求</span>
-                <div>99</div>
+                <div>
+                  {analysisDetailList && analysisDetailList.rate.request}
+                </div>
               </div>
             </div>
           </Col>
           <Col span={24} md={8} xl={6}>
             <div className='api-info-item fx-y-center'>
-              <img width='40' src={apiIco1} alt='' />
+              <img width='40' src={apiIco2} alt='' />
               <div className='m-l-20'>
-                <span className='gray-color-sub'>API请求</span>
-                <div>99</div>
+                <span className='gray-color-sub'>发送成功</span>
+                <div>
+                  {analysisDetailList && analysisDetailList.rate.deliveryed}
+                </div>
               </div>
             </div>
           </Col>
           <Col span={24} md={8} xl={6}>
             <div className='api-info-item fx-y-center'>
-              <img width='40' src={apiIco1} alt='' />
+              <img width='40' src={apiIco4} alt='' />
               <div className='m-l-20'>
-                <span className='gray-color-sub'>API请求</span>
-                <div>99</div>
+                <span className='gray-color-sub'>发送失败</span>
+                <div>
+                  {analysisDetailList && analysisDetailList.rate.dropped}
+                </div>
               </div>
             </div>
           </Col>
           <Col span={24} md={8} xl={6}>
             <div className='api-info-item fx-y-center'>
-              <img width='40' src={apiIco1} alt='' />
+              <img width='40' src={apiIco3} alt='' />
               <div className='m-l-20'>
-                <span className='gray-color-sub'>API请求</span>
-                <div>99</div>
+                <span className='gray-color-sub'>计费</span>
+                <div>{analysisDetailList && analysisDetailList.rate.fee}</div>
               </div>
             </div>
           </Col>
           <Col span={24} md={8} xl={6}>
             <div className='api-info-item fx-y-center'>
-              <img width='40' src={apiIco1} alt='' />
+              <img width='40' src={apiIco6} alt='' />
               <div className='m-l-20'>
-                <span className='gray-color-sub'>API请求</span>
-                <div>99</div>
-              </div>
-            </div>
-          </Col>
-          <Col span={24} md={8} xl={6}>
-            <div className='api-info-item fx-y-center'>
-              <img width='40' src={apiIco1} alt='' />
-              <div className='m-l-20'>
-                <span className='gray-color-sub'>API请求</span>
-                <div>99</div>
+                <span className='gray-color-sub'>联系人</span>
+                <div>{analysisDetailList && analysisDetailList.address}</div>
               </div>
             </div>
           </Col>
@@ -480,7 +500,7 @@ export default function Fn() {
         </Row>
 
         <Row gutter={16} className='bottom-part m-t-20'>
-          <Col span={24} md={24} xl={15}>
+          <Col span={24} md={24} xl={16}>
             <div className='border'>
               <div className='fn18'>热度分析</div>
               <div className='m-t-30 fx-between-center flex-wrap'>
@@ -493,18 +513,22 @@ export default function Fn() {
                         <td className='gray-color'>数量</td>
                         <td className='gray-color'>占比</td>
                       </tr>
-                      {tableList.map((item, index) => (
-                        <tr key={item.id}>
-                          <td className='gray-color'>{item.name}</td>
+                      {province.map((item, index) => (
+                        <tr key={item.index}>
+                          <td className='gray-color'>{item.province}</td>
                           <td width='45%;'>
                             <div className='progress'>
                               <div
                                 className='progress-bar'
-                                style={{ width: item.zhanbi }}></div>
+                                style={{
+                                  width: calculatePercentagePro(item.cnt) + '%',
+                                }}></div>
                             </div>
                           </td>
-                          <td className='gray-color'>{item.count}</td>
-                          <td className='gray-color'>{item.zhanbi}</td>
+                          <td className='gray-color'>{item.cnt}</td>
+                          <td className='gray-color'>
+                            {calculatePercentagePro(item.cnt)}%
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -519,21 +543,24 @@ export default function Fn() {
                         <td className='gray-color'>数量</td>
                         <td className='gray-color'>占比</td>
                       </tr>
-                      {cityList.map((item, index) => (
-                        <tr key={item.value}>
-                          <td className='gray-color'>{item.name}</td>
+                      {city.map((item, index) => (
+                        <tr key={item.index}>
+                          <td className='gray-color'>{item.city}</td>
                           <td width='45%;'>
                             <div className='progress'>
                               <div
                                 className='progress-bar'
                                 style={{
-                                  width: item.zhanbi,
+                                  width:
+                                    calculatePercentageCity(item.cnt) + '%',
                                   backgroundColor: '#47d1cb',
                                 }}></div>
                             </div>
                           </td>
-                          <td className='gray-color'>{item.count}</td>
-                          <td className='gray-color'>{item.zhanbi}</td>
+                          <td className='gray-color'>{item.cnt}</td>
+                          <td className='gray-color'>
+                            {calculatePercentageCity(item.cnt)}%
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -542,7 +569,7 @@ export default function Fn() {
               </div>
             </div>
           </Col>
-          <Col span={24} md={24} xl={9}>
+          <Col span={24} md={24} xl={8}>
             <div className='border'>
               <div className='fn18'>热度分析</div>
               <div className='m-t-30'>
@@ -557,24 +584,31 @@ export default function Fn() {
             </div>
           </Col>
         </Row>
-
-        <Collapse accordion className='m-t-30' defaultActiveKey={['1']}>
-          <Panel header='发送明细' key='1'>
-            <Table
-              className='theme-cell reset-table'
-              columns={columns}
-              dataSource={dataSource}
-              rowKey={'key'}
-              sticky
-              pagination={{
-                position: ['bottomRight'],
-                pageSize: 100,
-                pageSizeOptions: [100, 200, 300],
-              }}
-              scroll={{ x: 'max-content' }}
-            />
-          </Panel>
-        </Collapse>
+        <Collapse
+          className='m-t-30'
+          defaultActiveKey={['1']}
+          items={[
+            {
+              key: '1',
+              label: '发送明细',
+              children: (
+                <Table
+                  className='theme-cell reset-table'
+                  columns={columns}
+                  dataSource={historyList}
+                  rowKey={'sendID'}
+                  sticky
+                  pagination={{
+                    position: ['bottomRight'],
+                    pageSize: 100,
+                    pageSizeOptions: [100, 200, 300],
+                  }}
+                  scroll={{ x: 'max-content' }}
+                />
+              ),
+            },
+          ]}
+        />
       </Form>
     </PageContent>
   )

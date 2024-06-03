@@ -976,6 +976,41 @@ declare module 'apis' {
       rows: number
       data: GetSendlistsItems[]
     }
+    // 获取批量报告参数
+    interface GetSendlistReportParams {
+      sendlist: string
+    }
+    interface GetSendanalysisreportParams {
+      sendlist: string
+    }
+    // 概览数据分析参数
+    interface GetSendlistDeepAnalysisParams {
+      sendlist: string
+    }
+    // 发送明细参数
+    interface GetSendlistLogsParams {
+      sendlist: string
+    }
+    // 获取发送明细返回值
+    interface GetSendlistLogsItems {
+      sendID: string
+      send: string
+      sent: string
+      appid: string
+      serviceCode: string
+      to: string
+      sign: string
+      api: string
+      ipAddress: string
+      mobileType: string
+      mobileArea: string
+      status: string
+    }
+    interface GetSendlistLogsRes {
+      row: sting
+      history: GetSendlistLogsItems[]
+    }
+
     // 获取api历史明细
     interface GetHistoryParams {
       page: number
@@ -1014,17 +1049,6 @@ declare module 'apis' {
       start: string
       end: string
       appid: string
-    }
-    // api分析报告返回值
-    interface GetUnionAnalysisitems {
-      analysis: {
-        city: []
-        dropreason: []
-        points: {}
-        province: []
-        rate: {}
-        successreason: []
-      }
     }
 
     // 短信验证
