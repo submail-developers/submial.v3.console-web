@@ -5,7 +5,7 @@ import {
   useRef,
   useEffect,
 } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { Table, Flex } from 'antd'
 import { getRcsTempList } from '@/api'
 import {
@@ -28,7 +28,7 @@ function Fn(props, ref: any) {
   const state = useStateStore()
   const dispatch = useStateDispatch()
   const nav = useNavigate()
-  const { id } = useParams()
+  const { id, type } = useParams()
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [list, setList] = useState<API.RcsTempListItem[]>([])
@@ -63,7 +63,7 @@ function Fn(props, ref: any) {
       type: 'changeTemplate',
       payload: item,
     })
-    nav(`/console/rcs/interactive/template/${item.id}`, {
+    nav(`/console/rcs/interactive/list/template/${item.id}`, {
       replace: true,
     })
   }
@@ -106,10 +106,12 @@ function Fn(props, ref: any) {
   ]
   // 获取交互详情-刷新页面时重新dispatch
   useEffect(() => {
-    if (!state.template) {
-      getInfo()
+    if (type == 'template') {
+      if (!state.template || state?.template.id != id) {
+        getInfo()
+      }
     }
-  }, [state.template])
+  }, [state.template, id, type])
   const getInfo = async () => {
     try {
       const res = await getRcsTempList({

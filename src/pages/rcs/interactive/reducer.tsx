@@ -36,12 +36,15 @@ type InitData = {
   template: API.RcsTempListItem | null
   // 模拟交互的信息
   chats: API.GetRcsInteractiveListResItem[]
+  // 是否是演示
+  isTour: boolean
 }
 
 const initData: InitData = {
   chatbot: null,
   template: null,
   chats: [],
+  isTour: false,
 }
 
 export function StorePage(props: any) {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Flex, Space, Switch, Divider, Popconfirm } from 'antd'
+import { Flex, Space, Switch, Divider, Popconfirm, Tooltip } from 'antd'
 import ACopy from '@/components/aCopy'
 import { API } from 'apis'
 import { changeRcsInteractiveStatus } from '@/api'
@@ -26,7 +26,7 @@ const Keywords = ({ text, isReg }: { text: string; isReg: boolean }) => {
   return (
     <>
       {isReg ? (
-        <span className='color'>{text}</span>
+        <span className='tag-color'>{text}</span>
       ) : (
         <Space wrap align='center'>
           {list.map((item, index) => (
@@ -132,15 +132,21 @@ export default function Item(props: Props) {
         <Space size={0} align='center'>
           {props.item.enabled == '1' && (
             <>
-              <div className='handle-item fx-center-center' onClick={addChats}>
-                <span className='icon iconfont icon-yanshi'></span>
-              </div>
+              <Tooltip placement='bottom' title={'演示'}>
+                <div
+                  className='handle-item fx-center-center'
+                  onClick={addChats}>
+                  <span className='icon iconfont icon-yanshi'></span>
+                </div>
+              </Tooltip>
               <Divider type='vertical' />
-              <div
-                className='handle-item fx-center-center'
-                onClick={props.onEdit}>
-                <span className='icon iconfont icon-bianji'></span>
-              </div>
+              <Tooltip placement='bottom' title={'编辑'}>
+                <div
+                  className='handle-item fx-center-center'
+                  onClick={props.onEdit}>
+                  <span className='icon iconfont icon-bianji'></span>
+                </div>
+              </Tooltip>
               <Divider type='vertical' />
             </>
           )}
@@ -151,10 +157,13 @@ export default function Item(props: Props) {
             placement='bottom'
             onConfirm={props.onDel}
             okText='确定'
-            cancelText='取消'>
-            <div className='handle-item fx-center-center'>
-              <span className='icon iconfont icon-shanchu'></span>
-            </div>
+            cancelText='取消'
+            zIndex={2}>
+            <Tooltip placement='bottom' title={'删除'} zIndex={1}>
+              <div className='handle-item fx-center-center'>
+                <span className='icon iconfont icon-shanchu'></span>
+              </div>
+            </Tooltip>
           </Popconfirm>
         </Space>
       </div>

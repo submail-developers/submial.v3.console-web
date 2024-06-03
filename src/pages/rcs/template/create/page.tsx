@@ -82,7 +82,7 @@ export default function Fn(props: Props) {
       <Space className='handle-buttons' size={16}>
         <Button
           type='primary'
-          style={{ background: '#F1F2F4', color: '#282b31' }}
+          style={{ background: '#F1F2F4', color: '#282b31', boxShadow: 'none' }}
           onClick={() => nav(-1)}>
           取消编辑
         </Button>

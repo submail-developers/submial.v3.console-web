@@ -166,9 +166,11 @@ declare module 'apis' {
       autograph: string
       attachment: string
       actualIssueIndustry: string
-      eTag: string
+      eTag?: string
       debugWhiteAddress: string // 白名单
       sendApi: string
+      messageId?: string
+      menu_etag?: string
     }
     interface EntriesItem extends RcsSuggestionItem {
       menu?: {

@@ -28,7 +28,7 @@ function Fn(props, ref: any) {
   const state = useStateStore()
   const dispatch = useStateDispatch()
   const nav = useNavigate()
-  const { id } = useParams()
+  const { id, type } = useParams()
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(20)
   const [total, setTotal] = useState(0)
@@ -56,7 +56,7 @@ function Fn(props, ref: any) {
           type: 'changeChatbot',
           payload: res.list[0],
         })
-        nav(`/console/rcs/interactive/chatbot/${res.list[0].id}`, {
+        nav(`/console/rcs/interactive/list/chatbot/${res.list[0].id}`, {
           replace: true,
         })
       }
@@ -70,7 +70,7 @@ function Fn(props, ref: any) {
       type: 'changeChatbot',
       payload: item,
     })
-    nav(`/console/rcs/interactive/chatbot/${item.id}`)
+    nav(`/console/rcs/interactive/list/chatbot/${item.id}`)
   }
   const toDetail = (e, item: API.ChatbotItem) => {
     e.stopPropagation()
@@ -105,10 +105,12 @@ function Fn(props, ref: any) {
 
   // 获取交互详情-刷新页面时重新dispatch
   useEffect(() => {
-    if (!state.chatbot && id != '0') {
-      getInfo()
+    if (type == 'chatbot') {
+      if ((!state.chatbot && id != '0') || state.chatbot?.id != id) {
+        getInfo()
+      }
     }
-  }, [id, state.chatbot])
+  }, [id, state.chatbot, type])
   const getInfo = async () => {
     try {
       const res = await getChatbot({

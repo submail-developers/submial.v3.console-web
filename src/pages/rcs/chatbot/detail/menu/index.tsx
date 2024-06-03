@@ -295,7 +295,11 @@ export default function Menu(props: Props) {
                 <Button
                   onClick={cancel}
                   type='primary'
-                  style={{ background: '#F1F2F4', color: '#282b31' }}>
+                  style={{
+                    background: '#F1F2F4',
+                    color: '#282b31',
+                    boxShadow: 'none',
+                  }}>
                   取消编辑
                 </Button>
                 <Button type='primary' loading={loading} onClick={submitMenu}>

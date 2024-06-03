@@ -426,18 +426,7 @@ export const menus: RouteObject[] = [
         ),
         children: [
           {
-            path: 'chatbot/:id',
-            errorElement: <Error />,
-            element: (
-              <LazyImportComponent
-                lazyChildren={lazy(
-                  () => import('@/pages/rcs/interactive/default'),
-                )}
-              />
-            ),
-          },
-          {
-            path: 'template/:id',
+            path: 'list/:type/:id', // type: chatbot|template
             errorElement: <Error />,
             element: (
               <LazyImportComponent
@@ -471,6 +460,48 @@ export const menus: RouteObject[] = [
               <LazyImportComponent
                 lazyChildren={lazy(
                   () => import('@/pages/rcs/interactive/detail/template'),
+                )}
+              />
+            ),
+          },
+          {
+            path: 'tour/:type/:id', // type: chatbot|template
+            loader: loaderFn({
+              breadName: '交互演示',
+            }),
+            errorElement: <Error />,
+            element: (
+              <LazyImportComponent
+                lazyChildren={lazy(
+                  () => import('@/pages/rcs/interactive/tour/list'),
+                )}
+              />
+            ),
+          },
+          {
+            path: 'tour/detail/chatbot',
+            loader: loaderFn({
+              breadName: '交互演示',
+            }),
+            errorElement: <Error />,
+            element: (
+              <LazyImportComponent
+                lazyChildren={lazy(
+                  () => import('@/pages/rcs/interactive/tour/list'),
+                )}
+              />
+            ),
+          },
+          {
+            path: 'tour/detail/tamplate',
+            loader: loaderFn({
+              breadName: '交互演示',
+            }),
+            errorElement: <Error />,
+            element: (
+              <LazyImportComponent
+                lazyChildren={lazy(
+                  () => import('@/pages/rcs/interactive/tour/list'),
                 )}
               />
             ),
@@ -594,7 +625,9 @@ export const baseRouter: RouteObject[] = [
   },
   {
     path: '/console/rcs/interactive',
-    element: <Navigate to={'/console/rcs/interactive/chatbot/0'} replace />,
+    element: (
+      <Navigate to={'/console/rcs/interactive/list/chatbot/0'} replace />
+    ),
   },
   {
     path: '/console/aim',

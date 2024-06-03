@@ -1,11 +1,13 @@
+import { useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import codeImg from '@/assets/rcs/send1.png'
-import { Image, Flex, Divider, Button, Space } from 'antd'
+import { Image, Flex, Divider, Button, Space, ConfigProvider } from 'antd'
 import PageContent from '@/components/pageContent'
 import Mobile from '@/pages/rcs/interactive/compontent/mobile'
 import { Outlet } from 'react-router-dom'
 import { StorePage } from './reducer'
 
+import { chatbotList, templateList } from './tour/data'
 import './index.scss'
 
 const pageW = {
@@ -14,6 +16,14 @@ const pageW = {
 export default function Fn() {
   const nav = useNavigate()
   const location = useLocation()
+  const redirectPathNameRef = useRef('')
+  const toTour = () => {
+    redirectPathNameRef.current = location.pathname
+    nav(`/console/rcs/interactive/tour/chatbot/${chatbotList[0].id}`)
+  }
+  const reDirectEvent = () => {
+    nav(redirectPathNameRef.current)
+  }
   return (
     <div className='interactive-container'>
       <PageContent extClass='interactive p-16' {...pageW}>
@@ -32,17 +42,41 @@ export default function Fn() {
                 </div>
               </div>
               <Space>
-                <Button
-                  type='primary'
-                  icon={
-                    <span className='icon iconfont icon-yanshi fn14'></span>
-                  }>
-                  交互演示
-                </Button>
+                {/* {location.pathname.includes('tour') ? (
+                  <ConfigProvider wave={{ disabled: true }}>
+                    <Button
+                      type='primary'
+                      style={{
+                        background: '#F1F2F4',
+                        color: '#282b31',
+                        boxShadow: 'none',
+                      }}
+                      onClick={reDirectEvent}>
+                      关闭演示
+                    </Button>
+                  </ConfigProvider>
+                ) : (
+                  <Button
+                    type='primary'
+                    style={{
+                      boxShadow: 'none',
+                    }}
+                    icon={
+                      <span className='icon iconfont icon-yanshi fn14'></span>
+                    }
+                    onClick={toTour}>
+                    交互演示
+                  </Button>
+                )} */}
+
                 {location.pathname.includes('detail') && (
                   <Button
                     type='primary'
-                    style={{ background: '#F1F2F4', color: '#282b31' }}
+                    style={{
+                      background: '#F1F2F4',
+                      color: '#282b31',
+                      boxShadow: 'none',
+                    }}
                     onClick={() => nav(-1)}>
                     返回列表
                   </Button>
