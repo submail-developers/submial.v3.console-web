@@ -45,10 +45,12 @@ import codeImg from '@/assets/rcs/send1.png'
 import './index.scss'
 import '@/pages/rcs/template/mobile.scss'
 
+const disabledTime = 10 // 定时发送可选时间，当前时间10分钟之后的时间
+
 // 定时发送，只能选择当前时间5分钟之后的时间
 function disabledDateTime(date: Dayjs) {
   if (date) {
-    let now = dayjs().add(5, 'minute')
+    let now = dayjs().add(disabledTime, 'minute')
     if (date.format('YYYY/MM/DD') == now.format('YYYY/MM/DD')) {
       return {
         disabledHours: () => [...Array(now.hour()).keys()],
@@ -615,7 +617,10 @@ export default function CreateSend() {
                                   <Form.Item
                                     label=''
                                     name='timetosend_date'
-                                    initialValue={dayjs().add(5, 'minute')}
+                                    initialValue={dayjs().add(
+                                      disabledTime,
+                                      'minute',
+                                    )}
                                     className='m-b-0'>
                                     <DatePicker
                                       className='w-100'
@@ -623,7 +628,10 @@ export default function CreateSend() {
                                       placement='topLeft'
                                       showNow={false}
                                       placeholder='请选择日期'
-                                      minDate={dayjs().add(5, 'minute')}
+                                      minDate={dayjs().add(
+                                        disabledTime,
+                                        'minute',
+                                      )}
                                     />
                                   </Form.Item>
                                 </Col>
@@ -635,7 +643,7 @@ export default function CreateSend() {
                                           label=''
                                           name='time'
                                           // initialValue={dayjs()
-                                          //   .add(5, 'minute')
+                                          //   .add(disabledTime, 'minute')
                                           //   .startOf('minute')}
                                           className='m-b-0'>
                                           <DatePicker
@@ -668,8 +676,7 @@ export default function CreateSend() {
                                 <br />
                                 3)在定时任务未发送完成前，请不要对选择的Chatbot进行删除和禁用操作；
                                 <br />
-                                4)提交的任务短信数量越大，定时的时间应越长，计算公式
-                                =（总数/1万）x 1.5分钟；
+                                4)提交的任务短信数量越大，定时的时间应越长；
                               </div>
                             </Col>
                           )}
