@@ -477,21 +477,21 @@ export const menus: RouteObject[] = [
           },
         ],
       },
-      {
-        path: 'sandbox',
-        loader: loaderFn({
-          groupName: '智能交互',
-          groupIcon: 'icon-qianbao',
-          breadName: 'Chatbot 沙盒环境',
-          menuName: 'Chatbot 沙盒环境',
-        }),
-        errorElement: <Error />,
-        element: (
-          <LazyImportComponent
-            lazyChildren={lazy(() => import('@/pages/rcs/sandbox'))}
-          />
-        ),
-      },
+      // {
+      //   path: 'sandbox',
+      //   loader: loaderFn({
+      //     groupName: '智能交互',
+      //     groupIcon: 'icon-qianbao',
+      //     breadName: 'Chatbot 沙盒环境',
+      //     menuName: 'Chatbot 沙盒环境',
+      //   }),
+      //   errorElement: <Error />,
+      //   element: (
+      //     <LazyImportComponent
+      //       lazyChildren={lazy(() => import('@/pages/rcs/sandbox'))}
+      //     />
+      //   ),
+      // },
       {
         path: 'interactivelogs',
         loader: loaderFn({

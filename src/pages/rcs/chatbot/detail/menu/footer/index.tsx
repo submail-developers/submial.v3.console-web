@@ -2,7 +2,6 @@ import { useEffect, useState, Fragment } from 'react'
 import { useParams, useLocation } from 'react-router-dom'
 import { Space, Flex, Divider, Dropdown } from 'antd'
 import type { MenuProps } from 'antd'
-import { useStateStore } from '@/pages/rcs/sandbox/reducer'
 import { API } from 'apis'
 
 import './index.scss'

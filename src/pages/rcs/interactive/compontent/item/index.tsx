@@ -73,7 +73,11 @@ export default function Item(props: Props) {
   }, [props.item.enabled])
 
   return (
-    <Flex className='interactive-config-item m-t-24' gap={16}>
+    <Flex
+      className={`interactive-config-item m-t-24 ${
+        props.item.enabled == '1' ? '' : 'disabled'
+      }`}
+      gap={16}>
       <div className='left-config'>
         <Switch
           size='small'
@@ -83,11 +87,11 @@ export default function Item(props: Props) {
         />
       </div>
       <div className='center-config fx-col p-b-4'>
-        <div className='fn16 fw-500'>{props.item.title}</div>
+        <div className='fn16 fw-500 title'>{props.item.title}</div>
         {['1', '2'].includes(props.item.type) && (
           <Flex className='p-y-4' gap={32}>
             <span className='gray-color fx-shrink'>绑定按键</span>
-            <span className='color'>
+            <span className='tag-color'>
               {props.item.fixed_button_title || props.item.card_button_title}
             </span>
           </Flex>
@@ -107,7 +111,7 @@ export default function Item(props: Props) {
             </Flex>
             <Flex className='p-y-4' gap={32}>
               <span className='gray-color fx-shrink'>触发规则</span>
-              <span className='color g-ellipsis'>
+              <span className='tag-color g-ellipsis'>
                 {MatchType[props.item.match_type]}
               </span>
             </Flex>
@@ -115,7 +119,7 @@ export default function Item(props: Props) {
         )}
         <Flex className='p-y-4' gap={32}>
           <span className='gray-color fx-shrink'>下行模版</span>
-          <span className='color g-ellipsis' title={props.item.reply_title}>
+          <span className='tag-color g-ellipsis' title={props.item.reply_title}>
             <span style={{ position: 'relative' }}>
               【{props.item.reply_sign}】
               <ACopy text={props.item.reply_sign} />
@@ -126,14 +130,20 @@ export default function Item(props: Props) {
       </div>
       <div className='right-config'>
         <Space size={0} align='center'>
-          <div className='handle-item fx-center-center' onClick={addChats}>
-            <span className='icon iconfont icon-yanshi'></span>
-          </div>
-          <Divider type='vertical' />
-          <div className='handle-item fx-center-center' onClick={props.onEdit}>
-            <span className='icon iconfont icon-bianji'></span>
-          </div>
-          <Divider type='vertical' />
+          {props.item.enabled == '1' && (
+            <>
+              <div className='handle-item fx-center-center' onClick={addChats}>
+                <span className='icon iconfont icon-yanshi'></span>
+              </div>
+              <Divider type='vertical' />
+              <div
+                className='handle-item fx-center-center'
+                onClick={props.onEdit}>
+                <span className='icon iconfont icon-bianji'></span>
+              </div>
+              <Divider type='vertical' />
+            </>
+          )}
 
           <Popconfirm
             title='删除'

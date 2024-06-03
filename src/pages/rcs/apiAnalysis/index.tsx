@@ -31,7 +31,6 @@ import { useSize, usePoint } from '@/hooks'
 import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
 import ReactEcharts from 'echarts-for-react'
-import moment from 'moment'
 const { Option } = Select
 const { RangePicker } = DatePicker
 

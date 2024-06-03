@@ -66,7 +66,7 @@ export default defineConfig((mode: ConfigEnv): UserConfig => {
       target: 'modules', //modules 会被转换为 ['es2020', 'edge88', 'firefox78', 'chrome87', 'safari14']
       cssCodeSplit: false, // 是否拆分css，false-所有css打包到一个文件，true-单独打包
       cssTarget: 'chrome61',
-      chunkSizeWarningLimit: 1024 * 2, // kbs
+      chunkSizeWarningLimit: 1024 * 3, // kbs
       assetsInlineLimit: 1024 * 4, // 4kb 小于此阈值的导入或引用资源将内联为 base64 编码
       minify: 'esbuild', // 使用esbuild打包
       rollupOptions: {
