@@ -171,6 +171,7 @@ declare module 'apis' {
       sendApi: string
       messageId?: string
       menu_etag?: string
+      interactive?: '0' | '1' // 是否配置交互 0未配置1已配置
     }
     interface EntriesItem extends RcsSuggestionItem {
       menu?: {
@@ -348,6 +349,7 @@ declare module 'apis' {
       folder: string
       bcTemplate: null
       rejectReason: string
+      interactive?: '0' | '1' // 是否配置交互 0未配置1已配置
     }
 
     interface RcsSuggestionItem {

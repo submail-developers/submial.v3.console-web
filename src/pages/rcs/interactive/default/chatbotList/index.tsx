@@ -91,7 +91,9 @@ function Fn(props, ref: any) {
       width: 120,
       render: (_, record) => (
         <Flex justify='flex-end' align='center' className='p-r-24' gap={16}>
-          <span className='tag-color'>已配置</span>
+          <span className='tag-color'>
+            {record.interactive == '1' ? '已配置' : '未配置'}
+          </span>
           <div
             className='fx-center-center text-color'
             style={{ width: 32 }}
