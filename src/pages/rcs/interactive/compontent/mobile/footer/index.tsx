@@ -66,7 +66,6 @@ export default function RcsMobileFooter() {
   const [showMenu, setShowMenu] = useState(false)
   const [entries, setentries] = useState<API.EntriesItem[]>([]) // 固定菜单列表
   useEffect(() => {
-    console.log(state.chatbot, 'state.chatbot')
     if (state.chatbot) {
       setentries(state.chatbot.menu?.menu?.entries || [])
     }

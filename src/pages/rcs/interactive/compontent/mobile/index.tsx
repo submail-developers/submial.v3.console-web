@@ -19,7 +19,6 @@ export default function Mobile() {
   const isTemplate = location.pathname.includes('/template')
   const tempInfo: API.RcsTempListItem = state?.template || null
   const chatbot: API.ChatbotItem = state?.chatbot || null
-  console.log(isChatbot, isTemplate, state)
   const ref = useRef(null)
   const [scrollToBottom, setScrollToBottom] = useState(false)
 

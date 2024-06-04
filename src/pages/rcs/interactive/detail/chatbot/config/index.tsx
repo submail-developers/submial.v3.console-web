@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
-import { Flex, Space, Switch, Image, App, Empty, Spin } from 'antd'
+import { Flex, Space, Switch, Image, App, Empty, Spin, Tooltip } from 'antd'
 import folder_blue from '@/assets/rcs/address/folder_blue.png'
 import Modal from '@/pages/rcs/interactive/compontent/modal'
 import Item from '@/pages/rcs/interactive/compontent/item'
@@ -258,12 +258,12 @@ export default function Config() {
   }, [state.chatbot])
 
   return (
-    <div className='interactive-config p-r-40'>
+    <div className='interactive-chatbot-config p-r-40'>
       <Flex justify='space-between' align='center'>
         <Space align='center'>
           <Image src={folder_blue} preview={false} width={32} />
           {state.chatbot && (
-            <span className='fn18 fw-500'>{state.chatbot.name}</span>
+            <div className='fn18 fw-500 p-t-4'>{state.chatbot.name}</div>
           )}
         </Space>
         {allInteractiveList.length > 0 && (
@@ -285,17 +285,20 @@ export default function Config() {
         </div>
       ) : (
         <>
-          <div className='config-list m-t-40'>
+          <div className='config-list m-t-24'>
             <Flex
               className='config-header g-radius-4 p-x-16'
               align='center'
               justify='space-between'>
               <span className='fw-500'>固定菜单按钮</span>
-              <div
-                className='add-btn fx-center-center'
-                onClick={() => onAdd('1')}>
-                <span className='icon iconfont icon-jia fn14'></span>
-              </div>
+
+              <Tooltip placement='bottom' title={'新增'}>
+                <div
+                  className='add-btn fx-center-center'
+                  onClick={() => onAdd('1')}>
+                  <span className='icon iconfont icon-jia fn14'></span>
+                </div>
+              </Tooltip>
             </Flex>
             {chatbotInteractiveList.map((item) => (
               <Item
@@ -316,11 +319,13 @@ export default function Config() {
               align='center'
               justify='space-between'>
               <span className='fw-500'>纯文字消息</span>
-              <div
-                className='add-btn fx-center-center'
-                onClick={() => onAdd('3')}>
-                <span className='icon iconfont icon-jia fn14'></span>
-              </div>
+              <Tooltip placement='bottom' title={'新增'}>
+                <div
+                  className='add-btn fx-center-center'
+                  onClick={() => onAdd('3')}>
+                  <span className='icon iconfont icon-jia fn14'></span>
+                </div>
+              </Tooltip>
             </Flex>
             {textInteractiveList.map((item) => (
               <Item
