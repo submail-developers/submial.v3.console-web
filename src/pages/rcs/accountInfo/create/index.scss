@@ -1,25 +1,21 @@
-.create-account-page {
-  padding-bottom: 48px;
+.page-content.create-account-page {
+  padding-bottom: 60px;
   height: auto;
+  .form-header {
+    height: 100px;
+    background-image: url('@/assets/rcs/aco1.png');
+    background-position: top left;
+    background-repeat: no-repeat;
+    background-size: cover;
+    .title-desc {
+      color: #666666;
+      font-weight: normal;
+    }
+  }
 
   .create-account-form {
     margin: 24px;
     width: calc(100% - 48px);
-    .form-header {
-      padding: 12px 0;
-      position: relative;
-      .form-con {
-        text-align: center;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-      .title-desc {
-        color: #666666;
-        font-weight: normal;
-      }
-    }
 
     .form-group {
       .form-group-title {
@@ -65,5 +61,13 @@
     .form-con {
       width: 100%;
     }
+  }
+}
+.ant-select-dropdown .ant-cascader-menus {
+  .ant-cascader-menu:nth-child(1) {
+    max-width: calc(60vw - 24px);
+  }
+  .ant-cascader-menu:nth-child(2) {
+    max-width: calc(40vw - 24px);
   }
 }

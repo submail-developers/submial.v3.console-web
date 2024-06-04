@@ -1,4 +1,4 @@
-.account-detail {
+.page-content.account-detail {
   padding: 48px 16px;
   height: auto;
   .line {
@@ -26,7 +26,7 @@
     }
     span {
       padding: 4px 8px;
-      border-radius: 14px;
+      border-radius: 12px;
       font-size: 14px;
       font-weight: normal;
       margin-left: 10px;
@@ -70,18 +70,6 @@
     }
   }
 
-  .ant-btn {
-    padding: 0 20px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    .icon-bianji,
-    .icon-shanchu {
-      font-size: 18px;
-      padding-right: 4px;
-    }
-  }
-
   .border {
     width: 100%;
     border: 1px solid #e6e6e6;
@@ -103,6 +91,7 @@
     td {
       height: 56px;
       padding-left: 20px;
+      padding-right: 12px;
       border: 1px solid #e6e6e6;
     }
   }
@@ -128,6 +117,7 @@
     td {
       height: 56px;
       padding-left: 12px;
+      padding-right: 12px;
       border-bottom: 1px solid #e6e6e6;
     }
   }

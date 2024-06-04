@@ -500,7 +500,7 @@ declare module 'apis' {
       id: string
       credits: string
       datetime: string
-      status: string
+      status: '0' | '1' | '2' | '9' // 0未提交 1审核通过 2审核驳回 9审核中
       belongRegionCode: string
       customerName: string
       customerContactName: string
@@ -513,7 +513,7 @@ declare module 'apis' {
       contractName: string
       contractEffectiveDate: string
       contractExpiryDate: string
-      contractRenewStatus: string
+      contractRenewStatus: '0' | '1'
       contractRenewDate: string
       contractAccessory: string
       subhook_signature: string
@@ -525,6 +525,8 @@ declare module 'apis' {
       region: string
       province: string
       city: string
+      remarkText: string
+      reject_reason: string
     }
 
     // / 注册非直签客户信息参数

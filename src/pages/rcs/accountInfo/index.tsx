@@ -1,43 +1,20 @@
 import { useState, useEffect } from 'react'
-import { Flex, Space, Row, Col, Button, Divider, Image } from 'antd'
+import { Flex, Space, Row, Col, Button, Divider, Image, Spin } from 'antd'
 import { NavLink } from 'react-router-dom'
 import PageContent from '@/components/pageContent'
-import { getDicConfig } from '@/api'
+import { getDicConfig, getIndustry } from '@/api'
 import { API } from 'apis'
 import jiqirenImg from '@/assets/rcs/gunali.png'
-import './index.scss'
 import yidong from '@/assets/rcs/operator/yidong.png'
 interface DataType extends API.GetDicConfigItems {}
 
-type DownLoadProps = {
-  fileName: string
-  url: string
-}
-
-const DownLoad = ({ url, fileName }: DownLoadProps) => {
-  const arr = url.split('.')
-  const suffix = arr[arr.length - 1]
-
-  return (
-    <>
-      {fileName}
-      <a
-        href={
-          'https://asset.usm.cn/3fdf9da0-adb3-42f5-bb87-2f3b3b665d62.jpg?imageView2/0/format/webp/q/100/ignore-error/1'
-        }
-        target='_blank'
-        download={`${fileName}.${suffix}`}
-        title='点击下载'>
-        .{suffix}
-      </a>
-    </>
-  )
-}
+import './index.scss'
 
 export default function Fn() {
   const [loading, setloading] = useState(false)
   const [customerData, setCustomerData] = useState<API.GetDicConfigItems>()
-  const [auditingStatus, setAuditingStatus] = useState()
+  const [industryText, setindustryText] = useState('')
+  const [industryList, setIndustryList] = useState<API.IndustryItem[]>([])
 
   // 获取客户资料
   const search = async (ifshowLoading = false) => {
@@ -51,7 +28,30 @@ export default function Fn() {
       setloading(false)
     }
   }
+  // 获取行业类型
+  const getIndustryList = async () => {
+    try {
+      const res = await getIndustry()
+      setIndustryList(res.data)
+    } catch (error) {}
+  }
+
   useEffect(() => {
+    if (customerData && industryList.length > 0) {
+      industryList.forEach((item) => {
+        if (item.value == customerData.businessType) {
+          item.children.forEach((i) => {
+            if (i.value == customerData.industryTypeCode) {
+              setindustryText(`${item.label} / ${i.label}`)
+            }
+          })
+        }
+      })
+    }
+  }, [customerData, industryList])
+
+  useEffect(() => {
+    getIndustryList()
     search(true)
   }, [])
 
@@ -65,18 +65,20 @@ export default function Fn() {
             align='center'
             style={{ marginTop: '4px' }}>
             <div className='fn22 fw-500'>客户资料管理</div>
-            <Space>
+            {['1', '2'].includes(customerData.status) && (
               <NavLink to='/console/rcs/account/create/1'>
-                <Button type='primary'>
-                  <i className='icon iconfont icon-bianji'></i>编辑客户资料
+                <Button
+                  type='primary'
+                  icon={<i className='icon iconfont icon-bianji'></i>}>
+                  编辑客户资料
                 </Button>
               </NavLink>
-            </Space>
+            )}
           </Flex>
           <Divider className='line'></Divider>
-          <div className='info-title' style={{ marginBottom: '20px' }}>
+          <div className='info-title m-b-20'>
             客户信息
-            <div className='fn16'>
+            <div className='fn13'>
               {customerData.status == '0' ? (
                 <span className='gray-color'>未提交</span>
               ) : customerData.status == '1' ? (
@@ -84,7 +86,7 @@ export default function Fn() {
               ) : customerData.status == '2' ? (
                 <span className='color-status-error'>未通过</span>
               ) : (
-                <span className='color-status-waiting'>待审核</span>
+                <span className='color-status-waiting'>审核中</span>
               )}
             </div>
             <div className='auditing-status fn14'>
@@ -93,8 +95,13 @@ export default function Fn() {
               &nbsp; 移动
             </div>
           </div>
-
-          <table className='border'>
+          {customerData.status == '2' && customerData.reject_reason && (
+            <div className='color-warning-red g-radius-4 p-x-16 p-y-8 fn13 m-t-24'>
+              <span className='icon iconfont icon-dengpao fn12 m-r-2'></span>
+              未通过原因：{customerData.reject_reason}
+            </div>
+          )}
+          <table className='border m-t-24'>
             <tbody>
               <tr>
                 <td>客户名称</td>
@@ -104,12 +111,14 @@ export default function Fn() {
               <tr>
                 <td>联系人名称</td>
                 <td>{customerData.customerContactName}</td>
-                <td>联系人邮箱</td>
-                <td>{customerData.customerContactEmail}</td>
+                <td>联系人电话</td>
+                <td>{customerData.customerContactMob}</td>
               </tr>
               <tr>
-                <td>联系人电话</td>
-                <td colSpan={3}>{customerData.customerContactMob}</td>
+                <td>联系人邮箱</td>
+                <td>{customerData.customerContactEmail}</td>
+                <td>行业类型</td>
+                <td>{industryText || '-'}</td>
               </tr>
 
               <tr>
@@ -145,18 +154,63 @@ export default function Fn() {
                 </td>
               </tr>
               <tr>
-                <td>备注</td>
-                <td colSpan={3}>-</td>
+                <td>企业logo</td>
+                <td colSpan={3}>
+                  {customerData.companyLogo ? (
+                    <Image
+                      width={40}
+                      height={40}
+                      preview={false}
+                      src={customerData.companyLogo || ''}
+                    />
+                  ) : (
+                    '-'
+                  )}
+                </td>
               </tr>
               <tr>
-                <td>合同信息</td>
+                <td>合同名称</td>
+                <td>{customerData.contractName || '-'}</td>
+                <td>合同编号</td>
+                <td>{customerData.contractNo || '-'}</td>
+              </tr>
+              <tr>
+                <td>合同生效期</td>
+                <td>{customerData.contractEffectiveDate || '-'}</td>
+                <td>合同失效期</td>
+                <td>{customerData.contractExpiryDate || '-'}</td>
+              </tr>
+              <tr>
+                <td>合同是否续签</td>
+                <td>{customerData.contractRenewStatus == '0' ? '是' : '否'}</td>
+                <td>自动续签日期</td>
+                <td>{customerData.contractRenewDate || '-'}</td>
+              </tr>
+              <tr>
+                <td>合同电子扫描件</td>
                 <td colSpan={3}>
-                  {customerData.contractAccessory && '已上传'}
+                  <span className='icon iconfont icon-lianjie fn12 m-r-4 gray-color'></span>
+                  <a
+                    className='fn14 fw-400'
+                    style={{ textDecoration: 'underline' }}
+                    href={customerData.contractAccessory}
+                    target='blank'>
+                    查看文件
+                  </a>
                 </td>
+              </tr>
+              <tr>
+                <td>备注</td>
+                <td colSpan={3}>{customerData.remarkText || '-'}</td>
               </tr>
             </tbody>
           </table>
         </>
+      )}
+      {loading && (
+        <div className='fx-center-center m-t-32'>
+          <Spin />
+        </div>
       )}
     </PageContent>
   )
