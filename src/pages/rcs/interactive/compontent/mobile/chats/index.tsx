@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState } from 'react'
+import { useEffect, useCallback, useState, memo } from 'react'
 import { useStateStore } from '@/pages/rcs/interactive/reducer'
 import TextItem from '@/pages/rcs/template/create/text/item'
 import CardItem from '@/pages/rcs/template/create/card/item'
@@ -6,12 +6,29 @@ import CardsItem from '@/pages/rcs/template/create/cards/item'
 import { Spin, Empty } from 'antd'
 import { API } from 'apis'
 import { getRcsTempList } from '@/api'
+import { sample } from 'lodash'
 
 type ChatItemProps = {
   item: API.GetRcsInteractiveListResItem
   onLoad: () => void
 }
+
+// 随机生成关键字
+const pattern = /\((.*?)\)/
+const UserSendKewords = memo(({ keywords }: { keywords: string }) => {
+  let text = ''
+  const match = pattern.exec(keywords)
+  if (match) {
+    text = sample(match[1].split('|'))
+  } else {
+    text = sample(keywords.split('\n'))
+  }
+  return <span>{text || ''}</span>
+})
+
+// 交互的消息
 const ChatItem = (props: ChatItemProps) => {
+  console.log(1)
   const [tempInfo, setTempInfo] = useState<API.RcsTempListItem>()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
@@ -44,12 +61,20 @@ const ChatItem = (props: ChatItemProps) => {
 
   return (
     <div>
-      {props.item.type == '3' && (
-        <div className='fx-col fx-y-end p-y-8'>
-          <span className='icon iconfont icon-user color fn20 fw-500'></span>
-          <span>{props.item.keywords}</span>
+      <div className='fx-col fx-y-end p-y-8'>
+        <span className='icon iconfont icon-user color fn20 fw-500 '></span>
+        <div className='color-warning-blue p-x-12 p-y-4 g-radius-4'>
+          {props.item.type == '1' && (
+            <span>{props.item.fixed_button_title}</span>
+          )}
+          {props.item.type == '2' && (
+            <span>{props.item.card_button_title}</span>
+          )}
+          {props.item.type == '3' && (
+            <UserSendKewords keywords={props.item.keywords} />
+          )}
         </div>
-      )}
+      </div>
       <div className='p-y-8'>
         <span
           className='icon iconfont icon-jiqiren-filled color'
@@ -78,6 +103,7 @@ const ChatItem = (props: ChatItemProps) => {
     </div>
   )
 }
+
 export default function Chats({ onLoad }) {
   const state = useStateStore()
   return (
