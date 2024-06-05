@@ -44,6 +44,7 @@ import PageContent from '@/components/pageContent'
 import UploadLogo from './logo'
 import UploadBg from './bg'
 import UploadAttachment from './attachment'
+import { actualIssueIndustryOptions } from '@/pages/rcs/chatbot/type'
 
 import jiqiren from '@/assets/rcs/aco1.png'
 
@@ -78,7 +79,7 @@ export default function Fn() {
   const [industryList, setIndustryList] = useState([])
   const [color, setColor] = useState('#ffffff')
   const navigate = useNavigate()
-  const [status, setStatus] = useState('')
+  const [status, setStatus] = useState('0')
   const logoPathRef = useRef('')
   const backgroundImagePathRef = useRef('')
   const attachmentPathRef = useRef('')
@@ -127,62 +128,6 @@ export default function Fn() {
       console.log(error)
     }
   }
-
-  // 实际下发行业
-  const actualIssueIndustryOptions = [
-    {
-      value: '1',
-      label: '党政军',
-    },
-    {
-      value: '2',
-      label: '民生',
-    },
-    {
-      value: '3',
-      label: '金融',
-    },
-    {
-      value: '4',
-      label: '物流',
-    },
-    {
-      value: '5',
-      label: '游戏',
-    },
-    {
-      value: '6',
-      label: '电商',
-    },
-    {
-      value: '7',
-      label: '微商（个人）',
-    },
-    {
-      value: '8',
-      label: '沿街商铺（中小）',
-    },
-    {
-      value: '9',
-      label: '企业（大型）',
-    },
-    {
-      value: '10',
-      label: '教育培训',
-    },
-    {
-      value: '11',
-      label: '房地产',
-    },
-    {
-      value: '12',
-      label: '医疗器械、药店',
-    },
-    {
-      value: '13',
-      label: '其他',
-    },
-  ]
 
   // 获取行业类型
   const getIndustryList = async () => {
@@ -290,10 +235,10 @@ export default function Fn() {
         res2['path'] = ''
       }
 
-      // console.log(attachmentFileInfo[0].url, 'attachmentFileInfo')
-      // console.log(attachmentPathRef.current, 'attachmentPathRef.current')
-
-      if (attachmentFileInfo[0].url != attachmentPathRef.current) {
+      if (
+        attachmentFileInfo.length > 0 &&
+        attachmentFileInfo[0]?.url != attachmentPathRef.current
+      ) {
         delCustomerFile({
           path: attachmentPathRef.current,
         })
@@ -324,14 +269,14 @@ export default function Fn() {
 
       setloading(false)
     } catch (error) {
-      console.log(error)
       setloading(false)
     }
   }
   // 提交
   const submit = async () => {
     try {
-      const values = await form.validateFields()
+      setloading(true)
+      const formvalues = await form.validateFields()
       let res1: FilePath = {}, //头像
         res2: FilePath = {}, //背景图
         res3: FilePath = {} //营业执照
@@ -364,8 +309,6 @@ export default function Fn() {
         res3['path'] = ''
       }
 
-      const formvalues = await form.getFieldsValue()
-
       let params = {
         ...formvalues,
         appid: id,
@@ -383,7 +326,6 @@ export default function Fn() {
 
       setloading(false)
     } catch (error) {
-      // console.log(error)
       setloading(false)
     }
   }
@@ -619,7 +561,7 @@ export default function Fn() {
             <Col span={24}>
               <Form.Item label='IP限制' name='bind' validateTrigger='onBlur'>
                 <TextArea
-                  placeholder='无限制    多个IP地址以英文逗号拼接'
+                  placeholder='默认无限制，多个IP地址以英文逗号拼接'
                   autoSize={{ minRows: 3, maxRows: 3 }}
                 />
               </Form.Item>
@@ -639,7 +581,7 @@ export default function Fn() {
         </div>
 
         <div className='form-group' style={{ paddingBottom: '24px' }}>
-          <Flex justify='flex-left' style={{ justifyContent: 'space-between' }}>
+          <Flex justify='space-between'>
             <ConfigProvider
               theme={{
                 token: {
@@ -657,29 +599,28 @@ export default function Fn() {
                   保存
                 </Button>
               ) : (
-                ''
+                <div></div>
               )}
             </ConfigProvider>
-            <Space>
-              <NavLink to='/console/rcs/chatbot/index'>
+            <Flex gap={12} justify='flex-end'>
+              <NavLink to='/console/rcs/chatbot/index' replace>
                 <Button
                   className='cancle'
                   type='primary'
                   size='large'
-                  style={{ width: 120, marginRight: '12px' }}
-                  // onClick={submit}
-                >
+                  style={{ width: 120, marginRight: '12px' }}>
                   取消
                 </Button>
               </NavLink>
               <Button
+                loading={loading}
                 type='primary'
                 size='large'
                 style={{ width: 120 }}
                 onClick={submit}>
                 提交审核
               </Button>
-            </Space>
+            </Flex>
           </Flex>
         </div>
       </Form>

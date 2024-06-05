@@ -20,35 +20,17 @@ import { PlusOutlined } from '@ant-design/icons'
 import codeImg from '@/assets/rcs/chatbot_1.png'
 import { usePoint } from '@/hooks'
 import { getChatbot, deleteChatbot } from '@/api'
-
 import { API } from 'apis'
+
+import {
+  EnmuMenuStatusText,
+  EnmuMenuStatusColor,
+  ChatbotStatus,
+  ChatbotColor,
+} from '@/pages/rcs/chatbot/type'
 import './index.scss'
-import { constant } from 'lodash'
 
 interface DataType extends API.ChatbotItem {}
-
-enum EnmuMenuStatusText {
-  '通过' = 1,
-  '不通过' = 2,
-  '审核中' = 3,
-}
-enum EnmuMenuStatusColor {
-  'success-color' = 1,
-  'error-color' = 2,
-  'waiting-color' = 3,
-}
-export enum ChatbotStatus {
-  '未提交',
-  '我方通过',
-  '驳回',
-  '审核中',
-}
-export enum ChatbotColor {
-  'gray-color-sub',
-  'black-color',
-  'error-color',
-  'warning-color',
-}
 
 export default function Fn() {
   const point = usePoint('lg')
@@ -64,7 +46,7 @@ export default function Fn() {
     {
       title: 'Chatbot名称',
       className: 'paddingL30',
-      width: 240,
+      width: 200,
       fixed: true,
       dataIndex: 'name',
     },
@@ -74,10 +56,9 @@ export default function Fn() {
       width: 140,
       dataIndex: 'status',
       render: (_, record) => (
-        // <span className={`${ChatbotColor[record.status]}`}>
-        //   {ChatbotStatus[record.status]}
-        // </span>
-        <span className='success-color'>审核通过</span>
+        <span className={`${ChatbotColor[record.status]}`}>
+          {ChatbotStatus[record.status]}
+        </span>
       ),
     },
     {
@@ -97,7 +78,7 @@ export default function Fn() {
     },
     {
       title: '操作',
-      width: 240,
+      width: 200,
       render: (_, record) => (
         <>
           <Button type='link' style={{ paddingLeft: 0 }}>
@@ -105,20 +86,27 @@ export default function Fn() {
               查看
             </NavLink>
           </Button>
-          <Button type='link' style={{ paddingLeft: 0 }}>
-            <NavLink to={`/console/rcs/chatbot/create/1?id=${record.id}`}>
-              编辑
-            </NavLink>
-          </Button>
-          <Popconfirm
-            placement='left'
-            title='警告'
-            description='确定删除该chatbot吗？'
-            onConfirm={() => deleteSingleChatbot(record.id)}
-            okText='确定'
-            cancelText='取消'>
-            <Button type='link'>删除</Button>
-          </Popconfirm>
+          {/* 保存/通过/驳回可编辑 */}
+          {['0', '1', '2'].includes(record.status) && (
+            <Button type='link' style={{ paddingLeft: 0 }}>
+              <NavLink to={`/console/rcs/chatbot/create/1?id=${record.id}`}>
+                编辑
+              </NavLink>
+            </Button>
+          )}
+          {['0', '2'].includes(record.status) && (
+            <Popconfirm
+              placement='left'
+              title='警告'
+              description='确定删除该chatbot吗？'
+              onConfirm={() => deleteSingleChatbot(record.id)}
+              okText='确定'
+              cancelText='取消'>
+              <Button type='link' style={{ paddingLeft: 0 }}>
+                删除
+              </Button>
+            </Popconfirm>
+          )}
         </>
       ),
     },
@@ -142,6 +130,7 @@ export default function Fn() {
         return item
       })
       settableData(_list)
+      setTotal(res.total)
       setLoading(false)
     } catch (error) {
       setLoading(false)

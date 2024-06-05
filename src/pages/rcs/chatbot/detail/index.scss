@@ -1,6 +1,6 @@
 .chatbot-detail {
   padding: 48px 16px;
-  height: auto;
+  height: auto !important;
   min-width: 920px;
   .info-title {
     font-size: 18px;
@@ -15,10 +15,6 @@
       border-radius: 2px;
       background: var(--primary-color);
       margin-right: 8px;
-    }
-    .auditing-status {
-      position: absolute;
-      right: 0;
     }
   }
 

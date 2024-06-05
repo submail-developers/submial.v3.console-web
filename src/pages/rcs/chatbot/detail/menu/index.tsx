@@ -25,7 +25,7 @@ enum StatusStyle {
 
 type Props = {
   entries: API.EntriesItem[]
-  chatbotStatus: '1' | '2' | '3' //  1通过  2不通过  3审核中
+  chatbotStatus: '0' | '1' | '2' | '3' //  0保存 1通过  2不通过  3审核中
   menuStatus: '1' | '2' | '3' // 固定菜单审核状态 1通过  2不通过  3审核中
   reloadEvent: () => void
 }
@@ -315,7 +315,12 @@ export default function Menu(props: Props) {
                 }`}>
                 {StatusText[Number(props.menuStatus)]}
               </div>
-              <Button onClick={() => setEditing(true)} type='primary'>
+              <Button
+                onClick={() => setEditing(true)}
+                type='primary'
+                disabled={
+                  props.chatbotStatus != '1' || props.menuStatus == '3'
+                }>
                 编辑固定菜单
               </Button>
             </>

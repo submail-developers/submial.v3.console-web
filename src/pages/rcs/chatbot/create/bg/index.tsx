@@ -92,7 +92,7 @@ export default function Fn(props: Props) {
         <Flex align='center' gap={12}>
           <div className='upload-btn fx-center-center'>
             {props.bgSrc ? (
-              <AImage src={props.bgSrc} preview={false} alt='' />
+              <AImage src={props.bgSrc} alt='' />
             ) : (
               <img src={ava2} alt='' />
             )}

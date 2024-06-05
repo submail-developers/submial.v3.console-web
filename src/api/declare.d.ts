@@ -143,7 +143,7 @@ declare module 'apis' {
       enable: '1' | '0'
       bind: string
       datetime: string
-      status: '1' | '2' | '3'
+      status: '0' | '1' | '2' | '3' //  0=未提交(保存)，1=我方通过，2=我们驳回，3=我方审核中
       logo: string
       callback: string
       email: string
@@ -156,7 +156,7 @@ declare module 'apis' {
       provider: string
       providerSwitchCode: '1' | '0'
       description: string
-      menu: {
+      menu?: {
         menu: {
           entries: EntriesItem[]
         }

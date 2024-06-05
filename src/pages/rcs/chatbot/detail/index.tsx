@@ -1,21 +1,31 @@
 import { useState, useEffect } from 'react'
-import { Flex, Space, Button, Divider, Image, App } from 'antd'
+import { Flex, Space, Button, Divider, Image, App, Spin } from 'antd'
 import PageContent from '@/components/pageContent'
 import jiqirenImg from '@/assets/rcs/chatbot_1.png'
 import { useParams, NavLink, useNavigate } from 'react-router-dom'
-import { getChatbot, refreshAppkey } from '@/api'
+import { getChatbot, refreshAppkey, getIndustry } from '@/api'
 import Menu from './menu'
 import { API } from 'apis'
 
+import {
+  actualIssueIndustryOptions,
+  EnmuMenuStatusText,
+  EnmuMenuStatusColor,
+  ChatbotStatus,
+  ChatbotColor,
+} from '@/pages/rcs/chatbot/type'
 import './index.scss'
 
 export default function Fn() {
   const { id } = useParams()
   const { message } = App.useApp()
-
   const [detail, setDetail] = useState<API.ChatbotItem>()
+  const [industryList, setindustryList] = useState<API.IndustryItem[]>([])
+  const [categoryText, setcategoryText] = useState('')
+  const [loading, setLoading] = useState(false)
   const [isVisibleAppkey, setIsVisibleAppkey] = useState(false)
   const getDetail = async () => {
+    setLoading(true)
     try {
       const res = await getChatbot({
         page: 1,
@@ -26,14 +36,38 @@ export default function Fn() {
       if (res.list.length == 1) {
         setDetail(res.list[0])
       }
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+    }
+  }
+  const getIndustryList = async () => {
+    try {
+      const res = await getIndustry()
+      setindustryList(res?.data || [])
     } catch (error) {}
   }
 
   useEffect(() => {
+    getIndustryList()
     if (id) {
       getDetail()
     }
   }, [id])
+
+  useEffect(() => {
+    if (detail && industryList.length > 0) {
+      let arr = []
+      const categoryArr = detail.category.split(',')
+      categoryArr.forEach((item) => {
+        let obj = industryList.find((i) => i.value == item)
+        if (obj) {
+          arr.push(obj.label)
+        }
+      })
+      setcategoryText(arr.join('；'))
+    }
+  }, [detail, industryList])
 
   const toggleVisibility = () => {
     setIsVisibleAppkey(!isVisibleAppkey)
@@ -57,19 +91,23 @@ export default function Fn() {
       <Image src={jiqirenImg} preview={false} width={72}></Image>
       <Flex justify='space-between' align='center' style={{ marginTop: '4px' }}>
         <div className='fn22 fw-500'>Chatbot 详情</div>
-        <Space>
+        {detail && detail?.status != '3' && (
           <NavLink to={`/console/rcs/chatbot/create/1?id=${id}`}>
             <Button type='primary' className='detail-btn'>
               <i className='icon iconfont icon-bianji fn18 m-r-4'></i>
               编辑基本信息
             </Button>
           </NavLink>
-        </Space>
+        )}
       </Flex>
       <Divider className='m-t-16 m-b-24'></Divider>
       <div className='info-title' style={{ marginBottom: '20px' }}>
-        基本信息
-        <div className='auditing-status'>审核状态</div>
+        <Flex justify='space-between' className='w-100'>
+          <span>基本信息</span>
+          <span className={`${ChatbotColor[detail?.status]} fw-500 fn16`}>
+            {ChatbotStatus[detail?.status]}
+          </span>
+        </Flex>
       </div>
 
       {detail && (
@@ -116,34 +154,14 @@ export default function Fn() {
               </tr>
               <tr>
                 <td>行业类型</td>
-                <td>{detail.category}</td>
+                <td>{categoryText}</td>
                 <td>实际下发行业</td>
                 <td>
-                  {detail.actualIssueIndustry == '1'
-                    ? '党政军'
-                    : detail.actualIssueIndustry == '2'
-                    ? '民生'
-                    : detail.actualIssueIndustry == '3'
-                    ? '金融'
-                    : detail.actualIssueIndustry == '4'
-                    ? '物流'
-                    : detail.actualIssueIndustry == '5'
-                    ? '游戏'
-                    : detail.actualIssueIndustry == '6'
-                    ? '电商'
-                    : detail.actualIssueIndustry == '7'
-                    ? '微商（个人）'
-                    : detail.actualIssueIndustry == '8'
-                    ? '沿街商铺（中小）'
-                    : detail.actualIssueIndustry == '9'
-                    ? '企业（大型）'
-                    : detail.actualIssueIndustry == '10'
-                    ? '教育培训'
-                    : detail.actualIssueIndustry == '11'
-                    ? '房地产'
-                    : detail.actualIssueIndustry == '12'
-                    ? '医疗器械、药店'
-                    : '其他'}
+                  {
+                    actualIssueIndustryOptions.find(
+                      (item) => item.value == detail.actualIssueIndustry,
+                    )?.label
+                  }
                 </td>
               </tr>
               <tr>
@@ -180,19 +198,24 @@ export default function Fn() {
               <tr>
                 <td>背景图</td>
                 <td>
-                  <Image
-                    className='info-img'
-                    src={detail.backgroundImage}
-                    style={{ width: '60px', height: '60px' }}
-                  />
+                  {detail.backgroundImage && (
+                    <Image
+                      className='info-img'
+                      src={detail.backgroundImage}
+                      style={{ width: '60px', height: '60px' }}
+                    />
+                  )}
                 </td>
                 <td>Chatbot头像</td>
                 <td>
-                  <Image
-                    className='info-img'
-                    src={detail.logo}
-                    style={{ width: '60px', height: '60px' }}
-                  />
+                  {detail.logo && (
+                    <Image
+                      className='info-img'
+                      src={detail.logo}
+                      preview={false}
+                      style={{ width: 40 }}
+                    />
+                  )}
                 </td>
               </tr>
               <tr>
@@ -208,6 +231,11 @@ export default function Fn() {
             reloadEvent={getDetail}
           />
         </>
+      )}
+      {loading && (
+        <div className='fx-center-center m-t-32'>
+          <Spin />
+        </div>
       )}
     </PageContent>
   )
