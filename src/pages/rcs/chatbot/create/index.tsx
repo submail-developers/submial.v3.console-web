@@ -264,7 +264,7 @@ export default function Fn() {
       const res = await temporarySaveChatbot(params)
       if (res) {
         message.success('保存成功！')
-        navigate('/console/rcs/chatobot/index')
+        navigate('/console/rcs/chatbot/index', { replace: true })
       }
 
       setloading(false)
