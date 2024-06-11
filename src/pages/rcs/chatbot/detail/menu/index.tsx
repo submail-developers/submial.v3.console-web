@@ -269,13 +269,15 @@ export default function Menu(props: Props) {
         <div className='color-warning-blue g-radius-4 p-x-16 p-y-8 m-t-24'>
           <b className='fn16'>提示</b>
           <br />
+          chatbot审核通过后才能创建固定菜单；
+          <br />
           主菜单最大可创建数量为
           <span className='error-color'> 3 </span>
           个；
           <br />
-          每个主菜单可携带的二级菜单最大可创建数量为
-          <span className='error-color'> 5 </span>
-          个。
+          每个【菜单】类型的主菜单至少有<span className='error-color'> 1 </span>
+          个二级菜单，最多
+          <span className='error-color'> 5 </span>个二级菜单。
         </div>
         <Flex justify='space-between' align='center' className='m-t-16'>
           {editing ? (
