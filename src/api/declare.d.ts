@@ -53,6 +53,17 @@ declare module 'apis' {
       status: string
     }
 
+    // rcs账户概览
+    interface PointItem {
+      cnt: number | string // 数量
+      dateflg: string // 日期
+    }
+    interface HotPointItem {
+      cnt: number | string // 数量
+      dateflg: string // 日期
+      hourflg: number | string // 小时
+    }
+
     interface GetNoticeListParams {
       page: number
       tim?: stirng
@@ -215,6 +226,26 @@ declare module 'apis' {
       label: string
       value: string
       children: RegionItem[]
+    }
+    interface GetRcsOverviewRes {
+      credits: number
+      account_status: '0' | '1' | '2' | '9' //账户状态 0-未提交,1-通过,2-未通过,9-待审核
+      template: {
+        all: number
+        pass: number
+      }
+      chatbot: {
+        all: number
+        pass: number
+      }
+      task: {
+        all: number
+        timetosend: number
+      }
+      addressbook: {
+        addressbooks: number
+        folder: number
+      }
     }
     // 上传文件  合同、logo等  单个文件上传
     interface UploadCustomerFileParams {

@@ -115,8 +115,8 @@ export default function Fn() {
                 <table className='table-chat'>
                   <tbody>
                     <tr>
-                      <td className='gray-color-sub'>ChatBot</td>
-                      <td>全部ChatBot</td>
+                      <td className='gray-color-sub'>Chatbot</td>
+                      <td>全部Chatbot</td>
                     </tr>
                     <tr>
                       <td className='gray-color-sub'>回调文档类型</td>

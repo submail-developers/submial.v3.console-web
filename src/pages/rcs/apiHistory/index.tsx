@@ -30,7 +30,7 @@ const { RangePicker } = DatePicker
 
 const allChatBot = {
   id: 'all',
-  name: '全部ChatBot',
+  name: '全部Chatbot',
 } as API.ChatbotItem
 
 enum statusNum {
@@ -320,7 +320,7 @@ export default function Fn() {
         <Row gutter={16} className='m-b-20'>
           <Col>
             <Form.Item
-              label='ChatBot选择'
+              label='Chatbot选择'
               name='chatbot'
               style={{ width: '140px', marginBottom: '0px' }}>
               <Select placeholder='所有标签' popupMatchSelectWidth={120}>

@@ -99,7 +99,7 @@ export default function Fn() {
       width: 120,
     },
     {
-      title: 'ChatBot名称',
+      title: 'Chatbot名称',
       dataIndex: 'chatbot_name',
       width: 200,
     },

@@ -106,6 +106,14 @@ export const getRegion = () => {
   )
 }
 
+// 账户概览
+export const getRcsOverview = () => {
+  return request.post<any, API.Response<API.GetRcsOverviewRes>, any>(
+    '/console/api/rcs/get_rcs_overview',
+    {},
+  )
+}
+
 // 上传文件  合同、logo等  单个文件上传
 export const uploadCustomerFile = (data: API.UploadCustomerFileParams) => {
   return request.post<

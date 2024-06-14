@@ -25,7 +25,7 @@ const { Option } = Select
 const { RangePicker } = DatePicker
 const allChatBot = {
   id: 'all',
-  name: '全部ChatBot',
+  name: '全部Chatbot',
 } as API.ChatbotItem
 
 export default function Fn() {
@@ -101,7 +101,7 @@ export default function Fn() {
 
   const columns = [
     {
-      title: 'ChatBot',
+      title: 'Chatbot',
       dataIndex: 'chatbot_name',
       fixed: true,
       width: size == 'small' ? 150 : 240,
@@ -185,7 +185,7 @@ export default function Fn() {
         <Row gutter={16}>
           <Col className='top-item m-b-20'>
             <Form.Item
-              label='ChatBot选择'
+              label='Chatbot选择'
               name='chatbot'
               style={{ width: '140px', marginBottom: '0px' }}>
               <Select placeholder='所有标签' popupMatchSelectWidth={120}>

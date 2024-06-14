@@ -36,7 +36,7 @@ const { RangePicker } = DatePicker
 
 const allChatBot = {
   id: 'all',
-  name: '全部ChatBot',
+  name: '全部Chatbot',
 } as API.ChatbotItem
 
 export default function Fn() {
@@ -470,7 +470,7 @@ export default function Fn() {
         <Row gutter={16}>
           <Col className='m-b-20' span={8} md={8} lg={6} xl={4}>
             <Form.Item
-              label='ChatBot选择'
+              label='Chatbot选择'
               name='chatbot'
               style={{ marginBottom: '0px' }}>
               <Select placeholder='所有标签' popupMatchSelectWidth={120}>
@@ -488,7 +488,7 @@ export default function Fn() {
               name='time'
               style={{ marginBottom: '0px' }}>
               <RangePicker
-                clearIcon={false}
+                allowClear={false}
                 presets={rangePresets}
                 onChange={onRangeChange}
                 style={{ width: size == 'small' ? 190 : 240 }}></RangePicker>

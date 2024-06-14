@@ -185,7 +185,7 @@ const Dialog = (props: Props, ref: any) => {
           validateTrigger='onSubmit'
           extra={
             <Extra>
-              选择一个ChatBot或选择全部ChatBot,该SUBHOOK将推送指定的ChatBot发送那个的数据
+              选择一个Chatbot或选择全部Chatbot,该SUBHOOK将推送指定的Chatbot发送那个的数据
             </Extra>
           }>
           <Select placeholder='全部AppID'>

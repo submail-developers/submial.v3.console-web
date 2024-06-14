@@ -1,0 +1,24 @@
+.welcome-tour-modal {
+  .des {
+    color: #666666;
+    min-height: 72px;
+    line-height: 24px;
+  }
+  .dots-list {
+    height: 20px;
+    bottom: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    pointer-events: none;
+    li {
+      border-radius: 50%;
+      background-color: #d5d5d5;
+      &.slick-active {
+        button {
+          background-color: var(--color);
+        }
+      }
+    }
+  }
+}

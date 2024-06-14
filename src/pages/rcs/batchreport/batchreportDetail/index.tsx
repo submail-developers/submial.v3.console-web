@@ -366,7 +366,7 @@ export default function Fn() {
                   </td>
                 </tr>
                 <tr>
-                  <td>ChatBot名称</td>
+                  <td>Chatbot名称</td>
                   <td>{detailList?.chatbot_name}</td>
                 </tr>
                 <tr>
