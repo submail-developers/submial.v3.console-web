@@ -18,17 +18,15 @@ import type { CollapseProps, GetProps } from 'antd'
 import PageContent from '@/components/pageContent'
 import ARangePicker from '@/components/aRangePicker'
 import MyTour from './components/tour'
+import MyPay from './components/pay'
 import Card from './components/card'
 import SendOverview from './components/sendOverview'
 import SendTime from './components/sendTime'
 import SendDetail from './components/sendDetail'
-import UseTime from './components/useTime'
 import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
 
-import { points, hotPoints } from './data'
-
-import { getRcsOverview } from '@/api'
+import { getRcsOverview, getRcsAnalysisOverview } from '@/api'
 
 import codeImg from '@/assets/rcs/chatbot_1.png'
 
@@ -168,6 +166,7 @@ const _items: CollapseProps['items'] = [
 
 export default function Fn() {
   const tourRef = useRef(null)
+  const payRef = useRef(null)
 
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
@@ -177,6 +176,10 @@ export default function Fn() {
     dayjs(),
   ])
   const [data, setData] = useState<API.GetRcsOverviewRes>()
+  const [echartsData, setEchartsData] = useState<API.RcsAnalysis>()
+  const showPay = () => {
+    payRef.current && payRef.current.open()
+  }
 
   const onValuesChange = async () => {
     const values = await form.getFieldsValue()
@@ -205,11 +208,27 @@ export default function Fn() {
     }
   }
 
+  const getEchartsData = async () => {
+    try {
+      setEchartsLoading(true)
+      const res = await getRcsAnalysisOverview({
+        start: dayjs(time[0]).format('YYYY-MM-DD'),
+        end: dayjs(time[1]).format('YYYY-MM-DD'),
+      })
+      setEchartsLoading(false)
+      setEchartsData(res.analysis)
+    } catch (error) {
+      setEchartsLoading(false)
+    }
+  }
+
   useEffect(() => {
     getData()
   }, [])
 
-  useEffect(() => {}, [time])
+  useEffect(() => {
+    getEchartsData()
+  }, [time])
   return (
     <PageContent extClass='welcome'>
       {loading && (
@@ -252,7 +271,7 @@ export default function Fn() {
             <div className='fn16 fw-500'>
               {data && data.credits.toLocaleString()}
             </div>
-            <Button type='primary' className='m-t-16'>
+            <Button type='primary' className='m-t-16' onClick={showPay}>
               购买资源包
             </Button>
           </Card>
@@ -307,22 +326,19 @@ export default function Fn() {
 
         <Col span={24} sm={24} md={24} xl={12} xxl={15}>
           <Card title='发送概览' loading={echartsLoading}>
-            <SendOverview time={time} points={points} />
+            {echartsData && (
+              <SendOverview time={time} points={echartsData.points} />
+            )}
           </Card>
         </Col>
         <Col span={24} sm={24} md={24} xl={12} xxl={9}>
           <Card title='发送时段' loading={echartsLoading}>
-            <SendTime hotPoints={hotPoints} />
+            {echartsData && <SendTime hotPoints={echartsData.hotpoints} />}
           </Card>
         </Col>
-        <Col span={24} sm={24} md={24} xl={12} xxl={14}>
+        <Col span={24}>
           <Card title='发送详情' loading={echartsLoading}>
-            <SendDetail />
-          </Card>
-        </Col>
-        <Col span={24} sm={24} md={24} xl={12} xxl={10}>
-          <Card title='耗时统计' loading={echartsLoading}>
-            <UseTime />
+            {echartsData && <SendDetail data={echartsData.send_analysis} />}
           </Card>
         </Col>
 
@@ -455,6 +471,7 @@ export default function Fn() {
       </Row>
 
       <MyTour ref={tourRef} />
+      <MyPay ref={payRef} />
     </PageContent>
   )
 }

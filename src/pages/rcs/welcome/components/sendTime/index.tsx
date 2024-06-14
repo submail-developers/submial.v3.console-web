@@ -48,7 +48,12 @@ export default function MyTour(props: Props) {
       dataObj[`${day}-${hours}`] = value
     }
   })
-  let max = Math.max.apply(null, Object.values(dataObj))
+
+  let max = 200
+  let values = Object.values(dataObj)
+  if (values.length > 0) {
+    max = Math.max.apply(null, Object.values(dataObj))
+  }
   for (let key in dataObj) {
     data.push([
       Number(key.split('-')[0]),

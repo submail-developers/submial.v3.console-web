@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from 'react'
 import { Flex, Row, Col, Spin } from 'antd'
 import ReactEcharts from 'echarts-for-react'
 import { usePoint } from '@/hooks'
+import { API } from 'apis'
 
 type formatterItem = {
   color: string
@@ -11,17 +12,19 @@ type formatterItem = {
   value: number
 }
 
-type Props = {}
+type Props = {
+  data: API.SendAnalysis
+}
 
 const color = ['#FFBC5C', '#FF4446', '#0698EC', '#47D1CB', '#9DF3FF']
 export default function Fn(props: Props) {
   const point = usePoint('xxl')
   const initData = [
-    { value: 1048, name: '发送中' },
-    { value: 735, name: '发送失败' },
-    { value: 580, name: '发送成功为5G短信' },
-    { value: 580, name: '发送成功回落为短信' },
-    { value: 580, name: '发送成功回落为彩信' },
+    { value: props.data.pending, name: '发送中' },
+    { value: props.data.dropped, name: '发送失败' },
+    { value: props.data.rcs, name: '发送成功为5G短信' },
+    { value: props.data.sms, name: '发送成功回落为短信' },
+    { value: props.data.mms, name: '发送成功回落为彩信' },
   ]
   const [chartData, setChartData] = useState([])
   const formatterRef = useRef<formatterItem[]>([])
@@ -117,7 +120,7 @@ export default function Fn(props: Props) {
   }, [])
   return (
     <Row gutter={[16, 16]}>
-      <Col span={24} md={24} lg={12} xl={24} xxl={11}>
+      <Col span={24} md={24} lg={12}>
         <Flex justify='flex-end' align='center'>
           <ReactEcharts
             option={option}
@@ -125,9 +128,9 @@ export default function Fn(props: Props) {
           />
         </Flex>
       </Col>
-      <Col span={24} md={24} lg={12} xl={24} xxl={13}>
+      <Col span={24} md={24} lg={12}>
         <Flex justify='center' align='center' className='h-100'>
-          <div className='w-100 p-x-12'>
+          <div className='w-100 p-x-12' style={{ maxWidth: 360 }}>
             {chartData.map((item, index) => (
               <Flex
                 gap={12}

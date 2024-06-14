@@ -53,17 +53,6 @@ declare module 'apis' {
       status: string
     }
 
-    // rcs账户概览
-    interface PointItem {
-      cnt: number | string // 数量
-      dateflg: string // 日期
-    }
-    interface HotPointItem {
-      cnt: number | string // 数量
-      dateflg: string // 日期
-      hourflg: number | string // 小时
-    }
-
     interface GetNoticeListParams {
       page: number
       tim?: stirng
@@ -246,6 +235,44 @@ declare module 'apis' {
         addressbooks: number
         folder: number
       }
+    }
+
+    // 账户概览-echarts
+    interface PointItem {
+      cnt: number | string // 数量
+      dateflg: string // 日期
+    }
+    interface HotPointItem {
+      cnt: number | string // 数量
+      dateflg: string // 日期
+      hourflg: number | string // 小时
+    }
+    interface RcsAnalysis {
+      // 发送概览
+      points: {
+        request: PointItem[]
+        deliveryed: PointItem[]
+        dropped: PointItem[]
+      }
+      // 发送时段
+      hotpoints: HotPointItem[]
+      // 发送详情
+      send_analysis: {
+        dropped: number
+        pending: number
+        rcs: number
+        sms: number
+        mms: number
+      }
+    }
+    interface GetRcsAnalysisOverviewParams {
+      start: string
+      end: string
+    }
+    interface GetRcsAnalysisOverviewRes {
+      analysis: RcsAnalysis
+      message?: string
+      status?: string
     }
     // 上传文件  合同、logo等  单个文件上传
     interface UploadCustomerFileParams {

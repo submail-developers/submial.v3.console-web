@@ -113,6 +113,16 @@ export const getRcsOverview = () => {
     {},
   )
 }
+// 账户概览-echarts数据
+export const getRcsAnalysisOverview = (
+  data: API.GetRcsAnalysisOverviewParams,
+) => {
+  return request.post<
+    any,
+    API.GetRcsAnalysisOverviewRes,
+    API.GetRcsAnalysisOverviewParams
+  >('/console/api/rcs/get_rcs_analysis_overview', data)
+}
 
 // 上传文件  合同、logo等  单个文件上传
 export const uploadCustomerFile = (data: API.UploadCustomerFileParams) => {
