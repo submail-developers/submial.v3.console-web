@@ -247,6 +247,13 @@ declare module 'apis' {
       dateflg: string // 日期
       hourflg: number | string // 小时
     }
+    interface SendAnalysis {
+      dropped: number
+      pending: number
+      rcs: number
+      sms: number
+      mms: number
+    }
     interface RcsAnalysis {
       // 发送概览
       points: {
@@ -257,13 +264,7 @@ declare module 'apis' {
       // 发送时段
       hotpoints: HotPointItem[]
       // 发送详情
-      send_analysis: {
-        dropped: number
-        pending: number
-        rcs: number
-        sms: number
-        mms: number
-      }
+      send_analysis: SendAnalysis
     }
     interface GetRcsAnalysisOverviewParams {
       start: string
