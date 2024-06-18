@@ -17,7 +17,6 @@ import { API } from 'apis'
 import './index.scss'
 const { Option } = Select
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
-import type { CheckboxValueType } from 'antd/es/checkbox/Group'
 interface Props {
   open: boolean
   onCancel: () => void
@@ -30,8 +29,8 @@ const CheckboxGroup = Checkbox.Group
 const Dialog = (props: Props, ref: any) => {
   const [form] = Form.useForm()
   const { message } = App.useApp()
-  const [selectedList, setselectedList] = useState<CheckboxValueType[]>([])
-  const [selectedList2, setselectedList2] = useState<CheckboxValueType[]>([])
+  const [selectedList, setselectedList] = useState<string[]>([])
+  const [selectedList2, setselectedList2] = useState<string[]>([])
 
   useEffect(() => {}, [props.open])
 
@@ -51,31 +50,31 @@ const Dialog = (props: Props, ref: any) => {
 
   const checkList = [
     {
-      id: 0,
+      id: '0',
       name: 'API请求',
     },
     {
-      id: 1,
+      id: '1',
       name: '正在发送',
     },
     {
-      id: 2,
+      id: '2',
       name: '发送成功',
     },
     {
-      id: 3,
+      id: '3',
       name: '发送失败',
     },
     {
-      id: 4,
+      id: '4',
       name: '短信上行',
     },
     {
-      id: 5,
+      id: '5',
       name: '模板审核通过',
     },
     {
-      id: 6,
+      id: '6',
       name: '模板审核拒绝',
     },
   ]
@@ -116,12 +115,12 @@ const Dialog = (props: Props, ref: any) => {
   }, [huidaoList, selectedList2])
 
   // 单个checkbox点击
-  const onChange = (checkedValues: CheckboxValueType[]) => {
+  const onChange = (checkedValues: string[]) => {
     console.log(checkedValues, '1')
     setselectedList(checkedValues)
   }
 
-  const onChange2 = (checkedValues: CheckboxValueType[]) => {
+  const onChange2 = (checkedValues: string[]) => {
     console.log(checkedValues, '2')
     setselectedList2(checkedValues)
   }

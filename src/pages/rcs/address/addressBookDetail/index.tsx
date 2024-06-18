@@ -26,7 +26,6 @@ import {
 } from '@/api'
 import { useNavigate, useSearchParams, useParams } from 'react-router-dom'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
-import type { CheckboxValueType } from 'antd/es/checkbox/Group'
 import { getAddressPath } from '../type'
 import './index.scss'
 import VerifyCode from './verifyCodeDialog/index'
@@ -49,7 +48,7 @@ export default function Fn() {
   const [checkValues, setCheckValues] = useState([])
 
   // 全选
-  const [selectedList, setselectedList] = useState<CheckboxValueType[]>([])
+  const [selectedList, setselectedList] = useState<string[]>([])
   const [indeterminate, setIndeterminate] = useState(false) //控制半选状态
   const [checkAll, setCheckAll] = useState(false) //控制全选状态
   const CheckboxGroup = Checkbox.Group
@@ -181,7 +180,7 @@ export default function Fn() {
   }, [addressDetailList, selectedList])
 
   // 单个checkbox点击
-  const onChange = (checkedValues: CheckboxValueType[]) => {
+  const onChange = (checkedValues: string[]) => {
     setCheckValues(checkedValues)
     setselectedList(checkedValues)
   }

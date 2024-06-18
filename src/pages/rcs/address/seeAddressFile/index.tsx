@@ -37,7 +37,6 @@ import type { SearchProps } from 'antd/es/input/Search'
 import './index.scss'
 import { message } from '@/components/staticFn/staticFn'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
-import type { CheckboxValueType } from 'antd/es/checkbox/Group'
 import { useSearchParams, useParams, useNavigate } from 'react-router-dom'
 import { getAddressPath, getFolderPath } from '../type'
 
@@ -83,7 +82,7 @@ export default function Fn() {
 
   const [isEditMode, setIsEditMode] = useState(false)
 
-  const [selectedList, setselectedList] = useState<CheckboxValueType[]>([])
+  const [selectedList, setselectedList] = useState<string[]>([])
   const [isVisible, setIsVisible] = useState(false)
   const [indeterminate, setIndeterminate] = useState(false) //控制半选状态
   const [checkAll, setCheckAll] = useState(false) //控制全选状态
@@ -242,7 +241,7 @@ export default function Fn() {
   }, [addressList, selectedList])
 
   // 单个checkbox点击
-  const onChange = (checkedValues: CheckboxValueType[]) => {
+  const onChange = (checkedValues: string[]) => {
     setIsActive(checkedValues)
     setselectedList(checkedValues)
   }

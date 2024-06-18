@@ -36,7 +36,7 @@ export default function Fn() {
   ]
 
   return (
-    <PageContent extClass='address-list' xxl={1400} xl={980}>
+    <PageContent extClass='address-list'>
       <Image src={codeImg} preview={false} width={72}></Image>
       <Flex
         justify='space-between'
