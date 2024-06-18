@@ -8,6 +8,7 @@ import {
   Row,
   Col,
   DatePicker,
+  ConfigProvider,
 } from 'antd'
 import dayjs from 'dayjs'
 import { ProFormDependency } from '@ant-design/pro-components'
@@ -24,6 +25,7 @@ import type {
 } from '@/pages/rcs/template/create/type'
 
 import formRules from '@/utils/formRules'
+import { usePoint } from '@/hooks'
 import './index.scss'
 
 type Props = {
@@ -41,6 +43,7 @@ type ActionFormItemsParams = {
   isMainMenuConfig?: boolean // 是否为主菜单
 }
 export const ActionFormItems = (props: ActionFormItemsParams) => {
+  const point = usePoint('xs')
   return (
     <>
       <Form.Item name='btntype' label='按钮类型'>
@@ -436,13 +439,24 @@ export const ActionFormItems = (props: ActionFormItemsParams) => {
                                     message: '请选择',
                                   },
                                 ]}>
-                                <RangePicker
-                                  showTime={true}
-                                  className='w-100'
-                                  format='YYYY-MM-DD HH:mm:ss'
-                                  placeholder={['开始时间', '结束时间']}
-                                />
+                                <ConfigProvider
+                                  theme={{
+                                    components: {
+                                      DatePicker: {
+                                        cellWidth: point ? 22 : 36,
+                                        cellHeight: point ? 22 : 24,
+                                      },
+                                    },
+                                  }}>
+                                  <RangePicker
+                                    showTime={true}
+                                    className='w-100'
+                                    format='YYYY-MM-DD HH:mm:ss'
+                                    placeholder={['开始时间', '结束时间']}
+                                  />
+                                </ConfigProvider>
                               </Form.Item>
+
                               <Form.Item
                                 label='回落地址'
                                 name={[
