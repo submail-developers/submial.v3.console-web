@@ -27,7 +27,7 @@ export default function CheckContent(props: CheckContentProps) {
               <div className='name'>{item.label}</div>
               <div className='status'>
                 {item.value ? (
-                  <i className='icon iconfont icon-yes fn10 fw-600 primary-color'></i>
+                  <i className='icon iconfont icon-right fn10 primary-color'></i>
                 ) : (
                   <i className='icon iconfont icon-chahao fn10 error-color'></i>
                 )}

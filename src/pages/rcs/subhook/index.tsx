@@ -95,19 +95,19 @@ export default function Fn() {
                 <span className='gray-color-sub m-t-10'>已选中的事件</span>
                 <div className='m-t-10 fx fx-wrap'>
                   <span className='checkEvent'>
-                    <i className='icon iconfont icon-yes fn12'></i>
+                    <i className='icon iconfont icon-right fn10'></i>
                     成功下发并回落为短信
                   </span>
                   <span className='checkEvent'>
-                    <i className='icon iconfont icon-yes fn12'></i>
+                    <i className='icon iconfont icon-right fn10'></i>
                     消息撤回
                   </span>
                   <span className='checkEvent'>
-                    <i className='icon iconfont icon-yes fn12'></i>
+                    <i className='icon iconfont icon-right fn10'></i>
                     成功下发并回落为短信
                   </span>
                   <span className='checkEvent'>
-                    <i className='icon iconfont icon-yes fn12'></i>
+                    <i className='icon iconfont icon-right fn10'></i>
                     成功下发并回落为短信
                   </span>
                 </div>

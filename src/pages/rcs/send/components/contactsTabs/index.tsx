@@ -5,7 +5,7 @@ import {
   useImperativeHandle,
   forwardRef,
 } from 'react'
-import { Flex } from 'antd'
+import { Flex, Spin } from 'antd'
 import MyAddress from '../address'
 import MyFile from '../file'
 import MyInput from '../input'
@@ -36,6 +36,7 @@ function ContactsTabs(props: Props, ref: any) {
   const [type, setType] = useState<T>('1')
   const [books, setBooks] = useState<API.AddressbooksItem[][]>([])
   const [parentBooks, setParentBooks] = useState<API.AddressbooksItem[][]>([])
+  const [loading, setLoading] = useState(false)
 
   // addressbook地址簿,file文件,input手动输入框,paste手动粘贴,parent_addressbook主账户地址簿
   const getValues = async () => {
@@ -78,11 +79,13 @@ function ContactsTabs(props: Props, ref: any) {
     return values
   }
   const getAddress = async () => {
+    setLoading(true)
     try {
       const res = await getSendAddress({
         page: 1,
         type: 1,
       })
+      setLoading(false)
       if (Array.isArray(res.addressbooks)) {
         setBooks(res.addressbooks)
       } else {
@@ -95,7 +98,9 @@ function ContactsTabs(props: Props, ref: any) {
           setParentBooks(Object.values(res.parent_addressbooks))
         }
       }
-    } catch (error) {}
+    } catch (error) {
+      setLoading(false)
+    }
   }
   useEffect(() => {
     getAddress()
@@ -147,6 +152,12 @@ function ContactsTabs(props: Props, ref: any) {
       {type == '2' && <MyFile ref={fileRef} vars={props.vars} />}
       {type == '3' && <MyInput ref={inputRef} vars={props.vars} />}
       {type == '4' && <MyArea ref={areaRef} />}
+
+      {loading && (
+        <div className='p-y-40 fx-center-center'>
+          <Spin></Spin>
+        </div>
+      )}
     </div>
   )
 }

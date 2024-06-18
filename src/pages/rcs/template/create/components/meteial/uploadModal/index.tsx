@@ -293,10 +293,10 @@ export default function UploadModal(props: Props) {
             {faq.map((item) => {
               return (
                 <Space key={item.title} style={{ padding: '6px 0' }}>
-                  <Image preview={false} src={item.img} width={46} />
+                  <Image preview={false} src={item.img} width={60} />
                   <div>
-                    <div className='fn13 black-color'>{item.title}</div>
-                    <div className='fn12'>
+                    <div className='fn14 black-color'>{item.title}</div>
+                    <div className='fn13'>
                       {item.suffix.length > 0
                         ? `支持${item.suffix.join('、')}， 单个素材不超过${
                             item.size

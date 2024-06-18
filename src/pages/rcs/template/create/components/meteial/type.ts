@@ -18,7 +18,7 @@ export enum EnumMediaStatusBadge {
   'color-status-warning' = 9,
 }
 export enum EnumMediaStatusIcon {
-  'icon-yes' = 0,
+  'icon-right' = 0,
   'icon-no' = 1,
   'icon-time' = 8,
   'icon-dengpao' = 9,
