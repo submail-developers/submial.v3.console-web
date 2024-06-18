@@ -123,6 +123,46 @@ export const getRcsAnalysisOverview = (
     API.GetRcsAnalysisOverviewParams
   >('/console/api/rcs/get_rcs_analysis_overview', data)
 }
+// 账户概览-获取RCS资源包
+export const getRcsPackages = () => {
+  return request.post<any, API.GetRcsPackagesRes, any>(
+    '/console/api/store/get_rcs_packages',
+    {},
+  )
+}
+// 账户概览-获取发票列表
+export const getInvoices = () => {
+  return request.post<any, API.GetInvoicesRes, any>(
+    '/console/api/store/get_invoices',
+    {},
+  )
+}
+// 账户概览-创建订单
+export const createOrder = (data: API.CreateOrderParams) => {
+  return request.post<any, API.CreateOrderRes, API.CreateOrderParams>(
+    '/console/api/store/create_order',
+    data,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    },
+  )
+}
+// 取消订单
+export const cancalOrder = (data: API.CancalOrderParams) => {
+  return request.post<any, any, API.CancalOrderParams>(
+    '/console/api/store/cancel_order',
+    data,
+  )
+}
+// 查询订单支付状态
+export const getPayStatus = (data: API.GetPayStatusParams) => {
+  return request.post<any, API.GetPayStatusRes, API.GetPayStatusParams>(
+    '/console/api/store/get_order_status',
+    data,
+  )
+}
 
 // 上传文件  合同、logo等  单个文件上传
 export const uploadCustomerFile = (data: API.UploadCustomerFileParams) => {

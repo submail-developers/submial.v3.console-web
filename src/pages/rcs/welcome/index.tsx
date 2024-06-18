@@ -10,7 +10,6 @@ import {
   Row,
   Col,
   DatePicker,
-  ConfigProvider,
   Spin,
   Form,
 } from 'antd'
@@ -27,6 +26,7 @@ import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
 
 import { getRcsOverview, getRcsAnalysisOverview } from '@/api'
+import { StorePage } from './components/pay/reducer'
 
 import codeImg from '@/assets/rcs/chatbot_1.png'
 
@@ -179,11 +179,6 @@ export default function Fn() {
   const [echartsData, setEchartsData] = useState<API.RcsAnalysis>()
   const showPay = () => {
     payRef.current && payRef.current.open()
-  }
-
-  const onValuesChange = async () => {
-    const values = await form.getFieldsValue()
-    console.log(values)
   }
 
   const onRangeChange = (value: [Dayjs, Dayjs]) => {
@@ -471,7 +466,10 @@ export default function Fn() {
       </Row>
 
       <MyTour ref={tourRef} />
-      <MyPay ref={payRef} />
+
+      <StorePage>
+        <MyPay ref={payRef} />
+      </StorePage>
     </PageContent>
   )
 }

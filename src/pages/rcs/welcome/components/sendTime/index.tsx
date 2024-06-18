@@ -1,5 +1,3 @@
-import { useEffect, useRef } from 'react'
-import { Spin } from 'antd'
 import { API } from 'apis'
 import dayjs from 'dayjs'
 import ReactEcharts from 'echarts-for-react'

@@ -1,7 +1,4 @@
-import { useEffect, useRef } from 'react'
-import { Spin } from 'antd'
 import ReactEcharts from 'echarts-for-react'
-import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
 import { map } from 'lodash'
 

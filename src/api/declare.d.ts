@@ -275,6 +275,80 @@ declare module 'apis' {
       message?: string
       status?: string
     }
+
+    // rcs资源包
+    interface RcsPackagesItem {
+      id: string
+      type: string
+      title: string // 标题
+      credit: string // 条数
+      price: string // 价格
+      old_price: string // 旧的价格
+      sale: string
+      tn: string
+      unit_price: string
+      enable: string
+      extra: string
+      for_promotions: string
+      ngp_package: string
+    }
+    interface GetRcsPackagesRes {
+      message?: string
+      status?: string
+      packages: RcsPackagesItem[]
+    }
+
+    // 发票
+    // 0普票，1专票，2电子普票，3电子专票，现在0跟1已经没有了，只有电子发票普票跟专票了
+    type InvoiceType = '0' | '1' | '2' | '3'
+    interface InvoiceItem {
+      id: string
+      invoice_type: InvoiceType
+      first_name: string
+      last_name: string
+      tel: string
+      province: string
+      city: string
+      district: string
+      address: string
+      invoice_title: string
+      invoice_tax_code: string
+      invoice_address: string
+      invoice_tel: string
+      invoice_bank: string
+      invoice_bank_account: string
+      remark: string
+      default: string
+    }
+    interface GetInvoicesRes {
+      message?: string
+      status?: string
+      invoices: InvoiceItem[]
+    }
+    interface ShopcarItem extends RcsPackagesItem {
+      vol: number // 数量
+    }
+    // 创建订单
+    interface CreateOrderParams {
+      shopcar: CreateOrderParamsItem[]
+      invoice: string
+    }
+    interface CreateOrderRes {
+      create_at: string
+      ordernumber: string
+      price: number
+      status?: string
+    }
+    interface CancalOrderParams {
+      ordernumber: string
+    }
+    interface GetPayStatusParams {
+      ordernumber: string
+    }
+    interface GetPayStatusRes {
+      order: 'pending' | 'complete' | 'canceled' // pending支付中, complete支付成功, canceled取消
+      status: string
+    }
     // 上传文件  合同、logo等  单个文件上传
     interface UploadCustomerFileParams {
       // 1合同   2logo  3联系人身份证正面  4联系人身份证反面  5法人身份证正面  6法人身份证反面  7营业执照

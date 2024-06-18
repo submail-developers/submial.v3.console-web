@@ -134,11 +134,7 @@ function MyTour(props: MyTourProps, ref) {
       </div>
       <Flex justify='center' className='m-t-12'>
         <ConfigProvider wave={{ disabled: true }}>
-          <Button
-            // size='small'
-            type='primary'
-            style={{ width: 120 }}
-            onClick={next}>
+          <Button type='primary' style={{ width: 120 }} onClick={next}>
             {step == 3 ? '我知道了' : '下一步'}
           </Button>
         </ConfigProvider>

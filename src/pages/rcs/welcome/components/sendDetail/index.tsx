@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
-import { Flex, Row, Col, Spin } from 'antd'
+import { Flex, Row, Col } from 'antd'
 import ReactEcharts from 'echarts-for-react'
 import { usePoint } from '@/hooks'
 import { API } from 'apis'
