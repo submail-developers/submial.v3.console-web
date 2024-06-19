@@ -1,7 +1,7 @@
-import { useState, useImperativeHandle, forwardRef, useEffect } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { Modal, Form, App, Flex, Pagination, Button } from 'antd'
 import { getAddressbooksFolder } from '@/api'
-import { API } from 'apis'
 import './index.scss'
 import redImg from '@/assets/rcs/address/folder_red.png'
 import purpleImg from '@/assets/rcs/address/folder_purple.png'
@@ -9,7 +9,6 @@ import cyanImg from '@/assets/rcs/address/folder_cyan.png'
 import blueImg from '@/assets/rcs/address/folder_blue.png'
 import greenImg from '@/assets/rcs/address/folder_green.png'
 import yellowImg from '@/assets/rcs/address/folder_yellow.png'
-import { usePoint } from '@/hooks'
 
 import { moveAddressBook } from '@/api'
 interface Props {
@@ -36,8 +35,9 @@ const addresssIcon = {
 const Dialog = (props: Props, ref: any) => {
   const [form] = Form.useForm()
   const { message } = App.useApp()
+  const [searchParams] = useSearchParams()
+
   const [loading, setLoading] = useState(false)
-  const point = usePoint('sm')
 
   const [addressList, setAddressList] = useState()
   const [folderId, setFolderId] = useState()
@@ -45,6 +45,9 @@ const Dialog = (props: Props, ref: any) => {
   const [pageSize, setpageSize] = useState<number>(9)
   const [addressFolderList, setAddressFolderList] = useState([])
   const [folderTotal, setFolderTotal] = useState<number>(0)
+
+  const currentFilesTitle = searchParams.get('title')
+  const currentFilesTag = searchParams.get('tag')
   // 获取地址簿文件夹
   const getAddressFolderList = async () => {
     try {
@@ -59,19 +62,24 @@ const Dialog = (props: Props, ref: any) => {
       })
       setAddressFolderList(res.folders)
       setFolderTotal(res.rows)
-      setLoading(false)
-    } catch (error) {
-      setLoading(false)
-      console.log(error)
-    }
+    } catch (error) {}
   }
 
   // 获取当前文件夹
   useEffect(() => {
-    getAddressFolderList()
+    if (props.open) {
+      getAddressFolderList()
+    }
   }, [currentPage, pageSize, props.open])
 
+  useEffect(() => {
+    if (!props.open) {
+      setcurrentPage(1)
+    }
+  }, [props.open])
+
   const handleOk = async () => {
+    setLoading(true)
     try {
       let ids = props.ids.length > 0 ? props.ids.join(',') : props.singleId
       let params = {
@@ -86,17 +94,11 @@ const Dialog = (props: Props, ref: any) => {
         props.onSearch()
         props.onCancel()
       }
+      setLoading(false)
     } catch (error) {
-      console.log(error)
+      setLoading(false)
     }
   }
-
-  const handleCancel = () => {
-    props.onCancel()
-  }
-
-  const onFinish = () => {}
-  const onFinishFailed = () => {}
 
   const handelAddressList = (item) => {
     setAddressList(item.id)
@@ -110,11 +112,11 @@ const Dialog = (props: Props, ref: any) => {
   return (
     <Modal
       onOk={handleOk}
+      confirmLoading={loading}
       open={props.open}
       onCancel={props.onCancel}
       title='移动地址簿'
-      width={480}
-      style={{ top: 240 }}
+      width={600}
       data-class='move-address'
       closable={false}
       wrapClassName='modal-move-address'
@@ -125,7 +127,7 @@ const Dialog = (props: Props, ref: any) => {
             current={currentPage}
             defaultPageSize={pageSize}
             pageSizeOptions={[]}
-            size={point ? 'default' : 'small'}
+            size='small'
             total={folderTotal}
             showSizeChanger={false}
             showQuickJumper
@@ -147,51 +149,42 @@ const Dialog = (props: Props, ref: any) => {
         wrapperCol={{ span: 24 }}
         layout='vertical'
         initialValues={{ type: 'none' }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         autoComplete='off'>
         <div style={{ color: '#666d7a', marginBottom: '10px' }}>当前文件夹</div>
-        {addressFolderList.map((item, index) => (
-          <div key={item.id}>
-            {item.id == props.oldFolderId ? (
-              <div className='now-address fx-start-center'>
-                <div className='fx-start-center'>
-                  <img src={addresssIcon[item.tag]} alt='' />
-                  <span className='fw-500'>{item.title}</span>
-                </div>
-                <div style={{ marginLeft: '40px' }}>
-                  <span className='num-p'>{item.num}</span> 个联系人
-                </div>
-              </div>
-            ) : (
-              ''
-            )}{' '}
+        <div>
+          <div className='now-address fx-between-center p-x-24 p-y-4 '>
+            <div className='fx-start-center'>
+              <img src={addresssIcon[currentFilesTag]} alt='' />
+              <span className='fw-500'>{currentFilesTitle}</span>
+            </div>
+            <div></div>
           </div>
-        ))}
+        </div>
         <div
           className='m-t-10'
           style={{ color: '#666d7a', marginBottom: '10px' }}>
           文件夹列表
         </div>
-        {props.FolderList.map((item) => (
-          <div
-            className={`now-address2 fx-start-center ${
-              addressList === item.id ||
-              (props.oldFolderId == item.id && 'active')
-            }`}
-            key={item.id}
-            onClick={() => handelAddressList(item)}>
-            <div className='fx-start-center'>
-              <img src={addresssIcon[item.tag]} alt='' />
-              <span className='fw-500'>{item.title}</span>
+        {addressFolderList
+          .filter((i) => i.id != props.oldFolderId)
+          .map((item) => (
+            <div
+              className={`now-address2 fx-between-center p-x-24 p-y-4 g-pointer ${
+                addressList === item.id && 'active'
+              }`}
+              key={item.id}
+              onClick={() => handelAddressList(item)}>
+              <div className='fx-start-center'>
+                <img src={addresssIcon[item.tag]} alt='' />
+                <span className='fw-500'>{item.title}</span>
+              </div>
+              <div>
+                <span className='num-p'>{item.num}</span> 个地址簿
+              </div>
             </div>
-            <div style={{ marginLeft: '40px' }}>
-              <span className='num-p'>{item.num}</span> 个地址簿
-            </div>
-          </div>
-        ))}
+          ))}
       </Form>
     </Modal>
   )
 }
-export default forwardRef(Dialog)
+export default Dialog

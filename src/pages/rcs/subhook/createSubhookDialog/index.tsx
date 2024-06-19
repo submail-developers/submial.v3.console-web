@@ -153,7 +153,6 @@ const Dialog = (props: Props, ref: any) => {
       title='创建SUBHOOK'
       onOk={handleOk}
       width={580}
-      style={{ top: 240 }}
       data-class='create-subhook'
       closable={false}
       wrapClassName='modal-subhook'>

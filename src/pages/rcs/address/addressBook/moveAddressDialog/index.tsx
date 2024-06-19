@@ -1,5 +1,5 @@
 import { useState, useImperativeHandle, forwardRef, useEffect } from 'react'
-import { Modal, Form, App, Flex, Pagination, Button } from 'antd'
+import { Modal, Spin, App, Flex, Pagination, Button, Image } from 'antd'
 import { getAddressbooksFolder } from '@/api'
 import { API } from 'apis'
 import './index.scss'
@@ -9,7 +9,6 @@ import cyanImg from '@/assets/rcs/address/folder_cyan.png'
 import blueImg from '@/assets/rcs/address/folder_blue.png'
 import greenImg from '@/assets/rcs/address/folder_green.png'
 import yellowImg from '@/assets/rcs/address/folder_yellow.png'
-import { usePoint } from '@/hooks'
 
 import { moveAddressBook } from '@/api'
 interface Props {
@@ -33,11 +32,9 @@ const addresssIcon = {
 }
 
 const Dialog = (props: Props, ref: any) => {
-  const point = usePoint('sm')
-
-  const [form] = Form.useForm()
   const { message } = App.useApp()
   const [loading, setLoading] = useState(false)
+  const [initLoading, setInitLoading] = useState(true)
   const [currentPage, setcurrentPage] = useState<number>(1)
   const [pageSize, setpageSize] = useState<number>(9)
   const [addressFolderList, setAddressFolderList] = useState([])
@@ -59,18 +56,21 @@ const Dialog = (props: Props, ref: any) => {
       })
       setAddressFolderList(res.folders)
       setFolderTotal(res.rows)
-      setLoading(false)
+      setInitLoading(false)
     } catch (error) {
-      setLoading(false)
-      console.log(error)
+      setInitLoading(false)
     }
   }
 
   useEffect(() => {
-    getAddressFolderList()
-  }, [currentPage, pageSize])
+    if (props.open) {
+      setInitLoading(true)
+      getAddressFolderList()
+    }
+  }, [currentPage, pageSize, props.open])
 
   const handleOk = async () => {
+    setLoading(true)
     try {
       let params = {
         ids: props.isSingle ? props.singleId : props.ids.join(','),
@@ -84,17 +84,11 @@ const Dialog = (props: Props, ref: any) => {
         props.onSearch()
         props.onCancel()
       }
+      setLoading(false)
     } catch (error) {
-      console.log(error)
+      setLoading(false)
     }
   }
-
-  const handleCancel = () => {
-    props.onCancel()
-  }
-
-  const onFinish = () => {}
-  const onFinishFailed = () => {}
 
   const handelAddressList = (item) => {
     setAddressList(item.id)
@@ -109,12 +103,10 @@ const Dialog = (props: Props, ref: any) => {
 
   return (
     <Modal
-      onOk={handleOk}
       open={props.open}
       onCancel={props.onCancel}
       title='移动地址簿'
-      width={480}
-      style={{ top: 240 }}
+      width={600}
       data-class='move-address'
       closable={false}
       wrapClassName='modal-move-address'
@@ -125,7 +117,7 @@ const Dialog = (props: Props, ref: any) => {
             current={currentPage}
             defaultPageSize={pageSize}
             pageSizeOptions={[]}
-            size={point ? 'default' : 'small'}
+            size='small'
             total={folderTotal}
             showSizeChanger={false}
             showQuickJumper
@@ -134,39 +126,35 @@ const Dialog = (props: Props, ref: any) => {
           />
           <div>
             <Button onClick={props.onCancel}>取消</Button>
-            <Button className='btn-ok' onClick={handleOk}>
+            <Button className='btn-ok' loading={loading} onClick={handleOk}>
               确定
             </Button>
           </div>
         </Flex>
       }>
-      <Form
-        name='form-move-address'
-        form={form}
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 24 }}
-        layout='vertical'
-        initialValues={{ type: 'none' }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete='off'>
+      <div className='list'>
         {addressFolderList.map((item) => (
           <div
-            className={`now-address2 fx-start-center ${
-              addressList === item.id && 'active'
-            }`}
+            className={`fx-between-center p-y-4 p-l-24 p-r-40 m-y-8 g-pointer g-radius-4 g-transition-300 ${
+              addressList == item.id && 'active'
+            } item`}
             key={item.id}
             onClick={() => handelAddressList(item)}>
             <div className='fx-start-center'>
-              <img src={addresssIcon[item.tag]} alt='' />
-              <span className='fw-500'>{item.title}</span>
+              <Image width={36} preview={false} src={addresssIcon[item.tag]} />
+              <span className='fw-500 m-l-12'>{item.title}</span>
             </div>
             <div style={{ marginLeft: '40px' }}>
               <span className='num-p'>{item.num}</span> 个地址簿
             </div>
           </div>
         ))}
-      </Form>
+        {initLoading && (
+          <div className='loading fx-center-center'>
+            <Spin></Spin>
+          </div>
+        )}
+      </div>
     </Modal>
   )
 }

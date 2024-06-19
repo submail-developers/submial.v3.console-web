@@ -7,6 +7,7 @@ const { Paragraph } = Typography
 type Props = {
   text: string
   title?: string
+  zIndex?: number
 }
 
 /**
@@ -25,6 +26,7 @@ export default function ACopy(props: Props) {
         onCopy: () => messageApi.success('复制成功'),
       }}
       className='handle-copy'
+      style={{ zIndex: props.zIndex || 2 }}
       title={props.title || '点击复制'}></Paragraph>
   )
 }

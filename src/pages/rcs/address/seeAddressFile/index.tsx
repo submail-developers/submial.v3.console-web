@@ -12,8 +12,14 @@ import {
   Switch,
   Checkbox,
   Dropdown,
+  Space,
+  Image,
+  Divider,
+  Spin,
+  Empty,
 } from 'antd'
 import { IDIcon } from '@/components/aIcons'
+import ACopy from '@/components/aCopy'
 import redImg from '@/assets/rcs/address/address_red.png'
 import purpleImg from '@/assets/rcs/address/address_purple.png'
 import cyanImg from '@/assets/rcs/address/address_cyan.png'
@@ -38,7 +44,8 @@ import './index.scss'
 import { message } from '@/components/staticFn/staticFn'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { useSearchParams, useParams, useNavigate } from 'react-router-dom'
-import { getAddressPath, getFolderPath } from '../type'
+import { getFolderPath } from '../type'
+import { usePoint } from '@/hooks'
 
 const { Option } = Select
 
@@ -67,6 +74,7 @@ const addresssIcon2 = {
 const { Search } = Input
 
 export default function Fn() {
+  const point = usePoint('lg')
   const nav = useNavigate()
   const [form] = Form.useForm()
   const [currentPage, setcurrentPage] = useState<number>(1)
@@ -119,13 +127,12 @@ export default function Fn() {
       setTotal(res.rows)
       setLoading(false)
       let arr = []
-      let list = res.addressbook.map((item, index) => {
+      res.addressbook.forEach((item, index) => {
         arr.push(item.id)
       })
       setAllId(arr)
     } catch (error) {
       setLoading(false)
-      console.log(error)
     }
   }
   // 获取地址簿文件夹
@@ -142,9 +149,7 @@ export default function Fn() {
       })
       setAddressFolderList(res.folders)
       setFolderTotal(res.rows)
-      setLoading(false)
     } catch (error) {
-      setLoading(false)
       console.log(error)
     }
   }
@@ -154,6 +159,9 @@ export default function Fn() {
     getAddressList()
     getAddressFolderList()
   }, [currentPage, pageSize])
+  useEffect(() => {
+    setLoading(true)
+  }, [])
 
   // 切换页码
   const onChangeCurrentPage = (page: number, pageSize: number) => {
@@ -334,6 +342,7 @@ export default function Fn() {
     setOpenMoveModal(true)
   }
   const toDetail = (item) => {
+    if (isVisible) return
     nav(
       `/console/rcs/address/address/detail/${
         item.id
@@ -352,196 +361,227 @@ export default function Fn() {
   }
 
   return (
-    <Form
-      name='address-folder-list-form'
-      data-class='address-folder-list'
-      form={form}
-      layout='vertical'
-      initialValues={{
-        keyword: '',
-        search_type: 'all',
-        order_by: 'create_desc',
-      }}
-      autoComplete='off'>
-      <Row gutter={16}>
-        <Col
-          xl={24}
-          className='search-part fx-between-center'
-          style={{ padding: '0' }}>
-          <Form.Item name='keyword' label='名称'>
-            <Search
-              placeholder='地址簿名称/ID'
-              allowClear
-              onSearch={handleSearch}
-              style={{ width: 300 }}
-            />
-          </Form.Item>
-
-          <Button
-            type='primary'
-            className='fx-start-center'
-            htmlType='submit'
-            loading={loading}
-            onClick={() => setOpenMoveInModal(true)}>
-            <i className='icon iconfont icon-jia'></i>
-            &nbsp;&nbsp;移入地址簿
-          </Button>
-        </Col>
-        <Col xl={24} className='set-item fx-start-center'>
-          <div className='fx-start-center'>
-            <img
-              src={getFolderPath(Number(tag))}
-              alt=''
-              width='40'
-              style={{ marginRight: '16px' }}
-            />
-
-            <span className='fn16'>{title}</span>
-          </div>
-          <div className='fx-start-center batch-set'>
-            <div className='fx-start-center switch m-r-20'>
-              <Switch
-                defaultChecked={false}
-                size='small'
-                onChange={handelSwitchChange}
-              />
-              <span style={{ marginLeft: '8px' }}>批量操作</span>
-            </div>
-
-            {isVisible ? (
-              <>
-                <div className='m-r-20'>
-                  <Checkbox
-                    indeterminate={indeterminate}
-                    onChange={onCheckAllChange}
-                    checked={checkAll}>
-                    全选
-                  </Checkbox>
-                </div>
-
-                <Form.Item name='move' label=''>
-                  <div
-                    className={`primary-color move-folder m-r-20 ${
-                      indeterminate || checkAll ? 'active' : ''
-                    }`}
-                    onClick={moveFolder}>
-                    <i className='icon iconfont icon-move p-r-8'></i>
-                    移动到文件夹
-                  </div>
+    <>
+      <Form
+        name='address-folder-list-form'
+        data-class='address-folder-list'
+        form={form}
+        layout='vertical'
+        initialValues={{
+          keyword: '',
+          search_type: 'all',
+          order_by: 'create_desc',
+        }}
+        autoComplete='off'>
+        <Row gutter={6}>
+          <Col span={24}>
+            <Row justify='space-between' align='bottom'>
+              <Col span={12} xl={8}>
+                <Form.Item name='keyword' label='名称' className='m-b-0'>
+                  <Search
+                    placeholder='地址簿名称/ID'
+                    allowClear
+                    onSearch={handleSearch}
+                  />
                 </Form.Item>
+              </Col>
+              <Col span={12} xl={8} className='fx-x-end'>
+                <Button
+                  type='primary'
+                  className='fx-start-center'
+                  htmlType='submit'
+                  icon={<i className='icon iconfont icon-jia'></i>}
+                  onClick={() => setOpenMoveInModal(true)}>
+                  移入地址簿
+                </Button>
+              </Col>
+            </Row>
+          </Col>
+          <Col span={24} className='m-t-24'>
+            <Row
+              className='p-y-12 p-x-16 g-radius-4'
+              style={{ background: '#f6f7f9' }}>
+              <Col span={12} md={6}>
+                <Space align='center'>
+                  <Image
+                    src={getFolderPath(Number(tag))}
+                    preview={false}
+                    height={48}
+                  />
+                  <span className='fn16'>{title}</span>
+                </Space>
+              </Col>
+              <Col span={12} md={18}>
+                <Flex
+                  justify='flex-end'
+                  align={`${point ? 'center' : 'flex-end'}`}
+                  gap={8}
+                  wrap='wrap'
+                  className='h-100'
+                  style={{ flexDirection: point ? 'row' : 'column' }}>
+                  <Space
+                    align='center'
+                    size={12}
+                    className={`${point ? '' : 'p-r-10'}`}>
+                    <Switch
+                      size='small'
+                      defaultChecked={false}
+                      onChange={handelSwitchChange}
+                    />
+                    <span>批量操作</span>
+                  </Space>
+                  {!isVisible && (
+                    <>
+                      {point && <Divider type='vertical' />}
+                      <Space align='center' size={0}>
+                        <i className='icon iconfont icon-tag primary-color'></i>
+                        <Form.Item name='tag' label='' className='m-b-0'>
+                          <Select
+                            className='select-item'
+                            placeholder='全部标签'
+                            onChange={() => getAddressFolderList()}
+                            popupMatchSelectWidth={120}>
+                            {options.map((option) => (
+                              <Option key={option.value} value={option.value}>
+                                {option.label}
+                              </Option>
+                            ))}
+                          </Select>
+                        </Form.Item>
+                      </Space>
+                      {point && <Divider type='vertical' />}
+                      <Space align='center' size={0}>
+                        <i className='icon iconfont icon-paixu primary-color fn14'></i>
+                        <Form.Item name='order_by' label='' className='m-b-0'>
+                          <Select
+                            className='select-item'
+                            placeholder='选择排序'
+                            onChange={() => getAddressFolderList()}
+                            popupMatchSelectWidth={120}>
+                            {order.map((order) => (
+                              <Option key={order.value} value={order.value}>
+                                {order.label}
+                              </Option>
+                            ))}
+                          </Select>
+                        </Form.Item>
+                      </Space>
+                      {point && <Divider type='vertical' />}
+                      <Popconfirm
+                        placement='bottom'
+                        title='警告'
+                        description='确定清空文件夹吗？'
+                        onConfirm={cleanAllFolders}
+                        okText='确定'
+                        cancelText='取消'>
+                        <Space
+                          align='center'
+                          size={4}
+                          className='error-color g-pointer'>
+                          <i className='icon iconfont icon-saozhou'></i>
+                          <span>清空文件夹</span>
+                        </Space>
+                      </Popconfirm>
+                    </>
+                  )}
+                  {isVisible && (
+                    <>
+                      {point && <Divider type='vertical' />}
+                      <Space align='center'>
+                        <Checkbox
+                          indeterminate={indeterminate}
+                          onChange={onCheckAllChange}
+                          checked={checkAll}>
+                          全选
+                        </Checkbox>
+                      </Space>
+                      {point && <Divider type='vertical' />}
+                      <Space align='center'>
+                        <div
+                          onClick={moveFolder}
+                          className={`primary-color handle-item ${
+                            indeterminate || checkAll ? 'active' : 'disabled'
+                          }`}>
+                          <i className='icon iconfont icon-move m-r-8'></i>
+                          移动到文件夹
+                        </div>
+                      </Space>
 
-                <Form.Item name='tag' label=''>
-                  <Dropdown
-                    menu={{
-                      items: items,
-                      selectable: true,
-                      onClick: edit,
-                    }}>
-                    <a
-                      className={`set-ico ${
-                        indeterminate || checkAll ? 'active' : ''
-                      }`}>
-                      <i className='icon iconfont icon-shezhibiaoqian p-r-8'></i>
-                      设置标签
-                    </a>
-                  </Dropdown>
-                </Form.Item>
-                <div
-                  onClick={toBack}
-                  style={{ width: '60px' }}
-                  className='bactch-item '>
-                  <i className='icon iconfont icon-fanhui primary-color p-l-24'></i>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className='fx-center-center batch-item1 m-r-10 m-l-10'>
-                  <i className='icon iconfont icon-dizhibu1 primary-color'></i>
-                  <Form.Item name='tag' label='' className='bactch-item'>
-                    <Select placeholder='所有标签' popupMatchSelectWidth={120}>
-                      {options.map((option) => (
-                        <Option key={option.value} value={option.value}>
-                          {option.label}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </div>
-                <div className='fx-center-center batch-item2 '>
-                  <i className='icon iconfont icon-paixu primary-color fn14'></i>
-                  <Form.Item name='order_by' label='' className='bactch-item'>
-                    <Select placeholder='选择排序' popupMatchSelectWidth={120}>
-                      {order.map((order) => (
-                        <Option key={order.value} value={order.value}>
-                          {order.label}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </div>
-                <div className='clear-address p-x-16'>
-                  <Popconfirm
-                    placement='left'
-                    title='警告'
-                    description='确定清空文件夹吗？'
-                    onConfirm={cleanAllFolders}
-                    okText='确定'
-                    cancelText='取消'>
-                    <span>
-                      <i className='icon iconfont icon-saozhou p-r-8'></i>
-                      清空文件夹
-                    </span>
-                  </Popconfirm>
-                </div>
-                <div
-                  onClick={toBack}
-                  style={{ width: '60px' }}
-                  className='bactch-item'>
-                  <i className='icon iconfont icon-fanhui primary-color'></i>
-                </div>
-              </>
-            )}
-          </div>
-        </Col>
-      </Row>
-      <CheckboxGroup
-        style={{ width: '100%', marginTop: '10px' }}
-        value={selectedList}
-        onChange={onChange}>
-        <Row gutter={[20, 16]} style={{ marginTop: '24px' }}>
-          {addressList.map((item) => (
-            <Col span={24} lg={12} xl={10} xxl={6} key={item.id}>
-              <div className='address-book-item'>
-                <div>
-                  <div className='trapezoid'>
-                    <IDIcon />
-                    <div className='sign'>{item.sign}</div>
+                      {point && <Divider type='vertical' />}
+                      <Space align='center'>
+                        <Form.Item name='tag' label='' className='m-b-0'>
+                          <Dropdown
+                            menu={{
+                              items: items,
+                              selectable: true,
+                              onClick: edit,
+                            }}>
+                            <a
+                              className={`
+                              handle-item 
+                              ${
+                                indeterminate || checkAll
+                                  ? 'active'
+                                  : 'disabled'
+                              }
+                              `}>
+                              <i className='icon iconfont icon-tag m-r-8'></i>
+                              设置标签
+                            </a>
+                          </Dropdown>
+                        </Form.Item>
+                      </Space>
+                    </>
+                  )}
+                  {point && <Divider type='vertical' />}
+                  <div onClick={toBack} className='g-pointer' title='返回'>
+                    <i className='icon iconfont icon-fanhui primary-color fn14'></i>
                   </div>
-                </div>
-
-                <div className='book-list' onClick={() => toDetail(item)}>
-                  <div className='fx-y-center'>
-                    <div>
-                      <img src={addresssIcon[item.tag]} alt='' />
+                </Flex>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+        <CheckboxGroup
+          style={{ width: '100%', marginTop: '10px' }}
+          value={selectedList}
+          onChange={onChange}>
+          <Row gutter={[20, 16]} style={{ marginTop: '24px' }}>
+            {addressList.map((item) => (
+              <Col span={24} lg={12} xl={12} xxl={6} key={item.id}>
+                <div className='address-book-item'>
+                  <div>
+                    <div className='trapezoid'>
+                      <ACopy text={item.sign} />
+                      <IDIcon />
+                      <div className='sign'>{item.sign}</div>
                     </div>
+                  </div>
 
-                    <div className='to-detail'>
-                      <div className='fn18'>{item.name}</div>
-                      <div style={{ marginTop: '10px' }}>
-                        <span className='num-p'>{item.address}</span> 个联系人
+                  <div
+                    className={`book-list ${isVisible ? '' : 'g-pointer'}`}
+                    onClick={() => toDetail(item)}>
+                    <div className='fx-y-center'>
+                      <div>
+                        <img src={addresssIcon[item.tag]} alt='' />
+                      </div>
+
+                      <div className='to-detail'>
+                        <div className='fn18'>{item.name}</div>
+                        <div style={{ marginTop: '10px' }}>
+                          <span className='num-p'>{item.address}</span> 个联系人
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  {isVisible ? (
-                    <Checkbox
-                      value={item.id}
-                      className='choose-address fx-x-end'
-                      onClick={stopEvent}>
-                      选择
-                    </Checkbox>
-                  ) : (
-                    <div className='fx-x-end handle-item' onClick={stopEvent}>
-                      <Button>
+                    {isVisible ? (
+                      <Checkbox
+                        value={item.id}
+                        className='choose-address fx-x-end'
+                        onClick={stopEvent}>
+                        选择
+                      </Checkbox>
+                    ) : (
+                      <div className='fx-x-end handle-item' onClick={stopEvent}>
                         <Dropdown
                           trigger={['click']}
                           menu={{
@@ -549,47 +589,57 @@ export default function Fn() {
                             selectable: true,
                             onClick: (e) => edit2(e, item.id),
                           }}>
-                          <a>
-                            <i className='icon iconfont icon-gengduocaozuo'></i>
-                          </a>
+                          <Button className='fx-center-center'>
+                            <i className='icon iconfont icon-dots fn14'></i>
+                          </Button>
                         </Dropdown>
-                      </Button>
 
-                      <Button onClick={() => showModal(true, item)}>
-                        <i className='icon iconfont icon-input'></i>
-                      </Button>
-                      <Popconfirm
-                        placement='left'
-                        title='警告'
-                        description='确定删除该地址簿吗？'
-                        onConfirm={() => deleteAddress(item.id)}
-                        okText='确定'
-                        cancelText='取消'>
-                        <Button>
-                          <i className='icon iconfont icon-shanchu'></i>
+                        <Button
+                          onClick={() => showModal(true, item)}
+                          className='fx-center-center'>
+                          <i className='icon iconfont icon-input'></i>
                         </Button>
-                      </Popconfirm>
-                    </div>
-                  )}
+                        <Popconfirm
+                          placement='left'
+                          title='警告'
+                          description='确定删除该地址簿吗？'
+                          onConfirm={() => deleteAddress(item.id)}
+                          okText='确定'
+                          cancelText='取消'>
+                          <Button className='fx-center-center'>
+                            <i className='icon iconfont icon-shanchu'></i>
+                          </Button>
+                        </Popconfirm>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </Col>
-          ))}
-        </Row>
-      </CheckboxGroup>
+              </Col>
+            ))}
+            {addressList.length == 0 && !loading && (
+              <Empty className='m-t-40' style={{ margin: '0 auto' }} />
+            )}
+            {loading && (
+              <Col span={24} className='m-y-40 fx-center-center'>
+                <Spin />
+              </Col>
+            )}
+          </Row>
+        </CheckboxGroup>
 
-      <Flex justify='flex-end' align='center' style={{ marginTop: '32px' }}>
-        <Pagination
-          defaultCurrent={1}
-          current={currentPage}
-          defaultPageSize={pageSize}
-          pageSizeOptions={[]}
-          total={total}
-          showQuickJumper
-          onChange={onChangeCurrentPage}
-          showTotal={(total) => `共 ${total} 条`}
-        />
-      </Flex>
+        <Flex justify='flex-end' align='center' style={{ marginTop: '32px' }}>
+          <Pagination
+            defaultCurrent={1}
+            current={currentPage}
+            defaultPageSize={pageSize}
+            pageSizeOptions={[]}
+            total={total}
+            showQuickJumper
+            onChange={onChangeCurrentPage}
+            showTotal={(total) => `共 ${total} 条`}
+          />
+        </Flex>
+      </Form>
 
       <EditAddressDialog
         isEdit={isEditMode}
@@ -619,6 +669,6 @@ export default function Fn() {
         onCancel={handleCancleMoveIn}
         onSearch={getAddressList}
       />
-    </Form>
+    </>
   )
 }

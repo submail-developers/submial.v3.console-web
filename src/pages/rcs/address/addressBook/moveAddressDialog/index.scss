@@ -1,9 +1,34 @@
 [data-class='move-address'] {
+  .list {
+    position: relative;
+    min-height: 500px;
+
+    .item {
+      background-color: #f6f7f9;
+      position: relative;
+      &.active {
+        background-color: #e7ebf1;
+        color: var(--color);
+      }
+      &:hover {
+        background-color: #e7ebf1;
+      }
+    }
+    .loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+  }
   .now-address,
   .now-address2 {
     border: 1px solid #e6e6e6;
     border-radius: 4px;
-    padding: 4px 0px 4px 8px;
+    // padding: 4px 0px 4px 8px;
     img {
       width: 36px;
       margin-right: 10px;

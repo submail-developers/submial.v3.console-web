@@ -1,7 +1,6 @@
-import { useState, useEffect, forwardRef } from 'react'
-import { Modal, Form, App, Upload, Button, Input, Select } from 'antd'
+import { useEffect, forwardRef } from 'react'
+import { Modal, Form, App, Input, Select } from 'antd'
 import { createAddressbooks } from '@/api'
-import { API } from 'apis'
 import './index.scss'
 const { Option } = Select
 
@@ -13,15 +12,15 @@ interface Props {
   onSearch: () => void
 }
 enum Colors {
-  'tag-red' = '1',
-  'tag-purple' = '2',
-  'tag-cyan' = '3',
-  'tag-blue' = '4',
-  'tag-green' = '5',
-  'tag-yellow' = '6',
+  'tag-red' = 1,
+  'tag-purple' = 2,
+  'tag-cyan' = 3,
+  'tag-blue' = 4,
+  'tag-green' = 5,
+  'tag-yellow' = 6,
 }
 
-const Dialog = (props: Props, ref: any) => {
+const Dialog = (props: Props) => {
   const [form] = Form.useForm()
   const { message } = App.useApp()
 
@@ -35,11 +34,13 @@ const Dialog = (props: Props, ref: any) => {
   ]
 
   useEffect(() => {
+    form.resetFields()
     if (props.isEdit) {
-      form.resetFields()
       form.setFieldsValue({
         ...props.editData,
-        // tag: props.editData ? Colors[props.editData.tag] : '',
+        tag: props.editData.tag.includes('tag')
+          ? `${Colors[props.editData.tag]}`
+          : `${props.editData.tag}`,
       })
     }
   }, [props.open])
@@ -48,7 +49,7 @@ const Dialog = (props: Props, ref: any) => {
     if (props.isEdit) {
       // 编辑
       try {
-        const formValues = await form.getFieldsValue()
+        const formValues = await form.validateFields()
         const res = await createAddressbooks({
           ...formValues,
           id: props.editData.id,
@@ -59,12 +60,10 @@ const Dialog = (props: Props, ref: any) => {
           props.onCancel()
           props.onSearch()
         }
-      } catch (error) {
-        console.log(error)
-      }
+      } catch (error) {}
     } else {
       try {
-        const formValues = await form.getFieldsValue()
+        const formValues = await form.validateFields()
         let params = {
           ...formValues,
           tag: formValues ? Colors[formValues.tag] : '',
@@ -75,18 +74,9 @@ const Dialog = (props: Props, ref: any) => {
           props.onCancel()
           props.onSearch()
         }
-      } catch (error) {
-        console.log(error)
-      }
+      } catch (error) {}
     }
   }
-
-  const handleCancel = () => {
-    props.onCancel()
-  }
-
-  const onFinish = () => {}
-  const onFinishFailed = () => {}
 
   return (
     <Modal
@@ -94,8 +84,7 @@ const Dialog = (props: Props, ref: any) => {
       onCancel={props.onCancel}
       title={props.isEdit ? '编辑地址簿' : '创建地址簿'}
       onOk={handleOk}
-      width={480}
-      style={{ top: 240 }}
+      width={600}
       data-class='create-address'
       closable={false}
       wrapClassName='modal-create-address'>
@@ -106,10 +95,19 @@ const Dialog = (props: Props, ref: any) => {
         wrapperCol={{ span: 24 }}
         layout='vertical'
         initialValues={{ tag: '4' }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         autoComplete='off'>
-        <Form.Item label='地址簿名称' name='name' validateTrigger='onSubmit'>
+        <Form.Item
+          label='地址簿名称'
+          name='name'
+          validateTrigger='onSubmit'
+          rules={[
+            {
+              required: true,
+            },
+            {
+              max: 32,
+            },
+          ]}>
           <Input
             placeholder='请输入名称，请将名称控制在 32 个字符以内'
             maxLength={32}

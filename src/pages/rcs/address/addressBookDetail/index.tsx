@@ -5,20 +5,20 @@ import {
   Input,
   Row,
   Col,
-  ConfigProvider,
   Popconfirm,
   Checkbox,
   message,
   Empty,
-  Select,
   Dropdown,
-  Space,
+  Image,
+  Pagination,
+  Flex,
+  Spin,
 } from 'antd'
 import type { MenuProps } from 'antd'
 import ImportAddressDialog from './ImportDialog/index'
 import {
   getMobAddressbookDetail,
-  getMobAddressbooks,
   deleteAddressMob,
   truncateMob,
   exportAddress,
@@ -29,12 +29,15 @@ import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { getAddressPath } from '../type'
 import './index.scss'
 import VerifyCode from './verifyCodeDialog/index'
-interface Props {
-  onchildrenMethod: () => void
-  addressInfo: any
-}
 
-const { Option } = Select
+const items: MenuProps['items'] = [
+  { label: '导出 TXT', key: 'txt' },
+  { label: '导出 CSV', key: 'csv' },
+  { label: '导出 EXCEL', key: 'excel' },
+  { label: '导出 JSON', key: 'json' },
+  { label: '导出 XML', key: 'xml' },
+]
+
 export default function Fn() {
   const nav = useNavigate()
   const [form] = Form.useForm()
@@ -42,7 +45,6 @@ export default function Fn() {
   const [openCreateModal, setOpenCreateModal] = useState(false)
   const [isEditMode, setIsEditMode] = useState(false)
   const [currentPage, setcurrentPage] = useState<number>(1)
-  const [pageSize, setpageSize] = useState<number>(9)
   const [total, setTotal] = useState<number>(0)
   const [addressDetailList, setAddressDetailList] = useState([])
   const [checkValues, setCheckValues] = useState([])
@@ -71,6 +73,11 @@ export default function Fn() {
   const [fileType, setFileType] = useState()
   const [exportParams, setExportParams] = useState([])
 
+  // 切换页码
+  const onChangeCurrentPage = (page: number, pageSize: number) => {
+    setcurrentPage(page)
+  }
+
   // 获取地址簿详情
   const getAddressDetailList = async () => {
     try {
@@ -85,19 +92,15 @@ export default function Fn() {
       setLoading(false)
     } catch (error) {
       setLoading(false)
-      console.log(error)
     }
   }
   useEffect(() => {
     getAddressDetailList()
   }, [currentPage])
+
   const showModal = (isEdit) => {
     setIsEditMode(isEdit)
     setOpenCreateModal(true)
-  }
-
-  const handleOk = () => {
-    setOpenCreateModal(false)
   }
 
   const handleCancel = () => {
@@ -108,14 +111,6 @@ export default function Fn() {
   const handleSearch = () => {
     getAddressDetailList()
   }
-
-  const items: MenuProps['items'] = [
-    { label: '导出 TXT', key: 'txt' },
-    { label: '导出 CSV', key: 'csv' },
-    { label: '导出 EXCEL', key: 'excel' },
-    { label: '导出 JSON', key: 'json' },
-    { label: '导出 XML', key: 'xml' },
-  ]
 
   // 删除手机号
   const singleDeleteAddress = async (item) => {
@@ -130,8 +125,10 @@ export default function Fn() {
       }
     } catch (error) {}
   }
+
   // 批量删除
   const batchDel = async () => {
+    if (checkValues.length == 0) return
     try {
       const res = await deleteAddressMob({
         id:
@@ -147,7 +144,7 @@ export default function Fn() {
     } catch (error) {}
   }
   // 清空地址簿
-  const DeleteAllMob = async () => {
+  const deleteAllMob = async () => {
     try {
       const res = await truncateMob({
         id: id,
@@ -178,6 +175,9 @@ export default function Fn() {
     setIndeterminate(!checkedAll && hasChecked)
     setCheckAll(checkedAll)
   }, [addressDetailList, selectedList])
+  useEffect(() => {
+    setLoading(true)
+  }, [])
 
   // 单个checkbox点击
   const onChange = (checkedValues: string[]) => {
@@ -200,13 +200,7 @@ export default function Fn() {
 
   // 返回
   const toBack = () => {
-    if (name == 'folder') {
-      nav(
-        `/console/rcs/address/folder/detail/${folderId}?title=${oldTitle}&tag=${oldTag}`,
-      )
-    } else {
-      nav('/console/rcs/address/index/0')
-    }
+    nav(-1)
   }
 
   const edit = async (e) => {
@@ -235,13 +229,12 @@ export default function Fn() {
       initialValues={{ type: 'all', keyword: '' }}
       autoComplete='off'>
       <Row gutter={8}>
-        <Col xl={24} className='search-part fx-between-center'>
-          <Form.Item name='keyword' label='联系人手机号'>
+        <Col span={24} className='search-part fx-between-end'>
+          <Form.Item name='keyword' label='联系人手机号' className='m-b-0'>
             <Search
               placeholder='地址簿名称/ID'
               allowClear
               onSearch={handleSearch}
-              style={{ width: 300 }}
             />
           </Form.Item>
           <Button
@@ -249,64 +242,61 @@ export default function Fn() {
             className='fx-start-center '
             htmlType='submit'
             onClick={() => showModal(false)}>
-            <i
-              className='icon iconfont icon-daorulianxiren'
-              style={{ marginRight: '10px' }}></i>
+            <i className='icon iconfont icon-daorulianxiren'></i>
             导入联系人
           </Button>
         </Col>
       </Row>
 
-      <Col xl={24} className='set-item fx-start-center'>
+      <Col span={24} className='set-item fx-start-center m-t-24'>
         <div className='fx-start-center'>
-          <img
-            src={getAddressPath(Number(tag))}
-            alt=''
-            width='40'
-            style={{ marginRight: '16px' }}
-          />
-          <span className='fn16'>{title}</span>
+          <Image src={getAddressPath(Number(tag))} width={48} preview={false} />
+          <span className='fn16 m-l-16'>{title}</span>
         </div>
         <div className='dea-set fx-between-center'>
-          <Checkbox
-            style={{ width: '90px' }}
-            indeterminate={indeterminate}
-            onChange={onCheckAllChange}
-            checked={checkAll}>
-            全选
-          </Checkbox>
-          <div onClick={batchDel}>
-            <span
-              className={`batch-del-address fx-center-center ${
-                indeterminate || checkAll ? 'active' : ''
-              }`}>
-              <i className='icon iconfont icon-shanchu'></i>删除
-            </span>
-          </div>
-          <div className='clear-address'>
-            <Popconfirm
-              placement='left'
-              title='警告'
-              description='确定清空地址簿吗？'
-              onConfirm={DeleteAllMob}
-              okText='确定'
-              cancelText='取消'
-              className='fx-center-center'>
-              <i className='icon iconfont icon-saozhou'></i>
-              <span> 清空地址簿</span>
-            </Popconfirm>
-          </div>
-          <div>
-            <Dropdown
-              menu={{ items, selectable: true, onClick: edit }}
-              trigger={['click']}>
-              <a>
-                <i className='icon iconfont icon-daochuwei fn14'></i>导出为
-              </a>
-            </Dropdown>
-          </div>
-          <div onClick={toBack} style={{ width: '60px' }}>
-            <i className='icon iconfont icon-fanhui primary-color'></i>
+          {total > 0 && (
+            <>
+              <Checkbox
+                indeterminate={indeterminate}
+                onChange={onCheckAllChange}
+                checked={checkAll}>
+                全选
+              </Checkbox>
+              <div onClick={batchDel}>
+                <span
+                  className={`batch-del-address g-pointer fx-center-center ${
+                    indeterminate || checkAll ? 'active' : ''
+                  }`}>
+                  <i className='icon iconfont icon-shanchu'></i>删除
+                </span>
+              </div>
+              <div className='clear-address'>
+                <Popconfirm
+                  placement='bottom'
+                  title='警告'
+                  description='确定清空地址簿吗？'
+                  onConfirm={deleteAllMob}
+                  okText='确定'
+                  cancelText='取消'>
+                  <div className='g-pointer fx-center-center'>
+                    <i className='icon iconfont icon-saozhou'></i>
+                    <span> 清空地址簿</span>
+                  </div>
+                </Popconfirm>
+              </div>
+              <div>
+                <Dropdown
+                  menu={{ items, selectable: true, onClick: edit }}
+                  trigger={['click']}>
+                  <a>
+                    <i className='icon iconfont icon-daochuwei fn14'></i>导出为
+                  </a>
+                </Dropdown>
+              </div>
+            </>
+          )}
+          <div onClick={toBack} style={{ paddingRight: 0 }}>
+            <i className='icon iconfont icon-fanhui primary-color fn14'></i>
           </div>
         </div>
       </Col>
@@ -315,8 +305,13 @@ export default function Fn() {
         value={selectedList}
         onChange={onChange}>
         <Row wrap gutter={8} style={{ width: '100%' }}>
+          {loading && (
+            <Col span={24} className='m-y-40 fx-center-center'>
+              <Spin />
+            </Col>
+          )}
           {addressDetailList.map((item) => (
-            <Col key={item.id}>
+            <Col key={item.id} span={12} lg={8} xl={6} xxl={4}>
               <div className='checkbox-item fx-between-center'>
                 <Checkbox value={item.id} className='fn16'>
                   {item.address}
@@ -328,16 +323,28 @@ export default function Fn() {
                   onConfirm={() => singleDeleteAddress(item)}
                   okText='确定'
                   cancelText='取消'>
-                  <i className='icon iconfont icon-shanchu'></i>
+                  <i className='icon iconfont icon-shanchu g-pointer'></i>
                 </Popconfirm>
               </div>
             </Col>
           ))}
-          {addressDetailList.length == 0 && (
+          {addressDetailList.length == 0 && !loading && (
             <Empty className='m-t-40' style={{ margin: '0 auto' }} />
           )}
         </Row>
       </CheckboxGroup>
+
+      <Flex justify='flex-end' className='m-t-24'>
+        <Pagination
+          current={currentPage}
+          pageSize={100}
+          total={total}
+          showSizeChanger={false}
+          showQuickJumper
+          hideOnSinglePage
+          onChange={onChangeCurrentPage}
+          showTotal={(total) => `共 ${total} 条`}></Pagination>
+      </Flex>
 
       <ImportAddressDialog
         id={id}

@@ -1,4 +1,19 @@
 [data-class='address-book-file'] {
+  .handle-item {
+    transition: all 0.3s;
+    &.active {
+      opacity: 1;
+      pointer-events: all;
+      cursor: pointer;
+    }
+    &.disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+  }
+  .select-item .ant-select-selector {
+    background-color: transparent;
+  }
   .set-item {
     background: #f6f7f9;
     border-radius: 4px;
@@ -177,7 +192,7 @@
       margin-bottom: 10px;
     }
     .ant-form-item {
-      margin-bottom: 10px;
+      // margin-bottom: 10px;
     }
     .set-item {
       width: 100%;

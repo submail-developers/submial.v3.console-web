@@ -1,19 +1,8 @@
 import { useState, forwardRef, useEffect, useRef } from 'react'
-import {
-  Modal,
-  Form,
-  App,
-  Upload,
-  Button,
-  Input,
-  Select,
-  Switch,
-  Transfer,
-} from 'antd'
+import { Modal, Form, App, Button, Input, Select, Transfer } from 'antd'
 import type { TransferProps } from 'antd'
 import { getMobAddressbooks, moveAddressBook } from '@/api'
 import { uniqBy } from 'lodash'
-import { API } from 'apis'
 import './index.scss'
 import { getAddressPath } from '../../type'
 const { Option } = Select
@@ -26,35 +15,29 @@ interface Props {
   folderId: string
   foldetAddressList: any[]
 }
-interface RecordType {
-  key: string
-  title: string
-  description: string
-  chosen: boolean
-}
-const { Search } = Input
+const options = [
+  { label: '全部标签', value: 'all', color: '#1764ff' },
+  { label: '默认标签', value: 'tag-blue', color: '#1764ff' },
+  { label: '红色标签', value: 'tag-red', color: '#ff4446' },
+  { label: '紫色标签', value: 'tag-purple', color: '#6f42c1' },
+  { label: '青色标签', value: 'tag-cyan', color: '#17a2b8' },
+  { label: '绿色标签', value: 'tag-green', color: '#17c13d' },
+  { label: '黄色标签', value: 'tag-yellow', color: '#ffba00' },
+]
 
 const Dialog = (props: Props, ref: any) => {
   const [form] = Form.useForm()
   const { message } = App.useApp()
   const [currentPage, setcurrentPage] = useState<number>(1)
   const [pageSize, setpageSize] = useState<number>(9)
-  const [total, setTotal] = useState<number>(0)
-  const [loading, setLoading] = useState(false)
+  // const [total, setTotal] = useState<number>(0)
+  // const [loading, setLoading] = useState(false)
+  const [moveLoading, setMoveLoading] = useState(false)
+
   const [oneWay, setOneWay] = useState(false)
   const [dataSource, setdataSource] = useState([])
   const [targetKeys, setTargetKeys] = useState<React.Key[]>([])
   const targetItemsRef = useRef([])
-
-  const options = [
-    { label: '全部标签', value: 'all', color: '#1764ff' },
-    { label: '默认标签', value: 'tag-blue', color: '#1764ff' },
-    { label: '红色标签', value: 'tag-red', color: '#ff4446' },
-    { label: '紫色标签', value: 'tag-purple', color: '#6f42c1' },
-    { label: '青色标签', value: 'tag-cyan', color: '#17a2b8' },
-    { label: '绿色标签', value: 'tag-green', color: '#17c13d' },
-    { label: '黄色标签', value: 'tag-yellow', color: '#ffba00' },
-  ]
 
   useEffect(() => {
     if (props.open) {
@@ -76,7 +59,6 @@ const Dialog = (props: Props, ref: any) => {
     targetItemsRef.current = dataSource.filter((item) =>
       newTargetKeys.includes(item.id),
     )
-
     setTargetKeys(newTargetKeys)
   }
 
@@ -126,59 +108,51 @@ const Dialog = (props: Props, ref: any) => {
         ),
       )
 
-      setTotal(res.rows)
-      setLoading(false)
+      // setTotal(res.rows)
+      // setLoading(false)
     } catch (error) {
-      setLoading(false)
+      // setLoading(false)
       console.log(error)
     }
   }
 
   const handleOk = async () => {
-    let propsArr: React.Key[] = []
-    props.foldetAddressList.forEach((item, index) => {
-      propsArr.push(item.id as React.Key)
-    })
-    let addArr: React.Key[] = propsArr.filter(
-      (item) => !targetKeys.includes(item),
-    )
-
-    let delArr: React.Key[] = targetKeys.filter(
-      (item) => !propsArr.includes(item),
-    )
-    console.log(addArr, 'addArr')
-    console.log(delArr, 'delArr')
-    console.log(props.folderId)
-    // console.log(propsArr, targetKeys, addArr, delArr)
-    if (addArr.length > 0) {
-      // 移出
-      const res = await moveAddressBook({
-        ids: addArr.join(','),
-        folder: props.folderId,
-        type: 1,
-        flag: 2,
+    setMoveLoading(true)
+    try {
+      let propsArr: React.Key[] = []
+      props.foldetAddressList.forEach((item, index) => {
+        propsArr.push(item.id as React.Key)
       })
-      if (res.status == 'success') {
-        message.success('移出成功')
-        props.onCancel()
-        props.onSearch()
+      let addArr: React.Key[] = propsArr.filter(
+        (item) => !targetKeys.includes(item),
+      )
+      let delArr: React.Key[] = targetKeys.filter(
+        (item) => !propsArr.includes(item),
+      )
+      if (addArr.length > 0) {
+        // 移出
+        await moveAddressBook({
+          ids: addArr.join(','),
+          folder: props.folderId,
+          type: 1,
+          flag: 2,
+        })
       }
-    }
-    if (delArr.length > 0) {
-      // 移入
-      try {
-        const res = await moveAddressBook({
+      if (delArr.length > 0) {
+        // 移入
+        await moveAddressBook({
           ids: delArr.join(','),
           folder: props.folderId,
           type: 1,
           flag: 1,
         })
-        if (res.status == 'success') {
-          message.success('移入成功')
-          props.onCancel()
-          props.onSearch()
-        }
-      } catch (error) {}
+      }
+      props.onCancel()
+      props.onSearch()
+      message.success('保存成功')
+      setMoveLoading(false)
+    } catch (error) {
+      setMoveLoading(false)
     }
   }
 
@@ -197,7 +171,7 @@ const Dialog = (props: Props, ref: any) => {
             <div className='fn18'>移入地址簿</div>
             <div style={{ display: 'flex' }}>
               <Form.Item name='tag' style={{ margin: 0, width: '120px' }}>
-                <Select placeholder='所有标签'>
+                <Select placeholder='所有标签' onChange={handleSearch}>
                   {options.map((option) => (
                     <Option key={option.value} value={option.value}>
                       {option.label}
@@ -230,8 +204,8 @@ const Dialog = (props: Props, ref: any) => {
         </Form>
       }
       onOk={handleOk}
+      confirmLoading={moveLoading}
       width={680}
-      style={{ top: 240 }}
       data-class='create-address'
       closable={false}
       wrapClassName='modal-create-address'>
