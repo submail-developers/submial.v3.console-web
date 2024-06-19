@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { Modal, Form, App, Flex, Pagination, Button } from 'antd'
+import { Modal, Form, App, Flex, Pagination, Button, Spin } from 'antd'
 import { getAddressbooksFolder } from '@/api'
 import './index.scss'
 import redImg from '@/assets/rcs/address/folder_red.png'
@@ -37,6 +37,7 @@ const Dialog = (props: Props, ref: any) => {
   const { message } = App.useApp()
   const [searchParams] = useSearchParams()
 
+  const [initLoading, setInitLoading] = useState(false)
   const [loading, setLoading] = useState(false)
 
   const [addressList, setAddressList] = useState()
@@ -50,6 +51,7 @@ const Dialog = (props: Props, ref: any) => {
   const currentFilesTag = searchParams.get('tag')
   // 获取地址簿文件夹
   const getAddressFolderList = async () => {
+    setInitLoading(true)
     try {
       const res = await getAddressbooksFolder({
         id: '',
@@ -62,7 +64,10 @@ const Dialog = (props: Props, ref: any) => {
       })
       setAddressFolderList(res.folders)
       setFolderTotal(res.rows)
-    } catch (error) {}
+      setInitLoading(false)
+    } catch (error) {
+      setInitLoading(false)
+    }
   }
 
   // 获取当前文件夹
@@ -117,7 +122,7 @@ const Dialog = (props: Props, ref: any) => {
       onCancel={props.onCancel}
       title='移动地址簿'
       width={600}
-      data-class='move-address'
+      data-class='see-move-address'
       closable={false}
       wrapClassName='modal-move-address'
       footer={
@@ -165,24 +170,32 @@ const Dialog = (props: Props, ref: any) => {
           style={{ color: '#666d7a', marginBottom: '10px' }}>
           文件夹列表
         </div>
-        {addressFolderList
-          .filter((i) => i.id != props.oldFolderId)
-          .map((item) => (
-            <div
-              className={`now-address2 fx-between-center p-x-24 p-y-4 g-pointer ${
-                addressList === item.id && 'active'
-              }`}
-              key={item.id}
-              onClick={() => handelAddressList(item)}>
-              <div className='fx-start-center'>
-                <img src={addresssIcon[item.tag]} alt='' />
-                <span className='fw-500'>{item.title}</span>
+        <div className='list'>
+          {addressFolderList
+            .filter((i) => i.id != props.oldFolderId)
+            .map((item) => (
+              <div
+                className={`now-address2 fx-between-center p-x-24 p-y-4 g-pointer ${
+                  addressList === item.id && 'active'
+                }`}
+                key={item.id}
+                onClick={() => handelAddressList(item)}>
+                <div className='fx-start-center'>
+                  <img src={addresssIcon[item.tag]} alt='' />
+                  <span className='fw-500'>{item.title}</span>
+                </div>
+                <div>
+                  <span className='num-p'>{item.num}</span> 个地址簿
+                </div>
               </div>
-              <div>
-                <span className='num-p'>{item.num}</span> 个地址簿
-              </div>
+            ))}
+
+          {initLoading && (
+            <div className='fx-center-center loading'>
+              <Spin></Spin>
             </div>
-          ))}
+          )}
+        </div>
       </Form>
     </Modal>
   )
