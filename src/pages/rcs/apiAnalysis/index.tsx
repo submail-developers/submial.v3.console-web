@@ -74,7 +74,7 @@ export default function Fn() {
 
   const [echartsData, setechartsData] = useState<API.GetUnionAnalysis>()
 
-  const [time, setTime] = useState<[Dayjs, Dayjs]>(rangePresets[3].value)
+  const [time, setTime] = useState<[Dayjs, Dayjs]>(rangePresets[0].value)
   const onRangeChange = (value: [Dayjs, Dayjs]) => {
     setTime(value)
   }
@@ -132,10 +132,11 @@ export default function Fn() {
         <Space size={24}>
           <Form.Item label='Chatbot选择' name='chatbot'>
             <Select
+              allowClear
               value={appid}
               onChange={changeChatbot}
               style={{ width: 120 }}
-              placeholder='所有标签'
+              placeholder='全部'
               options={chatbotList}
               fieldNames={{ label: 'name', value: 'id' }}></Select>
           </Form.Item>
