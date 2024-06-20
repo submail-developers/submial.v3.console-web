@@ -42,7 +42,7 @@ export default function Fn(props: Props) {
     },
     {
       title: '占比',
-      width: 60,
+      width: 100,
       className: 'paddingL30',
       render: (_, record) => <span>{record.rate}%</span>,
     },
@@ -75,7 +75,7 @@ export default function Fn(props: Props) {
     {
       title: '占比',
       className: 'paddingL30',
-      width: 90,
+      width: 100,
       render: (_, record) => <span>{record.rate}%</span>,
     },
   ]
