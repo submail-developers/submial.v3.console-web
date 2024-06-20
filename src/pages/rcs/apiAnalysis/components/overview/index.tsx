@@ -11,7 +11,6 @@ import apiIco2 from '@/assets/rcs/analysis/apiInfo2.png'
 import apiIco3 from '@/assets/rcs/analysis/apiInfo3.png'
 import apiIco4 from '@/assets/rcs/analysis/apiInfo4.png'
 import apiIco5 from '@/assets/rcs/analysis/apiInfo5.png'
-import apiIco6 from '@/assets/rcs/analysis/apiInfo6.png'
 
 type Props = {
   time: [Dayjs, Dayjs]
@@ -184,7 +183,7 @@ export default function Fn(props: Props) {
             <div
               className='fx-y-center g-radius-4 p-12'
               style={{ border: '1px solid #e6e6e6' }}>
-              <Image src={apiIco6} preview={false} width={40} />
+              <Image src={apiIco5} preview={false} width={40} />
               <div className='m-l-20'>
                 <div className='gray-color-sub'>联系人</div>
                 <div>{Number(props.rate.address).toLocaleString()}</div>
