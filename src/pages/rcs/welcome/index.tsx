@@ -12,8 +12,10 @@ import {
   DatePicker,
   Spin,
   Form,
+  Statistic,
+  ConfigProvider,
 } from 'antd'
-import type { CollapseProps, GetProps } from 'antd'
+import type { CollapseProps, GetProps, StatisticProps } from 'antd'
 import PageContent from '@/components/pageContent'
 import ARangePicker from '@/components/aRangePicker'
 import MyTour from './components/tour'
@@ -24,6 +26,7 @@ import SendTime from './components/sendTime'
 import SendDetail from './components/sendDetail'
 import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
+import CountUp from 'react-countup'
 
 import { getRcsOverview, getRcsAnalysisOverview } from '@/api'
 import { StorePage } from './components/pay/reducer'
@@ -163,6 +166,9 @@ const _items: CollapseProps['items'] = [
     children: <CollapseChildren />,
   },
 ]
+const formatter: StatisticProps['formatter'] = (value) => (
+  <CountUp end={value as number} separator=',' />
+)
 
 export default function Fn() {
   const tourRef = useRef(null)
@@ -264,7 +270,20 @@ export default function Fn() {
         <Col span={24} sm={12} md={12} xl={12} xxl={18}>
           <Card title='余额'>
             <div className='fn16 fw-500'>
-              {data && data.credits.toLocaleString()}
+              <ConfigProvider
+                theme={{
+                  components: {
+                    Statistic: {
+                      contentFontSize: 16,
+                    },
+                  },
+                }}>
+                <Statistic
+                  title=''
+                  value={data ? Number(data.credits) : 0}
+                  formatter={formatter}
+                />
+              </ConfigProvider>
             </div>
             <Button type='primary' className='m-t-16' onClick={showPay}>
               购买资源包
@@ -320,19 +339,19 @@ export default function Fn() {
         </Col>
 
         <Col span={24} sm={24} md={24} xl={12} xxl={15}>
-          <Card title='发送概览' loading={echartsLoading}>
+          <Card title='发送概览' loading={echartsLoading} minHeight={360}>
             {echartsData && (
               <SendOverview time={time} points={echartsData.points} />
             )}
           </Card>
         </Col>
         <Col span={24} sm={24} md={24} xl={12} xxl={9}>
-          <Card title='发送时段' loading={echartsLoading}>
+          <Card title='发送时段' loading={echartsLoading} minHeight={360}>
             {echartsData && <SendTime hotPoints={echartsData.hotpoints} />}
           </Card>
         </Col>
         <Col span={24}>
-          <Card title='发送详情' loading={echartsLoading}>
+          <Card title='发送详情' loading={echartsLoading} minHeight={360}>
             {echartsData && <SendDetail data={echartsData.send_analysis} />}
           </Card>
         </Col>

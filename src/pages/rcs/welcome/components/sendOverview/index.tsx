@@ -29,6 +29,25 @@ export default function Fn(props: Props) {
     currentDate = currentDate.add(1, 'day')
   }
 
+  let request: API.PointItem[] = []
+  let deliveryed: API.PointItem[] = []
+  let dropped: API.PointItem[] = []
+
+  formattedDates.forEach((item) => {
+    request.push({
+      cnt: props.points.request.find((i) => i.dateflg == item)?.cnt || 0,
+      dateflg: item,
+    })
+    deliveryed.push({
+      cnt: props.points.deliveryed.find((i) => i.dateflg == item)?.cnt || 0,
+      dateflg: item,
+    })
+    dropped.push({
+      cnt: props.points.dropped.find((i) => i.dateflg == item)?.cnt || 0,
+      dateflg: item,
+    })
+  })
+
   const option = {
     color: ['#1764ff', '#00a97b', '#f00011'],
     grid: { top: 8, right: 8, bottom: 24, left: 36 },
@@ -41,13 +60,13 @@ export default function Fn(props: Props) {
     },
     series: [
       {
-        data: map(props.points?.request, 'cnt'),
+        data: map(request, 'cnt'),
         type: 'line',
         smooth: false,
         name: '发送',
       },
       {
-        data: map(props.points?.deliveryed, 'cnt'),
+        data: map(deliveryed, 'cnt'),
         type: 'line',
         smooth: false,
         name: '成功',
@@ -56,7 +75,7 @@ export default function Fn(props: Props) {
         },
       },
       {
-        data: map(props.points?.dropped, 'cnt'),
+        data: map(dropped, 'cnt'),
         type: 'line',
         smooth: false,
         name: '失败',

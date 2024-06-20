@@ -153,7 +153,9 @@ const Footer = (props: FooterProps) => {
         // 取消订单
       } else {
         setPayLoading(false)
-        props.onCancel()
+        if (state.step == 2) {
+          props.onCancel()
+        }
       }
     } catch (error) {
       setPayLoading(false)
