@@ -701,7 +701,7 @@ export const getSendlistLogs = (data: API.GetSendlistLogsParams) => {
 
 // 获取api分析报告
 export const getUnionAnalysis = (data: API.GetUnionAnalysisParams) => {
-  return request.post<any, any, API.GetUnionAnalysisParams>(
+  return request.post<any, API.GetUnionAnalysisRes, API.GetUnionAnalysisParams>(
     '/console/api/rcs/get_union_analysis',
     {
       ...data,

@@ -3,6 +3,7 @@ import { Flex, Row, Col } from 'antd'
 import ReactEcharts from 'echarts-for-react'
 import { usePoint } from '@/hooks'
 import { API } from 'apis'
+import Big from 'big.js'
 
 type formatterItem = {
   color: string

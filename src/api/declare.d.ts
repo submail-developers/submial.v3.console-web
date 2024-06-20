@@ -1190,6 +1190,49 @@ declare module 'apis' {
       appid: string
     }
 
+    type GetUnionAnalysisResCityItem = {
+      cnt: string
+      city: string
+    }
+    type GetUnionAnalysisResProvinceItem = {
+      cnt: string
+      province: string
+    }
+    type sentType = '0' | '1' | '2' // 0下发为5G消息 1回落为短信 2回落为彩信
+    type GetUnionAnalysisResDropreasonItem = {
+      cnt: string
+      reason: string
+    }
+    type GetUnionAnalysisResSuccessItem = {
+      cnt: string
+      sentType: sentType
+    }
+    type GetUnionAnalysisResRate = {
+      request: string
+      deliveryed: string
+      dropped: string
+      fee: string
+      address: string
+    }
+    type GetUnionAnalysisResPoints = {
+      request: PointItem[]
+      deliveryed: PointItem[]
+      dropped: PointItem[]
+      fee: PointItem[]
+    }
+    type GetUnionAnalysis = {
+      city: GetUnionAnalysisResCityItem[]
+      province: GetUnionAnalysisResProvinceItem[]
+      dropreason: GetUnionAnalysisResDropreasonItem[]
+      successreason: GetUnionAnalysisResSuccessItem[]
+      rate: GetUnionAnalysisResRate
+      points: GetUnionAnalysisResPoints
+    }
+    interface GetUnionAnalysisRes {
+      analysis: GetUnionAnalysis
+      status: string
+    }
+
     // 短信验证
     interface VerifyCodeSmsParams {}
 

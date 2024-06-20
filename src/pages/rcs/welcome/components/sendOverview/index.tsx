@@ -25,7 +25,7 @@ export default function Fn(props: Props) {
     currentDate.isSame(endDate) ||
     currentDate.isBefore(endDate)
   ) {
-    formattedDates.push(currentDate.format('M/D'))
+    formattedDates.push(currentDate.format('YYYY-MM-DD'))
     currentDate = currentDate.add(1, 'day')
   }
 
