@@ -4,19 +4,15 @@ import {
   Image,
   Flex,
   Space,
-  Button,
   Divider,
-  Collapse,
   Row,
   Col,
   DatePicker,
-  Spin,
   Form,
   Select,
 } from 'antd'
-import type { CollapseProps, GetProps } from 'antd'
+import type { GetProps } from 'antd'
 import PageContent from '@/components/pageContent'
-import ARangePicker from '@/components/aRangePicker'
 import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
 
@@ -26,6 +22,8 @@ import Overview from './components/overview'
 import MySuccess from './components/success'
 import MyError from './components/error'
 import MyHot from './components/hot'
+import { getPresets } from '@/utils/day'
+import { usePoint } from '@/hooks'
 
 import { API } from 'apis'
 import { getChatbot, getUnionAnalysis } from '@/api'
@@ -34,40 +32,20 @@ import topIco from '@/assets/rcs/analysis/analysis_ico.png'
 
 import './index.scss'
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>
+const { RangePicker } = DatePicker
 
-// 只允许选择15天前-今天的日期
+// 只允许选择90天前-今天的日期
 const disabledDate: RangePickerProps['disabledDate'] = (current) => {
-  const today = dayjs().startOf('day')
+  const today = dayjs()
   const fifteenDaysAgo = today.subtract(90, 'day')
   const currentDate = dayjs(current)
   return currentDate.isBefore(fifteenDaysAgo) || currentDate.isAfter(today)
 }
-
-type RangePresets = {
-  label: string
-  value: [Dayjs, Dayjs]
-}[]
-
-const rangePresets: RangePresets = [
-  {
-    label: '最近 7 天',
-    value: [dayjs().add(-6, 'd'), dayjs()],
-  },
-  {
-    label: '最近 15 天',
-    value: [dayjs().add(-14, 'd'), dayjs()],
-  },
-  {
-    label: '最近一个月',
-    value: [dayjs().add(-30, 'd'), dayjs()],
-  },
-  {
-    label: '最近三个月',
-    value: [dayjs().add(-90, 'd'), dayjs()],
-  },
-]
+// 预设日期
+const rangePresets = getPresets([7, 15, 30, 90])
 
 export default function Fn() {
+  const pointXs = usePoint('xs')
   const [loading, setLoading] = useState(false)
   const [chatbotList, setChatbotLit] = useState<API.ChatbotItem[]>([])
   const [appid, setappid] = useState('')
@@ -141,14 +119,11 @@ export default function Fn() {
               fieldNames={{ label: 'name', value: 'id' }}></Select>
           </Form.Item>
           <Form.Item label='时间范围' name='time'>
-            <ARangePicker
-              initValue={time}
-              presets={rangePresets}
-              rangePickerProps={{
-                allowClear: false,
-                disabledDate: disabledDate,
-              }}
-              onRangeChange={onRangeChange}
+            <RangePicker
+              presets={!pointXs && rangePresets}
+              allowClear={false}
+              disabledDate={disabledDate}
+              onChange={onRangeChange}
             />
           </Form.Item>
         </Space>

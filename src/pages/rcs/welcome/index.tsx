@@ -17,7 +17,6 @@ import {
 } from 'antd'
 import type { CollapseProps, GetProps, StatisticProps } from 'antd'
 import PageContent from '@/components/pageContent'
-import ARangePicker from '@/components/aRangePicker'
 import MyTour from './components/tour'
 import MyPay from './components/pay'
 import Card from './components/card'
@@ -27,56 +26,28 @@ import SendDetail from './components/sendDetail'
 import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
 import CountUp from 'react-countup'
+import { usePoint } from '@/hooks'
 
 import { getRcsOverview, getRcsAnalysisOverview } from '@/api'
 import { StorePage } from './components/pay/reducer'
 
 import codeImg from '@/assets/rcs/chatbot_1.png'
+import { getPresets } from '@/utils/day'
 
 import './index.scss'
 import { API } from 'apis'
 
-type RangePresets = {
-  label: string
-  value: [Dayjs, Dayjs]
-}[]
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>
 
-const rangePresets: RangePresets = [
-  {
-    label: '今天',
-    value: [dayjs().add(0, 'd'), dayjs()],
-  },
-  {
-    label: '昨天',
-    value: [dayjs().add(-1, 'd'), dayjs().add(-1, 'd')],
-  },
-  {
-    label: '最近 3 天',
-    value: [dayjs().add(-2, 'd'), dayjs()],
-  },
-  {
-    label: '最近 7 天',
-    value: [dayjs().add(-6, 'd'), dayjs()],
-  },
-  {
-    label: '最近 15 天',
-    value: [dayjs().add(-14, 'd'), dayjs()],
-  },
-  // {
-  //   label: '最近一个月',
-  //   value: [dayjs().add(-30, 'd'), dayjs()],
-  // },
-  // {
-  //   label: '最近三个月',
-  //   value: [dayjs().add(-90, 'd'), dayjs()],
-  // },
-]
+const { RangePicker } = DatePicker
+
+// 预设日期
+const rangePresets = getPresets([0, 1, 3, 7, 15])
 
 // 只允许选择15天前-今天的日期
 const disabledDate: RangePickerProps['disabledDate'] = (current) => {
-  const today = dayjs().startOf('day')
-  const fifteenDaysAgo = today.subtract(14, 'day')
+  const today = dayjs()
+  const fifteenDaysAgo = today.subtract(15, 'day')
   const currentDate = dayjs(current)
   return currentDate.isBefore(fifteenDaysAgo) || currentDate.isAfter(today)
 }
@@ -173,6 +144,7 @@ const formatter: StatisticProps['formatter'] = (value) => (
 export default function Fn() {
   const tourRef = useRef(null)
   const payRef = useRef(null)
+  const point = usePoint('xs')
 
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
@@ -188,7 +160,7 @@ export default function Fn() {
   }
 
   const onRangeChange = (value: [Dayjs, Dayjs]) => {
-    setTime(value)
+    form.setFieldValue('time', value)
   }
 
   const getData = async () => {
@@ -240,19 +212,6 @@ export default function Fn() {
       <Image src={codeImg} preview={false} width={72}></Image>
       <Flex justify='space-between' align='center'>
         <div className='fn22 fw-500'>账户概览</div>
-
-        {/* <Form form={form} onValuesChange={onValuesChange}>
-          <Form.Item name='time'>
-            <ARangePicker
-              presets={rangePresets}
-              form={form}
-              name='time'
-              rangePickerProps={{
-                allowClear: false,
-              }}
-            />
-          </Form.Item>
-        </Form> */}
       </Flex>
       <Divider />
 
@@ -324,15 +283,18 @@ export default function Fn() {
             orientationMargin={0}
             children={
               <div style={{ width: 240 }}>
-                <ARangePicker
-                  initValue={time}
-                  presets={rangePresets}
-                  rangePickerProps={{
-                    allowClear: false,
-                    disabledDate: disabledDate,
-                  }}
-                  onRangeChange={onRangeChange}
-                />
+                <Form
+                  initialValues={{ time: rangePresets[2].value }}
+                  form={form}>
+                  <Form.Item name='time' className='m-b-0'>
+                    <RangePicker
+                      presets={!point && rangePresets}
+                      allowClear={false}
+                      disabledDate={disabledDate}
+                      onChange={onRangeChange}
+                    />
+                  </Form.Item>
+                </Form>
               </div>
             }
           />

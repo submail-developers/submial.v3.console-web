@@ -23,6 +23,7 @@ type Locale = ConfigProviderProps['locale']
 export default function App() {
   const [locale, setLocal] = useState<Locale>(zhCN)
   const point = usePoint('xl')
+  const pointXs = usePoint('xs')
   useEffect(() => {
     setLocal(zhCN)
     dayjs.locale('zh-cn')
@@ -31,7 +32,13 @@ export default function App() {
     <ConfigProvider
       theme={{
         token: { ...token, controlHeight: point ? 40 : 32 },
-        components,
+        components: {
+          ...components,
+          DatePicker: {
+            cellWidth: pointXs ? 22 : 36,
+            cellHeight: pointXs ? 22 : 24,
+          },
+        },
       }}
       locale={locale}>
       <AntdApp style={{ width: '100%', height: '100%' }}>
