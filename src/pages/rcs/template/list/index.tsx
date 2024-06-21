@@ -63,14 +63,24 @@ export default function Fn() {
     setLoading(true)
     getList()
   }
-
-  useEffect(() => {
-    getList()
-  }, [currentPage, pageSize, status])
+  // 除搜索关键字，其他字段改变直接搜索
+  const onValuesChange = (changedValues, allValues) => {
+    if (!('keywords' in changedValues)) {
+      if (currentPage == 1) {
+        handleSearch()
+      } else {
+        setcurrentPage(1)
+      }
+    }
+  }
   const changeStatus = (value) => {
     setcurrentPage(1)
     setStatus(value)
   }
+
+  useEffect(() => {
+    getList()
+  }, [currentPage, pageSize, status])
 
   return (
     <PageContent extClass='template-list' xxl={1400} xl={1100}>
@@ -91,41 +101,37 @@ export default function Fn() {
         className='template-list-form'
         form={form}
         layout='vertical'
-        initialValues={{ type: 'all', keyword: '' }}
+        initialValues={{ type: 'all' }}
+        onValuesChange={onValuesChange}
         autoComplete='off'>
-        <Row gutter={16}>
-          <Col span={10} md={10} lg={8} xl={6}>
-            <Form.Item name='keyword' label='模版名称/ID'>
-              <Input placeholder='请输入' />
-            </Form.Item>
-          </Col>
-          <Col span={8} md={8} lg={6} xl={4}>
-            <Form.Item name='type' label='模版类型'>
-              <Select
-                placeholder='请选择'
-                options={[
-                  { value: 'all', label: '全部' },
-                  { value: 1, label: '文本' },
-                  { value: 2, label: '单卡片' },
-                  { value: 3, label: '多卡片' },
-                  // { value: 4, label: '文件' },
-                ]}
-              />
-            </Form.Item>
-          </Col>
-          <Col span={6} md={4} xl={3}>
-            <Form.Item label=' '>
-              <Button
-                type='primary'
-                className='w-100'
-                htmlType='submit'
-                loading={loading}
-                onClick={handleSearch}>
-                查询
-              </Button>
-            </Form.Item>
-          </Col>
-        </Row>
+        <Flex align='flex-end' gap={16}>
+          <Form.Item name='type' label='模版类型'>
+            <Select
+              placeholder='请选择'
+              options={[
+                { value: 'all', label: '全部' },
+                { value: 1, label: '文本' },
+                { value: 2, label: '单卡片' },
+                { value: 3, label: '多卡片' },
+                // { value: 4, label: '文件' },
+              ]}
+              popupMatchSelectWidth={120}
+              style={{ width: 120 }}
+            />
+          </Form.Item>
+          <Form.Item name='keyword' label='模版名称/ID'>
+            <Input placeholder='请输入' onPressEnter={handleSearch} />
+          </Form.Item>
+          <Form.Item label=' '>
+            <Button
+              type='primary'
+              htmlType='submit'
+              loading={loading}
+              onClick={handleSearch}>
+              查询
+            </Button>
+          </Form.Item>
+        </Flex>
       </Form>
       <Flex align='center' justify='space-between'>
         <Space wrap>
