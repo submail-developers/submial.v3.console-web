@@ -6,8 +6,6 @@ import {
   Form,
   Input,
   Select,
-  Row,
-  Col,
   Table,
   Image,
   Popconfirm,
@@ -18,7 +16,6 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import PageContent from '@/components/pageContent'
 import { PlusOutlined } from '@ant-design/icons'
 import codeImg from '@/assets/rcs/chatbot_1.png'
-import { usePoint } from '@/hooks'
 import { getChatbot, deleteChatbot } from '@/api'
 import { API } from 'apis'
 
@@ -33,7 +30,6 @@ import './index.scss'
 interface DataType extends API.ChatbotItem {}
 
 export default function Fn() {
-  const point = usePoint('lg')
   const nav = useNavigate()
   const [form] = Form.useForm()
   const [limit, setLimit] = useState(20)
@@ -153,6 +149,16 @@ export default function Fn() {
     setPage(page)
     setLimit(pageSize)
   }
+  // 除搜索关键字，其他字段改变直接搜索
+  const onValuesChange = (changedValues, allValues) => {
+    if (!('keywords' in changedValues)) {
+      if (page == 1) {
+        getList()
+      } else {
+        setPage(1)
+      }
+    }
+  }
 
   useEffect(() => {
     getList()
@@ -165,7 +171,6 @@ export default function Fn() {
         <div className='fn22 fw-500'>申请/管理 Chatbot</div>
         <Button
           type='primary'
-          size={point ? 'large' : 'middle'}
           onClick={toCreate}
           icon={<PlusOutlined className='fn14' rev={undefined} />}>
           申请 Chatbot
@@ -178,55 +183,44 @@ export default function Fn() {
         className='chatbot-list-form'
         form={form}
         layout='vertical'
-        size={point ? 'large' : 'middle'}
-        initialValues={{ status: 'all', keywords: '' }}
+        initialValues={{ status: 'all', status2: 'all' }}
+        onValuesChange={onValuesChange}
         autoComplete='off'>
-        <Row gutter={16}>
-          <Col span={10} md={10} lg={8} xl={6}>
-            <Form.Item name='keywords' label='关键词搜索'>
-              <Input placeholder='Chatbot名称' />
-            </Form.Item>
-          </Col>
-          <Col span={8} md={8} lg={6} xl={4}>
-            <Form.Item name='status' label='基本信息审核状态'>
-              <Select
-                placeholder='请选择'
-                options={[
-                  { value: 'all', label: '全部' },
-                  { value: '1', label: '审核通过' },
-                  { value: '2', label: '审核驳回' },
-                  { value: '3', label: '审核中' },
-                ]}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8} md={8} lg={6} xl={4}>
-            <Form.Item name='status2' label='固定菜单审核状态'>
-              <Select
-                placeholder='请选择'
-                options={[
-                  { value: 'all', label: '全部' },
-                  { value: '1', label: '等待审核' },
-                  { value: '2', label: '审核通过' },
-                  { value: '3', label: '审核驳回' },
-                  { value: '4', label: '未上传' },
-                ]}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={6} md={4} xl={3}>
-            <Form.Item label=' '>
-              <Button
-                type='primary'
-                className='w-100'
-                onClick={() => getList()}>
-                查询
-              </Button>
-            </Form.Item>
-          </Col>
-        </Row>
+        <Flex align='flex-end' gap={16}>
+          <Form.Item name='status' label='基本信息审核状态'>
+            <Select
+              placeholder='请选择'
+              popupMatchSelectWidth={120}
+              style={{ width: 120 }}
+              options={[
+                { value: 'all', label: '全部' },
+                { value: '1', label: '审核通过' },
+                { value: '2', label: '审核驳回' },
+                { value: '3', label: '审核中' },
+              ]}
+            />
+          </Form.Item>
+          <Form.Item name='status2' label='固定菜单审核状态'>
+            <Select
+              placeholder='请选择'
+              options={[
+                { value: 'all', label: '全部' },
+                { value: '1', label: '等待审核' },
+                { value: '2', label: '审核通过' },
+                { value: '3', label: '审核驳回' },
+                { value: '4', label: '未上传' },
+              ]}
+            />
+          </Form.Item>
+          <Form.Item name='keywords' label='关键词搜索'>
+            <Input placeholder='Chatbot名称' onPressEnter={getList} />
+          </Form.Item>
+          <Form.Item label=' '>
+            <Button type='primary' className='w-100' onClick={getList}>
+              查询
+            </Button>
+          </Form.Item>
+        </Flex>
       </Form>
       <div style={{ width: '100%', overflowX: 'hidden' }}>
         <Table
