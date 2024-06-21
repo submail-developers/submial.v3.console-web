@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Modal,
@@ -10,6 +10,7 @@ import {
   Row,
   Col,
   Empty,
+  Spin,
 } from 'antd'
 import { getRcsTempList } from '@/api'
 import Item from '@/pages/rcs/template/list/item'
@@ -22,13 +23,15 @@ type Props = {
 }
 
 type TitleProps = {
-  loading: boolean
   onSearch: (str: string) => void
 }
 
 // 弹框title
 const Title = (props: TitleProps) => {
   const [text, setText] = useState<string>()
+  const onPressEnter = (e) => {
+    props.onSearch(e.target.value)
+  }
   return (
     <Flex justify='space-between' align='center'>
       <div>选择模版</div>
@@ -38,12 +41,9 @@ const Title = (props: TitleProps) => {
           value={text}
           autoComplete='off'
           onChange={(e) => setText(e.target.value)}
-          onPressEnter={() => props.onSearch(text)}
+          onPressEnter={onPressEnter}
         />
-        <Button
-          type='primary'
-          loading={props.loading}
-          onClick={() => props.onSearch(text)}>
+        <Button type='primary' onClick={() => props.onSearch(text)}>
           搜索
         </Button>
       </Space>
@@ -56,6 +56,7 @@ export default function Fn(props: Props) {
   const point = usePoint('sm')
   const nav = useNavigate()
   const [keyword, setKeyword] = useState('')
+  const keywordRef = useRef('')
   const [currentPage, setcurrentPage] = useState<number>(1)
   const [pageSize, setpageSize] = useState<number>(12)
   const [total, setTotal] = useState<number>(0)
@@ -63,12 +64,13 @@ export default function Fn(props: Props) {
   const [loading, setLoading] = useState(false)
 
   const getList = async () => {
+    setLoading(true)
     try {
       const res = await getRcsTempList({
         page: currentPage,
         limit: pageSize,
         status: '1',
-        keyword: keyword,
+        keyword: keywordRef.current,
       })
       setLoading(false)
       setList(res.list)
@@ -84,10 +86,12 @@ export default function Fn(props: Props) {
   }
 
   const handleSearch = (val) => {
-    setLoading(true)
-    setcurrentPage(1)
-    setKeyword(val)
-    getList()
+    keywordRef.current = val
+    if (currentPage == 1) {
+      getList()
+    } else {
+      setcurrentPage(1)
+    }
   }
 
   // 选择该模版
@@ -110,7 +114,7 @@ export default function Fn(props: Props) {
       open={props.open}
       onCancel={props.onCancel}
       width={1092}
-      title={<Title loading={loading} onSearch={handleSearch} />}
+      title={<Title onSearch={handleSearch} />}
       footer={
         <Flex justify='space-between' align='center'>
           <Pagination
@@ -139,6 +143,13 @@ export default function Fn(props: Props) {
         ))}
       </Row>
       {list.length == 0 && <Empty className='m-t-40' />}
+      {loading && (
+        <div
+          className='w-100 fx-center-center'
+          style={{ position: 'absolute', top: '100px', left: 0 }}>
+          <Spin></Spin>
+        </div>
+      )}
     </Modal>
   )
 }
