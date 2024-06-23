@@ -22,6 +22,7 @@ import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
 
 import PageContent from '@/components/pageContent'
+import ACopy from '@/components/aCopy'
 import { getPresets } from '@/utils/day'
 
 import { getSendlists } from '@/api'
@@ -66,7 +67,7 @@ const typeOptions = [
   },
   {
     value: '1',
-    label: '普通发送',
+    label: '即时发送',
   },
   {
     value: '2',
@@ -107,17 +108,16 @@ const rangePresets = getPresets([3, 7, 15, 30, 90])
 
 export default function Fn() {
   const size = useSize()
-  const point = usePoint('lg')
   const pointXs = usePoint('xs')
+  const nav = useNavigate()
 
   const [loading, setLoading] = useState(false)
-  const [currentPage, setcurrentPage] = useState<number>(1)
-  const [pageSize, setpageSize] = useState<number>(40)
+  const [page, setPage] = useState<number>(1)
+  const [limit, setLimit] = useState<number>(10)
   const [total, setTotal] = useState<number>(0)
   const [getSendList, setGetSendList] = useState<API.GetSendlistsItems[]>()
   const [form] = Form.useForm()
 
-  const nav = useNavigate()
   // 获取任务发送报告
   const getList = async () => {
     setLoading(true)
@@ -132,8 +132,8 @@ export default function Fn() {
         status: fromValues.status,
         order_by: fromValues.order_by,
         type: fromValues.type,
-        page: currentPage,
-        limit: pageSize,
+        page: page,
+        limit: limit,
       }
       const res = await getSendlists(params)
       setGetSendList(res.data)
@@ -148,15 +148,35 @@ export default function Fn() {
     form.setFieldValue('time', dates)
   }
 
-  useEffect(() => {
-    getList()
-  }, [])
+  const changePageInfo = (page, pageSize) => {
+    setPage(page)
+    setLimit(pageSize)
+  }
 
+  // 除搜索关键字，其他字段改变直接搜索
   const onValuesChange = (changedValues, allValues) => {
     if (!('keywords' in changedValues)) {
-      getList()
+      if (page == 1) {
+        getList()
+      } else {
+        setPage(1)
+      }
     }
   }
+
+  // 导出
+  const exportEvent = async (e) => {
+    console.log(e)
+  }
+
+  // 查看详情
+  const toDetail = (id) => {
+    nav(`/console/rcs/batchreport/detail/${id}`)
+  }
+
+  useEffect(() => {
+    getList()
+  }, [limit, page])
 
   const columns = [
     {
@@ -168,27 +188,40 @@ export default function Fn() {
     },
     {
       title: '模板ID',
-      dataIndex: 'project',
-      key: 'project',
-      width: 120,
+      width: 100,
+      render: (_, record) => (
+        <div className='w-100' style={{ position: 'relative' }}>
+          <ACopy text={record.project} />
+          {record.project}
+        </div>
+      ),
     },
     {
       title: 'Chatbot名称',
-      dataIndex: 'chatbot_name',
-      width: 200,
+      width: 160,
+      render: (_, record) => (
+        <div
+          className='g-ellipsis'
+          style={{ width: 150 }}
+          title={record.chatbot_name}>
+          {record.chatbot_name}
+        </div>
+      ),
     },
     {
       title: '联系人(数量)',
       dataIndex: 'address',
-      width: 120,
+      width: 110,
+      render: (_, record) => (
+        <span>{Number(record.address).toLocaleString()}</span>
+      ),
     },
     {
       title: '类型',
       dataIndex: 'type',
-      key: 'type',
       width: 120,
       render: (_, record) => (
-        <span className='send-type'>
+        <span className={`send-type ${record.type == '1' ? '' : 'type2'}`}>
           {record.type == '1' ? '普通发送' : '定时发送'}
         </span>
       ),
@@ -196,8 +229,7 @@ export default function Fn() {
     {
       title: '状态',
       dataIndex: 'status',
-      key: 'status',
-      width: 120,
+      width: 100,
       render: (_, record) => (
         <div className={statusStyle[record.status]}>
           {statusNum[record.status]}
@@ -207,17 +239,16 @@ export default function Fn() {
     {
       title: '提交时间',
       dataIndex: 'send',
-      width: 200,
+      width: 180,
     },
     {
       title: '完成日期',
       dataIndex: 'sent',
-      width: 200,
+      width: 180,
     },
     {
       title: '操作',
-      width: 160,
-      className: 'paddingL20',
+      width: 100,
       render: (_, record) => (
         <>
           <span>
@@ -233,30 +264,23 @@ export default function Fn() {
     },
   ]
 
-  const edit = async (e) => {
-    console.log(e)
-  }
-
-  const toDetail = (id) => {
-    nav(`/console/rcs/batchreport/detail/${id}`)
-  }
   return (
-    <PageContent extClass='batchreport'>
+    <PageContent extClass='batchreport' xxl={1300}>
       <Image src={topIco} preview={false} width={72}></Image>
       <Flex justify='space-between' align='center' style={{ marginTop: '4px' }}>
         <div className='fn22 fw-500'>批量任务发送报告</div>
 
-        <Button type='primary' size={point ? 'large' : 'middle'}>
-          <Dropdown
-            className='export'
-            menu={{ items, selectable: true, onClick: edit }}
-            trigger={['click']}>
-            <Space>
-              导出
+        <Dropdown
+          className='export'
+          menu={{ items, selectable: true, onClick: exportEvent }}
+          trigger={['click']}>
+          <Button type='primary' style={{ width: 120 }}>
+            <Flex align='center' justify='space-around'>
+              <span>导出</span>
               <DownOutlined rev={null} />
-            </Space>
-          </Dropdown>
-        </Button>
+            </Flex>
+          </Button>
+        </Dropdown>
       </Flex>
       <Divider className='line'></Divider>
       <Form
@@ -270,96 +294,73 @@ export default function Fn() {
           type: 'all',
           status: 'all',
           order_by: 'send',
-          time: rangePresets[1].value,
+          time: rangePresets[4].value,
         }}>
-        <Row gutter={[16, 16]} className='m-b-20' wrap align={'bottom'}>
-          <Col>
-            <Form.Item label='任务类型' name='type' className='m-b-0'>
-              <Select
-                placeholder='全部类型'
-                popupMatchSelectWidth={120}
-                style={{ width: 120 }}>
-                {typeOptions.map((option) => (
-                  <Option key={option.value} value={option.value}>
-                    {option.label}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col>
-            <Form.Item label='发送状态' name='status' className='m-b-0'>
-              <Select
-                placeholder='全部标签'
-                popupMatchSelectWidth={120}
-                style={{ width: 120 }}>
-                {sendOptions.map((option) => (
-                  <Option key={option.value} value={option.value}>
-                    {option.label}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col>
-            <Form.Item name='time' label='时间范围' className='m-b-0'>
-              <RangePicker
-                presets={!pointXs && rangePresets}
-                allowClear={false}
-                disabledDate={disabledDate}
-                onChange={onRangeChange}
-              />
-            </Form.Item>
-          </Col>
-          <Col>
-            <Form.Item
-              label='搜索'
-              name='keywords'
-              style={{ marginBottom: '0px' }}>
-              <Input placeholder='请输入关键词' />
-            </Form.Item>
-          </Col>
-          <Col>
-            <Form.Item name='order_by' label='' className='m-b-0'>
-              <Select
-                placeholder='选择排序'
-                popupMatchSelectWidth={120}
-                style={{ width: 120 }}
-                suffixIcon={
-                  <i className='icon iconfont icon-paixu color fn14'></i>
-                }>
-                {order.map((order) => (
-                  <Option key={order.value} value={order.value}>
-                    {order.label}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col span={6} md={4} xl={3}>
-            <Form.Item label='' className='m-b-0'>
-              <Button
-                type='primary'
-                className='w-100'
-                htmlType='submit'
-                onClick={() => getList()}>
-                查询
-              </Button>
-            </Form.Item>
-          </Col>
-        </Row>
+        <Flex align='flex-end' wrap='wrap' gap={16}>
+          <Form.Item label='任务类型' name='type' className='m-b-0'>
+            <Select
+              placeholder=''
+              popupMatchSelectWidth={120}
+              style={{ width: 120 }}
+              options={typeOptions}></Select>
+          </Form.Item>
+          <Form.Item label='发送状态' name='status' className='m-b-0'>
+            <Select
+              placeholder=''
+              popupMatchSelectWidth={120}
+              style={{ width: 120 }}
+              options={sendOptions}></Select>
+          </Form.Item>
+          <Form.Item name='order_by' label='排序' className='m-b-0'>
+            <Select
+              placeholder='选择排序'
+              popupMatchSelectWidth={120}
+              style={{ width: 120 }}
+              suffixIcon={
+                <i className='icon iconfont icon-paixu color fn14'></i>
+              }
+              options={order}></Select>
+          </Form.Item>
+          <Form.Item name='time' label='时间范围' className='m-b-0'>
+            <RangePicker
+              presets={!pointXs && rangePresets}
+              allowClear={false}
+              disabledDate={disabledDate}
+              onChange={onRangeChange}
+            />
+          </Form.Item>
+          <Form.Item
+            label='搜索'
+            name='keywords'
+            style={{ marginBottom: '0px' }}>
+            <Input placeholder='请输入关键词' onPressEnter={getList} />
+          </Form.Item>
+          <Form.Item label='' className='m-b-0'>
+            <Button
+              type='primary'
+              className='w-100'
+              htmlType='submit'
+              onClick={getList}>
+              查询
+            </Button>
+          </Form.Item>
+        </Flex>
 
         <Table
           loading={loading}
-          className='theme-cell reset-table'
+          className='theme-cell reset-table m-t-24'
           columns={columns}
           dataSource={getSendList}
           rowKey={'id'}
           sticky
           pagination={{
             position: ['bottomRight'],
-            pageSize: 100,
-            pageSizeOptions: [100, 200, 300],
+            current: page,
+            pageSize: limit,
+            showQuickJumper: true,
+            pageSizeOptions: [10, 20, 50],
+            total: total,
+            onChange: changePageInfo,
           }}
           scroll={{ x: 'max-content' }}
         />

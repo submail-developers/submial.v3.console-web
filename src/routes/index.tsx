@@ -254,9 +254,7 @@ export const menus: RouteObject[] = [
         children: [
           {
             path: 'index',
-            loader: loaderFn({
-              breadName: '批量发送报告详情',
-            }),
+            loader: loaderFn({}),
             errorElement: <Error />,
             element: (
               <LazyImportComponent
@@ -267,7 +265,7 @@ export const menus: RouteObject[] = [
           {
             path: 'detail/:id',
             loader: loaderFn({
-              breadName: '批量发送报告详情',
+              breadName: '报告详情',
             }),
             errorElement: <Error />,
             element: (

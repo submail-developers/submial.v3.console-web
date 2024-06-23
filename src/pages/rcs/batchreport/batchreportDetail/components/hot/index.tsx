@@ -1,7 +1,8 @@
 import { API } from 'apis'
-import { Table, Row, Col, Space, Progress, Flex } from 'antd'
+import { Table, Row, Col, Progress, Flex } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { useEffect, useState } from 'react'
+import { usePoint } from '@/hooks'
 interface DataTypeP extends API.AnalysisProvinceItem {
   rate?: string | number
 }
@@ -14,6 +15,7 @@ type Props = {
   province: API.AnalysisProvinceItem[]
 }
 export default function Fn(props: Props) {
+  const point = usePoint('xs')
   const [tablePData, settablePData] = useState<DataTypeP[]>([])
   const [tableCData, settableCData] = useState<DataTypeC[]>([])
   const columnsP: ColumnsType<DataTypeP> = [
@@ -120,7 +122,7 @@ export default function Fn(props: Props) {
           rowKey={'province'}
           sticky
           pagination={false}
-          // scroll={{ y: 600 }}
+          scroll={{ y: point ? 'fit-content' : 600 }}
         />
       </Col>
       <Col span={24} xl={12}>
@@ -132,7 +134,7 @@ export default function Fn(props: Props) {
           rowKey={'city'}
           sticky
           pagination={false}
-          // scroll={{ y: 600 }}
+          scroll={{ y: point ? 'fit-content' : 600 }}
         />
       </Col>
     </Row>

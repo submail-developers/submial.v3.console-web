@@ -106,7 +106,7 @@ export default function Fn() {
         <MyExport />
       </Flex>
       <Divider />
-      <Form layout='vertical'>
+      <Form layout='vertical' initialValues={{ time: rangePresets[0].value }}>
         <Space size={24}>
           <Form.Item label='Chatbot选择' name='chatbot'>
             <Select
@@ -153,9 +153,11 @@ export default function Fn() {
           </MyCard>
         </Col>
         <Col span={24}>
-          {echartsData && (
-            <MyHot province={echartsData.province} city={echartsData.city} />
-          )}
+          <MyHot
+            loading={loading}
+            province={echartsData.province}
+            city={echartsData.city}
+          />
         </Col>
       </Row>
     </PageContent>

@@ -660,34 +660,37 @@ export const getSendlists = (data: API.GetSendlistsParams) => {
 }
 // 获取批量任务发送报告详情
 export const getSendlistReport = (data: API.GetSendlistReportParams) => {
-  return request.post<any, any, API.GetSendlistReportParams>(
-    'console/api/rcs/get_sendlist_report',
-    {
-      ...data,
-    },
-  )
+  return request.post<
+    any,
+    API.GetSendlistReportRes,
+    API.GetSendlistReportParams
+  >('console/api/rcs/get_sendlist_report', {
+    ...data,
+  })
 }
 // 获取批量任务发送报告概览详情
 export const getSndlistSendanalysisreport = (
   data: API.GetSendanalysisreportParams,
 ) => {
-  return request.post<any, any, API.GetSendanalysisreportParams>(
-    'console/api/rcs/get_sendlist_send_analysis_report',
-    {
-      ...data,
-    },
-  )
+  return request.post<
+    any,
+    API.Response<API.GetSendanalysisreportRes>,
+    API.GetSendanalysisreportParams
+  >('console/api/rcs/get_sendlist_send_analysis_report', {
+    ...data,
+  })
 }
 // 概览数据分析
 export const getSendlistDeepAnalysisReport = (
   data: API.GetSendlistDeepAnalysisParams,
 ) => {
-  return request.post<any, any, API.GetSendlistDeepAnalysisParams>(
-    '/console/api/rcs/get_sendlist_deep_analysis_report',
-    {
-      ...data,
-    },
-  )
+  return request.post<
+    any,
+    API.Response<API.GetSendlistDeepAnalysisRes>,
+    API.GetSendlistDeepAnalysisParams
+  >('/console/api/rcs/get_sendlist_deep_analysis_report', {
+    ...data,
+  })
 }
 // 发送明细
 export const getSendlistLogs = (data: API.GetSendlistLogsParams) => {

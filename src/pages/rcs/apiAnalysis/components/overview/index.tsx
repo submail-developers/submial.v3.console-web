@@ -20,7 +20,7 @@ type Props = {
     dropped: API.PointItem[]
     fee: API.PointItem[]
   }
-  rate: API.GetUnionAnalysisResRate
+  rate: API.AnalysisRate
 }
 import './index.scss'
 export default function Fn(props: Props) {

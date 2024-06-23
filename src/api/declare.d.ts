@@ -1119,16 +1119,107 @@ declare module 'apis' {
     interface GetSendlistReportParams {
       sendlist: string
     }
+    interface GetSendlistReportResInfo {
+      id: string
+      title: string
+      account: string
+      appid: string
+      project: string
+      address: string
+      type: string
+      timetosend: string
+      send: string
+      sent: string
+      status: '0' | '1' | '9' // '1发送完成  0尚未开始  9已撤销',
+      ip_address: string
+      errors: string
+      shortMessageSupported: 'true' | 'false' // 是否支持短信回落
+      smsBodyText: string
+      multimediaMessageSupported: 'true' | 'false' // 是否支持彩信回落
+      mmsSubject: string
+      mmsContentLength: string
+      mmsBodyText: string
+      addressbook: string
+      addressfile_oss_path: string // 通过文件导入的方式创建发送任务的文件地址
+      resend_status: string
+      resend_enable: string
+      resend_sendlist: string
+      chatbot_name: string
+      template_id: string
+      template_name: string
+    }
+    interface SendAddressItem {
+      address: string
+      create_at: string
+      folder: string
+      name: string
+      sign: string
+      tag: string
+      update_at: string
+    }
+    interface GetSendlistReportRes {
+      status: string
+      sendlist: GetSendlistReportResInfo
+      addressbooks: []
+      exportconfirm: string
+      mob: string
+    }
+
     interface GetSendanalysisreportParams {
       sendlist: string
+    }
+    interface GetSendanalysisreportRes {
+      rate: AnalysisRate
+      address: string
     }
     // 概览数据分析参数
     interface GetSendlistDeepAnalysisParams {
       sendlist: string
     }
+    interface GetSendlistDeepAnalysisRes {
+      city: AnalysisCityItem[]
+      province: AnalysisProvinceItem[]
+      dropreason: AnalysisDropreasonItem[]
+      successreason: AnalysisSuccessItem[]
+      points: AnalysisPoints
+    }
     // 发送明细参数
     interface GetSendlistLogsParams {
       sendlist: string
+    }
+    interface SendLogItem {
+      sendID: string
+      send: string
+      sent: string
+      appid: string
+      serviceCode: string
+      to: string
+      sign: string
+      api: string
+      ipAddress: string
+      message: string
+      suggestions: string
+      sendlist: string
+      conversationID: string
+      contributionID: string
+      inReplyToContributionID: string
+      sms: string
+      smsContent: string
+      mms: string
+      mmsSubject: string
+      mmsContent: string
+      mobileType: string
+      mobileArea: string
+      sentType: string
+      status: string
+      desc: string
+    }
+    interface GetSendlistLogsRes {
+      exportconfirm: string
+      history: SendLogItem[]
+      mob: string
+      page: string
+      row: string
     }
     // 获取发送明细返回值
     interface GetSendlistLogsItems {
@@ -1190,43 +1281,43 @@ declare module 'apis' {
       appid: string
     }
 
-    type GetUnionAnalysisResCityItem = {
+    type AnalysisCityItem = {
       cnt: string
       city: string
     }
-    type GetUnionAnalysisResProvinceItem = {
+    type AnalysisProvinceItem = {
       cnt: string
       province: string
     }
     type sentType = '0' | '1' | '2' // 0下发为5G消息 1回落为短信 2回落为彩信
-    type GetUnionAnalysisResDropreasonItem = {
+    type AnalysisDropreasonItem = {
       cnt: string
       reason: string
     }
-    type GetUnionAnalysisResSuccessItem = {
+    type AnalysisSuccessItem = {
       cnt: string
       sentType: sentType
     }
-    type GetUnionAnalysisResRate = {
+    type AnalysisRate = {
       request: string
       deliveryed: string
       dropped: string
       fee: string
       address: string
     }
-    type GetUnionAnalysisResPoints = {
+    type AnalysisPoints = {
       request: PointItem[]
       deliveryed: PointItem[]
       dropped: PointItem[]
       fee: PointItem[]
     }
     type GetUnionAnalysis = {
-      city: GetUnionAnalysisResCityItem[]
-      province: GetUnionAnalysisResProvinceItem[]
-      dropreason: GetUnionAnalysisResDropreasonItem[]
-      successreason: GetUnionAnalysisResSuccessItem[]
-      rate: GetUnionAnalysisResRate
-      points: GetUnionAnalysisResPoints
+      city: AnalysisCityItem[]
+      province: AnalysisProvinceItem[]
+      dropreason: AnalysisDropreasonItem[]
+      successreason: AnalysisSuccessItem[]
+      rate: AnalysisRate
+      points: AnalysisPoints
     }
     interface GetUnionAnalysisRes {
       analysis: GetUnionAnalysis
