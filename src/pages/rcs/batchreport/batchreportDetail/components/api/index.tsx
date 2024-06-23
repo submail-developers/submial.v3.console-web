@@ -1,4 +1,3 @@
-import {} from 'react'
 import { Image, Row, Col } from 'antd'
 
 import apiIco1 from '@/assets/rcs/analysis/apiInfo1.png'
