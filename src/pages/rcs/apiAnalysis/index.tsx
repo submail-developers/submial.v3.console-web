@@ -155,8 +155,8 @@ export default function Fn() {
         <Col span={24}>
           <MyHot
             loading={loading}
-            province={echartsData.province}
-            city={echartsData.city}
+            province={echartsData?.province || []}
+            city={echartsData?.city || []}
           />
         </Col>
       </Row>

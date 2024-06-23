@@ -118,25 +118,25 @@ export default function Fn() {
           </Card>
         </Col>
         <Col span={24}>
-          {deepAnalysisData && (
-            <Hot
-              loading={loading}
-              province={deepAnalysisData.province}
-              city={deepAnalysisData.city}
-            />
-          )}
+          <Hot
+            loading={loading}
+            province={deepAnalysisData?.province || []}
+            city={deepAnalysisData?.city || []}
+          />
         </Col>
         {reportData && reportData.addressbooks.length > 0 && (
           <Col span={24}>
             <Card title='地址簿列表' minHeight={80} loading={loading}>
-              <Address address={reportData.addressbooks} />
+              <Address address={reportData?.addressbooks || []} />
             </Card>
           </Col>
         )}
         {reportData && reportData.sendlist.addressfile_oss_path && (
           <Col span={24}>
             <Card title='联系人文件地址' loading={loading}>
-              <AddressFile path={reportData.sendlist.addressfile_oss_path} />
+              <AddressFile
+                path={reportData?.sendlist?.addressfile_oss_path || ''}
+              />
             </Card>
           </Col>
         )}
