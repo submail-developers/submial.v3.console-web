@@ -1,4 +1,4 @@
-import { useRef, useState, useImperativeHandle, forwardRef } from 'react'
+import { useState, useImperativeHandle, forwardRef, useEffect } from 'react'
 import { Table, Divider } from 'antd'
 import { API } from 'apis'
 import { getSendlistLogs } from '@/api'
@@ -23,7 +23,7 @@ enum statusStyle {
 function Fn(props: Props, ref) {
   useImperativeHandle(ref, () => {
     return {
-      init,
+      updata,
     }
   })
   const [loading, setLoading] = useState(false)
@@ -31,29 +31,44 @@ function Fn(props: Props, ref) {
   const [limit, setLimit] = useState(10)
   const [total, setTotal] = useState(0)
   const [tableData, setTableData] = useState<API.SendLogItem[]>([])
-  const dataRef = useRef<API.SendLogItem[]>([])
-  const init = () => {
-    setPage(1)
-    initData()
+  const updata = () => {
+    if (page == 1) {
+      getList()
+    } else {
+      setPage(1)
+    }
   }
 
-  const initData = async () => {
+  const getList = async () => {
     setLoading(true)
     try {
-      const res = await getSendlistLogs({ sendlist: props.id })
-      dataRef.current = res.history
-      setTotal(Number(res.row))
-      changePage(1, 10)
+      const res = await getSendlistLogs({
+        sendlist: props.id,
+        page: page,
+        limit: limit,
+      })
+      if (res.status == 'success') {
+        setTableData(res.history)
+        setTotal(Number(res.row))
+      }
       setLoading(false)
     } catch (error) {
       setLoading(false)
     }
   }
 
-  const changePage = (_page, pageSize) => {
-    setPage(_page)
-    setTableData(dataRef.current.slice((_page - 1) * limit, _page * limit))
+  const changePageInfo = (page, pageSize) => {
+    if (pageSize != limit) {
+      setPage(1)
+      setLimit(pageSize)
+    } else {
+      setPage(page)
+    }
   }
+
+  useEffect(() => {
+    getList()
+  }, [page, limit])
 
   const columns = [
     {
@@ -126,9 +141,9 @@ function Fn(props: Props, ref) {
           current: page,
           pageSize: limit,
           showQuickJumper: true,
-          showSizeChanger: false,
+          pageSizeOptions: [10, 20, 50],
           total: total,
-          onChange: changePage,
+          onChange: changePageInfo,
         }}
         scroll={{ x: 'max-content' }}
       />

@@ -1185,7 +1185,12 @@ declare module 'apis' {
     }
     // 发送明细参数
     interface GetSendlistLogsParams {
-      sendlist: string
+      sendlist?: string
+      page?: number
+      limit?: number
+      status?: 'all' | 'delivered' | 'dropped' | 'pending'
+      to?: string // 手机号
+      content?: string // 短信内容
     }
     interface SendLogItem {
       sendID: string
@@ -1220,6 +1225,7 @@ declare module 'apis' {
       mob: string
       page: string
       row: string
+      status: string
     }
     // 获取发送明细返回值
     interface GetSendlistLogsItems {

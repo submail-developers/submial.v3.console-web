@@ -39,9 +39,13 @@ export default function Fn() {
   const [deepAnalysisData, setdeepAnalysisData] =
     useState<API.GetSendlistDeepAnalysisRes>()
 
+  const updataInfo = () => {
+    sendRef.current && sendRef.current.updata()
+    initData()
+  }
+
   const initData = async () => {
     setLoading(true)
-    sendRef.current && sendRef.current.init()
     try {
       const params = { sendlist: id }
       const pAll = await Promise.all([
@@ -71,8 +75,12 @@ export default function Fn() {
         <div className='fn22 fw-500'>批量任务发送报告</div>
         <Button
           type='primary'
-          onClick={initData}
-          icon={<i className='icon iconfont icon-shuaxin fn14'></i>}>
+          onClick={updataInfo}
+          icon={
+            <div className={loading ? 'rotate' : ''}>
+              <i className='icon iconfont icon-shuaxin fn14 '></i>
+            </div>
+          }>
           刷新状态
         </Button>
       </Flex>

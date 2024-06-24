@@ -17,7 +17,8 @@ export default function Fn(props: Props) {
   let totaoRate = new Big(100)
   let deliveryedRate = '0' // 发送成功率
   let droppedRate = '0' // 发送失败率
-  let sendTotal = Number(props.rate.deliveryed) + Number(props.rate.dropped) // 发送总数
+  let sendTotal =
+    Number(props.rate?.deliveryed || 0) + Number(props.rate?.dropped || 0) // 发送总数
   if (sendTotal > 0) {
     deliveryedRate = (
       (Number(props.rate.deliveryed) / sendTotal) *
@@ -34,7 +35,7 @@ export default function Fn(props: Props) {
           <Image src={apiIco1} preview={false} width={40} />
           <div className='m-l-20'>
             <div className='gray-color-sub'>API请求</div>
-            <div>{Number(props.rate.request).toLocaleString()}</div>
+            <div>{Number(props.rate?.request).toLocaleString()}</div>
           </div>
         </div>
       </Col>

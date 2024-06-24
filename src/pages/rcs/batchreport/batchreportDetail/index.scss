@@ -1,4 +1,16 @@
 .page-content.batchreport-detail {
   padding: 48px 16px;
-  height: auto;
+  height: auto; /* 定义一个名为 rotate 的类 */
+  .rotate {
+    animation: rotateAnimation 1s linear infinite;
+  }
+
+  @keyframes rotateAnimation {
+    from {
+      transform: rotate(0deg); /* 从0度开始旋转 */
+    }
+    to {
+      transform: rotate(360deg); /* 旋转到360度 */
+    }
+  }
 }
