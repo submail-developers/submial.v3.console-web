@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import {
   Modal,
   Button,
@@ -110,6 +110,9 @@ type TitleProps = {
 }
 const Title = (props: TitleProps) => {
   const [text, setText] = useState<string>()
+  const onPressEnter = (e) => {
+    props.onSearch(e.target.value)
+  }
   return (
     <Flex justify='space-between' align='center'>
       <div>选择彩信模版</div>
@@ -119,7 +122,7 @@ const Title = (props: TitleProps) => {
           value={text}
           autoComplete='off'
           onChange={(e) => setText(e.target.value)}
-          onPressEnter={() => props.onSearch(text)}
+          onPressEnter={onPressEnter}
         />
         <Button
           type='primary'
@@ -139,6 +142,7 @@ export default function UploadModal(props: Props) {
   const { message } = App.useApp()
   const [form] = Form.useForm()
   const [total, setTotal] = useState<number>(0)
+  const keywordRef = useRef('')
 
   const [loading, setLoading] = useState(false)
   const [uploadLoading, setUploadLoading] = useState(false)
@@ -160,6 +164,7 @@ export default function UploadModal(props: Props) {
         // limit: pageSize,
         status: '1',
         search_type: 'all',
+        keyword: keywordRef.current,
       })
       setTemplatesList(res.templates)
       // console.log(res)
@@ -182,7 +187,8 @@ export default function UploadModal(props: Props) {
     setcurrentPage(page)
   }
   // 搜索
-  const handleSearch = () => {
+  const handleSearch = (val) => {
+    keywordRef.current = val
     setLoading(true)
     setcurrentPage(1)
     getList()
