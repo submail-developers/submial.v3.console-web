@@ -58,10 +58,14 @@ function Fn(props: Props, ref) {
   const columns = [
     {
       title: '手机号',
-      dataIndex: 'to',
       fixed: true,
       width: 140,
       className: 'paddingL20',
+      render: (_, record) => (
+        <div style={{ height: 40 }} className='fx-y-center'>
+          {record.to}
+        </div>
+      ),
     },
     {
       title: '号码详情',
@@ -88,10 +92,9 @@ function Fn(props: Props, ref) {
       width: 180,
     },
     {
-      title: '计费(元)',
-      dataIndex: 'fee',
+      title: '计费',
       width: 100,
-      render: (_, record) => <div>1</div>,
+      render: (_, record) => <div>{record.status == '1' ? '1' : '0'}</div>,
     },
     {
       title: '送达状态',

@@ -115,7 +115,7 @@ export default function Fn() {
   const [page, setPage] = useState<number>(1)
   const [limit, setLimit] = useState<number>(10)
   const [total, setTotal] = useState<number>(0)
-  const [getSendList, setGetSendList] = useState<API.GetSendlistsItems[]>()
+  const [tableData, setTableData] = useState<API.GetSendlistsItems[]>()
   const [form] = Form.useForm()
 
   // 获取任务发送报告
@@ -136,16 +136,12 @@ export default function Fn() {
         limit: limit,
       }
       const res = await getSendlists(params)
-      setGetSendList(res.data)
+      setTableData(res.data)
       setTotal(res.rows)
       setLoading(false)
     } catch (error) {
       setLoading(false)
     }
-  }
-
-  const onRangeChange = (dates, dateStrings) => {
-    form.setFieldValue('time', dates)
   }
 
   const changePageInfo = (page, pageSize) => {
@@ -294,7 +290,7 @@ export default function Fn() {
           type: 'all',
           status: 'all',
           order_by: 'send',
-          time: rangePresets[4].value,
+          time: rangePresets[0].value,
         }}>
         <Flex align='flex-end' wrap='wrap' gap={16}>
           <Form.Item label='任务类型' name='type' className='m-b-0'>
@@ -326,7 +322,6 @@ export default function Fn() {
               presets={!pointXs && rangePresets}
               allowClear={false}
               disabledDate={disabledDate}
-              onChange={onRangeChange}
             />
           </Form.Item>
           <Form.Item
@@ -350,7 +345,7 @@ export default function Fn() {
           loading={loading}
           className='theme-cell reset-table m-t-24'
           columns={columns}
-          dataSource={getSendList}
+          dataSource={tableData}
           rowKey={'id'}
           sticky
           pagination={{

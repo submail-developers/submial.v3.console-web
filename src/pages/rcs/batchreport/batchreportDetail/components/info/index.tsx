@@ -64,10 +64,13 @@ export default function Fn({ sendlist }: Props) {
             <>
               {sendlist?.multimediaMessageSupported == 'true' ? (
                 <>
-                  {sendlist?.project ? (
+                  {sendlist?.mmsSubject ? (
                     <span style={{ position: 'relative' }}>
-                      【{sendlist?.project}】
-                      <ACopy text={sendlist?.project} title='点击复制ID' />
+                      【{sendlist?.mmsSubject}】
+                      <ACopy
+                        text={sendlist?.mmsSubject}
+                        title='点击复制彩信标题'
+                      />
                     </span>
                   ) : (
                     '-'
