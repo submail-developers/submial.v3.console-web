@@ -1,19 +1,4 @@
-.api-errorlogs {
+.page-content.api-errorlogs {
   padding: 48px 16px;
   height: auto;
-  .line {
-    margin: 30px 0 24px;
-  }
-  .ant-picker {
-    padding-right: 15px;
-    .ant-picker-input > input {
-      color: #666d7a;
-    }
-  }
-
-  @media (max-width: 576px) {
-    .top-item {
-      margin-bottom: 0;
-    }
-  }
 }
