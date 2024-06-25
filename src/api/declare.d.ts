@@ -1344,5 +1344,50 @@ declare module 'apis' {
       content: string
       type: string
     }
+    // 获取subhook列表
+    interface GetRcsSubhookListParams {
+      page: number
+      limit: number
+    }
+    interface RcsSubhookItem {
+      id: string
+      title: string
+      appid: string
+      chatbot_name: string
+      account: string
+      password: string
+      url: string
+      datetime: string
+      request_method: string
+      request_content_type: string
+      response_code: string
+      thread: string
+      enabled: '1' | '0' // 1禁用 0开启
+    }
+    interface GetRcsSubhookListRes {
+      status: string
+      rows: number
+      subhooks: RcsSubhookItem[]
+      isSubaccount: boolean
+      page: number
+    }
+    // 修改subhook状态
+    interface ChangeRcsSubhookStatusParams {
+      id: string
+      status: boolean
+    }
+
+    // 测试发送subhook
+    interface RcsTestSubhookRes {
+      status: string
+      output: {
+        events: string
+        token: string
+        signature: string
+        timestamp: string
+      }
+      response_code: number
+      push_status: string
+    }
   }
 }

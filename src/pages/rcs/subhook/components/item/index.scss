@@ -1,0 +1,19 @@
+.subhook-item {
+  .subhook-item-head {
+    height: 48px;
+    border-radius: 4px 4px 0 0;
+    background-color: var(--table-bg);
+    border: 1px solid #eee;
+  }
+  .subhook-info {
+    border: 1px solid #eee;
+    border-top: 0;
+    .input-password-wrap {
+      background-color: var(--table-bg);
+      min-width: 316px;
+    }
+    .line-30 {
+      line-height: 30px;
+    }
+  }
+}

@@ -753,3 +753,58 @@ export const exportHistory = (data: API.ExportHistoryParams) => {
 export const downLaodFile = (data: '') => {
   return request.post<any, any, ''>('/onsole/api/services/download_export_file')
 }
+
+// subhook
+export const getRcsSubhookList = (data: API.GetRcsSubhookListParams) => {
+  return request.post<
+    any,
+    API.GetRcsSubhookListRes,
+    API.GetRcsSubhookListParams
+  >('/console/api/rcs/get_subhooks', {
+    ...data,
+  })
+}
+// 修改subhook状态
+export const changeRcsSubhookStatus = (
+  data: API.ChangeRcsSubhookStatusParams,
+) => {
+  return request.post<any, any, API.ChangeRcsSubhookStatusParams>(
+    '/console/api/rcs/subhook_status',
+    {
+      ...data,
+    },
+  )
+}
+// 重置subhook密钥
+export const resetRcsSubhookKey = (data: { id: string }) => {
+  return request.post<any, any, { id: string }>(
+    '/console/api/rcs/reset_subhook_key',
+    {
+      ...data,
+    },
+  )
+}
+// 新增/修改subhook
+export const saveRcsSubhook = (data: any) => {
+  return request.post<any, any, any>('/console/api/rcs/save_subhook', {
+    ...data,
+  })
+}
+// 删除subhook
+export const delRcsSubhook = (data: { id: string }) => {
+  return request.post<any, any, { id: string }>(
+    '/console/api/rcs/delete_subhook',
+    {
+      ...data,
+    },
+  )
+}
+// 测试subhook
+export const testRcsSubhook = (data: { id: string }) => {
+  return request.post<any, API.RcsTestSubhookRes, { id: string }>(
+    '/console/api/rcs/test_subhook',
+    {
+      ...data,
+    },
+  )
+}
