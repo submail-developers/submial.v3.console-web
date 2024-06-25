@@ -43,6 +43,7 @@ export default function Fn() {
   }
 
   useEffect(() => {
+    setLoading(true)
     getList()
   }, [page, limit])
 
@@ -68,22 +69,25 @@ export default function Fn() {
       </Flex>
       <Divider />
 
-      <Row gutter={[24, 24]} style={{ position: 'relative' }}>
+      <div style={{ position: 'relative', minHeight: 100 }}>
         {loading && (
-          <Col className='fx-center-center p-t-16 loading'>
+          <div className='fx-center-center p-t-16 loading'>
             <Spin />
-          </Col>
+          </div>
         )}
-        {subhookList.map((item) => (
-          <Col span={24} key={item.id}>
-            <Item
-              item={item}
-              onRefresh={getList}
-              onEdit={() => editSubhook(item)}
-            />
-          </Col>
-        ))}
-      </Row>
+        <Row gutter={[24, 24]}>
+          {subhookList.map((item) => (
+            <Col span={24} key={item.id}>
+              <Item
+                item={item}
+                onRefresh={getList}
+                onEdit={() => editSubhook(item)}
+              />
+            </Col>
+          ))}
+        </Row>
+      </div>
+
       <Flex justify='flex-end' align='center' style={{ marginTop: '32px' }}>
         <Pagination
           defaultCurrent={1}
