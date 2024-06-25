@@ -1,16 +1,5 @@
 import { useState } from 'react'
-import {
-  Space,
-  Switch,
-  Row,
-  Col,
-  Flex,
-  Button,
-  Popconfirm,
-  App,
-  Modal,
-  Typography,
-} from 'antd'
+import { Space, Switch, Row, Col, Flex, Button, Popconfirm, App } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 import { API } from 'apis'
 import {
