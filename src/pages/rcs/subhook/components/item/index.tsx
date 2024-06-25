@@ -21,8 +21,7 @@ import {
 } from '@/api'
 import './index.scss'
 import { usePoint } from '@/hooks'
-import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons'
-
+import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons'
 type Props = {
   item: API.RcsSubhookItem
   onRefresh: () => void
@@ -42,8 +41,6 @@ export default function Fn(props: Props) {
   const [switchLoading, setSwitchLoading] = useState(false)
   const [testLoading, settestLoading] = useState(false)
   const [status, setStatus] = useState(props.item.enabled == '0')
-  const [open, setOpen] = useState(false)
-  const [testInfo, setTestInfo] = useState<API.RcsTestSubhookRes>()
   const changeSwitch = async (flag) => {
     setSwitchLoading(true)
     try {
@@ -88,11 +85,12 @@ export default function Fn(props: Props) {
       const res = await testRcsSubhook({
         id: props.item.id,
       })
-      if (res.status == 'success') {
-        setOpen(true)
-        setTestInfo(res)
-        settestLoading(false)
+      if (res.status == 'success' && res.push_status == 'success') {
+        message.success('推送成功')
+      } else {
+        message.error('推送失败')
       }
+      settestLoading(false)
     } catch (error) {
       settestLoading(false)
     }
@@ -178,10 +176,13 @@ export default function Fn(props: Props) {
                       {showEye ? (
                         <EyeInvisibleOutlined
                           rev={null}
-                          className='fn16 color'
+                          className='fn16 gray-color-sub'
                         />
                       ) : (
-                        <EyeTwoTone rev={null} className='fn16 color' />
+                        <EyeOutlined
+                          rev={null}
+                          className='fn16 gray-color-sub'
+                        />
                       )}
                     </div>
                   </Flex>
@@ -262,33 +263,6 @@ export default function Fn(props: Props) {
           </Col>
         </Row>
       </div>
-      <Modal
-        open={open}
-        title={'推送结果'}
-        footer={null}
-        width={500}
-        closable={false}>
-        <div className='text-center'>
-          <div className='text-color fn20'>测试数据已推送</div>
-          <div
-            className={`fn16 ${
-              testInfo?.push_status == 'success'
-                ? 'success-color'
-                : 'error-color'
-            }`}>
-            SUBHOOK 推送失败
-          </div>
-          <div className='fn16'>响应码：{testInfo?.response_code}</div>
-        </div>
-        <Typography>
-          <pre>{JSON.stringify(testInfo?.output || {}, null, 1)}</pre>
-        </Typography>
-        <Flex className='m-t-32' justify='center'>
-          <Button type='primary' onClick={() => setOpen(false)}>
-            我知道了
-          </Button>
-        </Flex>
-      </Modal>
     </div>
   )
 }
