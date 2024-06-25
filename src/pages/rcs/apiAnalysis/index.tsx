@@ -64,7 +64,7 @@ export default function Fn() {
         limit: 10000,
         appid: '',
         keywords: '',
-        status: 'all',
+        status: '1',
       })
       setChatbotLit(res.list || [])
       setLoading(false)

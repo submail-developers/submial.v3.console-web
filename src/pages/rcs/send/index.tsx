@@ -121,7 +121,7 @@ export default function CreateSend() {
         limit: 100,
         appid: '',
         keywords: '',
-        status: 'all',
+        status: '1',
       })
       setChatbotList(res.list)
       if (res.list.length > 0) {

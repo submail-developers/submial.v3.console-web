@@ -116,10 +116,10 @@ export default function Fn() {
     try {
       const res = await getChatbot({
         page: 1,
-        limit: 1000,
+        limit: 10000,
         appid: '',
         keywords: '',
-        status: 'all',
+        status: '1',
       })
       setChatBotList(res.list)
     } catch (error) {}

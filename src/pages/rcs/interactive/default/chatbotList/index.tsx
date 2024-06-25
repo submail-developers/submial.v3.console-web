@@ -45,10 +45,10 @@ function Fn(props, ref: any) {
     try {
       const res = await getChatbot({
         page: 1,
-        limit: 1000,
+        limit: 10000,
         appid: '',
         keywords: keywordsRef.current as string,
-        status: 'all',
+        status: '1',
       })
       setList(res.list)
       if (isInit && res.list.length > 0 && id == '0') {
