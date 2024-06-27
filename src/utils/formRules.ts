@@ -19,7 +19,20 @@ const validateBackslash = (_, value) => {
   return Promise.resolve()
 }
 
-const phoneReg = /^1[3456789]\d{9}$/g
+const phoneReg = /^1[3456789]\d{9}$/
+const validateMobile = (_, value) => {
+  if (value) {
+    let flag = phoneReg.test(value)
+    if (flag) {
+      return Promise.resolve()
+    } else {
+      return Promise.reject(new Error('请输入正确的手机号码'))
+    }
+  } else {
+    return Promise.reject(new Error('请输入手机号码'))
+  }
+}
+const phonesReg = /^1[3456789]\d{9}$/g
 const validateMobiles = (_, value) => {
   if (value) {
     if (value.includes('，')) {
@@ -32,7 +45,7 @@ const validateMobiles = (_, value) => {
       if (!item) {
         isnull = true
       }
-      if (!phoneReg.test(item)) {
+      if (!phonesReg.test(item)) {
         isok = false
       }
     })
@@ -107,6 +120,7 @@ export default {
   validateEmoji,
   validateDoubleQuotation,
   validateBackslash,
+  validateMobile,
   validateMobiles,
   validateNoChinese,
   validateUrl,

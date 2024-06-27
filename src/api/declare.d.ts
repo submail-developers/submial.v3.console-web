@@ -1389,5 +1389,72 @@ declare module 'apis' {
       response_code: number
       push_status: string
     }
+    type SettingStatus = '0' | '1' // 1开启0关闭
+    type SettingReminderItem = {
+      id: string
+      type: '1' | '0' // 1手机号0邮箱
+      address: string
+      status: '0' | '1'
+    }
+    // rcs配置
+    interface RcsSettingRes {
+      status: string
+      settings: {
+        account: string // 默认账户-邮箱
+        mob: string // 默认账户-手机号
+        reminder_mail: SettingStatus
+        reminder_message: SettingStatus
+        export_confrim: SettingStatus
+        message_send_confirm: SettingStatus
+        message_sent_reminder: SettingStatus
+        account_verify_code_display: SettingStatus
+        account_mob_display: SettingStatus
+        address_mob_display: SettingStatus
+        reminder_list: SettingReminderItem[]
+        credits: string // 剩余条数
+        reminder_less: string // 余额提醒当条数
+        credits_reminder: SettingStatus // 是否开启余额提醒
+      }
+      mob: string
+    }
+    // 修改提醒上限
+    interface ChangeRcsSettingLessParams {
+      item: 'reminder_less'
+      value: number
+    }
+
+    // 修改Rcs偏好配置:reminder_mail 邮件提醒，reminder_message 短信提醒，credits_reminder 提醒上限
+    type ChangeRcsSettingSwitchType =
+      | 'credits_reminder'
+      | 'reminder_mail'
+      | 'reminder_message'
+    interface ChangeRcsSettingSwitchParams {
+      item: ChangeRcsSettingSwitchType
+      value: SettingStatus
+    }
+
+    // message_send_confirm 在线批量发送时需要输入手机验证码
+    // message_sent_reminder 在线发送完成时提醒我
+    // export_confrim 导出时需要输入手机验证码
+    // account_verify_code_display  在历史明细查询或导出时隐藏验证码
+    // account_mob_display  在历史明细查询或导出时隐藏手机号码
+    // address_mob_display  地址簿加密
+    type ChangeRcsSettingSafeSwitchType =
+      | 'message_send_confirm'
+      | 'message_sent_reminder'
+      | 'export_confrim'
+      | 'account_verify_code_display'
+      | 'account_mob_display'
+      | 'address_mob_display'
+    interface ChangeRcsSettingSafeSwitchParams {
+      item: ChangeRcsSettingSafeSwitchType
+      value: SettingStatus
+    }
+    // Rcs偏好配置-保存邮箱
+    interface SaveSettingParams {
+      type: 'mail' | 'sms'
+      address: string
+      code: string
+    }
   }
 }

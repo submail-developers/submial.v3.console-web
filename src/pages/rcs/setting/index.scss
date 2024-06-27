@@ -1,22 +1,4 @@
-.setting {
+.page-content.setting {
   padding: 48px 16px;
   height: auto;
-  .line {
-    margin: 30px 0 24px;
-  }
-  .one-part {
-    .top-item {
-      background: #f1f2f4;
-      border-radius: 4px;
-      padding: 18px 28px 10px 28px;
-      ul {
-        padding-left: 10px;
-        display: flex;
-        justify-content: space-between;
-      }
-    }
-  }
-  .w-title {
-    width: 120px;
-  }
 }

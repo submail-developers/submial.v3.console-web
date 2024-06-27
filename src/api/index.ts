@@ -808,3 +808,77 @@ export const testRcsSubhook = (data: { id: string }) => {
     },
   )
 }
+// 获取Rcs偏好配置
+export const getRcsSetting = () => {
+  return request.post<any, API.RcsSettingRes, any>(
+    '/console/api/rcs/get_settings',
+    {},
+  )
+}
+// 修改提醒上限
+export const changeRcsSettingLess = (data: API.ChangeRcsSettingLessParams) => {
+  return request.post<any, any, API.ChangeRcsSettingLessParams>(
+    '/console/api/rcs/save_settings',
+    { ...data },
+  )
+}
+// 修改Rcs偏好配置:reminder_mail 邮件提醒，reminder_message 短信提醒，credits_reminder 提醒上限
+export const changeRcsSetting = (data: API.ChangeRcsSettingSwitchParams) => {
+  return request.post<any, any, API.ChangeRcsSettingSwitchParams>(
+    '/console/api/rcs/save_settings_switch',
+    { ...data },
+  )
+}
+// message_send_confirm 在线批量发送时需要输入手机验证码
+// message_sent_reminder 在线发送完成时提醒我
+// export_confrim 导出时需要输入手机验证码
+// account_verify_code_display  在历史明细查询或导出时隐藏验证码
+// account_mob_display  在历史明细查询或导出时隐藏手机号码
+// address_mob_display  地址簿加密
+export const changeRcsSettingSafe = (
+  data: API.ChangeRcsSettingSafeSwitchParams,
+) => {
+  return request.post<any, any, API.ChangeRcsSettingSafeSwitchParams>(
+    '/console/api/rcs/save_settings_switch_confirm',
+    { ...data },
+  )
+}
+
+// 获取手机验证码
+export const getMobCode = (data: { address: string }) => {
+  return request.post<
+    any,
+    any,
+    {
+      address: string
+    }
+  >('/console/api/account/send_optional_verify_code_by_sms', { ...data })
+}
+
+// 获取邮箱验证码
+export const getEmailCode = (data: { address: string }) => {
+  return request.post<
+    any,
+    any,
+    {
+      address: string
+    }
+  >('/console/api/account/send_optional_verify_code_by_mail', { ...data })
+}
+// Rcs偏好配置-保存邮箱
+export const saveRcsSetting = (data: API.SaveSettingParams) => {
+  return request.post<any, any, API.SaveSettingParams>(
+    '/console/api/rcs/save_reminder_list',
+    { ...data },
+  )
+}
+// Rcs偏好配置-删除邮箱/手机号
+export const delRcsSettingMobEmail = (data: { id: string }) => {
+  return request.post<
+    any,
+    any,
+    {
+      id: string
+    }
+  >('/console/api/rcs/delete_reminder_list', { ...data })
+}

@@ -4,6 +4,9 @@ import { Layout } from 'antd'
 import { Outlet, useMatches } from 'react-router-dom'
 import Menu from './menu'
 import { useLocalStorage } from '@/hooks'
+import { settingRcs, initSetting } from '@/store/reducers/settingRcs'
+import { useAppDispatch, useAppSelector } from '@/store/hook'
+import { getRcsSetting } from '@/api'
 
 import './index.scss'
 
@@ -15,6 +18,8 @@ const sideStyle: React.CSSProperties = {
 }
 
 export default function Fn() {
+  const rcsSetting = useAppSelector(settingRcs)
+  const dispatch = useAppDispatch()
   const [isRouterHideMenu, setisRouterHideMenu] = useLocalStorage(
     'isRouterHideMenu',
     true,
@@ -31,12 +36,19 @@ export default function Fn() {
     setHeaderH(broken ? 104 : 65)
   }
 
+  // 初始化Rcs偏好设置
+  const initSettings = async () => {
+    if (!rcsSetting) {
+      dispatch(initSetting())
+    }
+  }
+
   // 路由中配置是否展示侧边栏
   useEffect(() => {
     let hideMenu = false
     let hideHeaderRight = false
     match.forEach((item) => {
-      let { data } = item
+      let { data, pathname } = item
       // @ts-ignore
       if (data && data.hideMenu) {
         hideMenu = Boolean(
@@ -49,6 +61,9 @@ export default function Fn() {
           (data as { hideMenu?: boolean; hideHeaderRight?: boolean })
             .hideHeaderRight,
         )
+      }
+      if (pathname == '/console/rcs') {
+        initSettings()
       }
     })
     setisRouterHideMenu(hideMenu)

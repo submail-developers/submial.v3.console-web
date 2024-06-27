@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import testReducer from './reducers/test'
 import loadingReducer from './reducers/loading'
 import breadcrumbReducer from './reducers/breadcrumb'
+import settingRcsReducer from './reducers/settingRcs'
 
 // 合并切片
 export const store = configureStore({
@@ -9,6 +10,7 @@ export const store = configureStore({
     loadingReducer,
     testReducer,
     breadcrumbReducer,
+    settingRcsReducer,
   },
 })
 
