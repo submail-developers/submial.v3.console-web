@@ -1389,6 +1389,32 @@ declare module 'apis' {
       response_code: number
       push_status: string
     }
+    // 计费日志
+    interface GetRcsFeeLogsParams {
+      page: number
+      limit: number
+      start: string
+      end: string
+      to: string
+      send_id: string
+    }
+    interface GetRcsFeeLogsRes {
+      status: string
+      message: string
+      mob: string
+      list: RcsFeeLogItem[]
+      row: number
+      page: number
+    }
+    interface RcsFeeLogItem {
+      sendID: string
+      send: string
+      appid: string
+      to: string
+      api: string
+      ipAddress: string
+      status: '0' | '1' | '2' | '3' //  0=无状态，1=成功，2=失败，3=已撤回
+    }
     type SettingStatus = '0' | '1' // 1开启0关闭
     type SettingReminderItem = {
       id: string

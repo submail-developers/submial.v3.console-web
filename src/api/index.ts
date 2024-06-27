@@ -808,6 +808,15 @@ export const testRcsSubhook = (data: { id: string }) => {
     },
   )
 }
+// 计费日志
+export const getRcsFeeLogs = (data: API.GetRcsFeeLogsParams) => {
+  return request.post<any, API.GetRcsFeeLogsRes, API.GetRcsFeeLogsParams>(
+    '/console/api/rcs/get_feelogs',
+    {
+      ...data,
+    },
+  )
+}
 // 获取Rcs偏好配置
 export const getRcsSetting = () => {
   return request.post<any, API.RcsSettingRes, any>(
