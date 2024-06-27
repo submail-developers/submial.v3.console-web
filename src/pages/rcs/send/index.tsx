@@ -36,15 +36,11 @@ import TextItem from '@/pages/rcs/template/create/text/item'
 import CardItem from '@/pages/rcs/template/create/card/item'
 import CardsItem from '@/pages/rcs/template/create/cards/item'
 import dayjs from 'dayjs'
-import {
-  getChatbot,
-  createRcsSend,
-  getRcsTempList,
-  getSendNumber,
-  getRcsOverview,
-} from '@/api'
+import { getChatbot, createRcsSend, getRcsTempList, getSendNumber } from '@/api'
 import { API } from 'apis'
 import { getVars } from '@/utils'
+import { useAppSelector } from '@/store/hook'
+import { settingRcs } from '@/store/reducers/settingRcs'
 
 import codeImg from '@/assets/rcs/send1.png'
 
@@ -96,6 +92,7 @@ export default function CreateSend() {
   const [form1] = Form.useForm()
   const [form2] = Form.useForm()
   const { message } = App.useApp()
+  const rcsSetting = useAppSelector(settingRcs)
   const tabsRef = useRef(null) // 添加联系人tab
   const [showModal, setShowModal] = useState(false) // 选择模版
   const [type, setType] = useState<API.RcsTempType>() // 1纯文本  2单卡片  3多卡片  4文件 0不展示
@@ -111,7 +108,6 @@ export default function CreateSend() {
   const [openConfirm, setOpenConfirm] = useState(false) // 显示数量弹框
   const [confirmLoading, setConfirmLoading] = useState(false) // 数量弹框-确定的loading
   const [sendNumLoading, setSendNumLoading] = useState(false) // 获取数量弹框的loading
-  const [surplus, setSurplus] = useState<number>(0) // 剩余余额
 
   // 获取chatbot列表
   const getChatbotList = async () => {
@@ -310,14 +306,6 @@ export default function CreateSend() {
     })
   }
 
-  // 获取余额
-  const initOverview = async () => {
-    try {
-      const res = await getRcsOverview()
-      setSurplus(res.data.credits)
-    } catch (error) {}
-  }
-
   useEffect(() => {
     form1 && form1.resetFields()
     form2 && form2.resetFields()
@@ -334,10 +322,6 @@ export default function CreateSend() {
       setShowModal(false)
     }
   }, [sign, id, form1, form2, clear])
-
-  useEffect(() => {
-    initOverview()
-  }, [])
 
   return (
     <>
@@ -361,7 +345,9 @@ export default function CreateSend() {
           <Flex wrap='wrap' gap={60}>
             <div className='left'>
               <div className='gray-color'>5g消息余额</div>
-              <div className='fn20 fw-500'>{surplus.toLocaleString()}</div>
+              <div className='fn20 fw-500'>
+                {Number(rcsSetting?.settings.credits || 0).toLocaleString()}
+              </div>
               <div className='gray-color m-t-12'>5g模版</div>
               <div
                 className='rcs-mobile small m-t-8'
