@@ -15,7 +15,7 @@ import PageContent from '@/components/pageContent'
 
 import { API } from 'apis'
 import { getRcsFeeLogs } from '@/api'
-import topIco from '@/assets/rcs/errorlogs/err_ico.png'
+import topIco from '@/assets/rcs/fee/index.png'
 import { usePoint } from '@/hooks'
 import { getPresets } from '@/utils/day'
 import dayjs from 'dayjs'
