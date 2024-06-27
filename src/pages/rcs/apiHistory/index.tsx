@@ -27,16 +27,16 @@ import dayjs from 'dayjs'
 import { getPresets } from '@/utils/day'
 
 enum statusNum {
-  '无状态' = 0,
+  '等待',
   '成功',
   '失败',
-  '已撤回',
+  '撤回',
 }
 enum statusStyle {
-  'text-color' = 0,
+  'gray-color',
   'success-color',
   'error-color',
-  'gray-color',
+  'warning-color',
 }
 enum ExportType {
   'txt' = 0,
@@ -215,6 +215,15 @@ export default function Fn() {
     }
   }
 
+  const search = () => {
+    setLoading(true)
+    if (page == 1) {
+      getList()
+    } else {
+      setPage(1)
+    }
+  }
+
   useEffect(() => {
     getChatbotList()
   }, [])
@@ -265,11 +274,6 @@ export default function Fn() {
       width: 180,
     },
     {
-      title: '计费',
-      width: 100,
-      render: (_, record) => <div>{record.status == '1' ? '1' : '0'}</div>,
-    },
-    {
       title: '送达状态',
       dataIndex: 'status',
       width: 120,
@@ -278,6 +282,11 @@ export default function Fn() {
           {statusNum[record.status]}
         </div>
       ),
+    },
+    {
+      title: '计费',
+      width: 100,
+      render: (_, record) => <div>{record.status == '1' ? '1' : '0'}</div>,
     },
   ]
 
@@ -334,16 +343,16 @@ export default function Fn() {
               disabledDate={disabledDate}></RangePicker>
           </Form.Item>
           <Form.Item label='SEND ID' name='send_id' className='m-b-0'>
-            <Input placeholder='请输入sendid' />
+            <Input placeholder='请输入sendid' onPressEnter={search} />
           </Form.Item>
           <Form.Item label='手机号码' name='to' className='m-b-0'>
-            <Input placeholder='请输入手机号码' />
+            <Input placeholder='请输入手机号码' onPressEnter={search} />
           </Form.Item>
           <Form.Item label='短信内容' name='content' className='m-b-0'>
-            <Input placeholder='请输入短信内容' />
+            <Input placeholder='请输入短信内容' onPressEnter={search} />
           </Form.Item>
           <Form.Item label='' className='m-b-0'>
-            <Button type='primary' htmlType='submit' onClick={() => getList()}>
+            <Button type='primary' htmlType='submit' onClick={search}>
               查询
             </Button>
           </Form.Item>

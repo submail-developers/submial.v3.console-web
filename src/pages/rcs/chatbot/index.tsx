@@ -160,6 +160,15 @@ export default function Fn() {
     }
   }
 
+  const search = () => {
+    setLoading(true)
+    if (page == 1) {
+      getList()
+    } else {
+      setPage(1)
+    }
+  }
+
   useEffect(() => {
     getList()
   }, [limit, page])
@@ -213,10 +222,10 @@ export default function Fn() {
             />
           </Form.Item>
           <Form.Item name='keywords' label='关键词搜索'>
-            <Input placeholder='Chatbot名称' onPressEnter={getList} />
+            <Input placeholder='Chatbot名称' onPressEnter={search} />
           </Form.Item>
           <Form.Item label=' '>
-            <Button type='primary' className='w-100' onClick={getList}>
+            <Button type='primary' className='w-100' onClick={search}>
               查询
             </Button>
           </Form.Item>

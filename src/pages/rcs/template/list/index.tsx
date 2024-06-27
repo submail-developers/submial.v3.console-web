@@ -61,7 +61,11 @@ export default function Fn() {
 
   const handleSearch = () => {
     setLoading(true)
-    getList()
+    if (currentPage == 1) {
+      getList()
+    } else {
+      setcurrentPage(1)
+    }
   }
   // 除搜索关键字，其他字段改变直接搜索
   const onValuesChange = (changedValues, allValues) => {

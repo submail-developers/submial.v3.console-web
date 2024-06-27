@@ -160,6 +160,15 @@ export default function Fn() {
     }
   }
 
+  const search = () => {
+    setLoading(true)
+    if (page == 1) {
+      getList()
+    } else {
+      setPage(1)
+    }
+  }
+
   // 导出
   const exportEvent = async (e) => {
     console.log(e)
@@ -328,14 +337,14 @@ export default function Fn() {
             label='搜索'
             name='keywords'
             style={{ marginBottom: '0px' }}>
-            <Input placeholder='请输入关键词' onPressEnter={getList} />
+            <Input placeholder='请输入关键词' onPressEnter={search} />
           </Form.Item>
           <Form.Item label='' className='m-b-0'>
             <Button
               type='primary'
               className='w-100'
               htmlType='submit'
-              onClick={getList}>
+              onClick={search}>
               查询
             </Button>
           </Form.Item>
