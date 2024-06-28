@@ -39,9 +39,7 @@ const SafeItem = (props: ItemProps) => {
     <Col span={24}>
       <Space size={24} align='center'>
         <Switch
-          checkedChildren='开启'
-          unCheckedChildren='关闭'
-          size='default'
+          size='small'
           checked={open}
           onChange={change}
           loading={loading}

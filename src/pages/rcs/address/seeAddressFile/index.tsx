@@ -78,7 +78,7 @@ export default function Fn() {
   const nav = useNavigate()
   const [form] = Form.useForm()
   const [currentPage, setcurrentPage] = useState<number>(1)
-  const [pageSize, setpageSize] = useState<number>(9)
+  const [pageSize, setpageSize] = useState<number>(20)
   const [total, setTotal] = useState<number>(0)
   const [addressList, setAddressList] = useState([])
   const [editData, setEditData] = useState()
@@ -158,7 +158,7 @@ export default function Fn() {
     setFolderId(id)
     getAddressList()
     getAddressFolderList()
-  }, [currentPage, pageSize])
+  }, [currentPage])
   useEffect(() => {
     setLoading(true)
   }, [])
@@ -166,7 +166,7 @@ export default function Fn() {
   // 切换页码
   const onChangeCurrentPage = (page: number, pageSize: number) => {
     setcurrentPage(page)
-    setpageSize(pageSize)
+    // setpageSize(pageSize)
   }
   const showModal = (isEdit, item) => {
     setIsEditMode(isEdit)
@@ -632,7 +632,8 @@ export default function Fn() {
             defaultCurrent={1}
             current={currentPage}
             defaultPageSize={pageSize}
-            pageSizeOptions={[]}
+            // pageSizeOptions={[]}
+            showSizeChanger={false}
             total={total}
             showQuickJumper
             onChange={onChangeCurrentPage}

@@ -32,7 +32,7 @@ interface DataType extends API.ChatbotItem {}
 export default function Fn() {
   const nav = useNavigate()
   const [form] = Form.useForm()
-  const [limit, setLimit] = useState(20)
+  const [limit, setLimit] = useState(10)
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [tableData, settableData] = useState<DataType[]>([])
@@ -185,8 +185,7 @@ export default function Fn() {
           申请 Chatbot
         </Button>
       </Flex>
-      <Divider className='line'></Divider>
-
+      <Divider />
       <Form
         name='chatbot-list-form'
         className='chatbot-list-form'
@@ -195,8 +194,8 @@ export default function Fn() {
         initialValues={{ status: 'all', status2: 'all' }}
         onValuesChange={onValuesChange}
         autoComplete='off'>
-        <Flex align='flex-end' gap={16}>
-          <Form.Item name='status' label='基本信息审核状态'>
+        <Flex align='flex-end' gap={16} wrap='wrap'>
+          <Form.Item name='status' label='基本信息审核状态' className='m-b-0'>
             <Select
               placeholder='请选择'
               popupMatchSelectWidth={120}
@@ -209,7 +208,7 @@ export default function Fn() {
               ]}
             />
           </Form.Item>
-          <Form.Item name='status2' label='固定菜单审核状态'>
+          <Form.Item name='status2' label='固定菜单审核状态' className='m-b-0'>
             <Select
               placeholder='请选择'
               options={[
@@ -221,37 +220,36 @@ export default function Fn() {
               ]}
             />
           </Form.Item>
-          <Form.Item name='keywords' label='关键词搜索'>
+          <Form.Item name='keywords' label='关键词搜索' className='m-b-0'>
             <Input placeholder='Chatbot名称' onPressEnter={search} />
           </Form.Item>
-          <Form.Item label=' '>
+          <Form.Item label='' className='m-b-0'>
             <Button type='primary' className='w-100' onClick={search}>
               查询
             </Button>
           </Form.Item>
         </Flex>
       </Form>
-      <div style={{ width: '100%', overflowX: 'hidden' }}>
-        <Table
-          className='theme-cell reset-table'
-          columns={columns}
-          dataSource={tableData}
-          rowKey={'name'}
-          sticky
-          loading={loading}
-          pagination={{
-            position: ['bottomRight'],
-            current: page,
-            pageSize: limit,
-            hideOnSinglePage: true,
-            showQuickJumper: true,
-            pageSizeOptions: [10, 20, 50],
-            total: total,
-            onChange: changePageInfo,
-          }}
-          scroll={{ x: 'max-content' }}
-        />
-      </div>
+      <Table
+        className='theme-cell reset-table m-t-24'
+        columns={columns}
+        dataSource={tableData}
+        rowKey={'name'}
+        sticky
+        loading={loading}
+        pagination={{
+          position: ['bottomRight'],
+          current: page,
+          pageSize: limit,
+          hideOnSinglePage: false,
+          showQuickJumper: true,
+          pageSizeOptions: [10, 20, 50],
+          total: total,
+          showTotal: (total) => `共 ${total} 条`,
+          onChange: changePageInfo,
+        }}
+        scroll={{ x: 'fit-content' }}
+      />
     </PageContent>
   )
 }

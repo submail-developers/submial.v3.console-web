@@ -1,5 +1,5 @@
 .chatbot-detail {
-  padding: 48px 16px;
+  padding: 32px 16px 48px;
   height: auto !important;
   min-width: 920px;
   .info-title {
@@ -74,7 +74,7 @@
     tr > td:nth-child(3) {
       color: #4f4f4f !important;
       width: 180px;
-      background-color: #f3f6f9;
+      background-color: var(--table-bg);
     }
     tr > td:nth-child(2),
     tr > td:nth-child(4) {

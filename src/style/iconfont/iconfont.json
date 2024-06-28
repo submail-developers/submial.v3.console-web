@@ -6,18 +6,25 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "40901215",
+      "name": "菜单",
+      "font_class": "d3",
+      "unicode": "e6b8",
+      "unicode_decimal": 59064
+    },
+    {
+      "icon_id": "40901023",
+      "name": "回落配置",
+      "font_class": "cb",
+      "unicode": "e6b7",
+      "unicode_decimal": 59063
+    },
+    {
       "icon_id": "40730357",
       "name": "完成2",
       "font_class": "right",
       "unicode": "e6b6",
       "unicode_decimal": 59062
-    },
-    {
-      "icon_id": "40727837",
-      "name": "菜单",
-      "font_class": "d3",
-      "unicode": "e6b5",
-      "unicode_decimal": 59061
     },
     {
       "icon_id": "40727770",

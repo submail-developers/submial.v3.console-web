@@ -6,7 +6,7 @@ import {
   useEffect,
 } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
-import { Table, Flex } from 'antd'
+import { Table, Flex, Tooltip } from 'antd'
 import { getRcsTempList } from '@/api'
 import {
   useStateDispatch,
@@ -94,14 +94,16 @@ function Fn(props, ref: any) {
       render: (_, record) => (
         <Flex justify='flex-end' align='center' className='p-r-24' gap={16}>
           <span className='tag-color'>
-            {record.interactive == '1' ? '已配置' : '未配置'}
+            {record.interactive == '1' ? '' : '未配置'}
           </span>
-          <div
-            className='fx-center-center'
-            style={{ width: 32 }}
-            onClick={(e) => toDetail(e, record)}>
-            <span className='icon iconfont icon-bianji text-color'></span>
-          </div>
+          <Tooltip placement='bottom' title={'配置交互'}>
+            <div
+              className='fx-center-center text-color g-pointer'
+              style={{ width: 32 }}
+              onClick={(e) => toDetail(e, record)}>
+              <span className='icon iconfont icon-bianji'></span>
+            </div>
+          </Tooltip>
         </Flex>
       ),
     },

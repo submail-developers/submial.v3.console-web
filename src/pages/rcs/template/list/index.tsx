@@ -119,11 +119,11 @@ export default function Fn() {
                 { value: 3, label: '多卡片' },
                 // { value: 4, label: '文件' },
               ]}
-              popupMatchSelectWidth={120}
-              style={{ width: 120 }}
+              popupMatchSelectWidth={180}
+              style={{ width: 180 }}
             />
           </Form.Item>
-          <Form.Item name='keyword' label='模版名称/ID'>
+          <Form.Item name='keyword' label='模版名称/ID' style={{ width: 200 }}>
             <Input placeholder='请输入' onPressEnter={handleSearch} />
           </Form.Item>
           <Form.Item label=' '>

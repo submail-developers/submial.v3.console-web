@@ -66,9 +66,7 @@ export default function Fn() {
         <Col span={12} lg={18} xl={20}>
           <Flex justify={pointLg ? 'flex-start' : 'flex-end'}>
             <Switch
-              checkedChildren='开启'
-              unCheckedChildren='关闭'
-              size='default'
+              size='small'
               checked={switchVal}
               onChange={(flag) =>
                 changeRcsSettings('reminder_message', flag ? '1' : '0')

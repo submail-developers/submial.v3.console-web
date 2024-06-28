@@ -98,26 +98,26 @@ export default function Fn({
             justify='space-between'
             align='center'
             style={{ paddingTop: '12px' }}>
-            <Button
-              className='id-btn'
-              style={{ padding: '0 4px', color: '#fd29a4' }}
-              size='small'
-              icon={<span className='icon iconfont icon-id fn14'></span>}>
+            <div className='id-btn'>
+              <span className='icon iconfont icon-id fn14 m-r-6'></span>
               {item.sign}
               <ACopy text={item.sign} title='点击复制ID' />
-            </Button>
+            </div>
             {!hiddenHandle && (
               <Space align='center' size={16}>
-                <div className='g-pointer' title='编辑' onClick={editEvent}>
-                  <span className='icon iconfont icon-bianji fn14'></span>
+                <div
+                  className='g-pointer text-color'
+                  title='编辑'
+                  onClick={editEvent}>
+                  <span className='icon iconfont icon-bianji fn16'></span>
                 </div>
                 <Popconfirm
                   title='删除模版'
                   description='确认删除该模版吗？'
                   onConfirm={delEvent}
                   placement='bottom'>
-                  <div className='g-pointer'>
-                    <span className='icon iconfont icon-shanchu fn14 error-color'></span>
+                  <div className='g-pointer text-color'>
+                    <span className='icon iconfont icon-shanchu fn16'></span>
                   </div>
                 </Popconfirm>
               </Space>

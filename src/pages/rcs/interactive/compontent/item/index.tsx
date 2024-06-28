@@ -87,7 +87,7 @@ export default function Item(props: Props) {
         />
       </div>
       <div className='center-config fx-col p-b-4'>
-        <div className='fn16 fw-500 title'>{props.item.title}</div>
+        <div className='fn16 fw-500 title m-b-8'>{props.item.title}</div>
         {['1', '2'].includes(props.item.type) && (
           <Flex className='p-y-4' gap={32}>
             <span className='gray-color fx-shrink'>绑定按键</span>

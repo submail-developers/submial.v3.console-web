@@ -109,6 +109,10 @@ export default function Fn() {
           </span>
         </Flex>
       </div>
+      {/* <div className='color-warning-red g-radius-4 p-x-16 p-y-8 fn13 m-b-24'>
+        <span className='icon iconfont icon-dengpao fn12 m-r-2'></span>
+        未通过原因：123
+      </div> */}
 
       {detail && (
         <>

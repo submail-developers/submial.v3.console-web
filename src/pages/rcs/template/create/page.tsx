@@ -32,9 +32,7 @@ export default function Fn(props: Props) {
       key: '0',
       label: (
         <>
-          <span
-            className='icon iconfont icon-card fn18'
-            style={{ marginRight: '2px' }}></span>
+          <span className='icon iconfont icon-card fn14 m-r-8'></span>
           <span>模版配置</span>
         </>
       ),
@@ -44,9 +42,7 @@ export default function Fn(props: Props) {
       key: '1',
       label: (
         <>
-          <span
-            className='icon iconfont icon-card fn18'
-            style={{ marginRight: '2px' }}></span>
+          <span className='icon iconfont icon-cb fn14 m-r-8'></span>
           <span>回落配置</span>
         </>
       ),

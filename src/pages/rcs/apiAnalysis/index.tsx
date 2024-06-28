@@ -37,12 +37,13 @@ const { RangePicker } = DatePicker
 // 只允许选择90天前-今天的日期
 const disabledDate: RangePickerProps['disabledDate'] = (current) => {
   const today = dayjs()
-  const fifteenDaysAgo = today.subtract(90, 'day')
+  // const fifteenDaysAgo = today.subtract(90, 'day')
   const currentDate = dayjs(current)
-  return currentDate.isBefore(fifteenDaysAgo) || currentDate.isAfter(today)
+  // return currentDate.isBefore(fifteenDaysAgo) || currentDate.isAfter(today)
+  return currentDate.isAfter(today)
 }
 // 预设日期
-const rangePresets = getPresets([7, 15, 30, 90])
+const rangePresets = getPresets([1, 7, 15, 30, 90])
 
 export default function Fn() {
   const pointXs = usePoint('xs')
@@ -52,7 +53,7 @@ export default function Fn() {
 
   const [echartsData, setechartsData] = useState<API.GetUnionAnalysis>()
 
-  const [time, setTime] = useState<[Dayjs, Dayjs]>(rangePresets[0].value)
+  const [time, setTime] = useState<[Dayjs, Dayjs]>(rangePresets[1].value)
   const onRangeChange = (value: [Dayjs, Dayjs]) => {
     setTime(value)
   }
@@ -106,7 +107,7 @@ export default function Fn() {
         <MyExport />
       </Flex>
       <Divider />
-      <Form layout='vertical' initialValues={{ time: rangePresets[0].value }}>
+      <Form layout='vertical' initialValues={{ time: rangePresets[1].value }}>
         <Space size={24}>
           <Form.Item label='Chatbot选择' name='chatbot'>
             <Select

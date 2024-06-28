@@ -129,7 +129,7 @@ export default function Fn(props: Props) {
             <Row>
               <Col span={24} lg={8} xl={6}>
                 <Flex justify='space-between' align='center'>
-                  <span className='gray-color-sub'>SUBHOOK密钥</span>
+                  <span className='gray-color'>SUBHOOK密钥</span>
                   {!point && (
                     <Popconfirm
                       placement='bottom'
@@ -192,7 +192,7 @@ export default function Fn(props: Props) {
           </Col>
           <Col span={24} xl={10} xxl={12}>
             <Row>
-              <Col span={8} xl={6} className='gray-color-sub'>
+              <Col span={8} xl={6} className='gray-color'>
                 回调方式
               </Col>
               <Col span={16} xl={18}>
@@ -208,7 +208,7 @@ export default function Fn(props: Props) {
           </Col>
           <Col span={24} xl={14} xxl={12}>
             <Row>
-              <Col span={8} xl={6} className='gray-color-sub'>
+              <Col span={8} xl={6} className='gray-color'>
                 Chatbot
               </Col>
               <Col span={16} xl={18}>
@@ -220,7 +220,7 @@ export default function Fn(props: Props) {
           </Col>
           <Col span={24} xl={10} xxl={12}>
             <Row>
-              <Col span={8} xl={6} className='gray-color-sub'>
+              <Col span={8} xl={6} className='gray-color'>
                 回调文档类型
               </Col>
               <Col span={16} xl={18}>
@@ -230,7 +230,7 @@ export default function Fn(props: Props) {
           </Col>
           <Col span={24} xl={14} xxl={12}>
             <Row>
-              <Col span={8} xl={6} className='gray-color-sub'>
+              <Col span={8} xl={6} className='gray-color'>
                 http响应码
               </Col>
               <Col span={16} xl={18}>
@@ -240,7 +240,7 @@ export default function Fn(props: Props) {
           </Col>
           <Col span={24} xl={10} xxl={12}>
             <Row>
-              <Col span={8} xl={6} className='gray-color-sub'>
+              <Col span={8} xl={6} className='gray-color'>
                 回调URL
               </Col>
               <Col span={16} xl={18}>

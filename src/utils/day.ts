@@ -24,11 +24,11 @@ const fastPresets = {
     value: [dayjs().add(-14, 'd'), dayjs()],
   },
   30: {
-    label: '最近一个月',
+    label: '最近 30 天',
     value: [dayjs().add(-29, 'd'), dayjs()],
   },
   90: {
-    label: '最近三个月',
+    label: '最近 90 天',
     value: [dayjs().add(-89, 'd'), dayjs()],
   },
 }

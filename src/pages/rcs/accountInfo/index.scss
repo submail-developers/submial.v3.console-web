@@ -1,5 +1,5 @@
 .page-content.account-detail {
-  padding: 48px 16px;
+  padding: 32px 16px 48px;
   height: auto;
   .line {
     margin: 16px 0 24px;
@@ -82,7 +82,7 @@
     tr > td:nth-child(3) {
       color: #4f4f4f;
       width: 180px;
-      background-color: #f3f6f9;
+      background-color: var(--table-bg);
     }
     tr > td:nth-child(2),
     tr > td:nth-child(4) {
@@ -100,7 +100,7 @@
     border-collapse: collapse;
     font-size: 15px;
     tr:first-child > td {
-      background-color: #f3f6f9;
+      background-color: var(--table-bg);
       border-bottom: none;
     }
     tr:first-child > td:first-child {

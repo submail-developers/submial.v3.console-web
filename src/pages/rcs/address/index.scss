@@ -1,20 +1,7 @@
 .page-content.address-list {
-  padding: 48px 16px;
+  padding: 32px 16px 48px;
   height: auto;
 
-  .line {
-    margin: 16px 0;
-  }
-  .template-list-form {
-    width: 100%;
-    .ant-form-item-label {
-      padding: 0;
-      label {
-        color: #666;
-        height: 32px;
-      }
-    }
-  }
   .status-item {
     height: 40px;
     padding: 0 16px;

@@ -49,13 +49,14 @@ enum ExportType {
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>
 const { RangePicker } = DatePicker
 
-const rangePresets = getPresets([7, 15, 30, 90])
+const rangePresets = getPresets([0, 1, 3, 7, 15, 30])
 // 只允许选择15天前-今天的日期
 const disabledDate: RangePickerProps['disabledDate'] = (current) => {
   const today = dayjs()
-  const fifteenDaysAgo = today.subtract(90, 'day')
+  // const fifteenDaysAgo = today.subtract(90, 'day')
   const currentDate = dayjs(current)
-  return currentDate.isBefore(fifteenDaysAgo) || currentDate.isAfter(today)
+  // return currentDate.isBefore(fifteenDaysAgo) || currentDate.isAfter(today)
+  return currentDate.isAfter(today)
 }
 
 const items = [
@@ -144,16 +145,8 @@ export default function Fn() {
         to: formValues.to,
         content: formValues.content,
       }
-      let arr = []
 
-      arr.push(params)
-      setExportParams(arr)
       const res = await getHistory(params)
-      if (res.exportconfirm == '1') {
-        setExportconfirm(true)
-      } else {
-        setExportconfirm(false)
-      }
       setTableData(res.history)
       setTotal(res.row)
       setLoading(false)
@@ -165,34 +158,7 @@ export default function Fn() {
   const handleCancel = () => {
     setIsOpenModal(false)
   }
-  const edit = async (e) => {
-    if (exportconfirm) {
-      setIsOpenModal(true)
-      setFileType(e.key)
-    } else {
-      const formValues = form.getFieldsValue()
-      const start =
-        (formValues.time && formValues.time[0].format('YYYY-MM-DD')) || ''
-      const end =
-        (formValues.time && formValues.time[1].format('YYYY-MM-DD')) || ''
-
-      const res = await exportHistory({
-        start,
-        end,
-        appid: formValues.appid,
-        status: formValues.status,
-        send_id: formValues.send_id,
-        to: formValues.to,
-        content: formValues.content,
-        type: ExportType[e.key],
-      })
-      if (res.status == 'success') {
-        downLaodFile('')
-      } else {
-        message.error(res.message)
-      }
-    }
-  }
+  const exportEvent = async (e) => {}
 
   const changePageInfo = (page, pageSize) => {
     if (pageSize != limit) {
@@ -249,7 +215,10 @@ export default function Fn() {
       width: 200,
       render: (_, record) => (
         <>
-          {record.mobileType}/{record.mobileArea}
+          {record.mobileType}
+          {record.mobileArea
+            ? `/${record.mobileArea.split(' ').join('/')}`
+            : '-'}
         </>
       ),
     },
@@ -291,21 +260,19 @@ export default function Fn() {
   ]
 
   return (
-    <PageContent extClass='api-history' xxl={1300}>
+    <PageContent extClass='api-history' xxl={1260}>
       <Image src={topIco} preview={false} width={72}></Image>
       <Flex justify='space-between' align='center' style={{ marginTop: '4px' }}>
         <div className='fn22 fw-500'>API历史明细</div>
-        <Button type='primary'>
-          <Dropdown
-            className='export'
-            menu={{ items, selectable: true, onClick: edit }}
-            trigger={['click']}>
-            <Space>
-              导出
-              <DownOutlined rev={null} />
-            </Space>
-          </Dropdown>
-        </Button>
+        <Dropdown
+          className='export'
+          menu={{ items, selectable: true, onClick: exportEvent }}
+          trigger={['click']}>
+          <Button type='primary'>
+            <span className='m-r-8'>导 出</span>
+            <DownOutlined rev={null} />
+          </Button>
+        </Dropdown>
       </Flex>
       <Divider className='line'></Divider>
       <Form
@@ -316,7 +283,7 @@ export default function Fn() {
         autoComplete='off'
         onValuesChange={onValuesChange}
         initialValues={{
-          time: rangePresets[3].value,
+          time: rangePresets[0].value,
         }}>
         <Flex align='flex-end' wrap='wrap' gap={16}>
           <Form.Item label='Chatbot选择' name='chatbot' className='m-b-0'>
@@ -365,15 +332,17 @@ export default function Fn() {
           dataSource={tableData}
           rowKey='sendID'
           pagination={{
+            defaultPageSize: limit,
             position: ['bottomRight'],
             current: page,
             pageSize: limit,
             showQuickJumper: true,
             pageSizeOptions: [10, 20, 50],
             total: total,
+            showTotal: (total) => `共 ${total} 条`,
             onChange: changePageInfo,
           }}
-          scroll={{ x: 'max-content' }}
+          scroll={{ x: 'fit-content' }}
         />
       </Form>
       <VerifyCode

@@ -15,7 +15,7 @@ import './index.scss'
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>
 
 const { RangePicker } = DatePicker
-const rangePresets = getPresets([7, 15, 30, 90])
+const rangePresets = getPresets([0, 1, 3, 7, 15, 30, 90])
 // 只允许选择15天前-今天的日期
 const disabledDate: RangePickerProps['disabledDate'] = (current) => {
   const today = dayjs()
@@ -154,7 +154,7 @@ export default function Fn() {
         autoComplete='off'
         onValuesChange={onValuesChange}
         initialValues={{
-          time: rangePresets[3].value,
+          time: rangePresets[2].value,
         }}>
         <Flex align='flex-end' wrap='wrap' gap={16}>
           <Form.Item label='Chatbot选择' name='chatbot' className='m-b-0'>
@@ -186,6 +186,7 @@ export default function Fn() {
             showQuickJumper: true,
             pageSizeOptions: [10, 20, 50],
             total: total,
+            showTotal: (total) => `共 ${total} 条`,
             onChange: changePageInfo,
           }}
           scroll={{ x: 'max-content' }}

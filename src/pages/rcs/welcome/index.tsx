@@ -31,7 +31,7 @@ import { usePoint } from '@/hooks'
 import { getRcsOverview, getRcsAnalysisOverview } from '@/api'
 import { StorePage } from './components/pay/reducer'
 
-import codeImg from '@/assets/rcs/chatbot_1.png'
+import codeImg from '@/assets/rcs/welcome/index.png'
 import { getPresets } from '@/utils/day'
 
 import './index.scss'
@@ -79,7 +79,7 @@ const CollapseChildren = () => {
               <NavLink to={'/console/rcs/account/index'}>前往</NavLink>
             </Space>
             <div className='des fn13 m-t-8'>
-              5G消息服务需要确保您的客户资料完整无缺且真实有效，审核团队将对资料进行核实，以保障服务的安全性。
+              5G消息需确保您的客户资料完整无缺且真实有效，审核团队将对资料进行核实，以保障服务的安全性。
             </div>
           </div>
         </div>
@@ -107,7 +107,7 @@ const CollapseChildren = () => {
               <span>创建模版</span>
             </Space>
             <div className='des fn13 m-t-8'>
-              创建符合您业务需求的模版并提交审核，通过后通过 Chatbot
+              创建符合您需求的模版并提交审核，通过后 Chatbot
               将5G消息精准分发至您所选定的地址簿号码中。
             </div>
           </div>
@@ -122,7 +122,7 @@ const CollapseChildren = () => {
             </Space>
             <div className='des fn13 m-t-8'>
               设置 Chatbot
-              交互规则与模版交互规则，在用户接收到5G消息并触发既定规则时，自动完成短信下发流程。
+              交互与模版交互规则，在用户收到5G消息并触发既定规则时，自动完成短信下发流程。
             </div>
           </div>
         </div>
@@ -227,13 +227,13 @@ export default function Fn() {
 
       <Row gutter={[24, 24]} className='m-t-24'>
         <Col span={24} sm={12} md={12} xl={12} xxl={18}>
-          <Card title='余额'>
+          <Card title='余额（条）'>
             <div className='fn16 fw-500'>
               <ConfigProvider
                 theme={{
                   components: {
                     Statistic: {
-                      contentFontSize: 16,
+                      contentFontSize: 20,
                     },
                   },
                 }}>
@@ -313,7 +313,7 @@ export default function Fn() {
           </Card>
         </Col>
         <Col span={24}>
-          <Card title='发送详情' loading={echartsLoading} minHeight={360}>
+          <Card title='发送详情' loading={echartsLoading} minHeight={270}>
             {echartsData && <SendDetail data={echartsData.send_analysis} />}
           </Card>
         </Col>

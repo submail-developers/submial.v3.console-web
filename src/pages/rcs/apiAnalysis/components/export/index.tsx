@@ -34,7 +34,7 @@ export default function Fn() {
       menu={{ items, selectable: true, onClick: exportEvent }}
       trigger={['click']}>
       <Button type='primary'>
-        <span className='m-r-8'>导出</span>
+        <span className='m-r-8'>导 出</span>
         <DownOutlined rev={null} />
       </Button>
     </Dropdown>

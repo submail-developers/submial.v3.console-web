@@ -128,6 +128,11 @@
       color: #69a5ff;
     }
   }
+  &.text-color {
+    &:hover {
+      color: var(--color);
+    }
+  }
 }
 
 .g-scroll {

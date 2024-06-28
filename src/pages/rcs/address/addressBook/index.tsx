@@ -76,7 +76,7 @@ export default function Fn() {
   const point = usePoint('lg')
   const [form] = Form.useForm()
   const [currentPage, setcurrentPage] = useState<number>(1)
-  const [pageSize, setpageSize] = useState<number>(12)
+  const [pageSize, setpageSize] = useState<number>(100)
   const [total, setTotal] = useState<number>(0)
   const [addressList, setAddressList] = useState([])
   const [editData, setEditData] = useState()
@@ -104,7 +104,7 @@ export default function Fn() {
       const res = await getMobAddressbooks({
         ...formValues,
         page: currentPage,
-        limit: pageSize,
+        // limit: pageSize,
       })
       setExportconfirm(res.exportconfirm)
       setAddressList(res.addressbooks)
@@ -118,7 +118,7 @@ export default function Fn() {
 
   useEffect(() => {
     getAddressList()
-  }, [currentPage, pageSize])
+  }, [currentPage])
 
   useEffect(() => {
     setLoading(true)
@@ -127,7 +127,7 @@ export default function Fn() {
   // 切换页码
   const onChangeCurrentPage = (page: number, pageSize: number) => {
     setcurrentPage(page)
-    setpageSize(pageSize)
+    // setpageSize(pageSize)
   }
   const showModal = (isEdit, item) => {
     setIsEditMode(isEdit)
@@ -284,14 +284,14 @@ export default function Fn() {
         </Col>
         <Col span={24} className='m-t-24'>
           <Row
-            className='p-y-12 p-x-16 g-radius-4'
+            className='p-y-6 p-x-16 g-radius-4'
             style={{ background: '#f6f7f9' }}>
             <Col span={12} md={6}>
               <Space align='center'>
                 <Image
                   src={getAddressPath(Number('4'))}
                   preview={false}
-                  height={48}
+                  height={36}
                 />
                 <span className='fn16'>地址簿</span>
               </Space>
@@ -413,7 +413,7 @@ export default function Fn() {
         onChange={onChange}>
         <Row gutter={[20, 16]} style={{ marginTop: '24px' }}>
           {addressList.map((item) => (
-            <Col span={24} lg={12} xl={8} xxl={6} key={item.id}>
+            <Col span={24} lg={24} xl={12} xxl={8} key={item.id}>
               <div className='address-book-item'>
                 <div>
                   <div
@@ -431,49 +431,56 @@ export default function Fn() {
                     <div>
                       <img src={getAddressPath(Number(item.tag))} alt='' />
                     </div>
-                    <div className='to-detail'>
+                    <div className='to-detail fx-auto'>
                       <div className='fn16 fw-500'>{item.name}</div>
-                      <div style={{ marginTop: '10px' }}>
-                        <span className='num-p'>{item.address}</span> 个联系人
+                      <div className='m-t-10 w-100 fx-between-center'>
+                        <div>
+                          <span className='num-p'>{item.address}</span> 个联系人
+                        </div>
+                        {isVisible ? (
+                          <Checkbox
+                            value={item.id}
+                            className='choose-address fx-x-end'
+                            onClick={stopEvent}>
+                            选择
+                          </Checkbox>
+                        ) : (
+                          <div
+                            className='fx-x-end handle-item'
+                            onClick={stopEvent}>
+                            <Tooltip title='移入文件夹' placement='bottom'>
+                              <Button
+                                onClick={() => openSingleAddressModal(item.id)}>
+                                <i className='icon iconfont icon-move'></i>
+                              </Button>
+                            </Tooltip>
+                            <Tooltip title='编辑' placement='bottom'>
+                              <Button onClick={() => showModal(true, item)}>
+                                <i className='icon iconfont icon-input'></i>
+                              </Button>
+                            </Tooltip>
+                            <Popconfirm
+                              placement='bottom'
+                              title='警告'
+                              description='确定删除该地址簿吗？'
+                              onConfirm={() => deleteAddress(item.id)}
+                              okText='确定'
+                              cancelText='取消'
+                              zIndex={100}>
+                              <Tooltip
+                                title='删除'
+                                placement='bottom'
+                                zIndex={99}>
+                                <Button>
+                                  <i className='icon iconfont icon-shanchu'></i>
+                                </Button>
+                              </Tooltip>
+                            </Popconfirm>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
-
-                  {isVisible ? (
-                    <Checkbox
-                      value={item.id}
-                      className='choose-address fx-x-end'
-                      onClick={stopEvent}>
-                      选择
-                    </Checkbox>
-                  ) : (
-                    <div className='fx-x-end handle-item' onClick={stopEvent}>
-                      <Tooltip title='移入文件夹' placement='bottom'>
-                        <Button onClick={() => openSingleAddressModal(item.id)}>
-                          <i className='icon iconfont icon-move'></i>
-                        </Button>
-                      </Tooltip>
-                      <Tooltip title='编辑' placement='bottom'>
-                        <Button onClick={() => showModal(true, item)}>
-                          <i className='icon iconfont icon-input'></i>
-                        </Button>
-                      </Tooltip>
-                      <Popconfirm
-                        placement='bottom'
-                        title='警告'
-                        description='确定删除该地址簿吗？'
-                        onConfirm={() => deleteAddress(item.id)}
-                        okText='确定'
-                        cancelText='取消'
-                        zIndex={100}>
-                        <Tooltip title='删除' placement='bottom' zIndex={99}>
-                          <Button>
-                            <i className='icon iconfont icon-shanchu'></i>
-                          </Button>
-                        </Tooltip>
-                      </Popconfirm>
-                    </div>
-                  )}
                 </div>
               </div>
             </Col>
@@ -494,7 +501,7 @@ export default function Fn() {
           defaultCurrent={1}
           current={currentPage}
           defaultPageSize={pageSize}
-          pageSizeOptions={[]}
+          showSizeChanger={false}
           total={total}
           showQuickJumper
           onChange={onChangeCurrentPage}

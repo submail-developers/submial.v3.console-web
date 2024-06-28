@@ -24,7 +24,7 @@ import './index.scss'
 
 enum Status {
   '等待',
-  '成功',
+  '扣费',
   '失败',
   '撤回',
 }
@@ -39,7 +39,7 @@ type RangePickerProps = GetProps<typeof DatePicker.RangePicker>
 
 interface DataType extends API.RcsFeeLogItem {}
 const { RangePicker } = DatePicker
-const rangePresets = getPresets([7, 15, 30, 90])
+const rangePresets = getPresets([0, 1, 7, 15, 30, 90])
 // 只允许选择15天前-今天的日期
 const disabledDate: RangePickerProps['disabledDate'] = (current) => {
   const today = dayjs()
@@ -153,7 +153,7 @@ export default function Fn() {
     {
       title: '余额变动',
       width: 100,
-      render: (_, record) => <div>{record.status == '1' ? '1' : '0'}</div>,
+      render: (_, record) => <div>{record.status == '1' ? '-1' : '0'}</div>,
     },
   ]
 
@@ -172,7 +172,7 @@ export default function Fn() {
         autoComplete='off'
         onValuesChange={onValuesChange}
         initialValues={{
-          time: rangePresets[1].value,
+          time: rangePresets[0].value,
         }}>
         <Flex align='flex-end' wrap='wrap' gap={16}>
           <Form.Item label='时间范围' name='time' className='m-b-0'>
@@ -206,6 +206,7 @@ export default function Fn() {
             showQuickJumper: true,
             pageSizeOptions: [10, 20, 50],
             total: total,
+            showTotal: (total) => `共 ${total} 条`,
             onChange: changePageInfo,
           }}
           scroll={{ x: 'max-content' }}

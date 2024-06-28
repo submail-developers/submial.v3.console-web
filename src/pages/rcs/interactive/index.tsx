@@ -36,7 +36,7 @@ export default function Fn() {
               style={{ marginTop: '4px' }}>
               <div>
                 <div className='fn22 fw-500'>上行交互</div>
-                <div className='fn14 m-t-8'>
+                <div className='fn14 m-t-8 gray-color'>
                   配置完成 5G 消息的交互和触发规则，用下行回复的方式实现 Chatbot
                   对话。
                 </div>

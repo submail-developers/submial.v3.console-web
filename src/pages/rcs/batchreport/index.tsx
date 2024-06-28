@@ -4,8 +4,6 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import {
   Flex,
   Table,
-  Row,
-  Col,
   Button,
   Divider,
   Image,
@@ -13,13 +11,11 @@ import {
   Form,
   Select,
   Dropdown,
-  Space,
   Input,
 } from 'antd'
 import type { GetProps } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs'
-import type { Dayjs } from 'dayjs'
 
 import PageContent from '@/components/pageContent'
 import ACopy from '@/components/aCopy'
@@ -31,8 +27,6 @@ import { API } from 'apis'
 import topIco from '@/assets/rcs/batchreport/batchreport_ico.png'
 
 import './index.scss'
-
-const { Option } = Select
 
 const { RangePicker } = DatePicker
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>
@@ -96,15 +90,17 @@ const order = [
   { label: '提交日期', value: 'send' },
   { label: '完成日期', value: 'sent' },
 ]
-// 只允许选择15天前-今天的日期
+
+// 可选范围【无-今天】
 const disabledDate: RangePickerProps['disabledDate'] = (current) => {
   const today = dayjs()
-  const fifteenDaysAgo = today.subtract(90, 'day')
+  // const fifteenDaysAgo = today.subtract(90, 'day')
   const currentDate = dayjs(current)
-  return currentDate.isBefore(fifteenDaysAgo) || currentDate.isAfter(today)
+  // return currentDate.isBefore(fifteenDaysAgo) || currentDate.isAfter(today)
+  return currentDate.isAfter(today)
 }
 // 预设日期
-const rangePresets = getPresets([3, 7, 15, 30, 90])
+const rangePresets = getPresets([0, 1, 3, 7, 15])
 
 export default function Fn() {
   const size = useSize()
@@ -188,12 +184,17 @@ export default function Fn() {
       title: '任务名称',
       dataIndex: 'title',
       fixed: true,
-      width: size == 'small' ? 150 : 200,
+      width: size == 'small' ? 170 : 220,
       className: size == 'small' ? 'paddingL20' : 'paddingL30',
+      render: (_, record) => (
+        <div className='w-100 p-r-16 g-ellipsis-2' title={record.title}>
+          {record.title}
+        </div>
+      ),
     },
     {
       title: '模板ID',
-      width: 100,
+      width: 120,
       render: (_, record) => (
         <div className='w-100' style={{ position: 'relative' }}>
           <ACopy text={record.project} />
@@ -279,9 +280,9 @@ export default function Fn() {
           className='export'
           menu={{ items, selectable: true, onClick: exportEvent }}
           trigger={['click']}>
-          <Button type='primary' style={{ width: 120 }}>
+          <Button type='primary'>
             <Flex align='center' justify='space-around'>
-              <span>导出</span>
+              <span className='m-r-8'>导 出</span>
               <DownOutlined rev={null} />
             </Flex>
           </Button>
@@ -299,7 +300,7 @@ export default function Fn() {
           type: 'all',
           status: 'all',
           order_by: 'send',
-          time: rangePresets[0].value,
+          time: rangePresets[2].value, // 默认获取最近三天的数据
         }}>
         <Flex align='flex-end' wrap='wrap' gap={16}>
           <Form.Item label='任务类型' name='type' className='m-b-0'>
@@ -364,6 +365,7 @@ export default function Fn() {
             showQuickJumper: true,
             pageSizeOptions: [10, 20, 50],
             total: total,
+            showTotal: (total) => `共 ${total} 条`,
             onChange: changePageInfo,
           }}
           scroll={{ x: 'max-content' }}

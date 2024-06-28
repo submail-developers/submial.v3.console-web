@@ -19,7 +19,7 @@ export default function Fn() {
           <div
             className='fn14 gray-color m-t-10'
             style={{ fontWeight: 'normal' }}>
-            配置您的5G消息账户，更改或更新余额共享设置、余额提醒、提醒列表、安全设置以及其他设置
+            配置您的5G消息账户，更改或更新余额共享设置、余额提醒、提醒列表、安全设置以及其他设置。
           </div>
         </div>
       </Flex>
