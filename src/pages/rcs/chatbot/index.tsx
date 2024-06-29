@@ -15,7 +15,7 @@ import type { ColumnsType } from 'antd/es/table'
 import { NavLink, useNavigate } from 'react-router-dom'
 import PageContent from '@/components/pageContent'
 import { PlusOutlined } from '@ant-design/icons'
-import codeImg from '@/assets/rcs/chatbot_1.png'
+import faceImg from '@/assets/rcs/face/chatbot.png'
 import { getChatbot, deleteChatbot } from '@/api'
 import { API } from 'apis'
 
@@ -175,7 +175,7 @@ export default function Fn() {
 
   return (
     <PageContent extClass='chatbot-list' lg={'100%'}>
-      <Image src={codeImg} preview={false} width={72}></Image>
+      <Image src={faceImg} preview={false} width={72}></Image>
       <Flex justify='space-between' align='center'>
         <div className='fn22 fw-500'>申请/管理 Chatbot</div>
         <Button

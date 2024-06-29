@@ -15,7 +15,7 @@ import PageContent from '@/components/pageContent'
 
 import { API } from 'apis'
 import { getRcsFeeLogs } from '@/api'
-import topIco from '@/assets/rcs/fee/index.png'
+import faceImg from '@/assets/rcs/face/fee.png'
 import { usePoint } from '@/hooks'
 import { getPresets } from '@/utils/day'
 import dayjs from 'dayjs'
@@ -159,8 +159,8 @@ export default function Fn() {
 
   return (
     <PageContent extClass='fee-log'>
-      <Image src={topIco} preview={false} width={72}></Image>
-      <Flex justify='space-between' align='center' className='m-t-4'>
+      <Image src={faceImg} preview={false} width={72}></Image>
+      <Flex justify='space-between' align='center' style={{ height: 40 }}>
         <div className='fn22 fw-500'>消费日志</div>
       </Flex>
       <Divider />

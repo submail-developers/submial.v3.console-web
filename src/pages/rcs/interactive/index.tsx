@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import codeImg from '@/assets/rcs/send1.png'
+import faceImg from '@/assets/rcs/face/interactive.png'
 import { Image, Flex, Divider, Button, Space, ConfigProvider } from 'antd'
 import PageContent from '@/components/pageContent'
 import Mobile from '@/pages/rcs/interactive/compontent/mobile'
@@ -29,7 +29,7 @@ export default function Fn() {
       <PageContent extClass='interactive p-16' {...pageW}>
         <StorePage>
           <div className='interactive-top'>
-            <Image src={codeImg} preview={false} width={72}></Image>
+            <Image src={faceImg} preview={false} width={72}></Image>
             <Flex
               justify='space-between'
               align='flex-end'
@@ -83,7 +83,7 @@ export default function Fn() {
                 )}
               </Space>
             </Flex>
-            <Divider className='m-t-12 m-b-16' />
+            <Divider />
           </div>
           <div className='fx-x-between' style={{ paddingBottom: 60 }}>
             <Outlet />

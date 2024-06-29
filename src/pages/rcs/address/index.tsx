@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Flex, Image, Space, Tabs } from 'antd'
 import PageContent from '@/components/pageContent'
-import codeImg from '@/assets/rcs/address/address_icon.png'
+import faceImg from '@/assets/rcs/face/address.png'
 import { Outlet, useNavigate, NavLink, useLocation } from 'react-router-dom'
 import './index.scss'
 
@@ -37,15 +37,9 @@ export default function Fn() {
 
   return (
     <PageContent extClass='address-list'>
-      <Image src={codeImg} preview={false} width={72}></Image>
-      <Flex
-        justify='space-between'
-        wrap='wrap'
-        gap={12}
-        style={{ marginTop: '4px' }}>
-        <Space align='baseline'>
-          <div className='fn22 fw-500'>地址簿管理</div>
-        </Space>
+      <Image src={faceImg} preview={false} width={72}></Image>
+      <Flex justify='space-between' wrap='wrap' style={{ height: 40 }}>
+        <div className='fn22 fw-500'>地址簿管理</div>
       </Flex>
       <div className='tab-address fx'>
         {navList.map((item, index) => (

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Flex, Space, Button, Divider, Image, App, Spin } from 'antd'
 import PageContent from '@/components/pageContent'
-import jiqirenImg from '@/assets/rcs/chatbot_1.png'
+import faceImg from '@/assets/rcs/face/chatbot.png'
 import { useParams, NavLink, useNavigate } from 'react-router-dom'
 import { getChatbot, refreshAppkey, getIndustry } from '@/api'
 import Menu from './menu'
@@ -88,8 +88,8 @@ export default function Fn() {
 
   return (
     <PageContent extClass='chatbot-detail'>
-      <Image src={jiqirenImg} preview={false} width={72}></Image>
-      <Flex justify='space-between' align='center' style={{ marginTop: '4px' }}>
+      <Image src={faceImg} preview={false} width={72}></Image>
+      <Flex justify='space-between' align='center' style={{ height: 40 }}>
         <div className='fn22 fw-500'>Chatbot 详情</div>
         {detail && detail?.status != '3' && (
           <NavLink to={`/console/rcs/chatbot/create/1?id=${id}`}>
@@ -100,7 +100,7 @@ export default function Fn() {
           </NavLink>
         )}
       </Flex>
-      <Divider className='m-t-16 m-b-24'></Divider>
+      <Divider />
       <div className='info-title' style={{ marginBottom: '20px' }}>
         <Flex justify='space-between' className='w-100'>
           <span>基本信息</span>

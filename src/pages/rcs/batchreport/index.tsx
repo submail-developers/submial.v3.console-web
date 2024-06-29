@@ -24,7 +24,7 @@ import { getPresets } from '@/utils/day'
 import { getSendlists } from '@/api'
 import { API } from 'apis'
 
-import topIco from '@/assets/rcs/batchreport/batchreport_ico.png'
+import faceImg from '@/assets/rcs/face/batchreport.png'
 
 import './index.scss'
 
@@ -271,24 +271,21 @@ export default function Fn() {
   ]
 
   return (
-    <PageContent extClass='batchreport' xxl={1300}>
-      <Image src={topIco} preview={false} width={72}></Image>
-      <Flex justify='space-between' align='center' style={{ marginTop: '4px' }}>
+    <PageContent extClass='batchreport'>
+      <Image src={faceImg} preview={false} width={72}></Image>
+      <Flex justify='space-between' align='center'>
         <div className='fn22 fw-500'>批量任务发送报告</div>
-
         <Dropdown
           className='export'
           menu={{ items, selectable: true, onClick: exportEvent }}
           trigger={['click']}>
           <Button type='primary'>
-            <Flex align='center' justify='space-around'>
-              <span className='m-r-8'>导 出</span>
-              <DownOutlined rev={null} />
-            </Flex>
+            <span className='m-r-8'>导 出</span>
+            <DownOutlined rev={null} />
           </Button>
         </Dropdown>
       </Flex>
-      <Divider className='line'></Divider>
+      <Divider />
       <Form
         form={form}
         className='batchreport-form'

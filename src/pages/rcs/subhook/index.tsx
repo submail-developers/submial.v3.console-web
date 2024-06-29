@@ -6,7 +6,7 @@ import CreateModal from './components/create'
 
 import { getRcsSubhookList } from '@/api'
 import { API } from 'apis'
-import topIco from '@/assets/rcs/subhook/subhook_ico.png'
+import faceImg from '@/assets/rcs/face/subhook.png'
 import './index.scss'
 
 export default function Fn() {
@@ -57,8 +57,8 @@ export default function Fn() {
 
   return (
     <PageContent extClass='subhook'>
-      <Image src={topIco} preview={false} width={72}></Image>
-      <Flex justify='space-between' align='center' className='m-t-4'>
+      <Image src={faceImg} preview={false} width={72}></Image>
+      <Flex justify='space-between' align='center'>
         <div className='fn22 fw-500'>SUBHOOK 状态推送</div>
         <Button
           type='primary'

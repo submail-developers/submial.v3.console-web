@@ -28,7 +28,7 @@ import { usePoint } from '@/hooks'
 import { API } from 'apis'
 import { getChatbot, getUnionAnalysis } from '@/api'
 
-import topIco from '@/assets/rcs/analysis/analysis_ico.png'
+import faceImg from '@/assets/rcs/face/analysis.png'
 
 import './index.scss'
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>
@@ -101,7 +101,7 @@ export default function Fn() {
 
   return (
     <PageContent extClass='api-analysis'>
-      <Image src={topIco} preview={false} width={72}></Image>
+      <Image src={faceImg} preview={false} width={72}></Image>
       <Flex justify='space-between' align='center'>
         <div className='fn22 fw-500'>API分析报告</div>
         <MyExport />

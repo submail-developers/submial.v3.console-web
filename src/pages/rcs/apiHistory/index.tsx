@@ -19,7 +19,7 @@ import ACopy from '@/components/aCopy'
 import { DownOutlined } from '@ant-design/icons'
 import { getChatbot, getHistory, exportHistory, downLaodFile } from '@/api'
 import { API } from 'apis'
-import topIco from '@/assets/rcs/history/history_ico.png'
+import faceImg from '@/assets/rcs/face/history.png'
 import './index.scss'
 import VerifyCode from './verifyCodeDialog/index'
 import { usePoint } from '@/hooks'
@@ -261,8 +261,8 @@ export default function Fn() {
 
   return (
     <PageContent extClass='api-history' xxl={1260}>
-      <Image src={topIco} preview={false} width={72}></Image>
-      <Flex justify='space-between' align='center' style={{ marginTop: '4px' }}>
+      <Image src={faceImg} preview={false} width={72}></Image>
+      <Flex justify='space-between' align='center'>
         <div className='fn22 fw-500'>API历史明细</div>
         <Dropdown
           className='export'
@@ -274,7 +274,7 @@ export default function Fn() {
           </Button>
         </Dropdown>
       </Flex>
-      <Divider className='line'></Divider>
+      <Divider />
       <Form
         form={form}
         className='api-history-form'

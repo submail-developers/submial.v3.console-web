@@ -31,7 +31,7 @@ import { usePoint } from '@/hooks'
 import { getRcsOverview, getRcsAnalysisOverview } from '@/api'
 import { StorePage } from './components/pay/reducer'
 
-import codeImg from '@/assets/rcs/welcome/index.png'
+import faceImg from '@/assets/rcs/face/welcome.png'
 import { getPresets } from '@/utils/day'
 
 import './index.scss'
@@ -42,12 +42,12 @@ type RangePickerProps = GetProps<typeof DatePicker.RangePicker>
 const { RangePicker } = DatePicker
 
 // 预设日期
-const rangePresets = getPresets([0, 1, 3, 7, 15])
+const rangePresets = getPresets([0, 1, 3, 7])
 
 // 只允许选择15天前-今天的日期
 const disabledDate: RangePickerProps['disabledDate'] = (current) => {
   const today = dayjs()
-  const fifteenDaysAgo = today.subtract(15, 'day')
+  const fifteenDaysAgo = today.subtract(16, 'day')
   const currentDate = dayjs(current)
   return currentDate.isBefore(fifteenDaysAgo) || currentDate.isAfter(today)
 }
@@ -149,10 +149,7 @@ export default function Fn() {
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
   const [echartsLoading, setEchartsLoading] = useState(false)
-  const [time, setTime] = useState<[Dayjs, Dayjs]>([
-    dayjs().add(-6, 'd'),
-    dayjs(),
-  ])
+  const [time, setTime] = useState<[Dayjs, Dayjs]>(rangePresets[1].value)
   const [data, setData] = useState<API.GetRcsOverviewRes>()
   const [echartsData, setEchartsData] = useState<API.RcsAnalysis>()
   const showPay = () => {
@@ -161,6 +158,7 @@ export default function Fn() {
 
   const onRangeChange = (value: [Dayjs, Dayjs]) => {
     form.setFieldValue('time', value)
+    setTime(value)
   }
 
   const getData = async () => {
@@ -209,8 +207,8 @@ export default function Fn() {
           <Spin />
         </div>
       )}
-      <Image src={codeImg} preview={false} width={72}></Image>
-      <Flex justify='space-between' align='center'>
+      <Image src={faceImg} preview={false} width={72}></Image>
+      <Flex justify='space-between' align='center' style={{ height: 40 }}>
         <div className='fn22 fw-500'>账户概览</div>
       </Flex>
       <Divider />
@@ -284,7 +282,7 @@ export default function Fn() {
             children={
               <div style={{ width: 240 }}>
                 <Form
-                  initialValues={{ time: rangePresets[2].value }}
+                  initialValues={{ time: rangePresets[1].value }}
                   form={form}>
                   <Form.Item name='time' className='m-b-0'>
                     <RangePicker

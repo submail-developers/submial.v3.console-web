@@ -46,7 +46,7 @@ import UploadBg from './bg'
 import UploadAttachment from './attachment'
 import { actualIssueIndustryOptions } from '@/pages/rcs/chatbot/type'
 
-import jiqiren from '@/assets/rcs/aco1.png'
+import bannerImg from '@/assets/rcs/account/banner.png'
 
 import './index.scss'
 import { name } from 'dayjs/locale/*'
@@ -342,7 +342,7 @@ export default function Fn() {
           providerSwitchCode: '0',
         }}>
         <div className='form-header'>
-          <Image src={jiqiren} preview={false}></Image>
+          <Image src={bannerImg} preview={false}></Image>
           <div className='fn22 fw-500 form-con'>
             {chatbotId == '0' ? '申请' : '编辑'} Chatbot 账户
             <div className='fn14 title-desc'>

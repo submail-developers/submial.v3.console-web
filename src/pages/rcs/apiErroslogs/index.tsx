@@ -5,7 +5,7 @@ import PageContent from '@/components/pageContent'
 
 import { API } from 'apis'
 import { getErrorsLogs, getChatbot } from '@/api'
-import topIco from '@/assets/rcs/errorlogs/err_ico.png'
+import faceImg from '@/assets/rcs/face/errors.png'
 import { useSize, usePoint } from '@/hooks'
 import { getPresets } from '@/utils/day'
 import dayjs from 'dayjs'
@@ -141,8 +141,8 @@ export default function Fn() {
 
   return (
     <PageContent extClass='api-errorlogs'>
-      <Image src={topIco} preview={false} width={72}></Image>
-      <Flex justify='space-between' align='center' className='m-t-4'>
+      <Image src={faceImg} preview={false} width={72}></Image>
+      <Flex justify='space-between' align='center' style={{ height: 40 }}>
         <div className='fn22 fw-500'>API错误日志</div>
       </Flex>
       <Divider />

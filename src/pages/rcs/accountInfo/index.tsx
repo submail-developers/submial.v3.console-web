@@ -4,7 +4,8 @@ import { NavLink } from 'react-router-dom'
 import PageContent from '@/components/pageContent'
 import { getDicConfig, getIndustry } from '@/api'
 import { API } from 'apis'
-import jiqirenImg from '@/assets/rcs/gunali.png'
+import faceImg from '@/assets/rcs/face/account.png'
+
 import yidong from '@/assets/rcs/operator/yidong.png'
 interface DataType extends API.GetDicConfigItems {}
 
@@ -57,25 +58,22 @@ export default function Fn() {
 
   return (
     <PageContent extClass='account-detail'>
+      <Image src={faceImg} preview={false} width={72}></Image>
+      <Flex justify='space-between' align='center' style={{ height: 40 }}>
+        <div className='fn22 fw-500'>客户资料管理</div>
+        {['1', '2'].includes(customerData?.status) && (
+          <NavLink to='/console/rcs/account/create/1'>
+            <Button
+              type='primary'
+              icon={<i className='icon iconfont icon-bianji'></i>}>
+              编辑客户资料
+            </Button>
+          </NavLink>
+        )}
+      </Flex>
+      <Divider />
       {customerData && (
         <>
-          <Image src={jiqirenImg} preview={false} width={72}></Image>
-          <Flex
-            justify='space-between'
-            align='center'
-            style={{ marginTop: '4px' }}>
-            <div className='fn22 fw-500'>客户资料管理</div>
-            {['1', '2'].includes(customerData.status) && (
-              <NavLink to='/console/rcs/account/create/1'>
-                <Button
-                  type='primary'
-                  icon={<i className='icon iconfont icon-bianji'></i>}>
-                  编辑客户资料
-                </Button>
-              </NavLink>
-            )}
-          </Flex>
-          <Divider className='line'></Divider>
           <div className='info-title m-b-20'>
             客户信息
             <div className='fn13'>

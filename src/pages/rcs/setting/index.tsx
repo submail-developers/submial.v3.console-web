@@ -5,14 +5,14 @@ import Mob from './components/mob'
 import Mail from './components/email'
 import Safe from './components/safe'
 
-import topIco from '@/assets/rcs/setting/set_ico.png'
+import faceImg from '@/assets/rcs/face/settings.png'
 
 import './index.scss'
 
 export default function Fn() {
   return (
     <PageContent extClass='setting'>
-      <Image src={topIco} preview={false} width={72}></Image>
+      <Image src={faceImg} preview={false} width={72}></Image>
       <Flex justify='space-between' align='center' className='m-t-4'>
         <div className='fn22 fw-500'>
           偏好设置

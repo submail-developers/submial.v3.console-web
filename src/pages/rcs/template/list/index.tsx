@@ -15,7 +15,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import PageContent from '@/components/pageContent'
 import { PlusOutlined } from '@ant-design/icons'
-import codeImg from '@/assets/rcs/5g2.png'
+import faceImg from '@/assets/rcs/face/template.png'
 import { delRcsMeteial, getRcsTempList } from '@/api'
 import SelectTypeModal from './selectTypeModal'
 import Item from './item'
@@ -88,17 +88,11 @@ export default function Fn() {
 
   return (
     <PageContent extClass='template-list' xxl={1400} xl={1100}>
-      <Image src={codeImg} preview={false} width={72}></Image>
-      <Flex
-        justify='space-between'
-        wrap='wrap'
-        gap={12}
-        style={{ marginTop: '4px' }}>
-        <Space align='baseline'>
-          <div className='fn22 fw-500'>5G 消息模版</div>
-        </Space>
+      <Image src={faceImg} preview={false} width={72}></Image>
+      <Flex justify='space-between' wrap='wrap' style={{ height: 40 }}>
+        <div className='fn22 fw-500'>5G 消息模版</div>
       </Flex>
-      <Divider className='line'></Divider>
+      <Divider />
 
       <Form
         name='rcs-template-list-form'

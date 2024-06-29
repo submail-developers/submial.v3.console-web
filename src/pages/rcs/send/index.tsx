@@ -42,7 +42,7 @@ import { getVars } from '@/utils'
 import { useAppSelector } from '@/store/hook'
 import { settingRcs } from '@/store/reducers/settingRcs'
 
-import codeImg from '@/assets/rcs/send1.png'
+import faceImg from '@/assets/rcs/face/send.png'
 
 import './index.scss'
 import '@/pages/rcs/template/mobile.scss'
@@ -326,21 +326,17 @@ export default function CreateSend() {
   return (
     <>
       <PageContent extClass='create-send'>
-        <Image src={codeImg} preview={false} width={72}></Image>
-        <Flex
-          justify='space-between'
-          align='center'
-          style={{ marginTop: '4px' }}>
+        <Image src={faceImg} preview={false} width={72}></Image>
+        <Flex justify='space-between' align='center'>
           <div className='fn22 fw-500'>创建在线发送任务</div>
           <Button
             type='primary'
-            size={point ? 'large' : 'middle'}
             onClick={() => setShowModal(true)}
             icon={<PlusOutlined className='fn14' rev={undefined} />}>
             {id == '0' ? '选择模板' : '选择其他模板'}
           </Button>
         </Flex>
-        <Divider className='line'></Divider>
+        <Divider />
         {id != '0' ? (
           <Flex wrap='wrap' gap={60}>
             <div className='left'>
