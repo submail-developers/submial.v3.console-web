@@ -1,8 +1,8 @@
 import { useState, useEffect, forwardRef, useRef, useCallback } from 'react'
 import { Modal, Form, App, Row, Col, Button, Input, Select } from 'antd'
 import {
-  verifyCodeSms,
-  smsCodeVerify,
+  // verifyCodeSms,
+  // smsCodeVerify,
   exportAddress,
   downLaodFile,
 } from '@/api'
@@ -45,9 +45,9 @@ const Dialog = (props: Props, ref: any) => {
     setCount(3)
     try {
       // 发送短信验证码
-      const res = await verifyCodeSms('')
-      if (res.status == 'success') {
-      }
+      // const res = await verifyCodeSms('')
+      // if (res.status == 'success') {
+      // }
     } catch (error) {}
   }, [])
 
@@ -55,13 +55,12 @@ const Dialog = (props: Props, ref: any) => {
     const formValues = form.getFieldsValue()
     try {
       //拿到验证码
-      const res = await smsCodeVerify({
-        code: formValues.code,
-      })
-
-      if (res.status == 'success') {
-        exportFile()
-      }
+      // const res = await smsCodeVerify({
+      //   code: formValues.code,
+      // })
+      // if (res.status == 'success') {
+      //   exportFile()
+      // }
     } catch (error) {}
   }
 

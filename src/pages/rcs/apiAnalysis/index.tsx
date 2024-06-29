@@ -1,22 +1,14 @@
-import { useEffect, useRef, useState } from 'react'
-import { NavLink, Link } from 'react-router-dom'
-import {
-  Image,
-  Flex,
-  Space,
-  Divider,
-  Row,
-  Col,
-  DatePicker,
-  Form,
-  Select,
-} from 'antd'
+import { useEffect, useState } from 'react'
+import { Image, Flex, Divider, Row, Col, DatePicker, Form, Select } from 'antd'
 import type { GetProps } from 'antd'
 import PageContent from '@/components/pageContent'
+import AExport from '@/components/aExport'
+import { useAppSelector } from '@/store/hook'
+import { settingRcs } from '@/store/reducers/settingRcs'
+import { downloadFile } from '@/utils'
 import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
 
-import MyExport from './components/export'
 import MyCard from './components/card'
 import Overview from './components/overview'
 import MySuccess from './components/success'
@@ -26,7 +18,7 @@ import { getPresets } from '@/utils/day'
 import { usePoint } from '@/hooks'
 
 import { API } from 'apis'
-import { getChatbot, getUnionAnalysis } from '@/api'
+import { getChatbot, getUnionAnalysis, exportRcsAnalysis } from '@/api'
 
 import faceImg from '@/assets/rcs/face/analysis.png'
 
@@ -44,19 +36,38 @@ const disabledDate: RangePickerProps['disabledDate'] = (current) => {
 }
 // 预设日期
 const rangePresets = getPresets([1, 7, 15, 30, 90])
+const initTime = rangePresets[1].value
+
+const items = [
+  {
+    label: '导出 CSV',
+    key: 'csv',
+  },
+
+  {
+    label: '导出 EXCEL',
+    key: 'excel',
+  },
+  {
+    label: '导出 JSON',
+    key: 'json',
+  },
+
+  {
+    label: '导出 XML',
+    key: 'xml',
+  },
+]
 
 export default function Fn() {
   const pointXs = usePoint('xs')
+  const rcsSetting = useAppSelector(settingRcs)
+  const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
+  const [time, setTime] = useState<[Dayjs, Dayjs]>(initTime)
   const [chatbotList, setChatbotLit] = useState<API.ChatbotItem[]>([])
-  const [appid, setappid] = useState('')
 
   const [echartsData, setechartsData] = useState<API.GetUnionAnalysis>()
-
-  const [time, setTime] = useState<[Dayjs, Dayjs]>(rangePresets[1].value)
-  const onRangeChange = (value: [Dayjs, Dayjs]) => {
-    setTime(value)
-  }
 
   const initChatbot = async () => {
     try {
@@ -75,10 +86,12 @@ export default function Fn() {
   const initData = async () => {
     setLoading(true)
     try {
+      const fromValues = await form.getFieldsValue()
+      setTime(time)
       const res = await getUnionAnalysis({
-        appid: appid,
-        start: time[0].format('YYYY-MM-DD'),
-        end: time[1].format('YYYY-MM-DD'),
+        appid: fromValues.appid || '',
+        start: fromValues.time[0].format('YYYY-MM-DD'),
+        end: fromValues.time[1].format('YYYY-MM-DD'),
       })
       setechartsData(res.analysis)
       setLoading(false)
@@ -87,16 +100,25 @@ export default function Fn() {
     }
   }
 
-  const changeChatbot = (value) => {
-    setappid(value)
+  // 导出
+  const exportEvent = async (file_type) => {
+    const { time, appid = '' } = await form.getFieldsValue()
+    const start = time[0].format('YYYY-MM-DD')
+    const end = time[1].format('YYYY-MM-DD')
+    const res = await exportRcsAnalysis({
+      file_type,
+      start,
+      end,
+      appid,
+    })
+    if (res.status == 'success') {
+      downloadFile()
+    }
   }
 
   useEffect(() => {
-    initData()
-  }, [appid, time])
-
-  useEffect(() => {
     initChatbot()
+    initData()
   }, [])
 
   return (
@@ -104,16 +126,25 @@ export default function Fn() {
       <Image src={faceImg} preview={false} width={72}></Image>
       <Flex justify='space-between' align='center'>
         <div className='fn22 fw-500'>API分析报告</div>
-        <MyExport />
+
+        <AExport
+          items={items}
+          onExportEvent={exportEvent}
+          useCode={rcsSetting?.settings?.export_confrim == '1'}
+        />
       </Flex>
       <Divider />
-      <Form layout='vertical' initialValues={{ time: rangePresets[1].value }}>
-        <Space size={24}>
+      <Form
+        form={form}
+        layout='vertical'
+        autoComplete='off'
+        onValuesChange={() => initData()}
+        initialValues={{ time: initTime }}>
+        <Flex align='flex-end' wrap='wrap' gap={16}>
           <Form.Item label='Chatbot选择' name='chatbot'>
             <Select
               allowClear
-              value={appid}
-              onChange={changeChatbot}
+              popupMatchSelectWidth={120}
               style={{ width: 120 }}
               placeholder='全部'
               options={chatbotList}
@@ -124,10 +155,9 @@ export default function Fn() {
               presets={!pointXs && rangePresets}
               allowClear={false}
               disabledDate={disabledDate}
-              onChange={onRangeChange}
             />
           </Form.Item>
-        </Space>
+        </Flex>
       </Form>
       <Row gutter={[24, 24]}>
         <Col span={24}>

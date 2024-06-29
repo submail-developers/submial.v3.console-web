@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useSize, usePoint } from '@/hooks'
 import { Outlet, useNavigate } from 'react-router-dom'
 import {
@@ -12,16 +12,21 @@ import {
   Select,
   Dropdown,
   Input,
+  App,
 } from 'antd'
 import type { GetProps } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs'
+import { useAppSelector } from '@/store/hook'
+import { settingRcs } from '@/store/reducers/settingRcs'
+import AExport from '@/components/aExport'
+import { downloadFile } from '@/utils'
 
 import PageContent from '@/components/pageContent'
 import ACopy from '@/components/aCopy'
 import { getPresets } from '@/utils/day'
 
-import { getSendlists } from '@/api'
+import { getSendlists, exportRcsSendTask } from '@/api'
 import { API } from 'apis'
 
 import faceImg from '@/assets/rcs/face/batchreport.png'
@@ -45,12 +50,12 @@ enum statusStyle {
 const items = [
   {
     label: '导出 CSV',
-    key: '1',
+    key: 'csv',
   },
 
   {
     label: '导出 EXCEL',
-    key: '2',
+    key: 'excel',
   },
 ]
 
@@ -106,13 +111,15 @@ export default function Fn() {
   const size = useSize()
   const pointXs = usePoint('xs')
   const nav = useNavigate()
+  const { message } = App.useApp()
+  const rcsSetting = useAppSelector(settingRcs)
+  const [form] = Form.useForm()
 
   const [loading, setLoading] = useState(false)
   const [page, setPage] = useState<number>(1)
   const [limit, setLimit] = useState<number>(10)
   const [total, setTotal] = useState<number>(0)
   const [tableData, setTableData] = useState<API.GetSendlistsItems[]>()
-  const [form] = Form.useForm()
 
   // 获取任务发送报告
   const getList = async () => {
@@ -166,8 +173,32 @@ export default function Fn() {
   }
 
   // 导出
-  const exportEvent = async (e) => {
-    console.log(e)
+  const exportEvent = async (file_type) => {
+    const {
+      keywords = '',
+      order_by,
+      status,
+      type,
+      time,
+    } = await form.getFieldsValue()
+    const start = time[0].format('YYYY-MM-DD')
+    const end = time[1].format('YYYY-MM-DD')
+    if (start != end) {
+      message.warning('导出状态下，仅支持导出单日期数据')
+      return
+    }
+    const res = await exportRcsSendTask({
+      file_type,
+      keywords,
+      order_by,
+      status,
+      type,
+      start,
+      end,
+    })
+    if (res.status == 'success') {
+      downloadFile()
+    }
   }
 
   // 查看详情
@@ -275,15 +306,11 @@ export default function Fn() {
       <Image src={faceImg} preview={false} width={72}></Image>
       <Flex justify='space-between' align='center'>
         <div className='fn22 fw-500'>批量任务发送报告</div>
-        <Dropdown
-          className='export'
-          menu={{ items, selectable: true, onClick: exportEvent }}
-          trigger={['click']}>
-          <Button type='primary'>
-            <span className='m-r-8'>导 出</span>
-            <DownOutlined rev={null} />
-          </Button>
-        </Dropdown>
+        <AExport
+          items={items}
+          onExportEvent={exportEvent}
+          useCode={rcsSetting?.settings?.export_confrim == '1'}
+        />
       </Flex>
       <Divider />
       <Form

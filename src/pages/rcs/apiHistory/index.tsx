@@ -8,23 +8,23 @@ import {
   DatePicker,
   Form,
   Select,
-  Dropdown,
-  Space,
   Input,
-  message,
 } from 'antd'
 import type { GetProps } from 'antd'
+import AExport from '@/components/aExport'
+import { useAppSelector } from '@/store/hook'
+import { settingRcs } from '@/store/reducers/settingRcs'
 import PageContent from '@/components/pageContent'
 import ACopy from '@/components/aCopy'
-import { DownOutlined } from '@ant-design/icons'
-import { getChatbot, getHistory, exportHistory, downLaodFile } from '@/api'
+import { getChatbot, getHistory, exportRcsHistory } from '@/api'
 import { API } from 'apis'
 import faceImg from '@/assets/rcs/face/history.png'
-import './index.scss'
-import VerifyCode from './verifyCodeDialog/index'
 import { usePoint } from '@/hooks'
 import dayjs from 'dayjs'
 import { getPresets } from '@/utils/day'
+import { downloadFile } from '@/utils'
+
+import './index.scss'
 
 enum statusNum {
   '等待',
@@ -37,13 +37,6 @@ enum statusStyle {
   'success-color',
   'error-color',
   'warning-color',
-}
-enum ExportType {
-  'txt' = 0,
-  'csv' = 1,
-  'excel' = 2,
-  'jso' = 3,
-  'xml' = 4,
 }
 
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>
@@ -62,24 +55,25 @@ const disabledDate: RangePickerProps['disabledDate'] = (current) => {
 const items = [
   {
     label: '导出 TXT (仅手机号码)',
-    key: '0',
+    key: 'txt',
   },
   {
     label: '导出 CSV',
-    key: '1',
+    key: 'csv',
   },
 
   {
     label: '导出 EXCEL',
-    key: '2',
+    key: 'excel',
   },
   {
     label: '导出 JSON',
-    key: '3',
+    key: 'json',
   },
+
   {
     label: '导出 XML',
-    key: '4',
+    key: 'xml',
   },
 ]
 
@@ -99,6 +93,7 @@ const sendOptions = [
 ]
 
 export default function Fn() {
+  const rcsSetting = useAppSelector(settingRcs)
   const [form] = Form.useForm()
   const pointXs = usePoint('xs')
   const [loading, setLoading] = useState(false)
@@ -107,11 +102,6 @@ export default function Fn() {
   const [total, setTotal] = useState<number>(0)
   const [tableData, setTableData] = useState<API.GetHistoryItems[]>()
   const [chatBotList, setChatBotList] = useState<API.ChatbotItem[]>([])
-  // 导出
-  const [isOpenModal, setIsOpenModal] = useState(false)
-  const [exportconfirm, setExportconfirm] = useState(false)
-  const [exportParams, setExportParams] = useState([])
-  const [fileType, setFileType] = useState()
   // 获取chatbot
   const getChatbotList = async () => {
     try {
@@ -155,10 +145,32 @@ export default function Fn() {
     }
   }
 
-  const handleCancel = () => {
-    setIsOpenModal(false)
+  // 导出
+  const exportEvent = async (type) => {
+    const {
+      appid = '',
+      status,
+      send_id,
+      to,
+      content,
+      time,
+    } = await form.getFieldsValue()
+    const start = time[0].format('YYYY-MM-DD')
+    const end = time[1].format('YYYY-MM-DD')
+    const res = await exportRcsHistory({
+      type,
+      start,
+      end,
+      appid,
+      status,
+      send_id,
+      to,
+      content,
+    })
+    if (res.status == 'success') {
+      downloadFile()
+    }
   }
-  const exportEvent = async (e) => {}
 
   const changePageInfo = (page, pageSize) => {
     if (pageSize != limit) {
@@ -264,15 +276,12 @@ export default function Fn() {
       <Image src={faceImg} preview={false} width={72}></Image>
       <Flex justify='space-between' align='center'>
         <div className='fn22 fw-500'>API历史明细</div>
-        <Dropdown
-          className='export'
-          menu={{ items, selectable: true, onClick: exportEvent }}
-          trigger={['click']}>
-          <Button type='primary'>
-            <span className='m-r-8'>导 出</span>
-            <DownOutlined rev={null} />
-          </Button>
-        </Dropdown>
+
+        <AExport
+          items={items}
+          onExportEvent={exportEvent}
+          useCode={rcsSetting?.settings?.export_confrim == '1'}
+        />
       </Flex>
       <Divider />
       <Form
@@ -345,12 +354,6 @@ export default function Fn() {
           scroll={{ x: 'fit-content' }}
         />
       </Form>
-      <VerifyCode
-        fileType={fileType}
-        exportParams={exportParams}
-        open={isOpenModal}
-        onCancel={handleCancel}
-      />
     </PageContent>
   )
 }

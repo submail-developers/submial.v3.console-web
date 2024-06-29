@@ -669,7 +669,7 @@ export const getSendlistReport = (data: API.GetSendlistReportParams) => {
   })
 }
 // 获取批量任务发送报告概览详情
-export const getSndlistSendanalysisreport = (
+export const getSendlistSendanalysisreport = (
   data: API.GetSendanalysisreportParams,
 ) => {
   return request.post<
@@ -712,17 +712,15 @@ export const getUnionAnalysis = (data: API.GetUnionAnalysisParams) => {
   )
 }
 
-// 导出文件 发送短信
-export const verifyCodeSms = (data: API.VerifyCodeSmsParams) => {
-  return request.post<any, any, API.VerifyCodeSmsParams>(
+// 发送验证码至默认账户
+export const getDefaultMobCode = () => {
+  return request.post<any, any, any>(
     '/console/api/account/send_verify_code_by_sms',
-    {
-      ...data,
-    },
+    {},
   )
 }
-// 验证
-export const smsCodeVerify = (data: { code: string }) => {
+// 发送验证码至默认账户 - 验证该验证码
+export const verifyDefaultMobCode = (data: { code: string }) => {
   return request.post<any, any, { code: string }>(
     '/console/api/account/sms_code_verify',
     {
@@ -891,3 +889,37 @@ export const delRcsSettingMobEmail = (data: { id: string }) => {
     }
   >('/console/api/rcs/delete_reminder_list', { ...data })
 }
+
+/**
+ * 导出-start
+ * */
+// 批量发送任务-导出
+export const exportRcsSendTask = (data: API.ExportRcsSendTaskParams) => {
+  return request.post<any, any, API.ExportRcsSendTaskParams>(
+    '/console/api/rcs/export_sendlists',
+    {
+      ...data,
+    },
+  )
+}
+// 批量发送任务-导出
+export const exportRcsAnalysis = (data: API.ExportRcsAnalysis) => {
+  return request.post<any, any, API.ExportRcsAnalysis>(
+    '/console/api/rcs/export_union_analysis',
+    {
+      ...data,
+    },
+  )
+}
+// 历史明细-导出
+export const exportRcsHistory = (data: API.ExportRcsHistory) => {
+  return request.post<any, any, API.ExportRcsHistory>(
+    '/console/api/rcs/export_history',
+    {
+      ...data,
+    },
+  )
+}
+/**
+ * 导出-end
+ * */

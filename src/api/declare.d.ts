@@ -1278,8 +1278,6 @@ declare module 'apis' {
       row: number
       history: GetHistoryItems[]
     }
-    // 短信验证
-    interface VerifyCodeSmsParams {}
     // api分析报告参数
     interface GetUnionAnalysisParams {
       start: string
@@ -1482,5 +1480,35 @@ declare module 'apis' {
       address: string
       code: string
     }
+    // 导出-start
+    // 导出-批量发送任务报告
+    interface ExportRcsSendTaskParams {
+      file_type: 'csv' | 'excel'
+      start: string
+      end: string
+      status: string
+      type: string
+      order_by: string
+      keywords: string
+    }
+    // 导出-api分析报告
+    interface ExportRcsAnalysis {
+      file_type: 'csv' | 'excel' | 'json' | 'xml'
+      start: string
+      end: string
+      appid: string
+    }
+    // 导出-历史明细
+    interface ExportRcsHistory {
+      type: 'txt' | 'csv' | 'excel' | 'json' | 'xml'
+      start: string
+      end: string
+      appid: string
+      status: string
+      send_id: string
+      to: string
+      content: string
+    }
+    // 导出-end
   }
 }

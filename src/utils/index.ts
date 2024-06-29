@@ -61,3 +61,20 @@ export const getVars = (str: string): string[] => {
   }
   return values
 }
+
+// iframe - 导出文件
+export const downloadFile = () => {
+  let tempDownloadHtml =
+    '<iframe id="exportfileController" width="1" height="1" style="opacity: 0;"></iframe>'
+  document.body.insertAdjacentHTML('beforeend', tempDownloadHtml)
+
+  let iframe = document.getElementById('exportfileController')
+  iframe.onload = () => {
+    console.log('iframe加载成功')
+    // 如果需要在下载完成后执行某些操作，可以在这里处理
+  }
+
+  // @ts-ignore
+  iframe.src =
+    'https://www.mysubmail.com/console/api/services/download_export_file'
+}

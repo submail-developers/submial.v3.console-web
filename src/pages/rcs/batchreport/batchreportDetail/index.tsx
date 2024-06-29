@@ -15,11 +15,11 @@ import Address from './components/address'
 import AddressFile from './components/addressFile'
 import Send from './components/send'
 
-import topIco from '@/assets/rcs/batchreport/batchreport_ico.png'
+import faceImg from '@/assets/rcs/face/batchreport.png'
 
 import {
   getSendlistReport,
-  getSndlistSendanalysisreport,
+  getSendlistSendanalysisreport,
   getSendlistDeepAnalysisReport,
 } from '@/api'
 import { API } from 'apis'
@@ -50,7 +50,7 @@ export default function Fn() {
       const params = { sendlist: id }
       const pAll = await Promise.all([
         getSendlistReport(params),
-        getSndlistSendanalysisreport(params),
+        getSendlistSendanalysisreport(params),
         getSendlistDeepAnalysisReport(params),
       ])
       const [reportRes, sendRes, deepRes] = pAll
@@ -70,9 +70,9 @@ export default function Fn() {
 
   return (
     <PageContent extClass='batchreport-detail'>
-      <Image src={topIco} preview={false} width={72}></Image>
-      <Flex justify='space-between' align='center' className='m-t-4'>
-        <div className='fn22 fw-500'>批量任务发送报告</div>
+      <Image src={faceImg} preview={false} width={72}></Image>
+      <Flex justify='space-between' align='center'>
+        <div className='fn22 fw-500'>批量任务发送报告详情</div>
         <Button
           type='primary'
           onClick={updataInfo}
