@@ -1,10 +1,18 @@
-import { useState, useImperativeHandle, forwardRef, useRef } from 'react'
+import {
+  useState,
+  useImperativeHandle,
+  forwardRef,
+  useRef,
+  ReactNode,
+} from 'react'
 import { Modal, Form, Input, Space, Statistic, App } from 'antd'
 import type { CountdownProps } from 'antd'
 import { verifyDefaultMobCode, getDefaultMobCode } from '@/api'
 
 type Props = {
+  title?: ReactNode
   onSuccess: () => void
+  onCancel?: () => void
 }
 
 const { Search } = Input
@@ -119,14 +127,20 @@ function Fn(props: Props, ref) {
       setSendLoading(false)
     }
   }
+  const onCancel = () => {
+    if ('onCancel' in props) {
+      props.onCancel()
+    }
+    setShow(false)
+  }
 
   return (
     <Modal
       onOk={handleOk}
       confirmLoading={loading}
       open={show}
-      onCancel={() => setShow(false)}
-      title='短信验证'
+      onCancel={onCancel}
+      title={props.title || '短信验证'}
       width={500}>
       <Form
         name='setting-add-mob'

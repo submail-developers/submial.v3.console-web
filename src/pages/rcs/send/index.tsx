@@ -41,6 +41,7 @@ import { API } from 'apis'
 import { getVars } from '@/utils'
 import { useAppSelector } from '@/store/hook'
 import { settingRcs } from '@/store/reducers/settingRcs'
+import ASmsVerify from '@/components/aSmsVerify'
 
 import faceImg from '@/assets/rcs/face/send.png'
 
@@ -94,6 +95,7 @@ export default function CreateSend() {
   const { message } = App.useApp()
   const rcsSetting = useAppSelector(settingRcs)
   const tabsRef = useRef(null) // 添加联系人tab
+  const verifyRef = useRef(null)
   const [showModal, setShowModal] = useState(false) // 选择模版
   const [type, setType] = useState<API.RcsTempType>() // 1纯文本  2单卡片  3多卡片  4文件 0不展示
 
@@ -189,8 +191,7 @@ export default function CreateSend() {
     }
   }
 
-  // 提交审核
-  const submit = async () => {
+  const verifySuccess = async () => {
     try {
       const value1 = await form1.getFieldsValue()
       const { mms, sms, isTimetosend, time, timetosend_date } =
@@ -232,6 +233,16 @@ export default function CreateSend() {
       }
     } catch (error) {
       setConfirmLoading(false)
+    }
+  }
+
+  // 提交审核
+  const submit = () => {
+    if (rcsSetting.settings.message_send_confirm == '1') {
+      setOpenConfirm(false)
+      verifyRef.current.open()
+    } else {
+      verifySuccess()
     }
   }
 
@@ -726,6 +737,8 @@ export default function CreateSend() {
           <Empty description='请选择模版' />
         )}
       </PageContent>
+
+      <ASmsVerify onSuccess={verifySuccess} ref={verifyRef} />
 
       <Modal open={showModal} onCancel={() => setShowModal(false)} />
     </>

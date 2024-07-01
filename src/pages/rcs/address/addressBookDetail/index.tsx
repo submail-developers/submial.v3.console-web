@@ -14,6 +14,7 @@ import {
   Pagination,
   Flex,
   Spin,
+  Space,
 } from 'antd'
 import type { MenuProps } from 'antd'
 import ImportAddressDialog from './ImportDialog/index'
@@ -22,13 +23,15 @@ import {
   deleteAddressMob,
   truncateMob,
   exportAddress,
-  downLaodFile,
 } from '@/api'
 import { useNavigate, useSearchParams, useParams } from 'react-router-dom'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { getAddressPath } from '../type'
 import './index.scss'
-import VerifyCode from './verifyCodeDialog/index'
+import AExport from '@/components/aExport'
+import { useAppSelector } from '@/store/hook'
+import { settingRcs } from '@/store/reducers/settingRcs'
+import { downloadFile } from '@/utils'
 
 const items: MenuProps['items'] = [
   { label: '导出 TXT', key: 'txt' },
@@ -39,6 +42,7 @@ const items: MenuProps['items'] = [
 ]
 
 export default function Fn() {
+  const rcsSetting = useAppSelector(settingRcs)
   const nav = useNavigate()
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
@@ -94,6 +98,18 @@ export default function Fn() {
       setLoading(false)
     }
   }
+
+  // 导出
+  const exportEvent = async (type) => {
+    const res = await exportAddress({
+      type,
+      id,
+    })
+    if (res.status == 'success') {
+      downloadFile()
+    }
+  }
+
   useEffect(() => {
     getAddressDetailList()
   }, [currentPage])
@@ -203,23 +219,6 @@ export default function Fn() {
     nav(-1)
   }
 
-  const edit = async (e) => {
-    if (exportconfirm == '1') {
-      setFileType(e.key)
-      setIsOpenModal(true)
-    } else {
-      const res = await exportAddress({
-        id: id,
-        type: e.key,
-      })
-      if (res.status == 'success') {
-        downLaodFile('')
-      } else {
-        message.error(res.message)
-      }
-    }
-  }
-
   return (
     <Form
       name='address-book-detail-form'
@@ -228,15 +227,15 @@ export default function Fn() {
       layout='vertical'
       initialValues={{ type: 'all', keyword: '' }}
       autoComplete='off'>
-      <Row gutter={8}>
-        <Col span={24} className='search-part fx-between-end'>
-          <Form.Item name='keyword' label='联系人手机号' className='m-b-0'>
-            <Search
-              placeholder='地址簿名称/ID'
-              allowClear
-              onSearch={handleSearch}
-            />
-          </Form.Item>
+      <Flex align='flex-end' justify='space-between'>
+        <Form.Item name='keyword' label='联系人手机号' className='m-b-0'>
+          <Search
+            placeholder='地址簿名称/ID'
+            allowClear
+            onSearch={handleSearch}
+          />
+        </Form.Item>
+        <Space>
           <Button
             type='primary'
             className='fx-start-center '
@@ -245,8 +244,13 @@ export default function Fn() {
             <i className='icon iconfont icon-daorulianxiren'></i>
             导入联系人
           </Button>
-        </Col>
-      </Row>
+          <AExport
+            items={items}
+            onExportEvent={exportEvent}
+            useCode={rcsSetting?.settings?.export_confrim == '1'}
+          />
+        </Space>
+      </Flex>
 
       <Col span={24} className='set-item fx-start-center m-t-24'>
         <div className='fx-start-center'>
@@ -283,15 +287,6 @@ export default function Fn() {
                     <span> 清空地址簿</span>
                   </div>
                 </Popconfirm>
-              </div>
-              <div>
-                <Dropdown
-                  menu={{ items, selectable: true, onClick: edit }}
-                  trigger={['click']}>
-                  <a>
-                    <i className='icon iconfont icon-daochuwei fn14'></i>导出为
-                  </a>
-                </Dropdown>
               </div>
             </>
           )}
@@ -352,14 +347,6 @@ export default function Fn() {
         open={openCreateModal}
         onCancel={handleCancel}
         getAddressDetailList={getAddressDetailList}
-      />
-
-      <VerifyCode
-        exportId={id}
-        fileType={fileType}
-        exportParams={exportParams}
-        open={isOpenModal}
-        onCancel={handleCancel}
       />
     </Form>
   )

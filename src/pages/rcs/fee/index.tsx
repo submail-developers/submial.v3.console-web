@@ -153,7 +153,11 @@ export default function Fn() {
     {
       title: '余额变动',
       width: 100,
-      render: (_, record) => <div>{record.status == '1' ? '-1' : '0'}</div>,
+      render: (_, record) => (
+        <div>
+          {record.status == '1' ? '-1' : record.status == '0' ? '0' : '+1'}
+        </div>
+      ),
     },
   ]
 

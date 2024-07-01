@@ -100,7 +100,7 @@ export default function Fn() {
   const [page, setPage] = useState<number>(1)
   const [limit, setLimit] = useState<number>(10)
   const [total, setTotal] = useState<number>(0)
-  const [tableData, setTableData] = useState<API.GetHistoryItems[]>()
+  const [tableData, setTableData] = useState<API.GetHistoryItems[]>([])
   const [chatBotList, setChatBotList] = useState<API.ChatbotItem[]>([])
   // 获取chatbot
   const getChatbotList = async () => {
