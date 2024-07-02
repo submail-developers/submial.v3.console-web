@@ -413,7 +413,7 @@ export default function Fn() {
         onChange={onChange}>
         <Row gutter={[20, 16]} wrap style={{ marginTop: '24px' }}>
           {addressFolderList.map((item, index) => (
-            <Col span={24} lg={12} xl={12} xxl={6} key={item.id}>
+            <Col span={24} lg={12} xl={12} xxl={8} key={item.id}>
               <div className='address-book-item'>
                 <div>
                   <div
@@ -431,46 +431,54 @@ export default function Fn() {
                     <div>
                       <img src={getFolderPath(Number(item.tag))} alt='' />
                     </div>
-                    <div className='to-detail'>
+                    <div className='to-detail fx-auto'>
                       <div className='fn16 fw-500'>{item.title}</div>
-                      <div style={{ marginTop: '10px' }}>
-                        <span>{item.num}</span> 个地址簿
+                      <div
+                        style={{ marginTop: '10px' }}
+                        className='fx-between-center'>
+                        <span>
+                          <span>{item.num}</span> 个地址簿
+                        </span>
+                        {isVisible ? (
+                          <Checkbox
+                            value={item.id}
+                            className='choose-address fx-x-end'
+                            onClick={stopEvent}>
+                            选择
+                          </Checkbox>
+                        ) : (
+                          <div
+                            className='fx-x-end handle-item'
+                            onClick={stopEvent}>
+                            <Tooltip title='编辑' placement='bottom'>
+                              <Button
+                                onClick={(e) => folderEdit(item, e)}
+                                className='fx-center-center'>
+                                <i className='icon iconfont icon-input'></i>
+                              </Button>
+                            </Tooltip>
+                            <Popconfirm
+                              placement='bottom'
+                              title='警告'
+                              description='确定删除该文件夹吗？'
+                              onConfirm={() => deleteFolder(item.id)}
+                              okText='确定'
+                              cancelText='取消'
+                              zIndex={100}>
+                              <Tooltip
+                                title='删除'
+                                placement='bottom'
+                                zIndex={99}>
+                                <Button className='fx-center-center'>
+                                  <i className='icon iconfont icon-shanchu'></i>
+                                </Button>
+                              </Tooltip>
+                            </Popconfirm>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
-
-                  {isVisible ? (
-                    <Checkbox
-                      value={item.id}
-                      className='choose-address fx-x-end'
-                      onClick={stopEvent}>
-                      选择
-                    </Checkbox>
-                  ) : (
-                    <div className='fx-x-end handle-item' onClick={stopEvent}>
-                      <Tooltip title='编辑' placement='bottom'>
-                        <Button
-                          onClick={(e) => folderEdit(item, e)}
-                          className='fx-center-center'>
-                          <i className='icon iconfont icon-input'></i>
-                        </Button>
-                      </Tooltip>
-                      <Popconfirm
-                        placement='bottom'
-                        title='警告'
-                        description='确定删除该文件夹吗？'
-                        onConfirm={() => deleteFolder(item.id)}
-                        okText='确定'
-                        cancelText='取消'
-                        zIndex={100}>
-                        <Tooltip title='删除' placement='bottom' zIndex={99}>
-                          <Button className='fx-center-center'>
-                            <i className='icon iconfont icon-shanchu'></i>
-                          </Button>
-                        </Tooltip>
-                      </Popconfirm>
-                    </div>
-                  )}
                 </div>
               </div>
             </Col>
