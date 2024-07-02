@@ -25,7 +25,7 @@ import './index.scss'
 enum Status {
   '等待',
   '扣费',
-  '失败',
+  '返还',
   '撤回',
 }
 enum StatusColor {
@@ -165,7 +165,7 @@ export default function Fn() {
     <PageContent extClass='fee-log'>
       <Image src={faceImg} preview={false} width={72}></Image>
       <Flex justify='space-between' align='center' style={{ height: 40 }}>
-        <div className='fn22 fw-500'>消费日志</div>
+        <div className='fn22 fw-500'>计费日志</div>
       </Flex>
       <Divider />
       <Form

@@ -221,7 +221,6 @@ export default function Fn() {
       render: (_, record) => (
         <Space style={{ height: 40 }} className='fx-y-center'>
           <span>{record.to}</span>
-
           <Tooltip
             title={
               <>
@@ -233,23 +232,11 @@ export default function Fn() {
             }
             placement='bottom'
             trigger={['hover', 'click']}>
-            <span className='icon iconfont icon-gps'></span>
+            <span className='icon iconfont icon-gps gray-color-sub'></span>
           </Tooltip>
         </Space>
       ),
     },
-    // {
-    //   title: '号码详情',
-    //   width: 200,
-    //   render: (_, record) => (
-    //     <>
-    // {record.mobileType}
-    // {record.mobileArea
-    //   ? `/${record.mobileArea.split(' ').join('/')}`
-    //   : '-'}
-    //     </>
-    //   ),
-    // },
     {
       title: '模板ID',
       width: 100,

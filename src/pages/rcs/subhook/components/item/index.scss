@@ -16,4 +16,11 @@
       line-height: 30px;
     }
   }
+  .event-item {
+    padding: 0 12px;
+    border-radius: 4px;
+    background-color: var(--table-bg);
+    border: 1px solid #dadada;
+    color: var(--gray-color);
+  }
 }

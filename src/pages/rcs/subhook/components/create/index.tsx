@@ -1,8 +1,19 @@
 import { useState, forwardRef, useImperativeHandle, useRef } from 'react'
-import { Modal, Form, App, Input, Select, Radio } from 'antd'
+import {
+  Modal,
+  Form,
+  App,
+  Input,
+  Select,
+  Radio,
+  Checkbox,
+  Row,
+  Col,
+} from 'antd'
 import { saveRcsSubhook, getChatbot } from '@/api'
 import { API } from 'apis'
 import formRules from '@/utils/formRules'
+import { eventOptions } from '../../type'
 interface Props {
   onRefresh: () => void
 }
@@ -92,6 +103,7 @@ const Dialog = (props: Props, ref: any) => {
       }
       setLoading(false)
     } catch (error) {
+      console.log(error)
       setLoading(false)
     }
   }
@@ -112,6 +124,14 @@ const Dialog = (props: Props, ref: any) => {
         initialValues={{
           id: '',
           appid: 'ALL',
+          event: [
+            'request',
+            'sending',
+            'dropped',
+            'delivered',
+            'template_accept',
+            'template_reject',
+          ],
           request_method: 'POST',
           request_content_type: 'x-www-form-urlencoded',
           response_code: '100',
@@ -154,6 +174,25 @@ const Dialog = (props: Props, ref: any) => {
             placeholder=''
             options={chatbotList}
             fieldNames={{ label: 'name', value: 'id' }}></Select>
+        </Form.Item>
+
+        <Form.Item
+          label='选择事件'
+          name='event'
+          rules={[
+            {
+              required: true,
+            },
+          ]}>
+          <Checkbox.Group disabled>
+            <Row gutter={[12, 12]}>
+              {eventOptions.map((item) => (
+                <Col span={12} md={8} key={item.value}>
+                  <Checkbox value={item.value}>{item.label}</Checkbox>
+                </Col>
+              ))}
+            </Row>
+          </Checkbox.Group>
         </Form.Item>
 
         <Form.Item

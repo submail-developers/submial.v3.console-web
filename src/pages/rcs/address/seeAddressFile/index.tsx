@@ -548,7 +548,7 @@ export default function Fn() {
           onChange={onChange}>
           <Row gutter={[20, 16]} style={{ marginTop: '24px' }}>
             {addressList.map((item) => (
-              <Col span={24} lg={12} xl={12} xxl={6} key={item.id}>
+              <Col span={24} lg={12} xl={12} xxl={8} key={item.id}>
                 <div className='address-book-item'>
                   <div>
                     <div className='trapezoid'>
@@ -566,52 +566,59 @@ export default function Fn() {
                         <img src={addresssIcon[item.tag]} alt='' />
                       </div>
 
-                      <div className='to-detail'>
+                      <div className='to-detail fx-auto'>
                         <div className='fn18'>{item.name}</div>
-                        <div style={{ marginTop: '10px' }}>
-                          <span className='num-p'>{item.address}</span> 个联系人
+                        <div
+                          style={{ marginTop: '10px' }}
+                          className='fx-between-center'>
+                          <span>
+                            <span className='num-p'>{item.address}</span>{' '}
+                            个联系人
+                          </span>
+                          {isVisible ? (
+                            <Checkbox
+                              value={item.id}
+                              className='choose-address fx-x-end'
+                              onClick={stopEvent}>
+                              选择
+                            </Checkbox>
+                          ) : (
+                            <div
+                              className='fx-x-end handle-item'
+                              onClick={stopEvent}>
+                              <Dropdown
+                                trigger={['click']}
+                                menu={{
+                                  items: items2,
+                                  selectable: true,
+                                  onClick: (e) => edit2(e, item.id),
+                                }}>
+                                <Button className='fx-center-center'>
+                                  <i className='icon iconfont icon-dots fn14'></i>
+                                </Button>
+                              </Dropdown>
+
+                              <Button
+                                onClick={() => showModal(true, item)}
+                                className='fx-center-center'>
+                                <i className='icon iconfont icon-input'></i>
+                              </Button>
+                              <Popconfirm
+                                placement='left'
+                                title='警告'
+                                description='确定删除该地址簿吗？'
+                                onConfirm={() => deleteAddress(item.id)}
+                                okText='确定'
+                                cancelText='取消'>
+                                <Button className='fx-center-center'>
+                                  <i className='icon iconfont icon-shanchu'></i>
+                                </Button>
+                              </Popconfirm>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
-                    {isVisible ? (
-                      <Checkbox
-                        value={item.id}
-                        className='choose-address fx-x-end'
-                        onClick={stopEvent}>
-                        选择
-                      </Checkbox>
-                    ) : (
-                      <div className='fx-x-end handle-item' onClick={stopEvent}>
-                        <Dropdown
-                          trigger={['click']}
-                          menu={{
-                            items: items2,
-                            selectable: true,
-                            onClick: (e) => edit2(e, item.id),
-                          }}>
-                          <Button className='fx-center-center'>
-                            <i className='icon iconfont icon-dots fn14'></i>
-                          </Button>
-                        </Dropdown>
-
-                        <Button
-                          onClick={() => showModal(true, item)}
-                          className='fx-center-center'>
-                          <i className='icon iconfont icon-input'></i>
-                        </Button>
-                        <Popconfirm
-                          placement='left'
-                          title='警告'
-                          description='确定删除该地址簿吗？'
-                          onConfirm={() => deleteAddress(item.id)}
-                          okText='确定'
-                          cancelText='取消'>
-                          <Button className='fx-center-center'>
-                            <i className='icon iconfont icon-shanchu'></i>
-                          </Button>
-                        </Popconfirm>
-                      </div>
-                    )}
                   </div>
                 </div>
               </Col>

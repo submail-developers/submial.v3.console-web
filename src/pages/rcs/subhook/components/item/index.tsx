@@ -16,6 +16,7 @@ type Props = {
   onRefresh: () => void
   onEdit: () => void
 }
+import { eventOptions } from '../../type'
 
 export const callbackCode = {
   '100': '100-199',
@@ -247,6 +248,22 @@ export default function Fn(props: Props) {
                 <div className='g-ellipsis-3' title={props.item.url}>
                   {props.item.url}
                 </div>
+              </Col>
+            </Row>
+          </Col>
+          <Col span={24}>
+            <Row>
+              <Col span={8} xl={4} xxl={3} className='gray-color'>
+                已选中的事件
+              </Col>
+              <Col span={16} xl={20} xxl={21}>
+                <Flex align='center' gap={16} wrap='wrap'>
+                  {eventOptions.map((item) => (
+                    <span className='event-item' key={item.value}>
+                      {item.label}
+                    </span>
+                  ))}
+                </Flex>
               </Col>
             </Row>
           </Col>
