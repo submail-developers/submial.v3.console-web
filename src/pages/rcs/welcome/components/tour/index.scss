@@ -4,7 +4,12 @@
     min-height: 72px;
     line-height: 24px;
   }
+  .dots-none {
+    opacity: 0;
+    transition: all 0.3s;
+  }
   .dots-list {
+    opacity: 1;
     height: 20px;
     bottom: 8px;
     display: flex;
@@ -14,6 +19,9 @@
     li {
       border-radius: 50%;
       background-color: #d5d5d5;
+      &:first-child {
+        display: none;
+      }
       &.slick-active {
         button {
           background-color: var(--color);
