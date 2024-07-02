@@ -9,6 +9,8 @@ import {
   Form,
   Select,
   Input,
+  Tooltip,
+  Space,
 } from 'antd'
 import type { GetProps } from 'antd'
 import AExport from '@/components/aExport'
@@ -217,23 +219,37 @@ export default function Fn() {
       width: 140,
       className: 'paddingL20',
       render: (_, record) => (
-        <div style={{ height: 40 }} className='fx-y-center'>
-          {record.to}
-        </div>
+        <Space style={{ height: 40 }} className='fx-y-center'>
+          <span>{record.to}</span>
+
+          <Tooltip
+            title={
+              <>
+                {record.mobileType}
+                {record.mobileArea
+                  ? `/${record.mobileArea.split(' ').join('/')}`
+                  : '-'}
+              </>
+            }
+            placement='bottom'
+            trigger={['hover', 'click']}>
+            <span className='icon iconfont icon-gps'></span>
+          </Tooltip>
+        </Space>
       ),
     },
-    {
-      title: '号码详情',
-      width: 200,
-      render: (_, record) => (
-        <>
-          {record.mobileType}
-          {record.mobileArea
-            ? `/${record.mobileArea.split(' ').join('/')}`
-            : '-'}
-        </>
-      ),
-    },
+    // {
+    //   title: '号码详情',
+    //   width: 200,
+    //   render: (_, record) => (
+    //     <>
+    // {record.mobileType}
+    // {record.mobileArea
+    //   ? `/${record.mobileArea.split(' ').join('/')}`
+    //   : '-'}
+    //     </>
+    //   ),
+    // },
     {
       title: '模板ID',
       width: 100,
