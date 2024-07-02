@@ -1,21 +1,19 @@
-import { ChatIcon } from '@/components/aIcons'
-import './index.scss'
 import { useEffect, useRef, useState } from 'react'
 import { Grid } from 'antd'
 
-import { usePoint } from '@/hooks'
+import './index.scss'
 
 type Rect = {
   width?: number | 'auto'
   height?: number | 'auto'
 }
 
-let isDev = true
+let isDev = false
 
 // 开发环境隐藏iframe
-// if (import.meta.env.MODE === 'development') {
-//   isDev = true
-// }
+if (import.meta.env.MODE === 'development') {
+  isDev = true
+}
 
 const iframeRects = {
   lg: {
@@ -81,11 +79,10 @@ export default function ChatBtn() {
         iframeDocRef.current =
           //@ts-ignore
           iframe.contentDocument || iframe.contentWindow.document
+
         if (iframeDocRef.current) {
           chatBtnEl.current =
             iframeDocRef.current.querySelector('.mdi-chat-btn')
-          iframeDocRef.current.classList.remove('shadow')
-          iframeDocRef.current.style.boxShadow = '0 0 8px rgba(0, 0, 0, 0.15)'
           if (chatBtnEl.current) {
             chatBtnEl.current.addEventListener('click', chatBtnClickEvent)
           }
@@ -148,8 +145,10 @@ export default function ChatBtn() {
           onLoad={init}
           width={openChat ? iframeRect.width : 100}
           height={openChat ? iframeRect.height : 100}
-          style={{ border: 'none' }}
-          src='/console/welcome/test_index'></iframe>
+          src='/console/welcome/chat'
+          // src='http://sjt.submail.v3.com/console/welcome/chat'
+          // src='https://www.mysubmail.com//console/welcome/test_index'
+          style={{ border: 'none' }}></iframe>
       )}
     </div>
   )
