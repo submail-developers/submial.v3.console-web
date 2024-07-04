@@ -6,6 +6,6 @@ export enum EnumTempStatusText {
 }
 export enum EnumTempStatusBadge {
   'color-status-waiting' = 0,
-  'color-status-primary' = 1,
+  'color-status-success' = 1,
   'color-status-error' = 2,
 }

@@ -1261,17 +1261,31 @@ declare module 'apis' {
     }
     // 获取api历史明细返回值
     interface GetHistoryItems {
-      account: string
       api: string
       appid: string
-      code: string
-      datetime: string
-      error_key: string
+      contributionID: string
+      conversationID: string
+      desc: string
+      inReplyToContributionID: string
+      ipAddress: string
       message: string
-      id: string
-      ip: string
-      msg: string
-      product: string
+      mms: string
+      mmsContent: string
+      mmsSubject: string
+      mobileArea: string
+      mobileType: string
+      send: string
+      sendID: string
+      sendlist: string
+      sent: string
+      sentType: string
+      serviceCode: string
+      sign: string
+      sms: string
+      smsContent: string
+      status: string
+      suggestions: string
+      to: string
     }
     interface GetHistoryRes {
       exportconfirm: sting

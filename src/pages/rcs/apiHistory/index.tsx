@@ -25,6 +25,8 @@ import { usePoint } from '@/hooks'
 import dayjs from 'dayjs'
 import { getPresets } from '@/utils/day'
 import { downloadFile } from '@/utils'
+import SeeModal from '@/pages/rcs/template/seeModal'
+import type { ColumnsType } from 'antd/es/table'
 
 import './index.scss'
 
@@ -94,6 +96,8 @@ const sendOptions = [
   },
 ]
 
+interface DataType extends API.GetHistoryItems {}
+
 export default function Fn() {
   const rcsSetting = useAppSelector(settingRcs)
   const [form] = Form.useForm()
@@ -102,7 +106,7 @@ export default function Fn() {
   const [page, setPage] = useState<number>(1)
   const [limit, setLimit] = useState<number>(10)
   const [total, setTotal] = useState<number>(0)
-  const [tableData, setTableData] = useState<API.GetHistoryItems[]>([])
+  const [tableData, setTableData] = useState<DataType[]>([])
   const [chatBotList, setChatBotList] = useState<API.ChatbotItem[]>([])
   // 获取chatbot
   const getChatbotList = async () => {
@@ -212,7 +216,7 @@ export default function Fn() {
     getList()
   }, [limit, page])
 
-  const columns = [
+  const columns: ColumnsType<DataType> = [
     {
       title: '手机号',
       fixed: true,
@@ -241,10 +245,13 @@ export default function Fn() {
       title: '模板ID',
       width: 100,
       render: (_, record) => (
-        <div className='w-100' style={{ position: 'relative' }}>
-          <ACopy text={record.sign} />
-          {record.sign}
-        </div>
+        <Space className='w-100'>
+          <div style={{ position: 'relative' }}>
+            <ACopy text={record.sign} />
+            {record.sign}
+          </div>
+          <SeeModal sign={record.sign} />
+        </Space>
       ),
     },
     {
@@ -327,8 +334,8 @@ export default function Fn() {
           <Form.Item label='手机号码' name='to' className='m-b-0'>
             <Input placeholder='请输入手机号码' onPressEnter={search} />
           </Form.Item>
-          <Form.Item label='短信内容' name='content' className='m-b-0'>
-            <Input placeholder='请输入短信内容' onPressEnter={search} />
+          <Form.Item label='模版ID' name='content' className='m-b-0'>
+            <Input placeholder='请输入' onPressEnter={search} />
           </Form.Item>
           <Form.Item label='' className='m-b-0'>
             <Button type='primary' htmlType='submit' onClick={search}>
