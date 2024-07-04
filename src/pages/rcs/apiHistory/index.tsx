@@ -158,7 +158,7 @@ export default function Fn() {
       status,
       send_id,
       to,
-      content,
+      sign,
       time,
     } = await form.getFieldsValue()
     const start = time[0].format('YYYY-MM-DD')
@@ -171,7 +171,7 @@ export default function Fn() {
       status,
       send_id,
       to,
-      content,
+      sign,
     })
     if (res.status == 'success') {
       downloadFile()
@@ -190,7 +190,7 @@ export default function Fn() {
   // 除搜索关键字，其他字段改变直接搜索
   const onValuesChange = (changedValues, allValues) => {
     let changeKey = Object.keys(changedValues)[0]
-    if (!['send_id', 'to', 'content'].includes(changeKey)) {
+    if (!['send_id', 'to', 'sign'].includes(changeKey)) {
       if (page == 1) {
         getList()
       } else {
@@ -334,7 +334,7 @@ export default function Fn() {
           <Form.Item label='手机号码' name='to' className='m-b-0'>
             <Input placeholder='请输入手机号码' onPressEnter={search} />
           </Form.Item>
-          <Form.Item label='模版ID' name='content' className='m-b-0'>
+          <Form.Item label='模版ID' name='sign' className='m-b-0'>
             <Input placeholder='请输入' onPressEnter={search} />
           </Form.Item>
           <Form.Item label='' className='m-b-0'>

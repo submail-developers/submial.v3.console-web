@@ -1521,7 +1521,7 @@ declare module 'apis' {
       status: string
       send_id: string
       to: string
-      content: string
+      sign: string
     }
     // 导出-end
   }
