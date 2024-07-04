@@ -58,7 +58,7 @@ export default function Fn({
     } catch (error) {}
   }
   const createSend = () => {
-    nav(`/console/rcs/send/${item.sign}/${item.id}`)
+    nav(`/console/rcs/send/${item.sign}`)
   }
   return (
     <div className='rcs-temp-item'>

@@ -24,33 +24,37 @@ export default function Fn(props: Props) {
     try {
       const res = await getRcsTempList({
         page: 1,
-        limit: 1,
+        limit: 10,
         status: 'all',
-        id: props.sign,
+        keyword: props.sign,
       })
       setLoading(false)
       if (res?.list.length > 0) {
-        let _item = JSON.parse(JSON.stringify(res?.list[0]))
-        if (_item.message.message.generalPurposeCard) {
-          let content = _item.message.message.generalPurposeCard.content
-          content.title = replaceVars(content.title, params)
-          content.description = replaceVars(content.description, params)
-          _item.message.message.generalPurposeCard.content = content
-          setItem(_item)
-        } else if (_item.message.message.generalPurposeCardCarousel) {
-          let content = _item.message.message.generalPurposeCardCarousel.content
-          content = content.map((item) => {
-            item.title = replaceVars(item.title, params)
-            item.description = replaceVars(item.description, params)
-            return item
-          })
-          _item.message.message.generalPurposeCardCarousel.content = content
-          setItem(_item)
-        } else if (typeof _item.message.message == 'string') {
-          _item.message.message = replaceVars(_item.message.message, params)
-          setItem(_item)
-        } else {
-          setItem(_item)
+        let _list = res?.list.filter((item) => item.sign == props.sign)
+        if (_list.length == 1) {
+          let _item = JSON.parse(JSON.stringify(_list[0]))
+          if (_item.message.message.generalPurposeCard) {
+            let content = _item.message.message.generalPurposeCard.content
+            content.title = replaceVars(content.title, params)
+            content.description = replaceVars(content.description, params)
+            _item.message.message.generalPurposeCard.content = content
+            setItem(_item)
+          } else if (_item.message.message.generalPurposeCardCarousel) {
+            let content =
+              _item.message.message.generalPurposeCardCarousel.content
+            content = content.map((item) => {
+              item.title = replaceVars(item.title, params)
+              item.description = replaceVars(item.description, params)
+              return item
+            })
+            _item.message.message.generalPurposeCardCarousel.content = content
+            setItem(_item)
+          } else if (typeof _item.message.message == 'string') {
+            _item.message.message = replaceVars(_item.message.message, params)
+            setItem(_item)
+          } else {
+            setItem(_item)
+          }
         }
       }
     } catch (error) {

@@ -96,7 +96,7 @@ export default function Fn(props: Props) {
 
   // 选择该模版
   const onSelect = (item: API.RcsTempListItem) => {
-    nav(`/console/rcs/send/${item.sign}/${item.id}`, { replace: true })
+    nav(`/console/rcs/send/${item.sign}`, { replace: true })
     props.onCancel()
   }
 

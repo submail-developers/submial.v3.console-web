@@ -231,7 +231,7 @@ export const menus: RouteObject[] = [
         errorElement: <Error />,
         children: [
           {
-            path: ':sign/:id', // 模版的sign和id
+            path: ':sign', // 模版的sign
             loader: loaderFn({}),
             errorElement: <Error />,
             element: (
@@ -604,7 +604,7 @@ export const baseRouter: RouteObject[] = [
   },
   {
     path: '/console/rcs/send',
-    element: <Navigate to={'/console/rcs/send/0/0'} replace />,
+    element: <Navigate to={'/console/rcs/send/0'} replace />,
   },
   {
     path: '/console/rcs/interactive',

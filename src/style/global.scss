@@ -128,7 +128,9 @@
       color: #69a5ff;
     }
   }
-  &.text-color {
+  &.text-color,
+  &.gray-color,
+  &.gray-color-sub {
     &:hover {
       color: var(--color);
     }

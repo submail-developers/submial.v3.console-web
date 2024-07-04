@@ -84,8 +84,8 @@ function disabledDateTime(date: Dayjs) {
 }
 
 export default function CreateSend() {
-  // 模版id和sign
-  const { id, sign } = useParams()
+  // 模版sign
+  const { sign } = useParams()
   const [params] = useSearchParams()
   const clear = params.get('clear') // sign=0&&clear=1时不展示模版弹框
   const nav = useNavigate()
@@ -228,7 +228,7 @@ export default function CreateSend() {
       if (res.status == 'success') {
         message.success('创建成功', 3, () => {
           setConfirmLoading(false)
-          nav('/console/rcs/send/0/0?clear=1', { replace: true })
+          nav('/console/rcs/send/0?clear=1', { replace: true })
         })
       }
     } catch (error) {
@@ -253,58 +253,65 @@ export default function CreateSend() {
         page: 1,
         limit: 10,
         status: '1',
-        id: id,
+        keyword: sign,
       })
-      if (res.list.length == 1) {
-        let checked = res.list[0].checked
-        if (checked == '0') {
-          message.error('该模版审核中，请重新选择模版')
-          nav('/console/rcs/send/0/0', { replace: true })
-        } else if (checked == '2') {
-          message.error('该模版审核失败，请重新选择模版')
-          nav('/console/rcs/send/0/0', { replace: true })
+      if (res.list.length > 0) {
+        let _list = res.list.filter((item) => item.sign == sign)
+        if (_list.length == 1) {
+          let checked = res.list[0].checked
+          if (checked == '0') {
+            message.error('该模版审核中，请重新选择模版')
+            nav('/console/rcs/send/0', { replace: true })
+          } else if (checked == '2') {
+            message.error('该模版审核失败，请重新选择模版')
+            nav('/console/rcs/send/0', { replace: true })
+          } else {
+            setTempInfo(res.list[0])
+          }
+          setType(res.list[0].type)
+          let info = res.list[0]
+          let _keys: string[] = []
+          // 获取回落短信的参数
+          switch (info.type) {
+            case 1:
+              // 获取纯文本中的参数
+              _keys = [..._keys, ...getVars(info.message.message)]
+              break
+            case 2:
+              // 获取单卡片中的参数
+              _keys = [
+                ..._keys,
+                ...getVars(
+                  info.message.message?.generalPurposeCard?.content?.title ||
+                    '',
+                ),
+                ...getVars(
+                  info.message.message?.generalPurposeCard?.content
+                    ?.description || '',
+                ),
+              ]
+              break
+            case 3:
+              info.message.message?.generalPurposeCardCarousel?.content?.forEach(
+                (item) => {
+                  _keys = [
+                    ..._keys,
+                    ...getVars(item?.title || ''),
+                    ...getVars(item?.description || ''),
+                  ]
+                },
+              )
+              break
+          }
+          _keys = [..._keys, ...getVars(info?.smsContent || '')]
+          setVarsKeys(_keys)
         } else {
-          setTempInfo(res.list[0])
+          message.error('未查询到模版，请重新选择模版')
+          nav('/console/rcs/send/0', { replace: true })
         }
-        setType(res.list[0].type)
-        let info = res.list[0]
-        let _keys: string[] = []
-        // 获取回落短信的参数
-        switch (info.type) {
-          case 1:
-            // 获取纯文本中的参数
-            _keys = [..._keys, ...getVars(info.message.message)]
-            break
-          case 2:
-            // 获取单卡片中的参数
-            _keys = [
-              ..._keys,
-              ...getVars(
-                info.message.message?.generalPurposeCard?.content?.title || '',
-              ),
-              ...getVars(
-                info.message.message?.generalPurposeCard?.content
-                  ?.description || '',
-              ),
-            ]
-            break
-          case 3:
-            info.message.message?.generalPurposeCardCarousel?.content?.forEach(
-              (item) => {
-                _keys = [
-                  ..._keys,
-                  ...getVars(item?.title || ''),
-                  ...getVars(item?.description || ''),
-                ]
-              },
-            )
-            break
-        }
-        _keys = [..._keys, ...getVars(info?.smsContent || '')]
-        setVarsKeys(_keys)
       } else {
         message.error('未查询到模版，请重新选择模版')
-        nav('/console/rcs/send/0/0', { replace: true })
+        nav('/console/rcs/send/0', { replace: true })
       }
     } catch (error) {}
   }
@@ -332,7 +339,7 @@ export default function CreateSend() {
       getTempInfo()
       setShowModal(false)
     }
-  }, [sign, id, form1, form2, clear])
+  }, [sign, form1, form2, clear])
 
   return (
     <>
@@ -344,11 +351,11 @@ export default function CreateSend() {
             type='primary'
             onClick={() => setShowModal(true)}
             icon={<PlusOutlined className='fn14' rev={undefined} />}>
-            {id == '0' ? '选择模板' : '选择其他模板'}
+            {sign == '0' ? '选择模板' : '选择其他模板'}
           </Button>
         </Flex>
         <Divider />
-        {id != '0' ? (
+        {sign != '0' ? (
           <Flex wrap='wrap' gap={60}>
             <div className='left'>
               <div className='gray-color'>5g消息余额（条）</div>
