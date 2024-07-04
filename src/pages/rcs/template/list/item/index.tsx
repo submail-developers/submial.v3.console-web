@@ -57,6 +57,9 @@ export default function Fn({
       }
     } catch (error) {}
   }
+  const createSend = () => {
+    nav(`/console/rcs/send/${item.sign}/${item.id}`)
+  }
   return (
     <div className='rcs-temp-item'>
       <Tooltip title={item.rejectReason || ''} placement='bottom'>
@@ -105,6 +108,14 @@ export default function Fn({
             </div>
             {!hiddenHandle && (
               <Space align='center' size={16}>
+                {item.checked == '1' && (
+                  <div
+                    className='g-pointer text-color'
+                    title='创建在线发送任务'
+                    onClick={createSend}>
+                    <span className='icon iconfont icon-fasong fn16'></span>
+                  </div>
+                )}
                 <div
                   className='g-pointer text-color'
                   title='编辑'

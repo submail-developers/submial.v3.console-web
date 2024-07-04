@@ -69,7 +69,7 @@ export default function Fn() {
   }
   // 除搜索关键字，其他字段改变直接搜索
   const onValuesChange = (changedValues, allValues) => {
-    if (!('keywords' in changedValues)) {
+    if (!('keyword' in changedValues)) {
       if (currentPage == 1) {
         handleSearch()
       } else {
