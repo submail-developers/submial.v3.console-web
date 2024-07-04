@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useSize, usePoint } from '@/hooks'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import {
   Flex,
   Table,
@@ -225,7 +225,7 @@ export default function Fn() {
     },
     {
       title: '模板ID',
-      width: 120,
+      width: 100,
       render: (_, record) => (
         <div className='w-100' style={{ position: 'relative' }}>
           <ACopy text={record.project} />
@@ -248,7 +248,7 @@ export default function Fn() {
     {
       title: '联系人(数量)',
       dataIndex: 'address',
-      width: 110,
+      width: 100,
       render: (_, record) => (
         <span>{Number(record.address).toLocaleString()}</span>
       ),
@@ -276,12 +276,12 @@ export default function Fn() {
     {
       title: '提交时间',
       dataIndex: 'send',
-      width: 180,
+      width: 170,
     },
     {
       title: '完成日期',
       dataIndex: 'sent',
-      width: 180,
+      width: 170,
     },
     {
       title: '操作',
@@ -302,7 +302,7 @@ export default function Fn() {
   ]
 
   return (
-    <PageContent extClass='batchreport'>
+    <PageContent extClass='batchreport' xxl={1300}>
       <Image src={faceImg} preview={false} width={72}></Image>
       <Flex justify='space-between' align='center'>
         <div className='fn22 fw-500'>批量任务发送报告</div>

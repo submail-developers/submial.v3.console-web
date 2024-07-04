@@ -351,7 +351,7 @@ export default function CreateSend() {
         {id != '0' ? (
           <Flex wrap='wrap' gap={60}>
             <div className='left'>
-              <div className='gray-color'>5g消息余额</div>
+              <div className='gray-color'>5g消息余额（条）</div>
               <div className='fn20 fw-500'>
                 {Number(rcsSetting?.settings.credits || 0).toLocaleString()}
               </div>

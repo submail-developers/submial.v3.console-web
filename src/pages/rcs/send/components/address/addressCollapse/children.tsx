@@ -29,8 +29,8 @@ const Item = (props: ItemProps) => {
         preview={false}
         width={60}
       />
-      <div className='name'>{props.item.addressbook_name}</div>
-      <div className='num'>{props.item.address}个联系人</div>
+      <div>{props.item.addressbook_name}</div>
+      <div>{props.item.address}个联系人</div>
       <div className='check-btn fx-center-center'>
         <span className='icon iconfont icon-right fn8 fw-600 m-t-2 primary-color'></span>
       </div>
