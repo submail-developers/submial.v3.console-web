@@ -1,0 +1,12 @@
+// 重置submail.mdi.css导致的样式错误
+a {
+  text-decoration: none;
+  &:hover {
+    text-decoration: none;
+    color: #69a5ff;
+  }
+}
+
+button:focus {
+  outline: none;
+}
