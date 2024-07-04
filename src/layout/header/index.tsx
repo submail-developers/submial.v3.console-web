@@ -11,6 +11,7 @@ import Notice from './notice'
 import ProductNav from './productNav'
 import ChatBtn from './chatBtn'
 import MobMenu from '@/layout/menu/mobMenu'
+import { useLocalStorage } from '@/hooks'
 
 import { API } from 'apis'
 
@@ -60,7 +61,7 @@ export default function MyHeader(props: Props) {
   const timerRef = useRef(null)
   const [showNoticeList, setshowNoticeList] = useState(false)
 
-  const [info, setInfo] = useState<API.GetInfoRes>()
+  const [info, setInfo] = useLocalStorage('useInfo', null)
 
   const loginEvent = async () => {
     await loginInit()
@@ -68,16 +69,18 @@ export default function MyHeader(props: Props) {
   }
 
   const getMsgInfo = async () => {
-    if (timerRef.current) clearTimeout(timerRef.current)
-    const info = await getInfo()
-    setInfo(info)
-    timerRef.current = setTimeout(() => {
-      getMsgInfo()
-    }, 5000)
+    try {
+      if (timerRef.current) clearTimeout(timerRef.current)
+      const info = await getInfo()
+      setInfo(info)
+      timerRef.current = setTimeout(() => {
+        getMsgInfo()
+      }, 5000)
+    } catch (error) {}
   }
 
   useEffect(() => {
-    // getMsgInfo()
+    getMsgInfo()
     return () => {
       if (timerRef.current) {
         clearTimeout(timerRef.current)
@@ -144,11 +147,17 @@ export default function MyHeader(props: Props) {
                     overlayClassName='drop-right'
                     onOpenChange={(open) => setshowNoticeList(open)}
                     dropdownRender={() => (
-                      <Notice show={showNoticeList} total={info.notification} />
+                      <Notice
+                        show={showNoticeList}
+                        total={info?.notification}
+                      />
                     )}>
                     <Flex className='right-menu' align='center' gap={2}>
                       通知
-                      <Badge count={(info && info.notification) || ''} />
+                      <Badge
+                        count={(info && info.notification) || ''}
+                        color='#ff4446'
+                      />
                     </Flex>
                   </Dropdown>
                   <Dropdown
@@ -163,7 +172,7 @@ export default function MyHeader(props: Props) {
             </Space>
           )}
         </Flex>
-        <ChatBtn />
+        {/* <ChatBtn /> */}
       </Flex>
       {!points.sm && <MobMenu />}
     </>

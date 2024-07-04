@@ -36,29 +36,27 @@ const Item = ({ item, onReGetList }: ItemProps) => {
   }
 
   return (
-    <>
+    <div className='list-item w-100' style={{ height: '100%' }}>
       <div className='title'>
         <div
           className='text g-ellipsis'
           dangerouslySetInnerHTML={{ __html: item.subject }}></div>
         <div
-          className='clear-btn'
-          title='删除该通知'
+          className='clear-btn g-pointer text-color'
           onClick={() => delEvent(item.id)}>
           {loading ? (
             <LoadingOutlined className='fn14' rev={undefined} />
           ) : (
-            <span
-              className='iconfont icon-chahao fn14'
-              style={{ cursor: 'pointer', color: '#393e49' }}></span>
+            <span className='iconfont icon-chahao fn12'></span>
           )}
         </div>
       </div>
       <div
-        className='des g-ellipsis'
+        className='des g-ellipsis-3'
+        title={item.msg}
         dangerouslySetInnerHTML={{ __html: item.msg }}></div>
       <div className='time'>{dayjs(item.create_at).fromNow(true)}前</div>
-    </>
+    </div>
   )
 }
 
@@ -68,7 +66,7 @@ export default function Notice(props: Props) {
   const [list, setList] = useState<DataType[]>([])
   const pageNumber = useRef(1)
 
-  const getList = async () => {
+  const getList = async (delId = '') => {
     try {
       const res = await getNoticeList({
         page: pageNumber.current,
@@ -76,9 +74,16 @@ export default function Notice(props: Props) {
       if (res.status == 'success') {
         setInitLoading(false)
         setLoading(false)
-        setList(unionBy([...list, ...res.notifications], 'id'))
+        setList(
+          unionBy([...list, ...res.notifications], 'id').filter(
+            (item) => item.id != delId,
+          ),
+        )
       }
-    } catch (error) {}
+    } catch (error) {
+      setInitLoading(false)
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -109,9 +114,9 @@ export default function Notice(props: Props) {
   }
 
   // 删除成功重新获取列表
-  const reGetList = () => {
+  const reGetList = (delId) => {
     if (pageNumber.current == 1) {
-      getList()
+      getList(delId)
     } else {
       let allList = []
       for (let i = 0; i < pageNumber.current; i++) {
@@ -141,7 +146,7 @@ export default function Notice(props: Props) {
       loadMore = (
         <div className='loadmore-btn fx-col fx-y-center' onClick={onLoadMore}>
           <span>加载更多通知</span>
-          <span className='iconfont icon-xiangxia'></span>
+          <span className='iconfont icon-xiangxia fn8'></span>
         </div>
       )
     }
@@ -170,7 +175,7 @@ export default function Notice(props: Props) {
       rowKey={'id'}
       renderItem={(item) => (
         <List.Item>
-          <Item item={item} onReGetList={reGetList} />
+          <Item item={item} onReGetList={() => reGetList(item.id)} />
         </List.Item>
       )}
     />
