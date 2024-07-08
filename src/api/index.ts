@@ -106,6 +106,13 @@ export const getRegion = () => {
   )
 }
 
+// 开通产品
+export const openRcs = (data: { agreement: boolean }) => {
+  return request.post<any, any, { agreement: boolean }>(
+    '/console/api/rcs/save_configure',
+    data,
+  )
+}
 // 账户概览
 export const getRcsOverview = () => {
   return request.post<any, API.Response<API.GetRcsOverviewRes>, any>(
@@ -259,6 +266,16 @@ export const refreshAppkey = (data: API.RefreshAppkeyParams) => {
       ...data,
     },
   )
+}
+// 获取chatbot交互日志
+export const getRcsChatbotLogs = (data: API.GetRcsChatbotLogsParams) => {
+  return request.post<
+    any,
+    API.GetRcsChatbotLogsRes,
+    API.GetRcsChatbotLogsParams
+  >('/console/api/rcs/get_interactive_log', {
+    ...data,
+  })
 }
 //编辑固定菜单
 export const saveFixedMenu = (data: API.SaveFixedMenuParams) => {

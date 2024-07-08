@@ -24,9 +24,14 @@ import step_img_2 from '@/assets/rcs/welcome/2.png'
 import step_img_3 from '@/assets/rcs/welcome/3.png'
 import step_img_4 from '@/assets/rcs/welcome/4.png'
 
+import { openRcs } from '@/api'
+
 import './index.scss'
 
-type MyTourProps = {}
+type MyTourProps = {
+  // 开通产品
+  openEvent: () => void
+}
 
 const Images = [step_img_0, step_img_1, step_img_2, step_img_3, step_img_4]
 
@@ -38,16 +43,26 @@ function MyTour(props: MyTourProps, ref) {
   })
   const carouselRef = useRef(null)
   const [show, setShow] = useState(false)
-  const [showCarousel, setShowCarousel] = useState(true)
   const [step, setStep] = useState(0)
+  const [loading, setLoading] = useState(false)
   const open = () => {
     setShow(true)
   }
 
-  const next = () => {
+  const next = async () => {
     if (step == 4) {
-      setShow(false)
-      window.localStorage.setItem('rcsTour', 'true')
+      try {
+        setLoading(true)
+        await openRcs({ agreement: true })
+        setLoading(false)
+        setShow(false)
+        window.localStorage.setItem('rcsTour', 'true')
+        props.openEvent()
+      } catch (error) {
+        setLoading(false)
+        setShow(false)
+        props.openEvent()
+      }
       return
     }
     setStep(step + 1)
@@ -166,8 +181,12 @@ function MyTour(props: MyTourProps, ref) {
 
       <Flex justify='center' className='m-t-12'>
         <ConfigProvider wave={{ disabled: true }}>
-          <Button type='primary' style={{ width: 120 }} onClick={next}>
-            {step == 0 ? '开始引导' : <>{step == 4 ? '我知道了' : '下一步'}</>}
+          <Button
+            type='primary'
+            style={{ width: 120 }}
+            onClick={next}
+            loading={loading}>
+            {step == 0 ? '开始引导' : <>{step == 4 ? '开通产品' : '下一步'}</>}
           </Button>
         </ConfigProvider>
       </Flex>
