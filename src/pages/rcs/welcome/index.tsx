@@ -27,6 +27,8 @@ import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
 import CountUp from 'react-countup'
 import { usePoint } from '@/hooks'
+import { useAppDispatch } from '@/store/hook'
+import { initSetting } from '@/store/reducers/settingRcs'
 
 import { getRcsOverview, getRcsAnalysisOverview } from '@/api'
 import { StorePage } from './components/pay/reducer'
@@ -145,6 +147,7 @@ export default function Fn() {
   const tourRef = useRef(null)
   const payRef = useRef(null)
   const point = usePoint('xs')
+  const dispatch = useAppDispatch()
 
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
@@ -165,7 +168,6 @@ export default function Fn() {
     setLoading(true)
     try {
       const res = await getRcsOverview()
-
       if (
         res.data.account_status == '0' &&
         !Boolean(window.localStorage.getItem('rcsTour'))
@@ -191,6 +193,12 @@ export default function Fn() {
     } catch (error) {
       setEchartsLoading(false)
     }
+  }
+
+  const reGetInfo = () => {
+    getData()
+    getEchartsData()
+    dispatch(initSetting())
   }
 
   useEffect(() => {
@@ -444,7 +452,7 @@ export default function Fn() {
         </Col>
       </Row>
 
-      <MyTour ref={tourRef} />
+      <MyTour ref={tourRef} openEvent={reGetInfo} />
 
       <StorePage>
         <MyPay ref={payRef} />
