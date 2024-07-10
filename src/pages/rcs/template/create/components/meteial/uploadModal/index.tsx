@@ -274,7 +274,7 @@ export default function UploadModal(props: Props) {
       destroyOnClose
       onCancel={onCancel}
       open={props.show}>
-      <Flex justify='space-between' gap={24} className='modal-content'>
+      <Flex justify='space-between' gap={24} className='upload-content'>
         <div className='img-layer-canvas'>
           <Dragger {...propsDragger} className='dragger'>
             <p className='ant-upload-drag-icon'>

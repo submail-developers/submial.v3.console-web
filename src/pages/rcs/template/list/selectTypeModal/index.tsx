@@ -81,7 +81,6 @@ export default function Fn(props: Props) {
       wrapClassName='select-rcs-type-modal'
       destroyOnClose>
       <Form
-        className='modal-content'
         name='select-rcs-type'
         layout='vertical'
         form={form}
