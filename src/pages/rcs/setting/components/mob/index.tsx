@@ -23,11 +23,15 @@ export default function Fn() {
     value: API.SettingStatus,
   ) => {
     setSwitchLoading(true)
-    const res = await changeRcsSetting({ item, value })
-    if (res.status == 'success') {
+    try {
+      const res = await changeRcsSetting({ item, value })
+      if (res.status == 'success') {
+        setSwitchVal(value == '1')
+        dispatch(initSetting())
+      }
       setSwitchLoading(false)
-      setSwitchVal(value == '1')
-      dispatch(initSetting())
+    } catch (error) {
+      setSwitchLoading(false)
     }
   }
   const delEvent = async (id: string) => {

@@ -37,12 +37,18 @@ export default function Fn() {
     item: API.ChangeRcsSettingSwitchType,
     value: API.SettingStatus,
   ) => {
-    setSwitchLoading(true)
-    const res = await changeRcsSetting({ item, value })
-    if (res.status == 'success') {
+    try {
+      setSwitchLoading(true)
+      const res = await changeRcsSetting({ item, value })
+      if (res.status == 'success') {
+        setSwitchLoading(false)
+        setSwitchVal(value == '1')
+        dispatch(initSetting())
+      } else {
+        setSwitchLoading(false)
+      }
+    } catch (error) {
       setSwitchLoading(false)
-      setSwitchVal(value == '1')
-      dispatch(initSetting())
     }
   }
   const changeLess = async () => {
@@ -56,6 +62,8 @@ export default function Fn() {
         setSaveLessLoading(false)
         setEditing(false)
         dispatch(initSetting())
+      } else {
+        setSaveLessLoading(false)
       }
     } catch (error) {
       setSaveLessLoading(false)
@@ -63,7 +71,7 @@ export default function Fn() {
   }
   useEffect(() => {
     if (rcsSetting) {
-      setLessNumber(Number(rcsSetting.settings.reminder_less))
+      setLessNumber(Number(rcsSetting.settings?.reminder_less || 0))
       setSwitchVal(rcsSetting?.settings.credits_reminder == '1')
     }
   }, [editing, rcsSetting])
