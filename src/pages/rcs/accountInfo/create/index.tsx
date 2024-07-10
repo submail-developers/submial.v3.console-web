@@ -13,11 +13,12 @@ import {
   ConfigProvider,
   DatePicker,
   App,
+  Spin,
 } from 'antd'
 import type { UploadFile, UploadProps } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import { useState, useRef, useEffect } from 'react'
-import { useParams, NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { changeBreadcrumbItem } from '@/store/reducers/breadcrumb'
 import { useAppDispatch } from '@/store/hook'
 import {
@@ -39,11 +40,6 @@ const Extra = (props) => {
   return <div style={{ marginTop: '8px' }}>{props.children}</div>
 }
 
-interface Option {
-  value: string | number
-  label: string
-  children?: Option[]
-}
 type FilePath = {
   path?: string
 }
@@ -59,30 +55,54 @@ export default function Fn() {
   const [status, setStatus] = useState('')
   const contractAccessoryPathRef = useRef('')
   const companyLogoPathRef = useRef('')
-  const { id } = useParams()
   const [loading, setloading] = useState(false)
   const [saveLoading, setsaveLoading] = useState(false)
+  const [submitLoading, setsubmitLoading] = useState(false)
   const [industryList, setIndustryList] = useState<API.IndustryItem[]>([])
   const { message } = App.useApp()
   const navigate = useNavigate()
   // 提交
   const submit = async () => {
-    if (loading) return
-    setloading(true)
+    setsubmitLoading(true)
     try {
       const formvalues = await form.validateFields()
       let res1: FilePath = {},
         res2: FilePath = {}
 
+      if (companyLogoPathRef.current) {
+        if (fileList[0]?.url != companyLogoPathRef.current) {
+          delCustomerFile({
+            path: companyLogoPathRef.current,
+          })
+          if (fileList[0]) {
+            res1 = await uploadCustomerFile({
+              file: fileList[0],
+              type: '2',
+            })
+          }
+        } else {
+          res1['path'] = companyLogoPathRef.current
+        }
+      } else {
+        if (fileList.length > 0) {
+          res1 = await uploadCustomerFile({
+            file: fileList[0],
+            type: '2',
+          })
+        }
+      }
+
       if (contractAccessoryPathRef.current) {
-        if (fileList2[0].url != contractAccessoryPathRef.current) {
+        if (fileList2[0]?.url != contractAccessoryPathRef.current) {
           delCustomerFile({
             path: contractAccessoryPathRef.current,
           })
-          res2 = await uploadCustomerFile({
-            file: fileList2[0],
-            type: '1',
-          })
+          if (fileList2[0]) {
+            res2 = await uploadCustomerFile({
+              file: fileList2[0],
+              type: '1',
+            })
+          }
         } else {
           res2['path'] = contractAccessoryPathRef.current
         }
@@ -95,71 +115,53 @@ export default function Fn() {
         }
       }
 
-      if (companyLogoPathRef.current) {
-        if (fileList[0].url != companyLogoPathRef.current) {
-          delCustomerFile({
-            path: companyLogoPathRef.current,
-          })
-          res1 = await uploadCustomerFile({
-            file: fileList[0],
-            type: '2',
-          })
-        } else {
-          res1['path'] = companyLogoPathRef.current
-        }
-      } else {
-        if (fileList.length > 0) {
-          res2 = await uploadCustomerFile({
-            file: fileList[0],
-            type: '2',
-          })
-        }
-      }
-
       let params = {
         ...formvalues,
         businessType: formvalues.businessType[0],
         industryTypeCode: formvalues.businessType[1],
         contractRenewStatus: formvalues.contractRenewStatus.value,
-        companyLogo: (res1 && res1.path) || '',
-        contractAccessory: res2 && res2.path,
+        companyLogo: res1?.path || '',
+        contractAccessory: res2?.path || '',
         contractEffectiveDate:
-          formvalues.contractEffectiveDate.format('YYYY-MM-DD'),
-        contractExpiryDate: formvalues.contractExpiryDate.format('YYYY-MM-DD'),
-        contractRenewDate: formvalues.contractRenewDate.format('YYYY-MM-DD'),
+          formvalues.contractEffectiveDate?.format('YYYY-MM-DD') || '',
+        contractExpiryDate:
+          formvalues.contractExpiryDate?.format('YYYY-MM-DD') || '',
+        contractRenewDate:
+          formvalues.contractRenewDate?.format('YYYY-MM-DD') || '',
       }
       const res = await signupForCspAccount(params)
-      if (res) {
+      if (res.status == 'success') {
         message.success('提交成功！')
-        navigate('/console/rcs/account/index')
+        navigate('/console/rcs/account/index', { replace: true })
       }
-      setloading(false)
+      setsubmitLoading(false)
     } catch (error) {
-      setloading(false)
+      setsubmitLoading(false)
     }
   }
   // 保存
   const save = async () => {
-    if (saveLoading) return
     setsaveLoading(true)
     try {
       let res1: FilePath = {},
         res2: FilePath = {}
       if (companyLogoPathRef.current) {
-        if (fileList[0].url != companyLogoPathRef.current) {
+        if (fileList[0]?.url != companyLogoPathRef.current) {
           delCustomerFile({
             path: companyLogoPathRef.current,
           })
-          res1 = await uploadCustomerFile({
-            file: fileList[0],
-            type: '2',
-          })
+          if (fileList[0]) {
+            res1 = await uploadCustomerFile({
+              file: fileList[0],
+              type: '2',
+            })
+          }
         } else {
           res1['path'] = companyLogoPathRef.current
         }
       } else {
         if (fileList.length > 0) {
-          res2 = await uploadCustomerFile({
+          res1 = await uploadCustomerFile({
             file: fileList[0],
             type: '2',
           })
@@ -167,14 +169,16 @@ export default function Fn() {
       }
 
       if (contractAccessoryPathRef.current) {
-        if (fileList2[0].url != contractAccessoryPathRef.current) {
+        if (fileList2[0]?.url != contractAccessoryPathRef.current) {
           delCustomerFile({
             path: contractAccessoryPathRef.current,
           })
-          res2 = await uploadCustomerFile({
-            file: fileList2[0],
-            type: '1',
-          })
+          if (fileList2[0]) {
+            res2 = await uploadCustomerFile({
+              file: fileList2[0],
+              type: '1',
+            })
+          }
         } else {
           res2['path'] = contractAccessoryPathRef.current
         }
@@ -190,21 +194,25 @@ export default function Fn() {
       const formvalues = await form.getFieldsValue()
       let params = {
         ...formvalues,
-        businessType: formvalues.businessType[0],
-        industryTypeCode: formvalues.businessType[1],
+        businessType:
+          (formvalues.businessType && formvalues.businessType[0]) || '',
+        industryTypeCode:
+          (formvalues.businessType && formvalues.businessType[1]) || '',
         contractRenewStatus: formvalues.contractRenewStatus.value,
-        companyLogo: (res1 && res1.path) || '',
-        contractAccessory: (res2 && res2.path) || '',
+        companyLogo: res1?.path || '',
+        contractAccessory: res2.path || '',
         contractEffectiveDate:
-          formvalues.contractEffectiveDate.format('YYYY-MM-DD'),
-        contractExpiryDate: formvalues.contractExpiryDate.format('YYYY-MM-DD'),
-        contractRenewDate: formvalues.contractRenewDate.format('YYYY-MM-DD'),
+          formvalues?.contractEffectiveDate?.format('YYYY-MM-DD') || '',
+        contractExpiryDate:
+          formvalues?.contractExpiryDate?.format('YYYY-MM-DD') || '',
+        contractRenewDate:
+          formvalues.contractRenewDate?.format('YYYY-MM-DD') || '',
       }
 
       const res = await saveupForCspAccount(params)
-      if (res) {
+      if (res.status == 'success') {
         message.success('保存成功！')
-        navigate('/console/rcs/account/index')
+        navigate('/console/rcs/account/index', { replace: true })
       }
       setsaveLoading(false)
     } catch (error) {
@@ -221,9 +229,9 @@ export default function Fn() {
       setFileList(newFileList)
     },
     beforeUpload: (file) => {
-      const isLt10M = file.size / 1024 / 1024 < 10
-      if (!isLt10M) {
-        message.error('文件不允许超过10M！')
+      const limit = file.size <= 50 * 1024
+      if (!limit) {
+        message.error('文件不允许超过50kb！')
       } else {
         setFileList([file])
         return false
@@ -253,16 +261,23 @@ export default function Fn() {
   }
 
   // 获取客户资料
-  const getCusInfo = async (ifshowLoading = false) => {
+  const getCusInfo = async () => {
+    setloading(true)
     try {
-      ifshowLoading && setloading(true)
-      const params = ''
-      const res = await getDicConfig(params)
+      const res = await getDicConfig()
+      if (res.data.status == '9') {
+        // message.error('客户资料正在审核中，无法编辑', 5)
+        // navigate('/console/rcs/account/index', { replace: true })
+        // return
+      }
       setStatus(res.data.status)
       form.resetFields()
       form.setFieldsValue({
         ...res.data,
-        businessType: [res.data.businessType, res.data.industryTypeCode],
+        businessType:
+          res.data.businessType && res.data.industryTypeCode
+            ? [res.data.businessType, res.data.industryTypeCode]
+            : [],
         contractEffectiveDate: res.data.contractEffectiveDate
           ? dayjs(res.data.contractEffectiveDate)
           : null,
@@ -273,25 +288,25 @@ export default function Fn() {
           ? dayjs(res.data.contractRenewDate)
           : null,
       })
-      // 合同回显
-      if (res.data.contractAccessory) {
-        contractAccessoryPathRef.current = res.data.contractAccessory
-        setFileList2([
-          {
-            uid: '',
-            name: '文件',
-            url: res.data.contractAccessory,
-          },
-        ])
-      }
       //头像回显
       if (res.data.companyLogo) {
         companyLogoPathRef.current = res.data.companyLogo
         setFileList([
           {
             uid: '',
-            name: 'logo',
+            name: '点击查看',
             url: res.data.companyLogo,
+          },
+        ])
+      }
+      // 合同回显
+      if (res.data.contractAccessory) {
+        contractAccessoryPathRef.current = res.data.contractAccessory
+        setFileList2([
+          {
+            uid: '',
+            name: '点击查看',
+            url: res.data.contractAccessory,
           },
         ])
       }
@@ -305,34 +320,30 @@ export default function Fn() {
   const getIndustryList = async () => {
     try {
       const res = await getIndustry()
-      setIndustryList(res.data)
+      setIndustryList(res?.data || [])
     } catch (error) {}
   }
 
   useEffect(() => {
     getIndustryList()
-    if (id == '0') {
-      dispatch(
-        changeBreadcrumbItem({
-          index: 2,
-          title: '客户资料填写',
-        }),
-      )
-    } else {
-      getCusInfo(true)
-      dispatch(
-        changeBreadcrumbItem({
-          index: 2,
-          title: '客户资料修改',
-        }),
-      )
-    }
-  }, [id])
+    getCusInfo()
+    dispatch(
+      changeBreadcrumbItem({
+        index: 2,
+        title: '编辑客户资料',
+      }),
+    )
+  }, [])
 
   return (
     <PageContent extClass='create-account-page'>
+      {loading && (
+        <div className='init-loading fx-center-center'>
+          <Spin></Spin>
+        </div>
+      )}
       <div className='form-header m-t-32 fx-col-center-center g-radius-4 m-x-12'>
-        <div className='fn22 fw-500'>客户资料{id == '0' ? '填写' : '修改'}</div>
+        <div className='fn22 fw-500'>编辑客户资料</div>
         <div className='fn14 title-desc'>
           请尽快完善客户信息，以便使用完整的5g消息功能
         </div>
@@ -351,6 +362,8 @@ export default function Fn() {
           className='create-account-form'
           name='craete-account'
           layout='vertical'
+          validateTrigger='onBlur'
+          scrollToFirstError={true}
           autoComplete='off'>
           <div className='form-group'>
             <div className='form-group-title'>基本信息</div>
@@ -388,10 +401,8 @@ export default function Fn() {
                   name='customerContactEmail'
                   rules={[
                     {
+                      type: 'email',
                       message: '请输入正确的邮箱',
-                      pattern: new RegExp(
-                        /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/,
-                      ),
                     },
                   ]}>
                   <Input placeholder='请输入联系人邮箱' />
@@ -472,7 +483,7 @@ export default function Fn() {
                   name='companyLogo'
                   extra={
                     <Extra>
-                      您可上传的文件类型：png、jpg、jpeg，单个附件大小限10M，限上传1个文件
+                      您可上传的文件类型：png、jpg、jpeg，单个附件大小限50kb，限上传1个文件
                     </Extra>
                   }>
                   <Upload {...props}>
@@ -548,7 +559,12 @@ export default function Fn() {
                 <Form.Item
                   label='合同电子扫描件（正反面）'
                   name='contractAccessory'
-                  required
+                  rules={[
+                    {
+                      required: true,
+                      message: '请上传合同电子扫描件（正反面）',
+                    },
+                  ]}
                   extra={
                     <Extra>
                       您可上传的文件类型：pdf、doc、docx、jpg、jpeg、gif、rar、zip，单个附件大小限10M，限上传1个文件
@@ -571,9 +587,9 @@ export default function Fn() {
             </Row>
           </div>
 
-          <Flex justify='space-between'>
+          <Flex justify='space-between' wrap='wrap' gap={12}>
             {/* 仅未提交状态可以保存 */}
-            {status == '0' ? (
+            {status == '2' ? (
               <ConfigProvider
                 theme={{
                   token: {
@@ -594,7 +610,7 @@ export default function Fn() {
               <span></span>
             )}
             <Space>
-              <NavLink to='/console/rcs/account/index'>
+              <NavLink to='/console/rcs/account/index' replace>
                 <Button
                   className='cancle'
                   type='primary'
@@ -606,7 +622,7 @@ export default function Fn() {
                 type='primary'
                 style={{ width: 120 }}
                 onClick={submit}
-                loading={loading}>
+                loading={submitLoading}>
                 提交审核
               </Button>
             </Space>

@@ -1,6 +1,12 @@
 .page-content.create-account-page {
   padding-bottom: 60px;
   height: auto;
+  .init-loading {
+    position: absolute;
+    top: 160px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
   .form-header {
     height: 100px;
     background-image: url('@/assets/rcs/account/banner.png');

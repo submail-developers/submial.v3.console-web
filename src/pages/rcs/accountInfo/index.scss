@@ -24,13 +24,6 @@
       display: flex;
       align-items: center;
     }
-    span {
-      padding: 4px 8px;
-      border-radius: 12px;
-      font-size: 14px;
-      font-weight: normal;
-      margin-left: 10px;
-    }
   }
 
   .base-info {
@@ -70,7 +63,7 @@
     }
   }
 
-  .border {
+  .cus-tab {
     width: 100%;
     border: 1px solid #e6e6e6;
     border-radius: 4px;
