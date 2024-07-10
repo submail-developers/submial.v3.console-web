@@ -1,5 +1,5 @@
 import { useState, forwardRef, useEffect, useRef } from 'react'
-import { Modal, Form, App, Button, Input, Select, Transfer } from 'antd'
+import { Modal, Form, App, Button, Input, Select, Transfer, Flex } from 'antd'
 import type { TransferProps } from 'antd'
 import { getMobAddressbooks, moveAddressBook } from '@/api'
 import { uniqBy } from 'lodash'
@@ -160,6 +160,12 @@ const Dialog = (props: Props, ref: any) => {
     <Modal
       open={props.open}
       onCancel={props.onCancel}
+      onOk={handleOk}
+      confirmLoading={moveLoading}
+      width={820}
+      data-class='create-address'
+      closable={false}
+      wrapClassName='modal-create-address'
       title={
         <Form
           form={form}
@@ -167,7 +173,12 @@ const Dialog = (props: Props, ref: any) => {
           name='cuploadMms-account'
           layout='vertical'
           autoComplete='off'>
-          <div className='fx-between-center'>
+          <Flex
+            justify='space-between'
+            align='center'
+            gap={12}
+            wrap='wrap'
+            className='p-y-8'>
             <div className='fn18'>移入地址簿</div>
             <div style={{ display: 'flex' }}>
               <Form.Item name='tag' style={{ margin: 0, width: '120px' }}>
@@ -185,47 +196,40 @@ const Dialog = (props: Props, ref: any) => {
                 name='keywords'
                 className='m-l-10 m-r-10'
                 style={{ marginBottom: '0' }}>
-                <Input placeholder='地址簿名称' allowClear></Input>
+                <Input
+                  placeholder='地址簿名称'
+                  allowClear
+                  style={{ width: 120 }}></Input>
               </Form.Item>
               <Button
                 style={{
                   width: '100px',
-                  height: '38px',
                   lineHeight: 'inherit',
                 }}
                 type='primary'
-                className='w-100'
                 htmlType='submit'
                 onClick={handleSearch}>
                 搜索
               </Button>
             </div>
-          </div>
+          </Flex>
         </Form>
-      }
-      onOk={handleOk}
-      confirmLoading={moveLoading}
-      width={680}
-      data-class='create-address'
-      closable={false}
-      wrapClassName='modal-create-address'>
-      <>
-        <Transfer
-          listStyle={{
-            height: 400,
-            width: 360,
-            margin: '0 auto',
-          }}
-          titles={['地址簿公海', props.folderTitle]}
-          rowKey={(record) => record.id}
-          dataSource={dataSource}
-          targetKeys={targetKeys}
-          onChange={onChange}
-          // render={(item) => item.name}
-          oneWay={oneWay}
-          render={renderItem}
-        />
-      </>
+      }>
+      <Transfer
+        style={{ width: 'fit-content', margin: '0 auto' }}
+        listStyle={{
+          height: 460,
+          width: 363,
+        }}
+        titles={['地址簿公海', props.folderTitle]}
+        rowKey={(record) => record.id}
+        dataSource={dataSource}
+        targetKeys={targetKeys}
+        onChange={onChange}
+        // render={(item) => item.name}
+        oneWay={oneWay}
+        render={renderItem}
+      />
     </Modal>
   )
 }

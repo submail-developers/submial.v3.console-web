@@ -8,7 +8,10 @@
     height: 18px;
   }
   .ant-transfer-list-header-title {
-    margin-left: 20px;
     font-weight: 500;
+  }
+  .tranfer-wrap {
+    width: 100%;
+    overflow-x: auto;
   }
 }
