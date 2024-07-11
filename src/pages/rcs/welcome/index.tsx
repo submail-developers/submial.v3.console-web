@@ -29,8 +29,14 @@ import CountUp from 'react-countup'
 import { usePoint } from '@/hooks'
 import { useAppDispatch } from '@/store/hook'
 import { initSetting } from '@/store/reducers/settingRcs'
+import { useLocalStorage } from '@/hooks'
 
-import { getRcsOverview, getRcsAnalysisOverview } from '@/api'
+import {
+  getRcsOverview,
+  getRcsAnalysisOverview,
+  getUseTourStatus,
+  hideUseTour,
+} from '@/api'
 import { StorePage } from './components/pay/reducer'
 
 import faceImg from '@/assets/rcs/face/welcome.png'
@@ -73,7 +79,7 @@ const CollapseChildren = () => {
   return (
     <Row gutter={[16, 16]}>
       <Col span={24} xs={24} md={12} xl={6}>
-        <div className='p-16 g-radius-4 guide-item h-100'>
+        <div className='p-y-16 p-r-16 g-radius-4 guide-item h-100'>
           <span className='step'>1</span>
           <div className='h-100'>
             <Space className='fn14 fw-500'>
@@ -87,7 +93,7 @@ const CollapseChildren = () => {
         </div>
       </Col>
       <Col span={24} xs={24} md={12} xl={6}>
-        <div className='p-16 g-radius-4 guide-item h-100'>
+        <div className='p-y-16 p-r-16 g-radius-4 guide-item h-100'>
           <span className='step'>2</span>
           <div className='h-100'>
             <Space className='fn14 fw-500'>
@@ -102,7 +108,7 @@ const CollapseChildren = () => {
         </div>
       </Col>
       <Col span={24} xs={24} md={12} xl={6}>
-        <div className='p-16 g-radius-4 guide-item h-100'>
+        <div className='p-y-16 p-r-16 g-radius-4 guide-item h-100'>
           <span className='step'>3</span>
           <div className='h-100'>
             <Space className='fn14 fw-500'>
@@ -116,7 +122,7 @@ const CollapseChildren = () => {
         </div>
       </Col>
       <Col span={24} xs={24} md={12} xl={6}>
-        <div className='p-16 g-radius-4 guide-item h-100'>
+        <div className='p-y-16 p-r-16 g-radius-4 guide-item h-100'>
           <span className='step'>4</span>
           <div className='h-100'>
             <Space className='fn14 fw-500'>
@@ -132,13 +138,6 @@ const CollapseChildren = () => {
     </Row>
   )
 }
-const _items: CollapseProps['items'] = [
-  {
-    key: `0`,
-    label: <div className='fw-500 fn16'>使用指引</div>,
-    children: <CollapseChildren />,
-  },
-]
 const formatter: StatisticProps['formatter'] = (value) => (
   <CountUp end={value as number} separator=',' />
 )
@@ -155,6 +154,31 @@ export default function Fn() {
   const [time, setTime] = useState<[Dayjs, Dayjs]>(rangePresets[1].value)
   const [data, setData] = useState<API.GetRcsOverviewRes>()
   const [echartsData, setEchartsData] = useState<API.RcsAnalysis>()
+  const [showUseTour, setShowUseTour] = useLocalStorage('useTour', false)
+
+  // 隐藏使用引导
+  const noTour = async (e) => {
+    e.stopPropagation()
+    const res = await hideUseTour()
+    if (res.status == 'success') {
+      setShowUseTour(false)
+    }
+  }
+
+  const _items: CollapseProps['items'] = [
+    {
+      key: `0`,
+      label: (
+        <Flex align='center' justify='space-between' className='p-r-24'>
+          <div className='fw-500 fn16'>使用指引</div>
+          <div className='g-pointer color' onClick={noTour}>
+            不再显示
+          </div>
+        </Flex>
+      ),
+      children: <CollapseChildren />,
+    },
+  ]
   const showPay = () => {
     payRef.current && payRef.current.open()
   }
@@ -168,17 +192,30 @@ export default function Fn() {
     setLoading(true)
     try {
       const res = await getRcsOverview()
-      if (
-        res.data.account_status == '0' &&
-        !Boolean(window.localStorage.getItem('rcsTour'))
-      ) {
-        tourRef.current && tourRef.current.open()
-      }
+      // if (
+      //   res.data.account_status == '0' &&
+      //   !Boolean(window.localStorage.getItem('rcsTour'))
+      // ) {
+      // tourRef.current && tourRef.current.open()
+      // }
       setData(res.data)
       setLoading(false)
     } catch (error) {
+      if (error.message.includes('无产品使用权限')) {
+        tourRef.current && tourRef.current.open()
+      }
       setLoading(false)
     }
+  }
+  const initUseTour = async () => {
+    try {
+      const res = await getUseTourStatus()
+      if (res.status == '0') {
+        setShowUseTour(true)
+      } else {
+        setShowUseTour(false)
+      }
+    } catch (error) {}
   }
 
   const getEchartsData = async () => {
@@ -203,6 +240,7 @@ export default function Fn() {
 
   useEffect(() => {
     getData()
+    initUseTour()
   }, [])
 
   useEffect(() => {
@@ -221,15 +259,17 @@ export default function Fn() {
       </Flex>
       <Divider />
 
-      <Collapse
-        className='guide-collapse'
-        items={_items}
-        defaultActiveKey={['0']}
-        bordered={false}
-        expandIconPosition='end'
-        expandIcon={expandIcon}
-        ghost
-      />
+      {showUseTour && (
+        <Collapse
+          className='guide-collapse'
+          items={_items}
+          defaultActiveKey={['0']}
+          bordered={false}
+          expandIconPosition='end'
+          expandIcon={expandIcon}
+          ghost
+        />
+      )}
 
       <Row gutter={[24, 24]} className='m-t-24'>
         <Col span={24} sm={12} md={12} xl={12} xxl={18}>

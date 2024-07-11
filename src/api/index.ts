@@ -113,6 +113,17 @@ export const openRcs = (data: { agreement: boolean }) => {
     data,
   )
 }
+// 是否展示页面引导提示
+export const getUseTourStatus = () => {
+  return request.post<any, any, any>('/console/api/rcs/show_hint_status', {})
+}
+// 隐藏页面引导提示
+export const hideUseTour = () => {
+  return request.post<any, any, any>(
+    '/console/api/rcs/set_show_hint_status',
+    {},
+  )
+}
 // 账户概览
 export const getRcsOverview = () => {
   return request.post<any, API.Response<API.GetRcsOverviewRes>, any>(
@@ -344,12 +355,11 @@ export const uploadMmsLibs = (data: API.UploadMmsLibsParams) => {
 }
 
 // 获取非直签客户信息
-export const getDicConfig = (data: API.GetDicConfigParams) => {
-  return request.post<
-    any,
-    API.Response<API.GetDicConfigItems>,
-    API.GetDicConfigParams
-  >('console/api/rcs/dic_config', { ...data })
+export const getDicConfig = () => {
+  return request.post<any, API.Response<API.GetDicConfigItems>, any>(
+    'console/api/rcs/dic_config',
+    {},
+  )
 }
 
 // 注册非直签客户信息
