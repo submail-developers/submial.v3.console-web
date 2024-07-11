@@ -56,7 +56,7 @@ export default function Fn({ templateId }: Props) {
               <ACopy text={item?.sign} title='点击复制ID' />
             </Button>
           </Flex>
-          <div className='preview-model p-12'>
+          <div className='preview-model p-t-12 p-x-12'>
             <div className='temp-type fx-center-center p-x-16 fn12'>
               {item.type == 1 && '纯文本模版'}
               {item.type == 2 && '单卡片模版'}

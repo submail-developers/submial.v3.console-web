@@ -39,7 +39,7 @@ export default function AExport(props: Props) {
         className='export'
         menu={{ items: props.items, selectable: true, onClick: exportEvent }}
         trigger={['click']}>
-        <Button type='primary'>
+        <Button type='primary' className='fx-y-center'>
           <span className='m-r-8'>导 出</span>
           <DownOutlined rev={null} />
         </Button>

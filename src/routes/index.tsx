@@ -80,7 +80,7 @@ export const menus: RouteObject[] = [
             ),
           },
           {
-            path: 'create/:id',
+            path: 'create',
             loader: loaderFn({}),
             errorElement: <Error />,
             element: (

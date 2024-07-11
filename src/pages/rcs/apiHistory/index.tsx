@@ -247,8 +247,7 @@ export default function Fn() {
       render: (_, record) => (
         <Space className='w-100'>
           <div style={{ position: 'relative' }}>
-            <ACopy text={record.sign} />
-            {record.sign}
+            <ACopy text={record.sign} />【{record.sign}】
           </div>
           <SeeModal sign={record.sign} />
         </Space>

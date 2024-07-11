@@ -13,9 +13,9 @@ import {
   Image,
   ConfigProvider,
   Space,
+  Checkbox,
 } from 'antd'
 
-import tourBannerImg from '@/assets/rcs/welcome/tourBanner.png'
 import newImg from '@/assets/rcs/welcome/new.png'
 
 import step_img_0 from '@/assets/rcs/welcome/tourBanner.png'
@@ -45,18 +45,18 @@ function MyTour(props: MyTourProps, ref) {
   const [show, setShow] = useState(false)
   const [step, setStep] = useState(0)
   const [loading, setLoading] = useState(false)
+  const [checked, setChecked] = useState(true)
   const open = () => {
     setShow(true)
   }
 
   const next = async () => {
-    if (step == 4) {
+    if (step == 4 && checked) {
       try {
         setLoading(true)
         await openRcs({ agreement: true })
         setLoading(false)
         setShow(false)
-        window.localStorage.setItem('rcsTour', 'true')
         props.openEvent()
       } catch (error) {
         setLoading(false)
@@ -80,7 +80,7 @@ function MyTour(props: MyTourProps, ref) {
     <Modal
       open={show}
       onCancel={() => setShow(false)}
-      width={500}
+      width={540}
       title=''
       footer={null}
       maskClosable={false}
@@ -179,9 +179,29 @@ function MyTour(props: MyTourProps, ref) {
         </div>
       )}
 
+      {step == 4 && (
+        <Space align='start' className='fn13'>
+          <Checkbox
+            checked={checked}
+            onChange={(e) => setChecked(e.target.checked)}></Checkbox>
+          <span>
+            我已阅读并同意
+            <a href='/documents/QBVE31' target='__blank'>
+              《SUBMAIL 产品服务协议》
+            </a>
+            以及
+            <a href='/documents/F70oc3' target='__blank'>
+              《SUBMAIL 开发者公约》
+            </a>
+            。
+          </span>
+        </Space>
+      )}
+
       <Flex justify='center' className='m-t-12'>
         <ConfigProvider wave={{ disabled: true }}>
           <Button
+            disabled={!checked}
             type='primary'
             style={{ width: 120 }}
             onClick={next}

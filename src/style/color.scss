@@ -130,6 +130,11 @@
   background-color: var(--waiting-color);
   color: #fff;
 }
+// 状态-等待/审核中
+.color-status-gray {
+  background-color: var(--gray-color-sub);
+  color: #fff;
+}
 
 /**
 * 自定义颜色相关的className

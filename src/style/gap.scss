@@ -3,11 +3,12 @@
 * m: margin, p: padding
 * x: left+right, y: top+bottom, t: top, r: right, b: bottom, l: left
 * number(0,40) | 50 | 60 | 70 | 80 | 90 | 100
+* !important 解决submail.mdi.css的影响
 */
 @mixin create-margin-padding($number) {
   $value: $number + px;
   .m-#{$number} {
-    margin: $value;
+    margin: $value !important;
   }
   .m-x-#{$number} {
     margin-left: $value;
@@ -27,10 +28,10 @@
     margin-bottom: $value;
   }
   .m-l-#{$number} {
-    margin-left: $value;
+    margin-left: $value !important;
   }
   .p-#{$number} {
-    padding: $value;
+    padding: $value !important;
   }
   .p-x-#{$number} {
     padding-left: $value;
@@ -50,7 +51,7 @@
     padding-bottom: $value;
   }
   .p-l-#{$number} {
-    padding-left: $value;
+    padding-left: $value !important;
   }
 }
 @include create-margin-padding(0);

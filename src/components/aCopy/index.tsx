@@ -13,7 +13,9 @@ type Props = {
 /**
  * 该组件是覆盖在父元素上的: position: absolute;wigth/height:100%;
  * 需要给父元素加上: position: relative;
- * @param  text string 复制的文本
+ * @param  text string 复制的文本 必填
+ * @param  title string 鼠标悬浮展示的文字 非必填
+ * @param  zIndex number 层级 非必填
  */
 export default function ACopy(props: Props) {
   const { message: messageApi } = App.useApp()

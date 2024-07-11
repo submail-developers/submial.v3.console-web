@@ -228,8 +228,7 @@ export default function Fn() {
       width: 100,
       render: (_, record) => (
         <div className='w-100' style={{ position: 'relative' }}>
-          <ACopy text={record.project} />
-          {record.project}
+          <ACopy text={record.project} />【{record.project}】
         </div>
       ),
     },

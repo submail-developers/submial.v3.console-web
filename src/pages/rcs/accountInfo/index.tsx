@@ -15,7 +15,7 @@ enum Status {
   '审核中' = 9,
 }
 enum StatusColor {
-  'gray-color' = 0,
+  'color-status-gray' = 0,
   'color-status-success' = 1,
   'color-status-error' = 2,
   'color-status-waiting' = 9,

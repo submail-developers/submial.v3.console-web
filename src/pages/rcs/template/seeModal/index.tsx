@@ -10,9 +10,9 @@ type Props = {
 }
 
 const params = {
-  params1: '123',
-  params2: '321',
-  params: '你好啊',
+  // params1: '123',
+  // params2: '321',
+  // params: '你好啊',
 }
 
 export default function Fn(props: Props) {

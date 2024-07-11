@@ -81,11 +81,6 @@ export default function MyHeader(props: Props) {
 
   useEffect(() => {
     getMsgInfo()
-    return () => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current)
-      }
-    }
   }, [])
 
   return (
@@ -118,7 +113,9 @@ export default function MyHeader(props: Props) {
           align='center'
           style={{ flexGrow: '1', padding: '0 16px 0 0', height: '100%' }}>
           {points.sm && <MyBreadcrumb></MyBreadcrumb>}
-          <Button onClick={loginEvent}>登陆</Button>
+
+          {/* <Button onClick={loginEvent}>登陆</Button> */}
+
           {!props.hideRight && (
             <Space align='center' size={points.lg ? 16 : 0}>
               <Dropdown

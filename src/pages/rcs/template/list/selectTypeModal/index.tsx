@@ -23,19 +23,19 @@ const list: ListItem[] = [
   {
     icon: 'icon-text',
     name: '纯文本',
-    des: '模版类型描述',
+    des: '简洁、迅速、易阅读',
     type: 1,
   },
   {
     icon: 'icon-card',
     name: '单卡片',
-    des: '模版类型描述',
+    des: '集中、直接、更明确',
     type: 2,
   },
   {
     icon: 'icon-cards',
     name: '多卡片',
-    des: '模版类型描述',
+    des: '丰富、互补、多交互',
     type: 3,
   },
 ]

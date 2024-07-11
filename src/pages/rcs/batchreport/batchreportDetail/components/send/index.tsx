@@ -2,6 +2,7 @@ import { useState, useImperativeHandle, forwardRef, useEffect } from 'react'
 import { Table, Divider } from 'antd'
 import { API } from 'apis'
 import { getSendlistLogs } from '@/api'
+import ACopy from '@/components/aCopy'
 
 type Props = {
   id: string
@@ -95,6 +96,11 @@ function Fn(props: Props, ref) {
       title: '模板ID',
       dataIndex: 'sign',
       width: 100,
+      render: (_, record) => (
+        <div className='w-100' style={{ position: 'relative' }}>
+          <ACopy text={record.sign} />【{record.sign}】
+        </div>
+      ),
     },
     {
       title: '发送时间',
