@@ -119,7 +119,7 @@ export default function Fn() {
         ...formvalues,
         businessType: formvalues.businessType[0],
         industryTypeCode: formvalues.businessType[1],
-        contractRenewStatus: formvalues.contractRenewStatus.value,
+        contractRenewStatus: formvalues.contractRenewStatus,
         companyLogo: res1?.path || '',
         contractAccessory: res2?.path || '',
         contractEffectiveDate:
@@ -198,7 +198,7 @@ export default function Fn() {
           (formvalues.businessType && formvalues.businessType[0]) || '',
         industryTypeCode:
           (formvalues.businessType && formvalues.businessType[1]) || '',
-        contractRenewStatus: formvalues.contractRenewStatus.value,
+        contractRenewStatus: formvalues.contractRenewStatus,
         companyLogo: res1?.path || '',
         contractAccessory: res2.path || '',
         contractEffectiveDate:
@@ -538,7 +538,7 @@ export default function Fn() {
                     <Form.Item
                       label='合同是否续签'
                       name='contractRenewStatus'
-                      initialValue={'0'}>
+                      initialValue={'1'}>
                       <Radio.Group>
                         <Radio value='0'>是</Radio>
                         <Radio value='1'>否</Radio>
