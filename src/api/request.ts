@@ -27,14 +27,32 @@ request.interceptors.response.use(
   (res: AxiosResponse) => {
     if (res.data.status == 'error') {
       // message.destroy()
+
+      // 无产品使用权限的接口只弹一次
+      let key = Math.random()
+      if (res?.data?.message?.includes('无产品使用权限')) {
+        key = 0
+        message.destroy(0)
+      }
       message.error({
+        key: key,
         content: res.data.message,
+        duration: 3,
         onClose: () => {
           if (res.data.message == 'session timeout') {
             window.location.href = `/login?redirct='+encodeURI(${window.location.href})`
           }
         },
       })
+
+      // 控制台新用户首次进入rcs隐藏报错
+      let url = window.location.href
+      if (
+        url.includes('/rcs/welcome') &&
+        res?.data?.message?.includes('无产品使用权限')
+      ) {
+        message.destroy(0)
+      }
       return Promise.reject(res.data)
     } else if (res && res.data) {
       return res.data

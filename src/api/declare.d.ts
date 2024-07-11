@@ -194,6 +194,54 @@ declare module 'apis' {
       appid: string
     }
 
+    // 导出RCS交互日志
+    interface ExportRcsChatbotLogsParams {
+      file_type: string
+      start: string
+      end: string
+      type?: 'all' | '0' | '1' | '2' | '3' //默认all  0没有匹配上行交互规则的-上行回复   1chatbot固定菜单  2模板-悬浮菜单和message交互按键  3纯文字消息
+      mobile: string
+      keyword?: string
+    }
+    // RCS交互日志
+    interface GetRcsChatbotLogsParams {
+      page?: number
+      limit?: number
+      start: string
+      end: string
+      type?: 'all' | '0' | '1' | '2' | '3' //默认all  0没有匹配上行交互规则的-上行回复   1chatbot固定菜单  2模板-悬浮菜单和message交互按键  3纯文字消息
+      mobile: string
+      keyword?: string
+    }
+
+    interface GetRcsChatbotLogsItem {
+      account: string
+      bodyText: string
+      chatbot: string
+      chatbot_name: string
+      contentEncoding: string
+      contentType: string
+      contributionID: string
+      conversationID: string
+      dateTime: string
+      destinationAddress: string // 收件人地址
+      id: string
+      match_keyword: string // 按钮名称/关键字
+      match_type: '0' | '1' | '2' | '3' // '0暂无匹配   1chatbot固定菜单  2模板-悬浮菜单和message交互按键  3纯文字消息',
+      replyMessageID: string
+      senderAddress: string // 发件人地址
+      sign: string // 下行回复模版sign
+      template_id: string
+      type: '0' | '1' // 是否成功回复 0否 1是
+    }
+
+    interface GetRcsChatbotLogsRes {
+      data: GetRcsChatbotLogsItem[]
+      rows: number
+      message: string
+      status: string
+    }
+
     // 获取行业一级、二级编码信息
     interface GetIndustryRes {
       status: string
@@ -626,9 +674,6 @@ declare module 'apis' {
     }
 
     // 获取非直签客户信息参数
-    interface GetDicConfigParams {}
-
-    // 非直签客户信息返回值
     interface GetDicConfigItems {
       id: string
       credits: string

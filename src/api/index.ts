@@ -288,6 +288,15 @@ export const getRcsChatbotLogs = (data: API.GetRcsChatbotLogsParams) => {
     ...data,
   })
 }
+// 导出chatbot交互日志
+export const exportRcsChatbotLogs = (data: API.ExportRcsChatbotLogsParams) => {
+  return request.post<any, any, API.ExportRcsChatbotLogsParams>(
+    '/console/api/rcs/export_interactive_log',
+    {
+      ...data,
+    },
+  )
+}
 //编辑固定菜单
 export const saveFixedMenu = (data: API.SaveFixedMenuParams) => {
   return request.post<any, any, API.SaveFixedMenuParams>(
