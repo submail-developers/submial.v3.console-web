@@ -22,7 +22,7 @@
     margin-top: $value;
   }
   .m-r-#{$number} {
-    margin-right: $value;
+    margin-right: $value !important;
   }
   .m-b-#{$number} {
     margin-bottom: $value;

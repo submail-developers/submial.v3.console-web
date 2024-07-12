@@ -99,7 +99,7 @@ export default function Menu() {
           <div className='group-name fx-y-center'>
             <div className='group-icon'>
               <span
-                className={`icon iconfont fn18 ${item.groupIcon} m-l-2`}></span>
+                className={`icon iconfont fn18 m-l-2 m-r-0 ${item.groupIcon}`}></span>
             </div>
             <div className='group-text'>{item.groupName}</div>
           </div>
