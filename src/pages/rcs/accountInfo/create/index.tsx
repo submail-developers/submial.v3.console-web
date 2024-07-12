@@ -35,6 +35,7 @@ import PageContent from '@/components/pageContent'
 import './index.scss'
 
 const { TextArea } = Input
+const { Option } = Select
 
 const Extra = (props) => {
   return <div style={{ marginTop: '8px' }}>{props.children}</div>
@@ -43,6 +44,18 @@ const Extra = (props) => {
 type FilePath = {
   path?: string
 }
+const prefixSelector = (
+  <Form.Item name='institutionLicenceType' noStyle initialValue={'01'}>
+    <Select style={{ width: 180 }}>
+      <Option value='01'>营业执照</Option>
+      <Option value='02'>组织机构代码证</Option>
+      <Option value='03'>事业单位法人证书</Option>
+      <Option value='04'>社会团体法人登记证书</Option>
+      <Option value='05'>军队代码</Option>
+      <Option value='06'>个体户（注册号）</Option>
+    </Select>
+  </Form.Item>
+)
 
 export default function Fn() {
   const dispatch = useAppDispatch()
@@ -427,16 +440,16 @@ export default function Fn() {
 
               <Col span={24} xl={12}>
                 <Form.Item
-                  label='企业统一社会信用代码'
+                  label='证书编号/社会代码/注册号'
                   required
                   rules={[{ required: true }]}
                   name='unifySocialCreditCodes'>
-                  <Input placeholder='请输入企业统一社会信用代码' />
+                  <Input addonBefore={prefixSelector} placeholder='请输入' />
                 </Form.Item>
               </Col>
               <Col span={24} xl={12}>
                 <Form.Item
-                  label='企业责任人姓名'
+                  label='责任人姓名'
                   required
                   rules={[{ required: true }]}
                   name='enterpriseOwnerName'>
@@ -469,11 +482,11 @@ export default function Fn() {
               </Col>
               <Col span={24} xl={12}>
                 <Form.Item
-                  label='企业责任人证件号码'
+                  label='责任人证件号码'
                   required
                   rules={[{ required: true }]}
                   name='certificateCode'>
-                  <Input placeholder='请输入企业责任人证件号码' />
+                  <Input placeholder='请输入责任人证件号码' />
                 </Form.Item>
               </Col>
 

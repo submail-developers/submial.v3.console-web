@@ -20,6 +20,14 @@ enum StatusColor {
   'color-status-error' = 2,
   'color-status-waiting' = 9,
 }
+const institutionLicenceTypes = {
+  '01': '营业执照',
+  '02': '组织机构代码证',
+  '03': '事业单位法人证书',
+  '04': '社会团体法人登记证书',
+  '05': '军队代码',
+  '06': '个体户（注册号）',
+}
 
 import './index.scss'
 
@@ -130,13 +138,16 @@ export default function Fn() {
               </tr>
 
               <tr>
-                <td>企业统一社会代码</td>
-                <td>{customerData.unifySocialCreditCodes || '-'}</td>
-                <td>企业责任人姓名</td>
+                <td>证书编号/社会代码/注册号</td>
+                <td>
+                  {/* {institutionLicenceTypes[customerData.institutionLicenceType]} */}
+                  {customerData.unifySocialCreditCodes || '-'}
+                </td>
+                <td>责任人姓名</td>
                 <td>{customerData.enterpriseOwnerName || '-'}</td>
               </tr>
               <tr>
-                <td>企业责任人证件类型</td>
+                <td>责任人证件类型</td>
                 <td>
                   {customerData.certificateType === '01'
                     ? '居民身份证'
@@ -146,7 +157,7 @@ export default function Fn() {
                     ? '中国人民武装警察身份证件'
                     : '-'}
                 </td>
-                <td>企业责任人证件号码</td>
+                <td>责任人证件号码</td>
                 <td>
                   {customerData.certificateCode == null
                     ? '-'

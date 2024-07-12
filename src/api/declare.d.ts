@@ -697,6 +697,7 @@ declare module 'apis' {
       subhook_signature: string
       subhook_url: string
       unifySocialCreditCodes: string
+      institutionLicenceType: '01' | '02' | '03' | '04' | '05' | '06' // 单位证件类型：01-营业执照;02-组织机构代码证;03-事业单位法人证书;04-社会团体法人登记证书;05-军队代码;06-个体户（注册号）
       enterpriseOwnerName: string
       certificateType: '01' | '02' | '03' // 1居民身份证,2人名
       certificateCode: string
