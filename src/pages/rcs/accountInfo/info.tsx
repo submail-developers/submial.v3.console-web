@@ -134,12 +134,12 @@ export default function Fn({ customerData }: Props) {
     {
       label: '合同失效期',
       span: span,
-      children: customerData.contractExpiryDate == '0' ? '是' : '否',
+      children: customerData.contractExpiryDate || '-',
     },
     {
       label: '合同是否续签',
       span: span,
-      children: customerData.contractRenewStatus == '0' ? '是' : '否',
+      children: customerData.contractRenewStatus == '1' ? '是' :customerData.contractRenewStatus == '0' ?'否': '-',
     },
     {
       label: '自动续签日期',

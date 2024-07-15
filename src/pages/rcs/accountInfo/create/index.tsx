@@ -278,10 +278,11 @@ export default function Fn() {
     setloading(true)
     try {
       const res = await getDicConfig()
-      if (res.data.status == '9') {
-        // message.error('客户资料正在审核中，无法编辑', 5)
-        // navigate('/console/rcs/account/index', { replace: true })
-        // return
+      // 3运营商审核中 9客服审核中
+      if (res.data.status == '9' || res.data.status == '3') {
+        message.error('客户资料正在审核中，无法编辑', 5)
+        navigate('/console/rcs/account/index', { replace: true })
+        return
       }
       setStatus(res.data.status)
       form.resetFields()
@@ -551,10 +552,10 @@ export default function Fn() {
                     <Form.Item
                       label='合同是否续签'
                       name='contractRenewStatus'
-                      initialValue={'1'}>
+                      initialValue={'0'}>
                       <Radio.Group>
-                        <Radio value='0'>是</Radio>
-                        <Radio value='1'>否</Radio>
+                        <Radio value='1'>是</Radio>
+                        <Radio value='0'>否</Radio>
                       </Radio.Group>
                     </Form.Item>
                   </Col>

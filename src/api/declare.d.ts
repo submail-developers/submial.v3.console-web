@@ -678,7 +678,7 @@ declare module 'apis' {
       id: string
       credits: string
       datetime: string
-      status: '0' | '1' | '2' | '9' // 0未提交 1审核通过 2审核驳回 9审核中
+      status: '0' | '1' | '2' | '3' | '9' // 0未提交 1审核通过 2审核驳回 3运营商审核中 9客服审核中
       belongRegionCode: string
       customerName: string
       customerContactName: string
