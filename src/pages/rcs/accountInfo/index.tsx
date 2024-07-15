@@ -2,23 +2,26 @@ import { useState, useEffect } from 'react'
 import { Flex, Space, Button, Divider, Image, Spin } from 'antd'
 import { NavLink } from 'react-router-dom'
 import PageContent from '@/components/pageContent'
-import { getDicConfig, getIndustry } from '@/api'
+import Info from './info'
+import { getDicConfig } from '@/api'
 import { API } from 'apis'
 import faceImg from '@/assets/rcs/face/account.png'
 
 import yidong from '@/assets/rcs/operator/yidong.png'
 
-enum Status {
-  '未提交' = 0,
-  '审核通过' = 1,
-  '审核未通过' = 2,
-  '审核中' = 9,
+const Status = {
+  '0': '未提交',
+  '1': '审核通过',
+  '2': '审核未通过',
+  '3': '审核中',
+  '9': '审核中',
 }
-enum StatusColor {
-  'color-status-gray' = 0,
-  'color-status-success' = 1,
-  'color-status-error' = 2,
-  'color-status-waiting' = 9,
+const StatusColor = {
+  '0': 'color-status-gray',
+  '1': 'color-status-success',
+  '2': 'color-status-error',
+  '3': 'color-status-waiting',
+  '9': 'color-status-waiting',
 }
 const institutionLicenceTypes = {
   '01': '营业执照',
@@ -34,8 +37,6 @@ import './index.scss'
 export default function Fn() {
   const [loading, setloading] = useState(false)
   const [customerData, setCustomerData] = useState<API.GetDicConfigItems>()
-  const [industryText, setindustryText] = useState('')
-  const [industryList, setIndustryList] = useState<API.IndustryItem[]>([])
 
   // 获取客户资料
   const getInfo = async () => {
@@ -48,30 +49,7 @@ export default function Fn() {
       setloading(false)
     }
   }
-  // 获取行业类型
-  const getIndustryList = async () => {
-    try {
-      const res = await getIndustry()
-      setIndustryList(res.data)
-    } catch (error) {}
-  }
-
   useEffect(() => {
-    if (customerData && industryList.length > 0) {
-      industryList.forEach((item) => {
-        if (item.value == customerData.businessType) {
-          item.children.forEach((i) => {
-            if (i.value == customerData.industryTypeCode) {
-              setindustryText(`${item.label} / ${i.label}`)
-            }
-          })
-        }
-      })
-    }
-  }, [customerData, industryList])
-
-  useEffect(() => {
-    getIndustryList()
     getInfo()
   }, [])
 
@@ -117,111 +95,7 @@ export default function Fn() {
               未通过原因：{customerData?.reject_reason || '-'}
             </div>
           )}
-          <table className='cus-tab m-t-24'>
-            <tbody>
-              <tr>
-                <td>客户名称</td>
-                <td colSpan={3}>{customerData.customerName || '-'}</td>
-              </tr>
-
-              <tr>
-                <td>联系人名称</td>
-                <td>{customerData.customerContactName || '-'}</td>
-                <td>联系人电话</td>
-                <td>{customerData.customerContactMob || '-'}</td>
-              </tr>
-              <tr>
-                <td>联系人邮箱</td>
-                <td>{customerData.customerContactEmail || '-'}</td>
-                <td>行业类型</td>
-                <td>{industryText || '-'}</td>
-              </tr>
-
-              <tr>
-                <td>证书编号/社会代码/注册号</td>
-                <td>
-                  {/* {institutionLicenceTypes[customerData.institutionLicenceType]} */}
-                  {customerData.unifySocialCreditCodes || '-'}
-                </td>
-                <td>责任人姓名</td>
-                <td>{customerData.enterpriseOwnerName || '-'}</td>
-              </tr>
-              <tr>
-                <td>责任人证件类型</td>
-                <td>
-                  {customerData.certificateType === '01'
-                    ? '居民身份证'
-                    : customerData.certificateType === '02'
-                    ? '中国人民解放军军人身份证'
-                    : customerData.certificateType === '03'
-                    ? '中国人民武装警察身份证件'
-                    : '-'}
-                </td>
-                <td>责任人证件号码</td>
-                <td>
-                  {customerData.certificateCode == null
-                    ? '-'
-                    : customerData.certificateCode}
-                </td>
-              </tr>
-              <tr>
-                <td>企业logo</td>
-                <td colSpan={3}>
-                  {customerData.companyLogo ? (
-                    <Image
-                      width={40}
-                      height={40}
-                      preview={false}
-                      src={customerData.companyLogo || ''}
-                    />
-                  ) : (
-                    '-'
-                  )}
-                </td>
-              </tr>
-              <tr>
-                <td>合同名称</td>
-                <td>{customerData.contractName || '-'}</td>
-                <td>合同编号</td>
-                <td>{customerData.contractNo || '-'}</td>
-              </tr>
-              <tr>
-                <td>合同生效期</td>
-                <td>{customerData.contractEffectiveDate || '-'}</td>
-                <td>合同失效期</td>
-                <td>{customerData.contractExpiryDate || '-'}</td>
-              </tr>
-              <tr>
-                <td>合同是否续签</td>
-                <td>{customerData.contractRenewStatus == '0' ? '是' : '否'}</td>
-                <td>自动续签日期</td>
-                <td>{customerData.contractRenewDate || '-'}</td>
-              </tr>
-              <tr>
-                <td>合同电子扫描件</td>
-                <td colSpan={3}>
-                  {customerData.contractAccessory ? (
-                    <>
-                      <span className='icon iconfont icon-lianjie fn12 m-r-4 gray-color'></span>
-                      <a
-                        className='fn14 fw-400'
-                        style={{ textDecoration: 'underline' }}
-                        href={customerData.contractAccessory}
-                        target='blank'>
-                        查看文件
-                      </a>
-                    </>
-                  ) : (
-                    '-'
-                  )}
-                </td>
-              </tr>
-              <tr>
-                <td>备注</td>
-                <td colSpan={3}>{customerData.remarkText || '-'}</td>
-              </tr>
-            </tbody>
-          </table>
+          <Info customerData={customerData} />
         </>
       )}
       {loading && (

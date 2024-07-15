@@ -2,7 +2,6 @@ import { Descriptions } from 'antd'
 import ACopy from '@/components/aCopy'
 import type { DescriptionsProps } from 'antd'
 import { API } from 'apis'
-import { usePoint } from '@/hooks'
 
 type Props = {
   sendlist?: API.GetSendlistReportResInfo
@@ -18,7 +17,6 @@ enum SendStatusColorEnum {
   'error-color' = 9,
 }
 export default function Fn({ sendlist }: Props) {
-  const point = usePoint('xs')
   const items: DescriptionsProps['items'] = [
     {
       label: '任务名称',
