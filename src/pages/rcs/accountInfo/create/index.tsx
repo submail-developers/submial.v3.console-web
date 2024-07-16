@@ -16,6 +16,7 @@ import {
   Spin,
 } from 'antd'
 import type { UploadFile, UploadProps } from 'antd'
+import { ProFormDependency } from '@ant-design/pro-components'
 import { UploadOutlined } from '@ant-design/icons'
 import { useState, useRef, useEffect } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
@@ -338,6 +339,20 @@ export default function Fn() {
     } catch (error) {}
   }
 
+  // 修改是否续签状态
+  const changeContractRenewStatus = async (e) => {
+    let status = e.target.value
+    const contractExpiryDateValues = await form.getFieldValue(
+      'contractExpiryDate',
+    )
+    if (status == '1') {
+      // 自动将合同失效日期同步到自动续签日期
+      form.setFieldValue('contractRenewDate', contractExpiryDateValues)
+    } else {
+      form.setFieldValue('contractRenewDate', null)
+    }
+  }
+
   useEffect(() => {
     getIndustryList()
     getCusInfo()
@@ -454,12 +469,12 @@ export default function Fn() {
                   required
                   rules={[{ required: true }]}
                   name='enterpriseOwnerName'>
-                  <Input placeholder='请输入企业责任人姓名' />
+                  <Input placeholder='请输入责任人姓名' />
                 </Form.Item>
               </Col>
               <Col span={24} xl={12}>
                 <Form.Item
-                  label='企业责任人证件类型'
+                  label='责任人证件类型'
                   name='certificateType'
                   required
                   rules={[{ required: true }]}>
@@ -528,18 +543,12 @@ export default function Fn() {
               <Col span={24} xl={12}>
                 <Row gutter={12}>
                   <Col xs={24} xl={12}>
-                    <Form.Item
-                      label='合同生效期'
-                      validateTrigger='onSubmit'
-                      name='contractEffectiveDate'>
+                    <Form.Item label='合同生效期' name='contractEffectiveDate'>
                       <DatePicker className='w-100' />
                     </Form.Item>
                   </Col>
                   <Col xs={24} xl={12}>
-                    <Form.Item
-                      label='合同失效期'
-                      validateTrigger='onSubmit'
-                      name='contractExpiryDate'>
+                    <Form.Item label='合同失效期' name='contractExpiryDate'>
                       <DatePicker className='w-100' />
                     </Form.Item>
                   </Col>
@@ -553,20 +562,33 @@ export default function Fn() {
                       label='合同是否续签'
                       name='contractRenewStatus'
                       initialValue={'0'}>
-                      <Radio.Group>
+                      <Radio.Group onChange={changeContractRenewStatus}>
                         <Radio value='1'>是</Radio>
                         <Radio value='0'>否</Radio>
                       </Radio.Group>
                     </Form.Item>
                   </Col>
-                  <Col xs={24} xl={12}>
-                    <Form.Item
-                      label='自动续签日期'
-                      validateTrigger='onSubmit'
-                      name='contractRenewDate'>
-                      <DatePicker className='w-100' />
-                    </Form.Item>
-                  </Col>
+
+                  <ProFormDependency
+                    name={['contractRenewStatus', 'contractExpiryDate']}>
+                    {({ contractRenewStatus, contractExpiryDate }) => {
+                      return (
+                        <>
+                          {contractRenewStatus == '1' ? (
+                            <Col xs={24} xl={12}>
+                              <Form.Item
+                                label='自动续签日期'
+                                name='contractRenewDate'>
+                                <DatePicker className='w-100' />
+                              </Form.Item>
+                            </Col>
+                          ) : (
+                            <></>
+                          )}
+                        </>
+                      )
+                    }}
+                  </ProFormDependency>
                 </Row>
               </Col>
               <Col span={24}>
