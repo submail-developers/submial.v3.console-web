@@ -81,6 +81,11 @@ export default function MyHeader(props: Props) {
 
   useEffect(() => {
     getMsgInfo()
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current)
+      }
+    }
   }, [])
 
   return (

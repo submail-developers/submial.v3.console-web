@@ -14,6 +14,7 @@ import {
   Form,
   Statistic,
   ConfigProvider,
+  App,
 } from 'antd'
 import type { CollapseProps, GetProps, StatisticProps } from 'antd'
 import PageContent from '@/components/pageContent'
@@ -36,6 +37,7 @@ import {
   getRcsAnalysisOverview,
   getUseTourStatus,
   hideUseTour,
+  getDicConfig,
 } from '@/api'
 import { StorePage } from './components/pay/reducer'
 
@@ -147,6 +149,7 @@ export default function Fn() {
   const payRef = useRef(null)
   const point = usePoint('xs')
   const dispatch = useAppDispatch()
+  const { message } = App.useApp()
 
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
@@ -155,6 +158,7 @@ export default function Fn() {
   const [data, setData] = useState<API.GetRcsOverviewRes>()
   const [echartsData, setEchartsData] = useState<API.RcsAnalysis>()
   const [showUseTour, setShowUseTour] = useLocalStorage('useTour', false)
+  const [accountInfo, setAccountInfo] = useState<API.GetDicConfigItems>()
 
   // 隐藏使用引导
   const noTour = async (e) => {
@@ -180,7 +184,20 @@ export default function Fn() {
     },
   ]
   const showPay = () => {
-    payRef.current && payRef.current.open()
+    if (!accountInfo) return
+    switch (accountInfo.status) {
+      case '0':
+      case '2':
+        message.warning('请完善客户资料，审核通过后购买资源包', 5)
+        break
+      case '1':
+        payRef.current && payRef.current.open()
+        break
+      case '3':
+      case '9':
+        message.warning('客户资料正在审核，请审核通过后购买资源包', 5)
+        break
+    }
   }
 
   const onRangeChange = (value: [Dayjs, Dayjs]) => {
@@ -238,9 +255,17 @@ export default function Fn() {
     dispatch(initSetting())
   }
 
+  const getAccountInfo = async () => {
+    try {
+      const res = await getDicConfig()
+      setAccountInfo(res.data)
+    } catch (error) {}
+  }
+
   useEffect(() => {
     getData()
     initUseTour()
+    getAccountInfo()
   }, [])
 
   useEffect(() => {
@@ -248,11 +273,11 @@ export default function Fn() {
   }, [time])
   return (
     <PageContent extClass='welcome'>
-      {loading && (
+      {/* {loading && (
         <div className='loading-wrap fx-center-center'>
           <Spin />
         </div>
-      )}
+      )} */}
       <Image src={faceImg} preview={false} width={72}></Image>
       <Flex justify='space-between' align='center' style={{ height: 40 }}>
         <div className='fn22 fw-500'>账户概览</div>
