@@ -108,6 +108,7 @@ export default function Fn({
             </div>
             {!hiddenHandle && (
               <Space align='center' size={16}>
+                {/* 审核中通过-进入创建在线发送任务入口 */}
                 {item.checked == '1' && (
                   <div
                     className='g-pointer text-color'
@@ -116,12 +117,15 @@ export default function Fn({
                     <span className='icon iconfont icon-fasong fn16'></span>
                   </div>
                 )}
-                <div
-                  className='g-pointer text-color'
-                  title='编辑'
-                  onClick={editEvent}>
-                  <span className='icon iconfont icon-bianji fn16'></span>
-                </div>
+                {/* 审核中禁止编辑 */}
+                {item.checked != '0' && (
+                  <div
+                    className='g-pointer text-color'
+                    title='编辑'
+                    onClick={editEvent}>
+                    <span className='icon iconfont icon-bianji fn16'></span>
+                  </div>
+                )}
                 <Popconfirm
                   title='删除模版'
                   description='确认删除该模版吗？'
