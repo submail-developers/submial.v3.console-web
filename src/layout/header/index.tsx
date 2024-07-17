@@ -159,6 +159,7 @@ export default function MyHeader(props: Props) {
                       <Badge
                         count={(info && info.notification) || ''}
                         color='#ff4446'
+                        overflowCount={999}
                       />
                     </Flex>
                   </Dropdown>
