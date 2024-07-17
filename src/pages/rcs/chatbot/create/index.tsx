@@ -7,32 +7,21 @@ import {
   Button,
   Input,
   Select,
-  Upload,
   Flex,
   ColorPicker,
   Radio,
-  Divider,
-  InputNumber,
-  Cascader,
   App,
   ConfigProvider,
 } from 'antd'
-import type { GetProp, UploadFile, UploadProps, RadioChangeEvent } from 'antd'
-import { UploadOutlined } from '@ant-design/icons'
+import type { UploadFile } from 'antd'
 
 import { useState, useRef, useEffect } from 'react'
-import {
-  useParams,
-  NavLink,
-  useNavigate,
-  useSearchParams,
-} from 'react-router-dom'
+import { useParams, NavLink, useNavigate } from 'react-router-dom'
 import { changeBreadcrumbItem } from '@/store/reducers/breadcrumb'
 import { useAppDispatch } from '@/store/hook'
 import utils from '@/utils/formRules'
 import {
   getChatbot,
-  updateChatbot,
   getIndustry,
   delCustomerFile,
   uploadCustomerFile,
@@ -49,8 +38,7 @@ import { actualIssueIndustryOptions } from '@/pages/rcs/chatbot/type'
 import bannerImg from '@/assets/rcs/account/banner.png'
 
 import './index.scss'
-import { name } from 'dayjs/locale/*'
-interface DataType extends API.GetChatbotListItem {}
+
 type FilePath = {
   path?: string
 }
@@ -73,8 +61,6 @@ export default function Fn() {
   const [bgFile, setBgFile] = useState<UploadFile>(null)
   const [bgSrc, setBgSrc] = useState<string>('')
   const [attachmentFileInfo, setAttachmentFileInfo] = useState<UploadFile[]>([])
-  const [params] = useSearchParams()
-  const id = params.get('id')
   const [loading, setloading] = useState(false)
   const [industryList, setIndustryList] = useState([])
   const [color, setColor] = useState('#ffffff')
@@ -90,11 +76,22 @@ export default function Fn() {
       const res = await getChatbot({
         page: 1,
         limit: 20,
-        appid: id,
+        appid: chatbotId,
         status: 'all',
       })
 
       if (res.list.length == 1) {
+        // 审核中禁止编辑
+        if (['3', '4'].includes(res.list[0].status)) {
+          message.error({
+            content: 'Chatbot审核中，禁止编辑',
+            duration: 4,
+            onClose: () => {
+              nav(-1)
+            },
+          })
+          return
+        }
         setStatus(res.list[0].status)
         form.resetFields()
         form.setFieldsValue({
@@ -195,15 +192,6 @@ export default function Fn() {
       )
     }
   }, [chatbotId])
-  useEffect(() => {
-    if (form) {
-      form.setFieldsValue({
-        chatbotId: '106108281498',
-        cspToken: '上海赛邮云计算有限公司',
-        cspId: '上海鼎邮云计算有限公司',
-      })
-    }
-  }, [form])
 
   // 保存
   const save = async () => {
@@ -253,7 +241,7 @@ export default function Fn() {
       const formvalues = await form.getFieldsValue()
       let params = {
         ...formvalues,
-        appid: id,
+        appid: chatbotId,
         logo: (res1 && res1.path) || '',
         backgroundImage: (res2 && res2.path) || '',
         attachment: (res3 && res3.path) || '',
@@ -311,7 +299,7 @@ export default function Fn() {
 
       let params = {
         ...formvalues,
-        appid: id,
+        appid: chatbotId,
         logo: res1 && res1.path,
         backgroundImage: (res2 && res2.path) || '',
         attachment: (res3 && res3.path) || '',
@@ -338,6 +326,7 @@ export default function Fn() {
         name='craete-chatbot'
         layout='vertical'
         autoComplete='off'
+        validateTrigger='onBlur'
         initialValues={{
           providerSwitchCode: '0',
         }}>
@@ -399,6 +388,7 @@ export default function Fn() {
                   allowClear
                   style={{ width: '100%' }}
                   placeholder='请选择'
+                  fieldNames={{ value: 'label' }}
                   options={industryList}
                 />
               </Form.Item>
@@ -436,10 +426,7 @@ export default function Fn() {
 
             {/* 证明材料 */}
             <Col span={24} xl={12}>
-              <Form.Item
-                label='服务方名称'
-                name='provider'
-                validateTrigger='onBlur'>
+              <Form.Item label='服务方名称' name='provider'>
                 <Input placeholder='用于 Chatbot 用户电话咨询' />
               </Form.Item>
             </Col>
@@ -447,7 +434,6 @@ export default function Fn() {
               <Form.Item
                 label='服务方电话'
                 name='callback'
-                validateTrigger='onBlur'
                 rules={[
                   {
                     validator: utils.validateNoChinese,
@@ -460,7 +446,6 @@ export default function Fn() {
               <Form.Item
                 label='服务方官网'
                 name='website'
-                validateTrigger='onBlur'
                 rules={[
                   {
                     validator: utils.validateUrl,
@@ -473,7 +458,6 @@ export default function Fn() {
               <Form.Item
                 label='服务条款链接'
                 name='tcPage'
-                validateTrigger='onBlur'
                 rules={[
                   {
                     validator: utils.validateUrl,
@@ -543,7 +527,6 @@ export default function Fn() {
               <Form.Item
                 label='Chatbot 调试白名单'
                 name='debugWhiteAddress'
-                validateTrigger='onBlur'
                 required
                 rules={[{ required: true }]}
                 extra={
@@ -559,7 +542,7 @@ export default function Fn() {
               </Form.Item>
             </Col>
             <Col span={24}>
-              <Form.Item label='IP限制' name='bind' validateTrigger='onBlur'>
+              <Form.Item label='IP限制' name='bind'>
                 <TextArea
                   placeholder='默认无限制，多个IP地址以英文逗号拼接'
                   autoSize={{ minRows: 3, maxRows: 3 }}
@@ -567,10 +550,7 @@ export default function Fn() {
               </Form.Item>
             </Col>
             <Col span={24}>
-              <Form.Item
-                label='服务描述'
-                name='description'
-                validateTrigger='onBlur'>
+              <Form.Item label='服务描述' name='description'>
                 <TextArea
                   placeholder='机器人描述信息'
                   autoSize={{ minRows: 3, maxRows: 3 }}
@@ -582,14 +562,14 @@ export default function Fn() {
 
         <div className='form-group' style={{ paddingBottom: '24px' }}>
           <Flex justify='space-between'>
-            <ConfigProvider
-              theme={{
-                token: {
-                  colorPrimary: '#f19d25',
-                  colorPrimaryHover: '#e9ae5e',
-                },
-              }}>
-              {status == '0' || status == '2' ? (
+            {status == '0' ? (
+              <ConfigProvider
+                theme={{
+                  token: {
+                    colorPrimary: '#f19d25',
+                    colorPrimaryHover: '#e9ae5e',
+                  },
+                }}>
                 <Button
                   className='color-status-waiting'
                   type='primary'
@@ -598,10 +578,10 @@ export default function Fn() {
                   onClick={save}>
                   保存
                 </Button>
-              ) : (
-                <div></div>
-              )}
-            </ConfigProvider>
+              </ConfigProvider>
+            ) : (
+              <div></div>
+            )}
             <Flex gap={12} justify='flex-end'>
               <NavLink to='/console/rcs/chatbot/index' replace>
                 <Button
@@ -613,6 +593,7 @@ export default function Fn() {
                 </Button>
               </NavLink>
               <Button
+                disabled={['3', '4'].includes(status)}
                 loading={loading}
                 type='primary'
                 size='large'

@@ -85,7 +85,7 @@ export default function Fn() {
           {/* 保存/通过/驳回可编辑 */}
           {['0', '1', '2'].includes(record.status) && (
             <Button type='link' style={{ paddingLeft: 0 }}>
-              <NavLink to={`/console/rcs/chatbot/create/1?id=${record.id}`}>
+              <NavLink to={`/console/rcs/chatbot/create/${record.id}`}>
                 编辑
               </NavLink>
             </Button>

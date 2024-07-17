@@ -161,7 +161,7 @@ declare module 'apis' {
           entries: EntriesItem[]
         }
       }
-      menu_status: '1' | '2' | '3' // 固定菜单审核状态 1通过  2不通过  3审核中
+      menu_status: '1' | '2' | '3' | '4' // 固定菜单审核状态 1通过  2不通过  3审核中 4运营商审核中
       genericCssTemplate: string
       autograph: string
       attachment: string

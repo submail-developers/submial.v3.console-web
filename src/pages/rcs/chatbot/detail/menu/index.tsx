@@ -26,7 +26,7 @@ enum StatusStyle {
 type Props = {
   entries: API.EntriesItem[]
   chatbotStatus: '0' | '1' | '2' | '3' //  0保存 1通过  2不通过  3审核中
-  menuStatus: '1' | '2' | '3' // 固定菜单审核状态 1通过  2不通过  3审核中
+  menuStatus: '1' | '2' | '3' | '4' // 固定菜单审核状态 1通过  2不通过  3审核中 4运营商审核中
   reloadEvent: () => void
 }
 

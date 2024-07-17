@@ -54,25 +54,33 @@ export const actualIssueIndustryOptions = [
   },
 ]
 
-export enum EnmuMenuStatusText {
-  '通过' = 1,
-  '不通过' = 2,
-  '审核中' = 3,
+// 固定菜单
+
+export const EnmuMenuStatusText = {
+  '0': '未提交',
+  '1': '通过',
+  '2': '不通过',
+  '3': '审核中',
+  '4': '审核中',
 }
-export enum EnmuMenuStatusColor {
-  'success-color' = 1,
-  'error-color' = 2,
-  'waiting-color' = 3,
+export const EnmuMenuStatusColor = {
+  '0': 'gray-color-sub',
+  '1': 'success-color',
+  '2': 'error-color',
+  '3': 'waiting-color',
+  '4': 'waiting-color',
 }
-export enum ChatbotStatus {
-  '未提交',
-  '审核通过',
-  '驳回',
-  '审核中',
+export const ChatbotStatus = {
+  '0': '未提交',
+  '1': '审核通过',
+  '2': '驳回',
+  '3': '审核中', // 3=我方审核中  4运营商审核中
+  '4': '审核中',
 }
-export enum ChatbotColor {
-  'gray-color-sub',
-  'success-color',
-  'error-color',
-  'warning-color',
+export const ChatbotColor = {
+  '0': 'gray-color-sub',
+  '1': 'success-color',
+  '2': 'error-color',
+  '3': 'waiting-color',
+  '4': 'waiting-color',
 }
