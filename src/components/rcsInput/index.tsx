@@ -86,6 +86,7 @@ const InsetParam = ({ onInsert, onOpen }) => {
       title=''
       description={param}
       okText='插入变量'
+      overlayClassName='rich-popconfirm'
       okButtonProps={{ type: 'text' }}
       cancelText=''
       trigger={['click']}
