@@ -321,7 +321,9 @@ export default function Menu(props: Props) {
                 onClick={() => setEditing(true)}
                 type='primary'
                 disabled={
-                  props.chatbotStatus != '1' || props.menuStatus == '3'
+                  props.chatbotStatus != '1' ||
+                  props.menuStatus == '3' ||
+                  props.menuStatus == '4'
                 }>
                 编辑固定菜单
               </Button>
