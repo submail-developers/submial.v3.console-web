@@ -40,7 +40,9 @@ request.interceptors.response.use(
         duration: 3,
         onClose: () => {
           if (res.data.message == 'session timeout') {
-            window.location.href = `/login?redirct='+encodeURI(${window.location.href})`
+            window.location.href = `/login?redirct='${encodeURIComponent(
+              window.location.href,
+            )}`
           }
         },
       })
