@@ -228,7 +228,7 @@ export default function CreateSend() {
       if (res.status == 'success') {
         message.success('创建成功', 3, () => {
           setConfirmLoading(false)
-          nav('/console/rcs/send/0?clear=1', { replace: true })
+          nav('/console/rcs/batchreport/index')
         })
       }
     } catch (error) {

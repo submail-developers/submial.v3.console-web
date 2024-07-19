@@ -33,6 +33,7 @@ export default function Fn(props: Props) {
         let _list = res?.list.filter((item) => item.sign == props.sign)
         if (_list.length == 1) {
           let _item = JSON.parse(JSON.stringify(_list[0]))
+          _item.rejectReason = ''
           if (_item.message.message.generalPurposeCard) {
             let content = _item.message.message.generalPurposeCard.content
             content.title = replaceVars(content.title, params)

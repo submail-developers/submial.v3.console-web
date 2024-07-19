@@ -45,7 +45,7 @@ export default function Fn({ sendlist }: Props) {
           {sendlist ? (
             <>
               {sendlist?.shortMessageSupported == 'true'
-                ? sendlist?.smsBodyText
+                ? sendlist?.smsBodyText || '-'
                 : '未配置'}
             </>
           ) : (

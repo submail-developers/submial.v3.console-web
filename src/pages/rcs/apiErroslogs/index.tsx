@@ -128,14 +128,8 @@ export default function Fn() {
     },
     {
       title: '详情',
-      render: (_, record) => (
-        <div
-          className='g-ellipsis-2 p-r-24'
-          style={{ width: '240px' }}
-          title={record.msg}>
-          {record.msg}
-        </div>
-      ),
+      width: 260,
+      dataIndex: 'msg',
     },
   ]
 
@@ -161,8 +155,8 @@ export default function Fn() {
             <Select
               placeholder='全部Chatbot'
               allowClear
-              popupMatchSelectWidth={120}
-              style={{ width: 120 }}
+              popupMatchSelectWidth={140}
+              style={{ width: 140 }}
               options={chatBotList}
               fieldNames={{ label: 'name', value: 'id' }}></Select>
           </Form.Item>
