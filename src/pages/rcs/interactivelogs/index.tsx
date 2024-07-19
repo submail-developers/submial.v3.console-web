@@ -30,7 +30,12 @@ import { settingRcs } from '@/store/reducers/settingRcs'
 import dayjs from 'dayjs'
 import { downloadFile } from '@/utils'
 import { getPresets } from '@/utils/day'
-import { exportItems, searchType, EnumSearchTypeTxt } from './type'
+import {
+  exportItems,
+  searchType,
+  EnumSearchTypeTxt,
+  EnumSearchTypeColor,
+} from './type'
 
 import faceImg from '@/assets/rcs/face/interactivelogs.png'
 
@@ -148,7 +153,7 @@ export default function Fn() {
       className: size == 'small' ? 'paddingL20' : 'paddingL30',
       render: (_, record) => (
         <div className='p-r-16 fx-y-center' style={{ minHeight: 40 }}>
-          {record.destinationAddress}
+          {record.senderAddress}
         </div>
       ),
     },
@@ -164,8 +169,8 @@ export default function Fn() {
         <div style={{ position: 'relative' }}>
           {record.template_id ? (
             <>
-              【record.template_id】
-              <ACopy text={record.template_id}></ACopy>
+              【{record.template_id}】
+              <ACopy text={record.template_id} title='点击复制模版ID'></ACopy>
             </>
           ) : (
             <>
@@ -182,7 +187,9 @@ export default function Fn() {
       title: '触发规则',
       width: 120,
       render: (_, record) => (
-        <div className='w-100' style={{ position: 'relative' }}>
+        <div
+          className={`w-100 ${EnumSearchTypeColor[record.match_type]}`}
+          style={{ position: 'relative' }}>
           {EnumSearchTypeTxt[record.match_type]}
         </div>
       ),
@@ -196,13 +203,14 @@ export default function Fn() {
       title: '回复内容',
       width: 180,
       className: 'paddingR20',
-      render: (_, record) => (
-        <Tooltip placement='bottom' title={record.bodyText}>
-          <div style={{ width: 160 }} className='g-ellipsis-2'>
-            {record.bodyText}
-          </div>
-        </Tooltip>
-      ),
+      dataIndex: 'bodyText',
+      // render: (_, record) => (
+      //   <Tooltip placement='bottom' title={record.bodyText}>
+      //     <div style={{ width: 160 }} className='g-ellipsis-2'>
+      //       {record.bodyText}
+      //     </div>
+      //   </Tooltip>
+      // ),
     },
     {
       title: '下行模版',

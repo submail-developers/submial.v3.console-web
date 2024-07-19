@@ -29,20 +29,19 @@ export const searchType = [
   { label: '全部', value: 'all' },
   { label: '上行回复', value: '0' },
   { label: '固定菜单按钮', value: '1' },
-  { label: '纯文字消息', value: '2' },
-  { label: '模版/悬浮按钮', value: '3' },
+  { label: '模版/悬浮按钮', value: '2' },
+  { label: '纯文字消息', value: '3' },
 ]
-
 export enum EnumSearchTypeTxt {
   '上行回复',
   '固定菜单按钮',
-  '纯文字消息',
   '模版/悬浮按钮',
+  '纯文字消息',
 }
 
 export enum EnumSearchTypeColor {
-  'gray-color',
-  'color',
-  'text-color',
-  'error-color',
+  'match_type_color_0',
+  'match_type_color_1',
+  'match_type_color_2',
+  'match_type_color_3',
 }
