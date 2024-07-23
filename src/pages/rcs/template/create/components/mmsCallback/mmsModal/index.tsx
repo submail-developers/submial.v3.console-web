@@ -135,7 +135,7 @@ const Title = (props: TitleProps) => {
   )
 }
 
-const pageSize = 6
+const pageSize = 30
 
 export default function UploadModal(props: Props) {
   const point = usePoint('sm')
@@ -167,13 +167,11 @@ export default function UploadModal(props: Props) {
         keyword: keywordRef.current,
       })
       setTemplatesList(res.templates)
-      // console.log(res)
       setTotal(res.rows)
       let list = res.templates.map((item, index) => {
         item.message = JSON.parse(item.message)
         return item
       })
-      // console.log(list)
       setMessageList(list)
 
       setLoading(false)
