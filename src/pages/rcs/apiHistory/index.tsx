@@ -83,6 +83,10 @@ const items = [
 
 const sendOptions = [
   {
+    value: 'all',
+    label: '全部状态',
+  },
+  {
     value: 'delivered',
     label: '发送成功',
   },

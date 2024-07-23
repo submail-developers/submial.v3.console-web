@@ -1145,17 +1145,27 @@ declare module 'apis' {
     }
     // 获取批量任务发送报告返回值
     interface GetSendlistsItems {
-      account: string
-      api: string
-      appid: string
-      code: string
-      datetime: string
-      error_key: string
-      message: string
       id: string
-      ip: string
-      msg: string
-      product: string
+      title: string
+      account: string
+      appid: string
+      project: string
+      address: string
+      type: string
+      timetosend: boolean
+      send: string
+      sent: string
+      status: '0' | '1' | '9'
+      ip_address: string
+      shortMessageSupported: 'true' | 'false'
+      smsBodyText: string
+      multimediaMessageSupported: 'true' | 'false'
+      mmsSubject: string
+      mmsContentLength: string
+      mmsBodyText: string
+      addressbook: string
+      addressfile_oss_path: string
+      chatbot_name: string
     }
     interface GetSendlistsRes {
       rows: number

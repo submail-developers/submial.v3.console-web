@@ -27,13 +27,13 @@ export const exportItems: MenuProps['items'] = [
 
 export const searchType = [
   { label: '全部', value: 'all' },
-  { label: '上行回复', value: '0' },
+  { label: '未匹配', value: '0' },
   { label: '固定菜单按钮', value: '1' },
   { label: '模版/悬浮按钮', value: '2' },
   { label: '纯文字消息', value: '3' },
 ]
 export enum EnumSearchTypeTxt {
-  '上行回复',
+  '未匹配',
   '固定菜单按钮',
   '模版/悬浮按钮',
   '纯文字消息',

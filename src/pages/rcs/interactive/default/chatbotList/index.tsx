@@ -29,9 +29,6 @@ function Fn(props, ref: any) {
   const dispatch = useStateDispatch()
   const nav = useNavigate()
   const { id, type } = useParams()
-  const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(20)
-  const [total, setTotal] = useState(0)
   const [list, setList] = useState<API.ChatbotItem[]>([]) // chatbot列表
   const [loading, setLoading] = useState(false)
   const keywordsRef = useRef('')

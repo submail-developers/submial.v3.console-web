@@ -27,10 +27,9 @@ import SendDetail from './components/sendDetail'
 import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
 import CountUp from 'react-countup'
-import { usePoint } from '@/hooks'
+import { usePoint, useLocalStorage } from '@/hooks'
 import { useAppDispatch } from '@/store/hook'
 import { initSetting } from '@/store/reducers/settingRcs'
-import { useLocalStorage } from '@/hooks'
 
 import {
   getRcsOverview,
@@ -154,7 +153,7 @@ export default function Fn() {
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
   const [echartsLoading, setEchartsLoading] = useState(false)
-  const [time, setTime] = useState<[Dayjs, Dayjs]>(rangePresets[1].value)
+  const [time, setTime] = useState<[Dayjs, Dayjs]>(rangePresets[3].value)
   const [data, setData] = useState<API.GetRcsOverviewRes>()
   const [echartsData, setEchartsData] = useState<API.RcsAnalysis>()
   const [showUseTour, setShowUseTour] = useLocalStorage('useTour', false)
@@ -355,7 +354,7 @@ export default function Fn() {
             children={
               <div style={{ width: 240 }}>
                 <Form
-                  initialValues={{ time: rangePresets[1].value }}
+                  initialValues={{ time: rangePresets[3].value }}
                   form={form}>
                   <Form.Item name='time' className='m-b-0'>
                     <RangePicker

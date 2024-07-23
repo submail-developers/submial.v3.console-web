@@ -16,6 +16,7 @@ import {
 } from 'antd'
 import type { GetProps } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
+import type { ColumnsType } from 'antd/es/table'
 import dayjs from 'dayjs'
 import { useAppSelector } from '@/store/hook'
 import { settingRcs } from '@/store/reducers/settingRcs'
@@ -32,6 +33,7 @@ import { API } from 'apis'
 import faceImg from '@/assets/rcs/face/batchreport.png'
 
 import './index.scss'
+interface DataType extends API.GetSendlistsItems {}
 
 const { RangePicker } = DatePicker
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>
@@ -210,7 +212,7 @@ export default function Fn() {
     getList()
   }, [limit, page])
 
-  const columns = [
+  const columns:ColumnsType<DataType> = [
     {
       title: '任务名称',
       dataIndex: 'title',
