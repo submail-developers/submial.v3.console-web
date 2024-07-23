@@ -105,6 +105,7 @@ export default function CreateSend() {
   const [showChatbotMenu, setShowChatbotMenu] = useState(true) // 固定菜单列表-显示与隐藏
   const [entries, setentries] = useState<API.EntriesItem[]>([]) // 固定菜单列表
   const [varsKeys, setVarsKeys] = useState<string[]>([]) // 模版的参数
+  const [cbDisabled, setcbDisabled] = useState(false) // 是否可回落
 
   const [sendNum, setSendNum] = useState(0) // 发送数量
   const [openConfirm, setOpenConfirm] = useState(false) // 显示数量弹框
@@ -194,7 +195,7 @@ export default function CreateSend() {
   const verifySuccess = async () => {
     try {
       const value1 = await form1.getFieldsValue()
-      const { mms, sms, isTimetosend, time, timetosend_date } =
+      const { cb, isTimetosend, time, timetosend_date } =
         await form2.getFieldsValue()
       const {
         address_data,
@@ -207,8 +208,8 @@ export default function CreateSend() {
         address_data,
         addressmod,
         template_id: sign,
-        mms: mms,
-        sms: sms,
+        mms: cb.includes('mms') ? 'true' : 'false',
+        sms: cb.includes('sms') ? 'true' : 'false',
         isTimetosend: isTimetosend.toString(),
         addressfile_oss_path,
       }
@@ -266,45 +267,59 @@ export default function CreateSend() {
             message.error('该模版审核失败，请重新选择模版')
             nav('/console/rcs/send/0', { replace: true })
           } else {
-            setTempInfo(res.list[0])
+            let info = res.list[0]
+            setTempInfo(info)
+            let cbValues = []
+            if (info.sms == 'true') {
+              cbValues.push('sms')
+            }
+            if (info.mms == 'true') {
+              cbValues.push('mms')
+            }
+            if (cbValues.length == 0) {
+              setcbDisabled(true)
+            }
+            form2.setFieldsValue({
+              cb: cbValues,
+              back: cbValues.length != 0,
+            })
+            setType(res.list[0].type)
+            let _keys: string[] = []
+            // 获取回落短信的参数
+            switch (info.type) {
+              case 1:
+                // 获取纯文本中的参数
+                _keys = [..._keys, ...getVars(info.message.message)]
+                break
+              case 2:
+                // 获取单卡片中的参数
+                _keys = [
+                  ..._keys,
+                  ...getVars(
+                    info.message.message?.generalPurposeCard?.content?.title ||
+                      '',
+                  ),
+                  ...getVars(
+                    info.message.message?.generalPurposeCard?.content
+                      ?.description || '',
+                  ),
+                ]
+                break
+              case 3:
+                info.message.message?.generalPurposeCardCarousel?.content?.forEach(
+                  (item) => {
+                    _keys = [
+                      ..._keys,
+                      ...getVars(item?.title || ''),
+                      ...getVars(item?.description || ''),
+                    ]
+                  },
+                )
+                break
+            }
+            _keys = [..._keys, ...getVars(info?.smsContent || '')]
+            setVarsKeys(_keys)
           }
-          setType(res.list[0].type)
-          let info = res.list[0]
-          let _keys: string[] = []
-          // 获取回落短信的参数
-          switch (info.type) {
-            case 1:
-              // 获取纯文本中的参数
-              _keys = [..._keys, ...getVars(info.message.message)]
-              break
-            case 2:
-              // 获取单卡片中的参数
-              _keys = [
-                ..._keys,
-                ...getVars(
-                  info.message.message?.generalPurposeCard?.content?.title ||
-                    '',
-                ),
-                ...getVars(
-                  info.message.message?.generalPurposeCard?.content
-                    ?.description || '',
-                ),
-              ]
-              break
-            case 3:
-              info.message.message?.generalPurposeCardCarousel?.content?.forEach(
-                (item) => {
-                  _keys = [
-                    ..._keys,
-                    ...getVars(item?.title || ''),
-                    ...getVars(item?.description || ''),
-                  ]
-                },
-              )
-              break
-          }
-          _keys = [..._keys, ...getVars(info?.smsContent || '')]
-          setVarsKeys(_keys)
         } else {
           message.error('未查询到模版，请重新选择模版')
           nav('/console/rcs/send/0', { replace: true })
@@ -318,9 +333,17 @@ export default function CreateSend() {
 
   // 是否开启回落
   const changeBack = (val) => {
+    let cbValues = []
+    if (val) {
+      if (tempInfo.sms == 'true') {
+        cbValues.push('sms')
+      }
+      if (tempInfo.mms == 'true') {
+        cbValues.push('mms')
+      }
+    }
     form2.setFieldsValue({
-      mms: val ? 'true' : 'false',
-      sms: val ? 'true' : 'false',
+      cb: cbValues,
     })
   }
 
@@ -576,40 +599,29 @@ export default function CreateSend() {
                         label=''
                         name='back'
                         className='m-b-0'
-                        valuePropName='checked'
-                        initialValue={true}>
-                        <Switch size='small' onChange={changeBack} />
+                        valuePropName='checked'>
+                        <Switch
+                          size='small'
+                          onChange={changeBack}
+                          disabled={cbDisabled}
+                        />
                       </Form.Item>
                       <span>短信回落</span>
                     </Space>
                   </Col>
                   <Col span={24}>
-                    <ProFormDependency name={['back']}>
-                      {({ back }) => {
-                        return (
-                          <Space>
-                            <Form.Item
-                              label=''
-                              name='sms'
-                              className='m-b-0'
-                              initialValue={'true'}>
-                              <Checkbox checked={back} disabled>
-                                回落短信
-                              </Checkbox>
-                            </Form.Item>
-                            <Form.Item
-                              label=''
-                              name='mms'
-                              className='m-b-0'
-                              initialValue={'true'}>
-                              <Checkbox checked={back} disabled>
-                                回落彩信
-                              </Checkbox>
-                            </Form.Item>
-                          </Space>
-                        )
-                      }}
-                    </ProFormDependency>
+                    <Space>
+                      <Form.Item label='' name='cb' className='m-b-0'>
+                        <Checkbox.Group>
+                          <Checkbox value='sms' disabled={true}>
+                            回落短信
+                          </Checkbox>
+                          <Checkbox value='mms' disabled={true}>
+                            回落彩信
+                          </Checkbox>
+                        </Checkbox.Group>
+                      </Form.Item>
+                    </Space>
                   </Col>
                   <Col span={24}>
                     <Space className='m-b-12'>
