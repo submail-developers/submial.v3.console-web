@@ -31,7 +31,8 @@ export default function Fn(props: Props) {
         min={0}
         chineseLen={2}
         label={'短信消息回落'}
-        showInsertParams
+        // 回落暂不支持变量
+        showInsertParams={false}
         active
         style={{
           height: 120,
