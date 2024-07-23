@@ -51,9 +51,9 @@ export const getPhoneLineBreak = (text: string): string => {
   return text.replace(/，|,/g, '\n')
 }
 
-// 获取字符串中@var{value}中的value
+// 获取字符串中@var(value)中的value
 export const getVars = (str: string): string[] => {
-  const regex = /@var\{([^}]+)\}/g
+  const regex = /@var\((\w+)\)/g
   let match
   const values = []
   while ((match = regex.exec(str)) !== null) {

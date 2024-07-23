@@ -72,12 +72,26 @@ const InsetParam = ({ onInsert, onOpen }) => {
   const insert = () => {
     onInsert(value)
   }
+  // 只允许输入字母、数字或下划线
+  const handleChange = (e) => {
+    const newValue = e.target.value
+
+    // 正则表达式匹配只包含字母、数字或下划线的字符
+    const regex = /^[\w]*$/
+
+    // 如果输入值符合正则表达式，则更新状态
+    if (regex.test(newValue)) {
+      setValue(newValue)
+    }
+  }
 
   const param = (
     <Input
       type='text'
+      placeholder='请输入字母、数字或下划线'
       value={value}
-      onChange={(e) => setValue(e.target.value)}
+      style={{ width: 200 }}
+      onChange={handleChange}
     />
   )
 
@@ -177,7 +191,7 @@ export default function RcsInput(props: Props) {
       return
     }
     // 插入参数的node节点
-    let inputNode = `@var{${value}}`
+    let inputNode = `@var(${value})`
     copyHtml.current = `${copyHtml.current.substring(
       0,
       selectionStart.current,

@@ -63,17 +63,13 @@ export default function Fn(props: Props) {
     }
   }
   const replaceVars = (inputString, params) => {
-    // 定义正则表达式匹配@var{}格式的内容
-    const regex = /@var{(\w+)}/g
+    // 定义正则表达式匹配@var()格式的内容
+    const regex = /@var\((\w+)\)/g
 
     // 使用replace方法进行替换
     const replacedString = inputString.replace(regex, (match, varName) => {
       // 根据varName从params对象中取出对应的值
-      if (params[varName]) {
-        return params[varName]
-      } else {
-        return match // 如果params中找不到对应的值，则保持原样
-      }
+      return params.hasOwnProperty(varName) ? params[varName] : match
     })
 
     return replacedString
