@@ -19,6 +19,14 @@ const validateBackslash = (_, value) => {
   return Promise.resolve()
 }
 
+// 禁止输入空格
+const validateNoSpace = (_, value) => {
+  if (value.match(/\s/g) !== null) {
+    return Promise.reject(new Error('不可包含空格'))
+  }
+  return Promise.resolve()
+}
+
 const phoneReg = /^1[3456789]\d{9}$/
 const validateMobile = (_, value) => {
   if (value) {
@@ -120,6 +128,7 @@ export default {
   validateEmoji,
   validateDoubleQuotation,
   validateBackslash,
+  validateNoSpace,
   validateMobile,
   validateMobiles,
   validateNoChinese,

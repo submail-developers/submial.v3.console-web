@@ -166,6 +166,11 @@ export default function Fn() {
     setBgSrc('')
   }
 
+  const changeName = (e) => {
+    let value = e.target.value
+    form.setFieldValue('autograph', value)
+  }
+
   // 颜色
   const handleColorChange = (value) => {
     let color = value.toHexString()
@@ -344,12 +349,12 @@ export default function Fn() {
           <Row style={{ marginTop: '16px' }} gutter={24}>
             <Col span={24} xl={12}>
               <Form.Item
-                label='Chatbot 名称'
+                label='Chatbot 名称(该名称会被用做【签名】使用，请谨慎填写)'
                 required
                 name='name'
                 rules={[
-                  { required: true },
-                  { max: 20 },
+                  { required: true, message: '请输入' },
+                  { max: 20, message: '最多20个字符' },
                   {
                     validator: utils.validateEmoji,
                   },
@@ -359,10 +364,14 @@ export default function Fn() {
                   {
                     validator: utils.validateBackslash,
                   },
+                  {
+                    validator: utils.validateNoSpace,
+                  },
                 ]}>
                 <Input
                   placeholder='不可携带英文双引号、\、emoji，不超过20个字符'
                   max={20}
+                  onChange={changeName}
                 />
               </Form.Item>
             </Col>
@@ -420,7 +429,7 @@ export default function Fn() {
                 name='autograph'
                 required
                 rules={[{ max: 20 }]}>
-                <Input placeholder='不超过 20 个字符' />
+                <Input placeholder='' disabled />
               </Form.Item>
             </Col>
 
