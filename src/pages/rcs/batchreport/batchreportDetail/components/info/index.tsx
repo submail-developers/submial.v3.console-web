@@ -1,10 +1,13 @@
-import { Descriptions } from 'antd'
+import { Descriptions, Flex, Popconfirm, Button, Space } from 'antd'
+import { NavLink } from 'react-router-dom'
 import ACopy from '@/components/aCopy'
 import type { DescriptionsProps } from 'antd'
 import { API } from 'apis'
+import { cancelRcsTask } from '@/api'
 
 type Props = {
   sendlist?: API.GetSendlistReportResInfo
+  onRefresh: () => void // 撤销任务刷新状态
 }
 enum SendStatusEnum {
   '尚未开始' = 0,
@@ -16,7 +19,16 @@ enum SendStatusColorEnum {
   'success-color' = 1,
   'error-color' = 9,
 }
-export default function Fn({ sendlist }: Props) {
+export default function Fn({ sendlist, onRefresh }: Props) {
+  // 撤销任务
+  const cancelTask = async (id) => {
+    try {
+      const res = await cancelRcsTask({ id })
+      if (res.status == 'success') {
+        onRefresh()
+      }
+    } catch (error) {}
+  }
   const items: DescriptionsProps['items'] = [
     {
       label: '任务名称',
@@ -25,14 +37,61 @@ export default function Fn({ sendlist }: Props) {
     {
       label: '任务状态',
       children: (
-        <span className={SendStatusColorEnum[sendlist?.status]}>
-          {sendlist?.status ? SendStatusEnum[sendlist?.status] : '-'}
-        </span>
+        <Flex justify='space-between' align='center'>
+          <span className={SendStatusColorEnum[sendlist?.status]}>
+            {SendStatusEnum[sendlist?.status]}
+            {sendlist?.type == '2' && (
+              <span className='gray-color-sub'>
+                (定时时间：{sendlist?.timetosend})
+              </span>
+            )}
+          </span>
+
+          {sendlist?.type == '2' && sendlist?.status == '0' && (
+            <Popconfirm
+              placement='bottom'
+              title='警告'
+              description='确定撤销该任务吗？'
+              onConfirm={() => cancelTask(sendlist?.id)}
+              okText='确定'
+              cancelText='取消'>
+              <Button type='link' style={{ paddingLeft: 0 }}>
+                撤销
+              </Button>
+            </Popconfirm>
+          )}
+        </Flex>
       ),
     },
     {
-      label: 'Chatbot名称',
-      children: sendlist?.chatbot_name || '-',
+      label: 'Chatbot名称(ID)',
+      children: (
+        <Space size={0} align='center' wrap style={{ width: 180 }}>
+          <div style={{ position: 'relative' }}>
+            {sendlist?.chatbot_name ? (
+              <>
+                <ACopy
+                  text={sendlist?.chatbot_name}
+                  title='点击复制Chatbot名称'
+                />
+                {sendlist?.chatbot_name}
+              </>
+            ) : (
+              '-'
+            )}
+          </div>
+          {sendlist?.appid ? (
+            <NavLink
+              target='__blank'
+              to={`/console/rcs/chatbot/detail/${sendlist?.appid}`}
+              className='gray-color-sub g-pointer'>
+              ({sendlist?.appid})
+            </NavLink>
+          ) : (
+            ''
+          )}
+        </Space>
+      ),
     },
     {
       label: '联系人',
@@ -44,9 +103,11 @@ export default function Fn({ sendlist }: Props) {
         <span>
           {sendlist ? (
             <>
-              {sendlist?.shortMessageSupported == 'true'
-                ? sendlist?.smsBodyText || '-'
-                : '未配置'}
+              {sendlist?.shortMessageSupported == 'true' ? (
+                sendlist?.smsBodyText || '-'
+              ) : (
+                <span className='warning-color'>未配置</span>
+              )}
             </>
           ) : (
             '-'
@@ -75,7 +136,7 @@ export default function Fn({ sendlist }: Props) {
                   )}
                 </>
               ) : (
-                '未配置'
+                <span className='warning-color'>未配置</span>
               )}
             </>
           ) : (

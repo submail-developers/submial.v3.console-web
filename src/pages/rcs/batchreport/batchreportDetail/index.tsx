@@ -90,7 +90,7 @@ export default function Fn() {
           <Col span={24}>
             <Flex gap={24} wrap='wrap'>
               <Template templateId={reportData?.sendlist?.template_id} />
-              <Info sendlist={reportData?.sendlist} />
+              <Info sendlist={reportData?.sendlist} onRefresh={updataInfo} />
             </Flex>
           </Col>
         ) : (
@@ -99,7 +99,7 @@ export default function Fn() {
               <Template templateId={reportData?.sendlist?.template_id} />
             </Col>
             <Col span={24}>
-              <Info sendlist={reportData?.sendlist} />
+              <Info sendlist={reportData?.sendlist} onRefresh={updataInfo} />
             </Col>
           </>
         )}

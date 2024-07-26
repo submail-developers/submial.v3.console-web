@@ -1,5 +1,5 @@
 import { useState, useImperativeHandle, forwardRef, useEffect } from 'react'
-import { Table, Divider } from 'antd'
+import { Table, Divider, Tooltip, Space } from 'antd'
 import { API } from 'apis'
 import { getSendlistLogs } from '@/api'
 import ACopy from '@/components/aCopy'
@@ -78,28 +78,22 @@ function Fn(props: Props, ref) {
       width: 140,
       className: 'paddingL20',
       render: (_, record) => (
-        <div style={{ height: 40 }} className='fx-y-center'>
-          {record.to}
-        </div>
-      ),
-    },
-    {
-      title: '号码详情',
-      width: 200,
-      render: (_, record) => (
-        <div>
-          {record.mobileType}/{record.mobileArea}
-        </div>
-      ),
-    },
-    {
-      title: '模板ID',
-      dataIndex: 'sign',
-      width: 100,
-      render: (_, record) => (
-        <div className='w-100' style={{ position: 'relative' }}>
-          <ACopy text={record.sign} />【{record.sign}】
-        </div>
+        <Space style={{ height: 40 }} className='fx-y-center'>
+          <span>{record.to}</span>
+          <Tooltip
+            title={
+              <>
+                {record.mobileType}
+                {record.mobileArea
+                  ? `/${record.mobileArea.split(' ').join(' ')}`
+                  : '-'}
+              </>
+            }
+            placement='bottom'
+            trigger={['hover', 'click']}>
+            <span className='icon iconfont icon-gps gray-color-sub'></span>
+          </Tooltip>
+        </Space>
       ),
     },
     {

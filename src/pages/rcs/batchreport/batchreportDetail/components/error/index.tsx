@@ -1,31 +1,50 @@
 import { Row, Col, Flex, Space } from 'antd'
 import ReactEcharts from 'echarts-for-react'
 import { API } from 'apis'
-import Big from 'big.js'
+import { getRandomRedColor } from '@/utils'
+// import Big from 'big.js'
 
 type Props = {
   dropreason: API.AnalysisDropreasonItem[]
 }
-const color = ['#FF4D4F', '#ffba00', '#fd7e14']
-const names = ['无法投递消息', '短信签名受限', '网关黑名单']
+const defalutColor = [
+  '#FF4D4F',
+  '#ffba00',
+  '#fd7e14',
+  '#921C14',
+  '#E87C7C',
+  '#FFE68E',
+  '#FF9F6A',
+]
 
 export default function Fn(props: Props) {
-  let data: (string | number)[] = ['0', '0', '0'] // 数量
-  let dataRate: (string | number)[] = ['0', '0', '0'] // 比例
+  let color = [...defalutColor] // 颜色
+  let data: (string | number)[] = [] // 数量
+  let dataRate: (string | number)[] = [] // 比例
   let total: number = 0 // 总数
+  let seriesData = []
   if (props.dropreason.length > 0) {
-    props.dropreason.forEach((item, index) => {
-      data[index] = item.cnt
+    props.dropreason.forEach((item) => {
       total += Number(item.cnt)
     })
+    props.dropreason.forEach((item, index) => {
+      seriesData.push({
+        name: item.reason,
+        value: item.cnt,
+      })
+      data.push(item.cnt)
+      if (total > 0) {
+        dataRate[index] = ((Number(data[index]) / total) * 100).toFixed(2)
+      }
+    })
   }
-  if (total != 0) {
-    dataRate[0] = ((Number(data[0]) / total) * 100).toFixed(2)
-    dataRate[1] = ((Number(data[1]) / total) * 100).toFixed(2)
-    let _total = new Big(100)
-    dataRate[2] = _total.minus(dataRate[0]).minus(dataRate[1]).toFixed(2)
+  if (props.dropreason.length > defalutColor.length) {
+    props.dropreason.forEach((item, index) => {
+      if (index > defalutColor.length - 1) {
+        color.push(getRandomRedColor())
+      }
+    })
   }
-
   const option = {
     color: color,
     tooltip: {
@@ -52,17 +71,7 @@ export default function Fn(props: Props) {
           show: false,
         },
 
-        data: [
-          {
-            name: props.dropreason[0]?.reason || names[0],
-            value: data[0],
-          },
-          {
-            name: props.dropreason[1]?.reason || names[1],
-            value: data[1],
-          },
-          { name: props.dropreason[2]?.reason || names[2], value: data[2] },
-        ],
+        data: seriesData,
       },
     ],
   }
@@ -91,7 +100,7 @@ export default function Fn(props: Props) {
                     width: 16,
                     height: 16,
                   }}></div>
-                <div>{props.dropreason[index]?.reason || names[index]}</div>
+                <div>{props.dropreason[index]?.reason}</div>
               </Space>
               <div>
                 {Number(item).toLocaleString()}

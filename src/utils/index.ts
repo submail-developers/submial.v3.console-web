@@ -78,3 +78,11 @@ export const downloadFile = () => {
   iframe.src =
     'https://www.mysubmail.com/console/api/services/download_export_file'
 }
+
+// 获取红色范围的颜色
+export const getRandomRedColor = () => {
+  const r = Math.floor(Math.random() * 256) // 红色通道的值范围
+  const g = Math.floor(Math.random() * 128) // 绿色通道值较小
+  const b = Math.floor(Math.random() * 128) // 蓝色通道值较小
+  return `rgb(${r}, ${g}, ${b})`
+}
