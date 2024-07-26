@@ -105,7 +105,8 @@ export default function Fn() {
         <Flex align='flex-end' gap={16}>
           <Form.Item name='type' label='模版类型'>
             <Select
-              placeholder='请选择'
+              allowClear
+              placeholder='全部'
               options={[
                 { value: 'all', label: '全部' },
                 { value: 1, label: '文本' },
@@ -113,8 +114,8 @@ export default function Fn() {
                 { value: 3, label: '多卡片' },
                 // { value: 4, label: '文件' },
               ]}
-              popupMatchSelectWidth={180}
-              style={{ width: 180 }}
+              popupMatchSelectWidth={120}
+              style={{ width: 120 }}
             />
           </Form.Item>
           <Form.Item name='keyword' label='模版名称/ID' style={{ width: 200 }}>

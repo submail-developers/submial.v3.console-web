@@ -446,7 +446,7 @@ export default function Fn() {
           suggestions: actions,
         },
         layout: {
-          cardOrientation: 'HORIZONTAL',
+          cardOrientation: 'VERTICAL',
           imageAlignment: 'LEFT',
           titleFontStyle: titleFontStyle,
           descriptionFontStyle: descriptionFontStyle,

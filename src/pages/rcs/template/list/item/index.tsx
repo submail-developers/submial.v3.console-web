@@ -62,7 +62,9 @@ export default function Fn({
   }
   return (
     <div className='rcs-temp-item'>
-      <Tooltip title={item.rejectReason || ''} placement='bottom'>
+      <Tooltip
+        title={(item.checked == '2' && item.rejectReason) || ''}
+        placement='bottom'>
         <div
           className={`temp-item-content ${onSelect ? 'openSelect' : ''}`}
           onClick={handleItem}>

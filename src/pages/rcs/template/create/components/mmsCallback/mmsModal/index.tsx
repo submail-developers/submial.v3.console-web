@@ -118,7 +118,7 @@ const Title = (props: TitleProps) => {
       <div>选择彩信模版</div>
       <Space>
         <Input
-          placeholder='模版标题/模版ID'
+          placeholder='彩信模版名称或ID'
           value={text}
           autoComplete='off'
           onChange={(e) => setText(e.target.value)}
