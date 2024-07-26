@@ -30,7 +30,7 @@ const Item = (props: ItemProps) => {
         width={60}
       />
       <div>{props.item.addressbook_name}</div>
-      <div>{props.item.address}个联系人</div>
+      <div className='gray-color'>{props.item.address}个联系人</div>
       <div className='check-btn fx-center-center'>
         <span className='icon iconfont icon-right fn8 fw-600 m-t-2 primary-color'></span>
       </div>

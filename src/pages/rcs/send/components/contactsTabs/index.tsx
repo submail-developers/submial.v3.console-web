@@ -154,7 +154,7 @@ function ContactsTabs(props: Props, ref: any) {
       {type == '4' && <MyArea ref={areaRef} />}
 
       {loading && (
-        <div className='p-y-40 fx-center-center'>
+        <div className='p-y-40 fx-center-center init-loading'>
           <Spin></Spin>
         </div>
       )}

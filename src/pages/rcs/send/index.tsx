@@ -239,6 +239,12 @@ export default function CreateSend() {
 
   // 提交审核
   const submit = () => {
+    if (sendNum > Number(rcsSetting?.settings.credits)) {
+            message.error('余额不足，无法创建发送任务')
+      setOpenConfirm(false)
+      return
+
+    }
     if (rcsSetting.settings.message_send_confirm == '1') {
       setOpenConfirm(false)
       verifyRef.current.open()
@@ -385,7 +391,7 @@ export default function CreateSend() {
               <div className='fn20 fw-500'>
                 {Number(rcsSetting?.settings.credits || 0).toLocaleString()}
               </div>
-              <div className='gray-color m-t-12'>5g模版</div>
+              <div className='gray-color m-t-12'>发送模版</div>
               <div
                 className='rcs-mobile small m-t-8'
                 style={{ marginBottom: 0 }}>
@@ -431,7 +437,9 @@ export default function CreateSend() {
                       value={tempInfo?.smsContent || ''}
                       disabled
                     />
-                    <div className='label m-b-8 m-t-16'>回落彩信</div>
+                    <div className='m-b-8 m-t-16' style={{ color: '#666d7a' }}>
+                      回落彩信
+                    </div>
                     <Input
                       value={`${
                         tempInfo.mmsSubject
@@ -723,7 +731,7 @@ export default function CreateSend() {
                                 }}>
                                 <Popconfirm
                                   title='此次发送任务'
-                                  description={`短信计费条数：${sendNum}`}
+                                  description={`发送计费条数：${sendNum.toLocaleString()}，5g消息余额${Number(rcsSetting?.settings.credits || 0).toLocaleString()}`}
                                   open={openConfirm}
                                   onConfirm={submit}
                                   onOpenChange={getSendNum}
