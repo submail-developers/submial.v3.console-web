@@ -110,7 +110,7 @@ export default function Fn() {
           onChange={(e) => setKeyword(e.target.value)}
           onSearch={handleSearch}
           allowClear
-          placeholder='chatbot名称/模版名称'
+          placeholder='Chatbot名称/模版名称'
         />
         <Table
           className='theme-cell reset-table'

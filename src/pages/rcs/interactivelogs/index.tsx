@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
-import { useSize, usePoint } from '@/hooks'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { usePoint } from '@/hooks'
+import { Outlet, useNavigate, NavLink } from 'react-router-dom'
 import {
   Flex,
   Table,
@@ -13,7 +13,6 @@ import {
   Input,
   App,
   Space,
-  Tooltip,
 } from 'antd'
 import type { GetProps } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
@@ -54,10 +53,9 @@ const disabledDate: RangePickerProps['disabledDate'] = (current) => {
   return currentDate.isAfter(today)
 }
 // 预设日期
-const rangePresets = getPresets([0, 1, 3, 7, 15])
+const rangePresets = getPresets([0, 1, 3, 7, 15, 30, 90])
 
 export default function Fn() {
-  const size = useSize()
   const pointXs = usePoint('xs')
   const nav = useNavigate()
   const { message } = App.useApp()
@@ -150,7 +148,7 @@ export default function Fn() {
       title: '手机号',
       fixed: true,
       width: 140,
-      className: size == 'small' ? 'paddingL20' : 'paddingL30',
+      className: 'paddingL20',
       render: (_, record) => (
         <div className='p-r-16 fx-y-center' style={{ minHeight: 40 }}>
           {record.senderAddress}
@@ -163,24 +161,43 @@ export default function Fn() {
       dataIndex: 'dateTime',
     },
     {
-      title: 'Chatbot/模版ID',
-      width: 160,
+      title: 'Chatbot名称(ID)',
+      width: 200,
       render: (_, record) => (
-        <div style={{ position: 'relative' }}>
-          {record.template_id ? (
+        <Space size={0} align='center' wrap style={{ width: 180 }}>
+          <div style={{ position: 'relative' }}>
+            <ACopy text={record.chatbot_name} title='点击复制Chatbot名称' />
+            {record.chatbot_name}
+          </div>
+          <NavLink
+            target='__blank'
+            to={`/console/rcs/chatbot/detail/${record.chatbot}`}
+            className='gray-color-sub g-pointer'>
+            ({record.chatbot})
+          </NavLink>
+        </Space>
+      ),
+    },
+    {
+      title: '模版',
+      width: 260,
+      render: (_, record) => (
+        <Space size={0} align='center'>
+          {record.template_sign ? (
             <>
-              【{record.template_id}】
-              <ACopy text={record.template_id} title='点击复制模版ID'></ACopy>
+              <div style={{ position: 'relative', minWidth: 80 }}>
+                <ACopy text={record.template_sign} />【{record.template_sign}】
+              </div>
+              <SeeModal sign={record.template_sign}>
+                <div className='g-ellipsis' style={{ maxWidth: 160 }}>
+                  {record.template_name}
+                </div>
+              </SeeModal>
             </>
           ) : (
-            <>
-              {record.chatbot_name}
-              <ACopy
-                text={record.template_id}
-                title='点击复制Chatbot ID'></ACopy>
-            </>
+            <span className='p-l-8'>-</span>
           )}
-        </div>
+        </Space>
       ),
     },
     {
@@ -204,29 +221,26 @@ export default function Fn() {
       width: 180,
       className: 'paddingR20',
       dataIndex: 'bodyText',
-      // render: (_, record) => (
-      //   <Tooltip placement='bottom' title={record.bodyText}>
-      //     <div style={{ width: 160 }} className='g-ellipsis-2'>
-      //       {record.bodyText}
-      //     </div>
-      //   </Tooltip>
-      // ),
     },
     {
       title: '下行模版',
-      width: 120,
+      width: 260,
       render: (_, record) => (
         <Space className='w-100' size={0}>
-          {record.sign ? (
+          {record.replyMessage_sign ? (
             <>
-              <div style={{ position: 'relative', minWidth: 78 }}>
-                【{record.sign}】
-                <ACopy text={record.sign} />
+              <div style={{ position: 'relative', minWidth: 80 }}>
+                <ACopy text={record.replyMessage_sign} />【
+                {record.replyMessage_sign}】
               </div>
-              <SeeModal sign={record.sign}></SeeModal>
+              <SeeModal sign={record.replyMessage_sign}>
+                <div className='g-ellipsis' style={{ maxWidth: 160 }}>
+                  {record.replyMessage_name}
+                </div>
+              </SeeModal>
             </>
           ) : (
-            '-'
+            <span className='p-l-8'>-</span>
           )}
         </Space>
       ),
@@ -234,7 +248,7 @@ export default function Fn() {
   ]
 
   return (
-    <PageContent extClass='interactivelogs' xxl={1300}>
+    <PageContent extClass='interactivelogs' xl={'100%'} xxl={'90%'}>
       <Image src={faceImg} preview={false} width={72}></Image>
       <Flex justify='space-between' align='center'>
         <div className='fn22 fw-500'>上行交互日志</div>
@@ -260,8 +274,8 @@ export default function Fn() {
           <Form.Item name='type' label='触发规则' className='m-b-0'>
             <Select
               placeholder='触发规则'
-              popupMatchSelectWidth={140}
-              style={{ width: 140 }}
+              popupMatchSelectWidth={200}
+              style={{ width: 200 }}
               suffixIcon={
                 <i className='icon iconfont icon-paixu color fn14'></i>
               }
@@ -278,10 +292,10 @@ export default function Fn() {
             label='手机号'
             name='mobile'
             style={{ marginBottom: '0px' }}>
-            <Input placeholder='请输入手机号' onPressEnter={search} />
+            <Input placeholder='请输入' onPressEnter={search} />
           </Form.Item>
           <Form.Item
-            label='Chatbot/模版ID'
+            label='Chatbot/模版'
             name='keyword'
             style={{ marginBottom: '0px' }}>
             <Input placeholder='请输入' onPressEnter={search} />
@@ -314,7 +328,7 @@ export default function Fn() {
             showTotal: (total) => `共 ${total} 条`,
             onChange: changePageInfo,
           }}
-          scroll={{ x: 'max-content' }}
+          scroll={{ x: 'fit-content' }}
         />
       </Form>
       <Outlet />

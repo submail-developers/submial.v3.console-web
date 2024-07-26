@@ -14,3 +14,9 @@
     color: #86c207;
   }
 }
+
+@media screen and (min-width: 992px) {
+  .page-content.interactivelogs {
+    padding: 32px 24px 48px;
+  }
+}

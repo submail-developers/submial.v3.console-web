@@ -101,7 +101,7 @@ export const templateList: API.RcsTempListItem[] = [
             ],
           },
           layout: {
-            cardOrientation: 'HORIZONTAL',
+            cardOrientation: 'VERTICAL',
             imageAlignment: 'LEFT',
             titleFontStyle: 'bold',
             descriptionFontStyle: 'italics',
