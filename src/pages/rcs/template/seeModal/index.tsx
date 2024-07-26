@@ -1,18 +1,14 @@
-import { Modal, Row, Col, Empty, Spin, Flex, Button, Divider } from 'antd'
+import { Modal, Row, Col, Empty, Spin, Flex, Button, Input, Space } from 'antd'
 import { EyeOutlined } from '@ant-design/icons'
 import { useEffect, useState, ReactNode } from 'react'
 import { getRcsTempList } from '@/api'
 import Item from '@/pages/rcs/template/list/item'
 import { API } from 'apis'
+import './index.scss'
 type Props = {
   sign: string // 模版sign
+  message?: any // 含有参数值的message
   children?: ReactNode
-}
-
-const params = {
-  // params1: '123',
-  // params2: '321',
-  // params: '你好啊',
 }
 
 export default function Fn(props: Props) {
@@ -33,25 +29,39 @@ export default function Fn(props: Props) {
         let _list = res?.list.filter((item) => item.sign == props.sign)
         if (_list.length == 1) {
           let _item = JSON.parse(JSON.stringify(_list[0]))
-          _item.rejectReason = ''
+          // 传入的message中的title，description含有参数的值，将title，description设置为有参数值的数据
           if (_item.message.message.generalPurposeCard) {
             let content = _item.message.message.generalPurposeCard.content
-            content.title = replaceVars(content.title, params)
-            content.description = replaceVars(content.description, params)
+            if (props.message) {
+              content.title =
+                props.message.message.generalPurposeCard.content.title
+              content.description =
+                props.message.message.generalPurposeCard.content.description
+            }
             _item.message.message.generalPurposeCard.content = content
             setItem(_item)
           } else if (_item.message.message.generalPurposeCardCarousel) {
             let content =
               _item.message.message.generalPurposeCardCarousel.content
-            content = content.map((item) => {
-              item.title = replaceVars(item.title, params)
-              item.description = replaceVars(item.description, params)
+            content = content.map((item, index) => {
+              if (props.message) {
+                item.title =
+                  props.message.message.generalPurposeCardCarousel.content[
+                    index
+                  ].title
+                item.description =
+                  props.message.message.generalPurposeCardCarousel.content[
+                    index
+                  ].description
+              }
               return item
             })
             _item.message.message.generalPurposeCardCarousel.content = content
             setItem(_item)
           } else if (typeof _item.message.message == 'string') {
-            _item.message.message = replaceVars(_item.message.message, params)
+            if (props.message) {
+              _item.message.message = props.message.message
+            }
             setItem(_item)
           } else {
             setItem(_item)
@@ -62,18 +72,6 @@ export default function Fn(props: Props) {
       setLoading(false)
     }
   }
-  const replaceVars = (inputString, params) => {
-    // 定义正则表达式匹配@var()格式的内容
-    const regex = /@var\((\w+)\)/g
-
-    // 使用replace方法进行替换
-    const replacedString = inputString.replace(regex, (match, varName) => {
-      // 根据varName从params对象中取出对应的值
-      return params.hasOwnProperty(varName) ? params[varName] : match
-    })
-
-    return replacedString
-  }
 
   useEffect(() => {
     if (show) {
@@ -82,12 +80,24 @@ export default function Fn(props: Props) {
   }, [show])
   return (
     <>
-      <div
-        className='text-color g-pointer gray-color-sub'
-        onClick={() => setShow(true)}
-        title='查看模版详情'>
-        {props.children ? props.children : <EyeOutlined rev={null} />}
-      </div>
+      {props.children ? (
+        <Space
+          size={4}
+          align='center'
+          className='text-color g-pointer gray-color-sub see-modal-trigger'
+          onClick={() => setShow(true)}
+          title='查看模版详情'>
+          {props.children}
+          <EyeOutlined className='see-modal-eye' rev={null} />
+        </Space>
+      ) : (
+        <div
+          className='text-color g-pointer gray-color-sub'
+          onClick={() => setShow(true)}
+          title='查看模版详情'>
+          <EyeOutlined rev={null} />
+        </div>
+      )}
       <Modal
         closeIcon={null}
         footer={
@@ -98,12 +108,32 @@ export default function Fn(props: Props) {
         open={show}
         onCancel={() => setShow(false)}
         title='模版详情'
-        width={480}
-        destroyOnClose>
+        width={800}
+        destroyOnClose
+        wrapClassName='modal-see-temp'>
         {item && (
-          <div className='fx-center-center'>
+          <Flex wrap='wrap' gap={24}>
             <Item item={item} hiddenHandle />
-          </div>
+            <div style={{ flex: '1', minWidth: 200 }}>
+              <div className='m-b-8' style={{ color: '#666d7a' }}>
+                回落短信
+              </div>
+              <Input.TextArea
+                autoSize={{ minRows: 2, maxRows: 6 }}
+                value={item?.smsContent || ''}
+                disabled
+              />
+              <div className='m-b-8 m-t-16' style={{ color: '#666d7a' }}>
+                回落彩信
+              </div>
+              <Input
+                value={`${
+                  item.mmsSubject ? '【' + item?.mmsSubject + '】' : ''
+                }${item?.mmsTemplate || ''}`}
+                disabled
+              />
+            </div>
+          </Flex>
         )}
 
         {!item && !loading && (

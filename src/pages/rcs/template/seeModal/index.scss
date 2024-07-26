@@ -1,0 +1,16 @@
+.see-modal-trigger {
+  &:hover {
+    .see-modal-eye {
+      opacity: 1;
+    }
+  }
+  .see-modal-eye {
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+}
+.modal-see-temp {
+  .rcs-temp-item {
+    margin: 0;
+  }
+}
