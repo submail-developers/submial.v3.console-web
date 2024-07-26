@@ -13,6 +13,7 @@ import {
   Space,
 } from 'antd'
 import type { GetProps } from 'antd'
+import { usePoint } from '@/hooks'
 import AExport from '@/components/aExport'
 import { useAppSelector } from '@/store/hook'
 import { settingRcs } from '@/store/reducers/settingRcs'
@@ -21,7 +22,6 @@ import ACopy from '@/components/aCopy'
 import { getChatbot, getHistory, exportRcsHistory } from '@/api'
 import { API } from 'apis'
 import faceImg from '@/assets/rcs/face/history.png'
-import { usePoint } from '@/hooks'
 import dayjs from 'dayjs'
 import { getPresets } from '@/utils/day'
 import { downloadFile } from '@/utils'
@@ -41,6 +41,11 @@ enum statusStyle {
   'success-color',
   'error-color',
   'warning-color',
+}
+enum SendTypeEnum {
+  '5G消息',
+  '回落为短信',
+  '回落为彩信',
 }
 
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>
@@ -122,7 +127,12 @@ export default function Fn() {
         keywords: '',
         status: '1',
       })
-      setChatBotList(res.list)
+      setChatBotList(
+        res.list.map((item) => {
+          item.name = `${item.name}(${item.id})`
+          return item
+        }),
+      )
     } catch (error) {}
   }
 
@@ -143,7 +153,7 @@ export default function Fn() {
         status: formValues?.status || 'all',
         send_id: formValues.send_id,
         to: formValues.to,
-        content: formValues.content,
+        keyword: formValues.keyword,
       }
 
       const res = await getHistory(params)
@@ -158,11 +168,11 @@ export default function Fn() {
   // 导出
   const exportEvent = async (type) => {
     const {
-      appid = '',
+      appid = 'all',
       status,
       send_id,
       to,
-      sign,
+      keyword,
       time,
     } = await form.getFieldsValue()
     const start = time[0].format('YYYY-MM-DD')
@@ -175,7 +185,7 @@ export default function Fn() {
       status,
       send_id,
       to,
-      sign,
+      keyword,
     })
     if (res.status == 'success') {
       downloadFile()
@@ -194,7 +204,7 @@ export default function Fn() {
   // 除搜索关键字，其他字段改变直接搜索
   const onValuesChange = (changedValues, allValues) => {
     let changeKey = Object.keys(changedValues)[0]
-    if (!['send_id', 'to', 'sign'].includes(changeKey)) {
+    if (!['send_id', 'to', 'keyword'].includes(changeKey)) {
       if (page == 1) {
         getList()
       } else {
@@ -224,7 +234,7 @@ export default function Fn() {
     {
       title: '手机号',
       fixed: true,
-      width: 140,
+      width: 160,
       className: 'paddingL20',
       render: (_, record) => (
         <Space style={{ height: 40 }} className='fx-y-center'>
@@ -234,7 +244,7 @@ export default function Fn() {
               <>
                 {record.mobileType}
                 {record.mobileArea
-                  ? `/${record.mobileArea.split(' ').join('/')}`
+                  ? `/${record.mobileArea.split(' ').join(' ')}`
                   : '-'}
               </>
             }
@@ -246,14 +256,18 @@ export default function Fn() {
       ),
     },
     {
-      title: '模板ID',
-      width: 100,
+      title: '模板',
+      width: 260,
       render: (_, record) => (
-        <Space className='w-100'>
-          <div style={{ position: 'relative' }}>
+        <Space className='w-100' size={0}>
+          <div style={{ position: 'relative', minWidth: 80 }}>
             <ACopy text={record.sign} />【{record.sign}】
           </div>
-          <SeeModal sign={record.sign} />
+          <SeeModal message={record.message} sign={record.sign}>
+            <div className='g-ellipsis' style={{ maxWidth: 160 }}>
+              {record.template_name}
+            </div>
+          </SeeModal>
         </Space>
       ),
     },
@@ -270,22 +284,25 @@ export default function Fn() {
     {
       title: '送达状态',
       dataIndex: 'status',
-      width: 120,
+      width: 180,
       render: (_, record) => (
         <div className={statusStyle[record.status]}>
           {statusNum[record.status]}
+          {record.status == '1' && <> ({SendTypeEnum[record.sentType]})</>}
+          {record.status == '2' && <>({record.message_resp})</>}
         </div>
       ),
     },
     {
       title: '计费',
       width: 100,
+      className: 'paddingL20',
       render: (_, record) => <div>{record.status == '1' ? '1' : '0'}</div>,
     },
   ]
 
   return (
-    <PageContent extClass='api-history' xxl={1260}>
+    <PageContent extClass='api-history' xl={'100%'} xxl={'90%'}>
       <Image src={faceImg} preview={false} width={72}></Image>
       <Flex justify='space-between' align='center'>
         <div className='fn22 fw-500'>API历史明细</div>
@@ -312,8 +329,8 @@ export default function Fn() {
             <Select
               placeholder='全部Chatbot'
               allowClear
-              popupMatchSelectWidth={120}
-              style={{ width: 120 }}
+              popupMatchSelectWidth={200}
+              style={{ width: 200 }}
               options={chatBotList}
               fieldNames={{ label: 'name', value: 'id' }}></Select>
           </Form.Item>
@@ -332,12 +349,12 @@ export default function Fn() {
               disabledDate={disabledDate}></RangePicker>
           </Form.Item>
           <Form.Item label='SEND ID' name='send_id' className='m-b-0'>
-            <Input placeholder='请输入sendid' onPressEnter={search} />
+            <Input placeholder='请输入' onPressEnter={search} />
           </Form.Item>
           <Form.Item label='手机号码' name='to' className='m-b-0'>
-            <Input placeholder='请输入手机号码' onPressEnter={search} />
+            <Input placeholder='请输入' onPressEnter={search} />
           </Form.Item>
-          <Form.Item label='模版ID' name='sign' className='m-b-0'>
+          <Form.Item label='模版名称或ID' name='keyword' className='m-b-0'>
             <Input placeholder='请输入' onPressEnter={search} />
           </Form.Item>
           <Form.Item label='' className='m-b-0'>
