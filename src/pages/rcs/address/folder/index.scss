@@ -191,9 +191,6 @@
       flex-wrap: wrap;
       margin-bottom: 10px;
     }
-    .ant-form-item {
-      // margin-bottom: 10px;
-    }
     .set-item {
       width: 100%;
     }
@@ -212,6 +209,13 @@
       .batch-item2::before {
         width: 0;
       }
+    }
+
+    .handle-row {
+      padding-right: 12px;
+    }
+    .handle-text {
+      padding-right: 8px;
     }
   }
 }

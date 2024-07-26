@@ -3,16 +3,10 @@ import { useSearchParams } from 'react-router-dom'
 import { Modal, Form, App, Flex, Pagination, Button, Spin } from 'antd'
 import { getAddressbooksFolder } from '@/api'
 import './index.scss'
-import redImg from '@/assets/rcs/address/folder_red.png'
-import purpleImg from '@/assets/rcs/address/folder_purple.png'
-import cyanImg from '@/assets/rcs/address/folder_cyan.png'
-import blueImg from '@/assets/rcs/address/folder_blue.png'
-import greenImg from '@/assets/rcs/address/folder_green.png'
-import yellowImg from '@/assets/rcs/address/folder_yellow.png'
+import { getFolderPath } from '@/pages/rcs/address/type'
 
 import { moveAddressBook } from '@/api'
 interface Props {
-  FolderList: any[]
   ids: any
   oldFolderId: string
   singleId: string
@@ -20,16 +14,6 @@ interface Props {
   open: boolean
   onCancel: () => void
   onSearch: () => void
-}
-
-const addresssIcon = {
-  '0': blueImg,
-  '1': redImg,
-  '2': purpleImg,
-  '3': cyanImg,
-  '4': blueImg,
-  '5': greenImg,
-  '6': yellowImg,
 }
 
 const Dialog = (props: Props, ref: any) => {
@@ -159,7 +143,7 @@ const Dialog = (props: Props, ref: any) => {
         <div>
           <div className='now-address fx-between-center p-x-24 p-y-4 '>
             <div className='fx-start-center'>
-              <img src={addresssIcon[currentFilesTag]} alt='' />
+              <img src={getFolderPath(Number(currentFilesTag))} alt='' />
               <span className='fw-500'>{currentFilesTitle}</span>
             </div>
             <div></div>
@@ -181,7 +165,7 @@ const Dialog = (props: Props, ref: any) => {
                 key={item.id}
                 onClick={() => handelAddressList(item)}>
                 <div className='fx-start-center'>
-                  <img src={addresssIcon[item.tag]} alt='' />
+                  <img src={getFolderPath(Number(item.tag))} alt='' />
                   <span className='fw-500'>{item.title}</span>
                 </div>
                 <div>

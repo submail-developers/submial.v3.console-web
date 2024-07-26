@@ -31,8 +31,7 @@
         text-align: center;
         position: relative;
         &:nth-child(2):after,
-        &:nth-child(3):after,
-        &:nth-child(4):after {
+        &:nth-child(3):after {
           position: absolute;
           content: '';
           right: 0;
@@ -162,16 +161,10 @@
       margin-bottom: 10px;
     }
     .dea-set {
+      width: 100%;
       flex-wrap: wrap;
       margin-top: 10px;
-      justify-content: flex-start;
-      div {
-        padding: 0 !important;
-      }
-      label::after,
-      div:after {
-        width: 0 !important;
-      }
+      justify-content: flex-end;
     }
   }
 }

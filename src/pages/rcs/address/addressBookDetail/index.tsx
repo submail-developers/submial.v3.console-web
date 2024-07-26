@@ -9,7 +9,6 @@ import {
   Checkbox,
   message,
   Empty,
-  Dropdown,
   Image,
   Pagination,
   Flex,
@@ -27,11 +26,13 @@ import {
 import { useNavigate, useSearchParams, useParams } from 'react-router-dom'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { getAddressPath } from '../type'
-import './index.scss'
 import AExport from '@/components/aExport'
 import { useAppSelector } from '@/store/hook'
 import { settingRcs } from '@/store/reducers/settingRcs'
 import { downloadFile } from '@/utils'
+import './index.scss'
+
+const { Search } = Input
 
 const items: MenuProps['items'] = [
   { label: '导出 TXT', key: 'txt' },
@@ -59,23 +60,11 @@ export default function Fn() {
   const [checkAll, setCheckAll] = useState(false) //控制全选状态
   const CheckboxGroup = Checkbox.Group
 
-  const { Search } = Input
   const { id } = useParams()
 
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
   const name = searchParams.get('name')
-  const title = searchParams.get('title')
   const tag = searchParams.get('tag')
-
-  const oldTitle = searchParams.get('oldTitle')
-  const oldTag = searchParams.get('oldTag')
-  const folderId = searchParams.get('folderId')
-
-  // 导出
-  const exportconfirm = searchParams.get('exportconfirm')
-  const [isOpenModal, setIsOpenModal] = useState(false)
-  const [fileType, setFileType] = useState()
-  const [exportParams, setExportParams] = useState([])
 
   // 切换页码
   const onChangeCurrentPage = (page: number, pageSize: number) => {
@@ -85,6 +74,7 @@ export default function Fn() {
   // 获取地址簿详情
   const getAddressDetailList = async () => {
     try {
+      setLoading(true)
       const formValues = await form.getFieldsValue()
       const res = await getMobAddressbookDetail({
         id,
@@ -121,7 +111,6 @@ export default function Fn() {
 
   const handleCancel = () => {
     setOpenCreateModal(false)
-    setIsOpenModal(false)
   }
 
   const handleSearch = () => {
@@ -191,9 +180,6 @@ export default function Fn() {
     setIndeterminate(!checkedAll && hasChecked)
     setCheckAll(checkedAll)
   }, [addressDetailList, selectedList])
-  useEffect(() => {
-    setLoading(true)
-  }, [])
 
   // 单个checkbox点击
   const onChange = (checkedValues: string[]) => {
@@ -227,84 +213,98 @@ export default function Fn() {
       layout='vertical'
       initialValues={{ type: 'all', keyword: '' }}
       autoComplete='off'>
-      <Flex align='flex-end' justify='space-between'>
-        <Form.Item name='keyword' label='联系人手机号' className='m-b-0'>
-          <Search
-            placeholder='地址簿名称/ID'
-            allowClear
-            onSearch={handleSearch}
-          />
-        </Form.Item>
-        <Space>
-          <Button
-            type='primary'
-            className='fx-start-center '
-            htmlType='submit'
-            onClick={() => showModal(false)}>
-            <i className='icon iconfont icon-daorulianxiren'></i>
-            导入联系人
-          </Button>
-          <AExport
-            items={items}
-            onExportEvent={exportEvent}
-            useCode={rcsSetting?.settings?.export_confrim == '1'}
-          />
-        </Space>
-      </Flex>
+      <Row gutter={6}>
+        <Col span={24}>
+          <Row justify='space-between' align='bottom' gutter={[12, 12]}>
+            <Col span={24} lg={12} xl={8}>
+              <Form.Item name='keyword' label='搜索' className='m-b-0'>
+                <Search placeholder='手机号' onSearch={handleSearch} />
+              </Form.Item>
+            </Col>
+            <Col span={24} lg={12} xl={8} className='fx-x-end'>
+              <Space>
+                <Button
+                  type='primary'
+                  className='fx-start-center'
+                  onClick={() => showModal(false)}>
+                  <i className='icon iconfont icon-daorulianxiren'></i>
+                  导入联系人
+                </Button>
+                <AExport
+                  items={items}
+                  onExportEvent={exportEvent}
+                  useCode={rcsSetting?.settings?.export_confrim == '1'}
+                />
+              </Space>
+            </Col>
+          </Row>
+        </Col>
 
-      <Col span={24} className='set-item fx-start-center m-t-24'>
-        <div className='fx-start-center'>
-          <Image src={getAddressPath(Number(tag))} width={48} preview={false} />
-          <span className='fn16 m-l-16'>{title}</span>
-        </div>
-        <div className='dea-set fx-between-center'>
-          {total > 0 && (
-            <>
-              <Checkbox
-                indeterminate={indeterminate}
-                onChange={onCheckAllChange}
-                checked={checkAll}>
-                全选
-              </Checkbox>
-              <div onClick={batchDel}>
-                <span
-                  className={`batch-del-address g-pointer fx-center-center ${
-                    indeterminate || checkAll ? 'active' : ''
-                  }`}>
-                  <i className='icon iconfont icon-shanchu'></i>删除
-                </span>
-              </div>
-              <div className='clear-address'>
-                <Popconfirm
-                  placement='bottom'
-                  title='警告'
-                  description='确定清空地址簿吗？'
-                  onConfirm={deleteAllMob}
-                  okText='确定'
-                  cancelText='取消'>
-                  <div className='g-pointer fx-center-center'>
-                    <i className='icon iconfont icon-saozhou'></i>
-                    <span> 清空地址簿</span>
-                  </div>
-                </Popconfirm>
-              </div>
-            </>
-          )}
-          <div onClick={toBack} style={{ paddingRight: 0 }}>
-            <i className='icon iconfont icon-fanhui primary-color fn14'></i>
+        <Col span={24} className='set-item fx-start-center m-t-24'>
+          <div className='fx-start-center'>
+            <Image
+              src={getAddressPath(Number(tag))}
+              width={48}
+              preview={false}
+            />
+            <span className='fn16 m-l-16'>{name}</span>
           </div>
-        </div>
-      </Col>
+          <div className='dea-set fx-between-center'>
+            {total > 0 && (
+              <>
+                <Checkbox
+                  indeterminate={indeterminate}
+                  onChange={onCheckAllChange}
+                  checked={checkAll}>
+                  全选
+                </Checkbox>
+                <div onClick={batchDel}>
+                  <span
+                    className={`batch-del-address g-pointer fx-center-center ${
+                      indeterminate || checkAll ? 'active' : ''
+                    }`}>
+                    <i className='icon iconfont icon-shanchu'></i>删除
+                  </span>
+                </div>
+                <div className='clear-address'>
+                  <Popconfirm
+                    placement='bottom'
+                    title='警告'
+                    description='确定清空地址簿吗？'
+                    onConfirm={deleteAllMob}
+                    okText='确定'
+                    cancelText='取消'>
+                    <div className='g-pointer fx-center-center'>
+                      <i className='icon iconfont icon-saozhou'></i>
+                      <span> 清空地址簿</span>
+                    </div>
+                  </Popconfirm>
+                </div>
+              </>
+            )}
+            <div onClick={toBack} style={{ paddingRight: 0 }}>
+              <i className='icon iconfont icon-fanhui primary-color fn14'></i>
+            </div>
+          </div>
+        </Col>
+      </Row>
+
       <CheckboxGroup
-        style={{ width: '100%', marginTop: '20px' }}
+        style={{ width: '100%', marginTop: '20px', position: 'relative' }}
         value={selectedList}
         onChange={onChange}>
+        {loading && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 24,
+              left: '50%',
+              transform: 'translateX(-50%)',
+            }}>
+            <Spin />
+          </div>
+        )}
         <Row wrap gutter={8} style={{ width: '100%' }}>
-          {loading && (
-            <Col span={24} className='m-y-40 fx-center-center'>
-              <Spin />
-            </Col>
-          )}
           {addressDetailList.map((item) => (
             <Col key={item.id} span={12} lg={8} xl={6} xxl={4}>
               <div className='checkbox-item fx-between-center'>

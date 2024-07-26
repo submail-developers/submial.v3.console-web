@@ -1,34 +1,18 @@
-import { useState, useImperativeHandle, forwardRef, useEffect } from 'react'
+import { useState, forwardRef, useEffect } from 'react'
 import { Modal, Spin, App, Flex, Pagination, Button, Image } from 'antd'
 import { getAddressbooksFolder } from '@/api'
-import { API } from 'apis'
+
+import { getFolderPath } from '@/pages/rcs/address/type'
 import './index.scss'
-import redImg from '@/assets/rcs/address/folder_red.png'
-import purpleImg from '@/assets/rcs/address/folder_purple.png'
-import cyanImg from '@/assets/rcs/address/folder_cyan.png'
-import blueImg from '@/assets/rcs/address/folder_blue.png'
-import greenImg from '@/assets/rcs/address/folder_green.png'
-import yellowImg from '@/assets/rcs/address/folder_yellow.png'
 
 import { moveAddressBook } from '@/api'
 interface Props {
-  // FolderList: any[]
   ids: any
   singleId: string
   isSingle: boolean
   open: boolean
   onCancel: () => void
   onSearch: () => void
-}
-
-const addresssIcon = {
-  '0': blueImg,
-  '1': redImg,
-  '2': purpleImg,
-  '3': cyanImg,
-  '4': blueImg,
-  '5': greenImg,
-  '6': yellowImg,
 }
 
 const Dialog = (props: Props, ref: any) => {
@@ -105,7 +89,7 @@ const Dialog = (props: Props, ref: any) => {
     <Modal
       open={props.open}
       onCancel={props.onCancel}
-      title='移动地址簿'
+      title='移动地址簿至文件夹'
       width={600}
       data-class='move-address'
       closable={false}
@@ -141,7 +125,11 @@ const Dialog = (props: Props, ref: any) => {
             key={item.id}
             onClick={() => handelAddressList(item)}>
             <div className='fx-start-center'>
-              <Image width={36} preview={false} src={addresssIcon[item.tag]} />
+              <Image
+                width={36}
+                preview={false}
+                src={getFolderPath(Number(item.tag))}
+              />
               <span className='fw-500 m-l-12'>{item.title}</span>
             </div>
             <div style={{ marginLeft: '40px' }}>

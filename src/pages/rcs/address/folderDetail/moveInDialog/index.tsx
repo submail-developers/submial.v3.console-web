@@ -3,9 +3,9 @@ import { Modal, Form, App, Button, Input, Select, Transfer, Flex } from 'antd'
 import type { TransferProps } from 'antd'
 import { getMobAddressbooks, moveAddressBook } from '@/api'
 import { uniqBy } from 'lodash'
-import './index.scss'
 import { getAddressPath } from '../../type'
-const { Option } = Select
+import { TagsColorEnum, tags } from '@/pages/rcs/address/type'
+import './index.scss'
 
 interface Props {
   open: boolean
@@ -15,26 +15,13 @@ interface Props {
   folderId: string
   foldetAddressList: any[]
 }
-const options = [
-  { label: '全部标签', value: 'all', color: '#1764ff' },
-  { label: '默认标签', value: 'tag-blue', color: '#1764ff' },
-  { label: '红色标签', value: 'tag-red', color: '#ff4446' },
-  { label: '紫色标签', value: 'tag-purple', color: '#6f42c1' },
-  { label: '青色标签', value: 'tag-cyan', color: '#17a2b8' },
-  { label: '绿色标签', value: 'tag-green', color: '#17c13d' },
-  { label: '黄色标签', value: 'tag-yellow', color: '#ffba00' },
-]
 
 const Dialog = (props: Props, ref: any) => {
   const [form] = Form.useForm()
   const { message } = App.useApp()
   const [currentPage, setcurrentPage] = useState<number>(1)
-  const [pageSize, setpageSize] = useState<number>(9)
-  // const [total, setTotal] = useState<number>(0)
-  // const [loading, setLoading] = useState(false)
   const [moveLoading, setMoveLoading] = useState(false)
 
-  const [oneWay, setOneWay] = useState(false)
   const [dataSource, setdataSource] = useState([])
   const [targetKeys, setTargetKeys] = useState<React.Key[]>([])
   const targetItemsRef = useRef([])
@@ -68,7 +55,11 @@ const Dialog = (props: Props, ref: any) => {
         <img
           className='m-r-10'
           width='32'
-          src={getAddressPath(Number(item.tag))}
+          src={getAddressPath(
+            isNaN(Number(item.tag))
+              ? Number(TagsColorEnum[item.tag])
+              : Number(item.tag),
+          )}
           alt=''
         />
         <span className='fw-500'>{item.name}</span>
@@ -94,7 +85,7 @@ const Dialog = (props: Props, ref: any) => {
       const res = await getMobAddressbooks({
         ...formValues,
         page: currentPage,
-        limit: pageSize,
+        // limit: pageSize,
       })
 
       setdataSource(
@@ -182,13 +173,13 @@ const Dialog = (props: Props, ref: any) => {
             <div className='fn18'>移入地址簿</div>
             <div style={{ display: 'flex' }}>
               <Form.Item name='tag' style={{ margin: 0, width: '120px' }}>
-                <Select placeholder='所有标签' onChange={handleSearch}>
-                  {options.map((option) => (
-                    <Option key={option.value} value={option.value}>
-                      {option.label}
-                    </Option>
-                  ))}
-                </Select>
+                <Select
+                  placeholder='全部标签'
+                  onChange={handleSearch}
+                  options={[
+                    { label: '全部标签', value: 'all' },
+                    ...tags,
+                  ]}></Select>
               </Form.Item>
 
               <Form.Item
@@ -196,10 +187,7 @@ const Dialog = (props: Props, ref: any) => {
                 name='keywords'
                 className='m-l-10 m-r-10'
                 style={{ marginBottom: '0' }}>
-                <Input
-                  placeholder='地址簿名称'
-                  allowClear
-                  style={{ width: 120 }}></Input>
+                <Input placeholder='地址簿名称' style={{ width: 120 }}></Input>
               </Form.Item>
               <Button
                 style={{
@@ -226,8 +214,7 @@ const Dialog = (props: Props, ref: any) => {
         dataSource={dataSource}
         targetKeys={targetKeys}
         onChange={onChange}
-        // render={(item) => item.name}
-        oneWay={oneWay}
+        oneWay={false}
         render={renderItem}
       />
     </Modal>

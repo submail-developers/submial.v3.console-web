@@ -21,27 +21,29 @@ import {
   Empty,
 } from 'antd'
 import { IDIcon } from '@/components/aIcons'
-import { getFolderPath } from '../type'
+import { getFolderPath, tags, tags_key } from '@/pages/rcs/address/type'
 import {
   getAddressbooksFolder,
   deleteAddressbooksFolder,
-  createAddressbooksFolder,
   batchDeleteFolder,
   batchUpdateFolderTag,
 } from '@/api'
-import CerateAddressDialog from './createAddressFileDialog/index'
-import { NavLink, useNavigate } from 'react-router-dom'
+import CerateFloderDialog from './createFolderDialog'
+import { useNavigate } from 'react-router-dom'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import './index.scss'
-import { constant } from 'lodash'
 import { usePoint } from '@/hooks'
 
 const { Option } = Select
 
 const { Search } = Input
-interface Props {
-  onchildrenMethod: (info: any) => void
-}
+
+const orderOptions = [
+  { label: '最后编辑', value: 'update' },
+  { label: '创建日期', value: 'create' },
+  { label: '文件数升序', value: 'vol-asc' },
+  { label: '文件数降序', value: 'vol-desc' },
+]
 
 export default function Fn() {
   const point = usePoint('lg')
@@ -67,6 +69,7 @@ export default function Fn() {
   // 获取地址簿文件夹
   const getAddressFolderList = async () => {
     try {
+      setLoading(true)
       const formValues = await form.getFieldsValue()
       let params = {
         ...formValues,
@@ -86,9 +89,6 @@ export default function Fn() {
   useEffect(() => {
     getAddressFolderList()
   }, [currentPage, pageSize])
-  useEffect(() => {
-    setLoading(true)
-  }, [])
 
   const showModal = (isEdit) => {
     setIsEditMode(isEdit)
@@ -102,21 +102,6 @@ export default function Fn() {
   const handleCancel = () => {
     setOpenCreateModal(false)
   }
-
-  const handleSearch = () => {
-    getAddressFolderList()
-  }
-
-  // 设置标签
-  const items = [
-    { label: '全部标签', key: 'all' },
-    { label: '默认标签', key: 'tag-blue' },
-    { label: '红色标签', key: 'tag-red' },
-    { label: '紫色标签', key: 'tag-purple' },
-    { label: '青色标签', key: 'tag-cyan' },
-    { label: '绿色标签', key: 'tag-green' },
-    { label: '黄色标签', key: 'tag-yellow' },
-  ]
 
   const edit = async (e) => {
     try {
@@ -174,22 +159,6 @@ export default function Fn() {
   const handelSwitchChange = (checked: boolean) => {
     setIsVisible(checked)
   }
-
-  const options = [
-    { label: '全部标签', value: 'all' },
-    { label: '默认标签', value: 'tag-blue' },
-    { label: '红色标签', value: 'tag-red' },
-    { label: '紫色标签', value: 'tag-purple' },
-    { label: '青色标签', value: 'tag-cyan' },
-    { label: '绿色标签', value: 'tag-green' },
-    { label: '黄色标签', value: 'tag-yellow' },
-  ]
-  const orderOptions = [
-    { label: '最后编辑', value: 'update' },
-    { label: '创建日期', value: 'create' },
-    { label: '文件数升序', value: 'vol-asc' },
-    { label: '文件数降序', value: 'vol-desc' },
-  ]
   // 切换页码
   const onChangeCurrentPage = (page: number, pageSize: number) => {
     setcurrentPage(page)
@@ -231,7 +200,7 @@ export default function Fn() {
       await navigator.clipboard.writeText(sign)
       message.success('复制成功')
     } catch (error) {
-      message.success('复制失败')
+      message.error('复制失败')
     }
   }
   // 批量删除
@@ -256,17 +225,16 @@ export default function Fn() {
       data-class='address-book-file'
       form={form}
       layout='vertical'
-      initialValues={{ order_by: 'update', tag: 'all', keyword: '' }}
+      initialValues={{ order_by: 'update', tag: 'all', keywords: '' }}
       autoComplete='off'>
       <Row gutter={6}>
         <Col span={24}>
-          <Row justify='space-between' align='bottom'>
+          <Row justify='space-between' align='bottom' gutter={[12, 12]}>
             <Col span={12} xl={8}>
-              <Form.Item name='keyword' label='名称' className='m-b-0'>
+              <Form.Item name='keywords' label='搜索' className='m-b-0'>
                 <Search
-                  placeholder='地址簿文件夹名称/ID'
-                  allowClear
-                  onSearch={handleSearch}
+                  placeholder='文件夹名称/ID'
+                  onSearch={() => getAddressFolderList()}
                 />
               </Form.Item>
             </Col>
@@ -274,7 +242,6 @@ export default function Fn() {
               <Button
                 type='primary'
                 className='fx-start-center'
-                htmlType='submit'
                 icon={<i className='icon iconfont icon-jia'></i>}
                 onClick={(e) => showModal(false)}>
                 创建文件夹
@@ -284,15 +251,11 @@ export default function Fn() {
         </Col>
         <Col span={24} className='m-t-24'>
           <Row
-            className='p-y-12 p-x-16 g-radius-4'
+            className='p-y-12 p-x-16 g-radius-4 handle-row'
             style={{ background: '#f6f7f9' }}>
             <Col span={12} md={6}>
               <Space align='center'>
-                <Image
-                  src={getFolderPath(Number('4'))}
-                  preview={false}
-                  height={48}
-                />
+                <Image src={getFolderPath(4)} preview={false} height={48} />
                 <span className='fn16'>地址簿文件夹</span>
               </Space>
             </Col>
@@ -325,13 +288,11 @@ export default function Fn() {
                           className='select-item1'
                           placeholder='全部标签'
                           onChange={() => getAddressFolderList()}
-                          popupMatchSelectWidth={120}>
-                          {options.map((option) => (
-                            <Option key={option.value} value={option.value}>
-                              {option.label}
-                            </Option>
-                          ))}
-                        </Select>
+                          popupMatchSelectWidth={120}
+                          options={[
+                            { label: '全部标签', value: 'all' },
+                            ...tags,
+                          ]}></Select>
                       </Form.Item>
                     </Space>
                     {point && <Divider type='vertical' />}
@@ -366,13 +327,23 @@ export default function Fn() {
                     </Space>
                     {point && <Divider type='vertical' />}
                     <Space align='center'>
-                      <div
-                        className={`primary-color handle-item ${
-                          indeterminate || checkAll ? 'active' : 'disabled'
-                        }`}>
-                        <i className='icon iconfont icon-shanchu m-r-8'></i>
-                        删除
-                      </div>
+                      <Popconfirm
+                        placement='bottom'
+                        title='警告'
+                        description='确定删除选择的文件夹吗？'
+                        onConfirm={batchDel}
+                        disabled={selectedList.length == 0}
+                        okText='确定'
+                        cancelText='取消'
+                        zIndex={100}>
+                        <div
+                          className={`color g-pointer handle-item handle-text ${
+                            indeterminate || checkAll ? 'active' : 'disabled'
+                          }`}>
+                          <i className='icon iconfont icon-shanchu m-r-8'></i>
+                          删除
+                        </div>
+                      </Popconfirm>
                     </Space>
 
                     {point && <Divider type='vertical' />}
@@ -380,13 +351,14 @@ export default function Fn() {
                       <Form.Item name='tag' label='' className='m-b-0'>
                         <Dropdown
                           menu={{
-                            items: items,
+                            items: tags_key,
                             selectable: true,
                             onClick: edit,
                           }}>
                           <a
                             className={`
-                              handle-item 
+                              handle-item
+                              handle-text
                               ${
                                 indeterminate || checkAll
                                   ? 'active'
@@ -409,8 +381,20 @@ export default function Fn() {
 
       <CheckboxGroup
         className='w-100 g-t-12'
+        style={{ position: 'relative' }}
         value={selectedList}
         onChange={onChange}>
+        {loading && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 24,
+              left: '50%',
+              transform: 'translateX(-50%)',
+            }}>
+            <Spin />
+          </div>
+        )}
         <Row gutter={[20, 16]} wrap style={{ marginTop: '24px' }}>
           {addressFolderList.map((item, index) => (
             <Col span={24} lg={12} xl={12} xxl={8} key={item.id}>
@@ -483,12 +467,9 @@ export default function Fn() {
               </div>
             </Col>
           ))}
-          {/* {addressFolderList.length == 0 && !loading && (
-            <Empty className='m-t-40' style={{ margin: '0 auto' }} />
-          )} */}
-          {loading && (
+          {addressFolderList.length == 0 && !loading && (
             <Col span={24} className='m-y-40 fx-center-center'>
-              <Spin />
+              <Empty style={{ margin: '0 auto' }} />
             </Col>
           )}
         </Row>
@@ -505,7 +486,8 @@ export default function Fn() {
           showTotal={(total) => `共 ${total} 条`}
         />
       </Flex>
-      <CerateAddressDialog
+      {/* 创建/编辑文件夹 */}
+      <CerateFloderDialog
         isEdit={isEditMode}
         open={openCreateModal}
         editData={editData}

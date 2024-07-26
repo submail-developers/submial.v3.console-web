@@ -1,12 +1,10 @@
-import { useState, useImperativeHandle, forwardRef, useRef } from 'react'
+import { useState, forwardRef } from 'react'
 import { Modal, Form, App, Upload, Button, Input, Select } from 'antd'
 import { addAddressMobileList, uploadAddressFile } from '@/api'
 import { UploadOutlined } from '@ant-design/icons'
 import type { UploadFile, UploadProps } from 'antd/es/upload/interface'
 
-import { API } from 'apis'
 import './index.scss'
-const { Option } = Select
 
 interface Props {
   id: string
@@ -21,16 +19,6 @@ const Dialog = (props: Props, ref: any) => {
   const { message } = App.useApp()
   const { TextArea } = Input
   const [fileList, setFileList] = useState<UploadFile[]>([])
-
-  const options = [
-    { label: '无标签', value: 'none', color: '#282b31' },
-    { label: '红色', value: 'red', color: '#ff4446' },
-    { label: '紫色', value: 'purple', color: '#6f42c1' },
-    { label: '青色', value: 'cyan', color: '#17a2b8' },
-    { label: '蓝色', value: 'blue', color: '#1764ff' },
-    { label: '绿色', value: 'green', color: '#17c13d' },
-    { label: '黄色', value: 'yellow', color: '#ffba00' },
-  ]
 
   const propsUpload: UploadProps = {
     accept: '.txt, .xlsx, .xls, .csv, .vcf',
@@ -105,9 +93,6 @@ const Dialog = (props: Props, ref: any) => {
     setFileList([])
     props.onCancel()
   }
-
-  const onFinish = () => {}
-  const onFinishFailed = () => {}
 
   return (
     <Modal

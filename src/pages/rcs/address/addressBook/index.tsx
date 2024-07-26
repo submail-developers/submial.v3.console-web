@@ -24,14 +24,12 @@ import { IDIcon } from '@/components/aIcons'
 import CerateAddressDialog from './cerateAddressDialog/index'
 import MoveAddressDialog from './moveAddressDialog/index'
 import { useNavigate } from 'react-router-dom'
-import { getAddressPath } from '../type'
+import { getAddressPath, tags, tags_key } from '@/pages/rcs/address/type'
 import {
   getMobAddressbooks,
   deleteAddressbooks,
   updateAddressBookTag,
 } from '@/api'
-import { API } from 'apis'
-import type { SearchProps } from 'antd/es/input/Search'
 import './index.scss'
 import { message } from '@/components/staticFn/staticFn'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
@@ -39,35 +37,11 @@ import { usePoint } from '@/hooks'
 
 const { Option } = Select
 
-interface Props {
-  onchildrenMethod: (info: any) => void
-}
-
-const options = [
-  { label: '全部标签', value: 'all', color: '#1764ff' },
-  { label: '默认标签', value: 'tag-blue', color: '#1764ff' },
-  { label: '红色标签', value: 'tag-red', color: '#ff4446' },
-  { label: '紫色标签', value: 'tag-purple', color: '#6f42c1' },
-  { label: '青色标签', value: 'tag-cyan', color: '#17a2b8' },
-  { label: '绿色标签', value: 'tag-green', color: '#17c13d' },
-  { label: '黄色标签', value: 'tag-yellow', color: '#ffba00' },
-]
 const order = [
   { label: '创建日期降序', value: 'create_desc' },
   { label: '创建日期升序', value: 'create_ascall' },
   { label: '联系人数降序', value: 'address_desc' },
   { label: '联系人数升序', value: 'address_asc' },
-]
-
-// 设置标签
-const items = [
-  { label: '全部标签', key: 'all' },
-  { label: '无标签', key: 'tag-blue' },
-  { label: '红色标签', key: 'tag-red' },
-  { label: '紫色标签', key: 'tag-purple' },
-  { label: '青色标签', key: 'tag-cyan' },
-  { label: '绿色标签', key: 'tag-green' },
-  { label: '黄色标签', key: 'tag-yellow' },
 ]
 
 const { Search } = Input
@@ -95,18 +69,16 @@ export default function Fn() {
   const [singleId, setSingleId] = useState() //单个地址簿id
   const [isSingle, setIsSingle] = useState(false) //单独移动地址簿
 
-  const [exportconfirm, setExportconfirm] = useState('')
-
   // 获取地址簿
   const getAddressList = async () => {
     try {
+      setLoading(true)
       const formValues = await form.getFieldsValue()
       const res = await getMobAddressbooks({
         ...formValues,
         page: currentPage,
         // limit: pageSize,
       })
-      setExportconfirm(res.exportconfirm)
       setAddressList(res.addressbooks)
       setTotal(res.rows)
       setLoading(false)
@@ -119,10 +91,6 @@ export default function Fn() {
   useEffect(() => {
     getAddressList()
   }, [currentPage])
-
-  useEffect(() => {
-    setLoading(true)
-  }, [])
 
   // 切换页码
   const onChangeCurrentPage = (page: number, pageSize: number) => {
@@ -216,7 +184,7 @@ export default function Fn() {
       return
     }
     nav(
-      `/console/rcs/address/address/detail/${item.id}?title=${item.name}&tag=${item.tag}&exportconfirm=${exportconfirm}`,
+      `/console/rcs/address/address/detail/${item.id}?name=${item.name}&tag=${item.tag}`,
     )
   }
   const stopEvent = (e) => {
@@ -251,7 +219,7 @@ export default function Fn() {
       form={form}
       layout='vertical'
       initialValues={{
-        keyword: '',
+        keywords: '',
         search_type: 'all',
         order_by: 'create_desc',
         tag: 'all',
@@ -259,22 +227,16 @@ export default function Fn() {
       autoComplete='off'>
       <Row gutter={6}>
         <Col span={24}>
-          <Row justify='space-between' align='bottom'>
+          <Row justify='space-between' align='bottom' gutter={[12, 12]}>
             <Col span={12} xl={8}>
-              <Form.Item name='keyword' label='名称' className='m-b-0'>
-                <Search
-                  className='w-100'
-                  placeholder='地址簿名称/ID'
-                  allowClear
-                  onSearch={handleSearch}
-                />
+              <Form.Item name='keywords' label='搜索' className='m-b-0'>
+                <Search placeholder='地址簿名称/ID' onSearch={handleSearch} />
               </Form.Item>
             </Col>
             <Col span={12} xl={8} className='fx-x-end'>
               <Button
                 type='primary'
                 className='fx-start-center'
-                htmlType='submit'
                 icon={<i className='icon iconfont icon-jia'></i>}
                 onClick={(e) => showModal(false, '')}>
                 创建地址簿
@@ -284,7 +246,7 @@ export default function Fn() {
         </Col>
         <Col span={24} className='m-t-24'>
           <Row
-            className='p-y-12 p-x-16 g-radius-4'
+            className='p-y-12 p-x-16 g-radius-4 handle-row'
             style={{ background: '#f6f7f9' }}>
             <Col span={12} md={6}>
               <Space align='center'>
@@ -325,13 +287,11 @@ export default function Fn() {
                           className='select-item1'
                           placeholder='全部标签'
                           onChange={() => getAddressList()}
-                          popupMatchSelectWidth={120}>
-                          {options.map((option) => (
-                            <Option key={option.value} value={option.value}>
-                              {option.label}
-                            </Option>
-                          ))}
-                        </Select>
+                          popupMatchSelectWidth={120}
+                          options={[
+                            { label: '全部标签', value: 'all' },
+                            ...tags,
+                          ]}></Select>
                       </Form.Item>
                     </Space>
                     {point && <Divider type='vertical' />}
@@ -367,7 +327,7 @@ export default function Fn() {
                     {point && <Divider type='vertical' />}
                     <Space align='center'>
                       <div
-                        className={`primary-color handle-item ${
+                        className={`primary-color handle-item handle-text ${
                           indeterminate || checkAll ? 'active' : 'disabled'
                         }`}
                         onClick={moveFolder}>
@@ -380,14 +340,16 @@ export default function Fn() {
                     <Space align='center'>
                       <Form.Item name='tag' label='' className='m-b-0'>
                         <Dropdown
+                          trigger={['click']}
                           menu={{
-                            items: items,
+                            items: tags_key,
                             selectable: true,
                             onClick: edit,
                           }}>
                           <a
                             className={`
-                              handle-item 
+                              handle-item
+                              handle-text
                               ${
                                 indeterminate || checkAll
                                   ? 'active'
@@ -408,9 +370,20 @@ export default function Fn() {
         </Col>
       </Row>
       <CheckboxGroup
-        style={{ width: '100%', marginTop: '10px' }}
+        style={{ width: '100%', marginTop: '10px', position: 'relative' }}
         value={selectedList}
         onChange={onChange}>
+        {loading && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 24,
+              left: '50%',
+              transform: 'translateX(-50%)',
+            }}>
+            <Spin />
+          </div>
+        )}
         <Row gutter={[20, 16]} style={{ marginTop: '24px' }}>
           {addressList.map((item) => (
             <Col span={24} lg={24} xl={12} xxl={8} key={item.id}>
@@ -487,11 +460,6 @@ export default function Fn() {
           ))}
           {addressList.length == 0 && !loading && (
             <Empty className='m-t-40' style={{ margin: '0 auto' }} />
-          )}
-          {loading && (
-            <Col span={24} className='m-y-40 fx-center-center'>
-              <Spin />
-            </Col>
           )}
         </Row>
       </CheckboxGroup>
