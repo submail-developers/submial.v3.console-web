@@ -46,6 +46,11 @@ export default function Fn() {
       fixed: true,
       dataIndex: 'name',
     },
+    {
+      title: '应用ID',
+      width: 100,
+      dataIndex: 'id',
+    },
 
     {
       title: '基本信息审核状态',
@@ -191,7 +196,7 @@ export default function Fn() {
         className='chatbot-list-form'
         form={form}
         layout='vertical'
-        initialValues={{ status: 'all', status2: 'all' }}
+        initialValues={{ status: 'all', menu_status: 'all' }}
         onValuesChange={onValuesChange}
         autoComplete='off'>
         <Flex align='flex-end' gap={16} wrap='wrap'>
@@ -208,20 +213,25 @@ export default function Fn() {
               ]}
             />
           </Form.Item>
-          <Form.Item name='status2' label='固定菜单审核状态' className='m-b-0'>
+          <Form.Item
+            name='menu_status'
+            label='固定菜单审核状态'
+            className='m-b-0'>
             <Select
+              popupMatchSelectWidth={120}
+              style={{ width: 120 }}
               placeholder='请选择'
               options={[
                 { value: 'all', label: '全部' },
-                { value: '1', label: '等待审核' },
-                { value: '2', label: '审核通过' },
-                { value: '3', label: '审核驳回' },
-                { value: '4', label: '未上传' },
+                { value: '0', label: '未上传' },
+                { value: '3', label: '审核中' },
+                { value: '1', label: '审核通过' },
+                { value: '2', label: '审核驳回' },
               ]}
             />
           </Form.Item>
           <Form.Item name='keywords' label='关键词搜索' className='m-b-0'>
-            <Input placeholder='Chatbot名称' onPressEnter={search} />
+            <Input placeholder='Chatbot名称或ID' onPressEnter={search} />
           </Form.Item>
           <Form.Item label='' className='m-b-0'>
             <Button type='primary' className='w-100' onClick={search}>
@@ -234,7 +244,7 @@ export default function Fn() {
         className='theme-cell reset-table m-t-24'
         columns={columns}
         dataSource={tableData}
-        rowKey={'name'}
+        rowKey={'id'}
         sticky
         loading={loading}
         pagination={{
