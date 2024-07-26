@@ -132,6 +132,7 @@ declare module 'apis' {
       appid?: string
       keywords?: string
       status?: 'all' | '0' | '1' | '2' | '3' // 默认all   0=未提交，1=我方通过，2=我们驳回，3=我方审核中
+      menu_status?: 'all' | '0' | '1' | '2' | '3' // 默认all   0未提交，1通过，2驳回，3审核中
     }
     interface ChatbotItem {
       index?: number
@@ -229,9 +230,12 @@ declare module 'apis' {
       match_keyword: string // 按钮名称/关键字
       match_type: '0' | '1' | '2' | '3' // '0暂无匹配   1chatbot固定菜单  2模板-悬浮菜单和message交互按键  3纯文字消息',
       replyMessageID: string
+      replyMessage_name: string
+      replyMessage_sign: string // 下行回复模版sign
       senderAddress: string // 发件人地址
-      sign: string // 下行回复模版sign
       template_id: string
+      template_sign: string
+      template_name: string
       type: '0' | '1' // 是否成功回复 0否 1是
     }
 
@@ -1001,11 +1005,11 @@ declare module 'apis' {
     interface GetFolderDetailParams {
       id: string
       type: number
-      tag: string
-      order_by: string
+      tag?: string
+      order_by?: string
       page: number
-      keywords: string
-      search_type: string
+      keywords?: string
+      search_type?: string
     }
     interface GetFolderDetailItems {
       id: string
@@ -1151,11 +1155,11 @@ declare module 'apis' {
       appid: string
       project: string
       address: string
-      type: string
-      timetosend: boolean
+      type: '1' | '2' // 1普通任务 2定时任务
+      timetosend: string
       send: string
       sent: string
-      status: '0' | '1' | '9'
+      status: '0' | '1' | '9' // 0任务未开始 1发送成功 9任务撤销
       ip_address: string
       shortMessageSupported: 'true' | 'false'
       smsBodyText: string
@@ -1166,6 +1170,7 @@ declare module 'apis' {
       addressbook: string
       addressfile_oss_path: string
       chatbot_name: string
+      template_name: string
     }
     interface GetSendlistsRes {
       rows: number
@@ -1182,7 +1187,7 @@ declare module 'apis' {
       appid: string
       project: string
       address: string
-      type: string
+      type: '1' | '2' // 1普通任务 2定时任务
       timetosend: string
       send: string
       sent: string
@@ -1212,6 +1217,7 @@ declare module 'apis' {
       sign: string
       tag: string
       update_at: string
+      id: string
     }
     interface GetSendlistReportRes {
       status: string
@@ -1313,18 +1319,20 @@ declare module 'apis' {
       status: string
       send_id: string
       to: string
-      content: string
+      keyword: string
     }
     // 获取api历史明细返回值
     interface GetHistoryItems {
       api: string
       appid: string
+      chatbot_name: string
       contributionID: string
       conversationID: string
       desc: string
       inReplyToContributionID: string
       ipAddress: string
-      message: string
+      message: any
+      message_resp: string
       mms: string
       mmsContent: string
       mmsSubject: string
@@ -1334,14 +1342,15 @@ declare module 'apis' {
       sendID: string
       sendlist: string
       sent: string
-      sentType: string
+      sentType: '0' | '1' | '2' // 5g｜短息｜彩信
       serviceCode: string
       sign: string
       sms: string
       smsContent: string
-      status: string
-      suggestions: string
+      status: '0' | '1' | '2' | '3' // 等待｜成功｜失败｜撤回
+      suggestions: any
       to: string
+      template_name: string
     }
     interface GetHistoryRes {
       exportconfirm: sting
@@ -1577,7 +1586,7 @@ declare module 'apis' {
       status: string
       send_id: string
       to: string
-      sign: string
+      keyword: string
     }
     // 导出-end
   }

@@ -1,7 +1,6 @@
-import { CSSProperties, ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { usePoint } from '@/hooks'
-import { Flex, Col, Row } from 'antd'
-import { Link } from 'react-router-dom'
+import { Col, Row } from 'antd'
 
 import {
   MsgIcon,
@@ -16,6 +15,7 @@ import {
   RcsIcon,
   MdetectIcon,
   AimIcon,
+  NewVisionIcon,
   ConsoleIcon,
   LogoIcon,
 } from '@/components/aIcons'
@@ -105,6 +105,12 @@ const prodList: ProdListItem[] = [
     link: '/console/aim',
     extClass: 'aim-icon',
     icon: <AimIcon />,
+  },
+  {
+    text: '5G新视通',
+    link: '/console/newVision',
+    extClass: 'newVision-icon',
+    icon: <NewVisionIcon />,
   },
   {
     text: '控制台',

@@ -28,7 +28,7 @@ export default function ACopy(props: Props) {
         onCopy: () => messageApi.success('复制成功'),
       }}
       className='handle-copy'
-      style={{ zIndex: props.zIndex || 2 }}
+      style={{ zIndex: props.zIndex || 2, marginBottom: 0 }}
       title={props.title || '点击复制'}></Paragraph>
   )
 }
