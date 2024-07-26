@@ -381,14 +381,12 @@ export const menus: RouteObject[] = [
           {
             path: 'folder',
             loader: loaderFn({
-              breadName: '文件夹',
+              breadName: '文件夹列表',
             }),
             errorElement: <Error />,
             element: (
               <LazyImportComponent
-                lazyChildren={lazy(
-                  () => import('@/pages/rcs/address/addressBookFile'),
-                )}
+                lazyChildren={lazy(() => import('@/pages/rcs/address/folder'))}
               />
             ),
           },
@@ -401,7 +399,7 @@ export const menus: RouteObject[] = [
             element: (
               <LazyImportComponent
                 lazyChildren={lazy(
-                  () => import('@/pages/rcs/address/seeAddressFile'),
+                  () => import('@/pages/rcs/address/folderDetail'),
                 )}
               />
             ),
