@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useSize, usePoint } from '@/hooks'
-import { Outlet, useNavigate, useLocation } from 'react-router-dom'
+import { Outlet, useNavigate, NavLink } from 'react-router-dom'
 import {
   Flex,
   Table,
@@ -10,12 +10,13 @@ import {
   DatePicker,
   Form,
   Select,
-  Dropdown,
+  Space,
   Input,
   App,
+  Popconfirm,
+  Tooltip,
 } from 'antd'
 import type { GetProps } from 'antd'
-import { DownOutlined } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/es/table'
 import dayjs from 'dayjs'
 import { useAppSelector } from '@/store/hook'
@@ -25,9 +26,10 @@ import { downloadFile } from '@/utils'
 
 import PageContent from '@/components/pageContent'
 import ACopy from '@/components/aCopy'
+import SeeModal from '@/pages/rcs/template/seeModal'
 import { getPresets } from '@/utils/day'
 
-import { getSendlists, exportRcsSendTask } from '@/api'
+import { getSendlists, exportRcsSendTask, cancelRcsTask } from '@/api'
 import { API } from 'apis'
 
 import faceImg from '@/assets/rcs/face/batchreport.png'
@@ -39,14 +41,14 @@ const { RangePicker } = DatePicker
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>
 
 enum statusNum {
-  '发送完成' = 1,
   '尚未开始' = 0,
+  '发送完成' = 1,
   '已撤销' = 9,
 }
 enum statusStyle {
+  'waiting-color' = 0,
   'success-color' = 1,
-  'text-color' = 0,
-  'error-colo' = 9,
+  'error-color' = 9,
 }
 
 const items = [
@@ -107,7 +109,7 @@ const disabledDate: RangePickerProps['disabledDate'] = (current) => {
   return currentDate.isAfter(today)
 }
 // 预设日期
-const rangePresets = getPresets([0, 1, 3, 7, 15])
+const rangePresets = getPresets([0, 1, 3, 7, 15, 30, 90])
 
 export default function Fn() {
   const size = useSize()
@@ -208,11 +210,21 @@ export default function Fn() {
     nav(`/console/rcs/batchreport/detail/${id}`)
   }
 
+  // 撤销任务
+  const cancelTask = async (id) => {
+    try {
+      const res = await cancelRcsTask({ id })
+      if (res.status == 'success') {
+        getList()
+      }
+    } catch (error) {}
+  }
+
   useEffect(() => {
     getList()
   }, [limit, page])
 
-  const columns:ColumnsType<DataType> = [
+  const columns: ColumnsType<DataType> = [
     {
       title: '任务名称',
       dataIndex: 'title',
@@ -221,29 +233,42 @@ export default function Fn() {
       className: size == 'small' ? 'paddingL20' : 'paddingL30',
       render: (_, record) => (
         <div className='w-100 p-r-16 g-ellipsis-2' title={record.title}>
-          {record.title}
+          {record.title || '-'}
         </div>
       ),
     },
     {
-      title: '模板ID',
-      width: 100,
+      title: '模板',
+      width: 260,
       render: (_, record) => (
-        <div className='w-100' style={{ position: 'relative' }}>
-          <ACopy text={record.project} />【{record.project}】
-        </div>
+        <Space className='w-100' size={0} align='center'>
+          <div style={{ position: 'relative', minWidth: 80 }}>
+            <ACopy text={record.project} />【{record.project}】
+          </div>
+          <SeeModal sign={record.project}>
+            <div className='g-ellipsis' style={{ maxWidth: 160 }}>
+              {record.template_name}
+            </div>
+          </SeeModal>
+        </Space>
       ),
     },
     {
-      title: 'Chatbot名称',
-      width: 160,
+      title: 'Chatbot名称(ID)',
+      width: 200,
       render: (_, record) => (
-        <div
-          className='g-ellipsis'
-          style={{ width: 150 }}
-          title={record.chatbot_name}>
-          {record.chatbot_name}
-        </div>
+        <Space size={0} align='center' wrap style={{ width: 180 }}>
+          <div style={{ position: 'relative' }}>
+            <ACopy text={record.chatbot_name} title='点击复制Chatbot名称' />
+            {record.chatbot_name}
+          </div>
+          <NavLink
+            target='__blank'
+            to={`/console/rcs/chatbot/detail/${record.appid}`}
+            className='gray-color-sub g-pointer'>
+            ({record.appid})
+          </NavLink>
+        </Space>
       ),
     },
     {
@@ -259,15 +284,23 @@ export default function Fn() {
       dataIndex: 'type',
       width: 120,
       render: (_, record) => (
-        <span className={`send-type ${record.type == '1' ? '' : 'type2'}`}>
-          {record.type == '1' ? '普通发送' : '定时发送'}
-        </span>
+        <>
+          {record.type == '1' ? (
+            <span className='send-type'>普通发送</span>
+          ) : (
+            <Tooltip
+              placement='bottom'
+              title={`定时时间：${record.timetosend}`}>
+              <span className='send-type type2'>定时发送</span>
+            </Tooltip>
+          )}
+        </>
       ),
     },
     {
       title: '状态',
       dataIndex: 'status',
-      width: 100,
+      width: 80,
       render: (_, record) => (
         <div className={statusStyle[record.status]}>
           {statusNum[record.status]}
@@ -283,27 +316,41 @@ export default function Fn() {
       title: '完成日期',
       dataIndex: 'sent',
       width: 170,
+      render: (_, record) => <div>{record.sent || '-'}</div>,
     },
     {
       title: '操作',
       width: 100,
       render: (_, record) => (
         <>
-          <span>
+          <Space>
             <Button
               type='link'
               style={{ paddingLeft: 0 }}
               onClick={() => toDetail(record.id)}>
               查看
             </Button>
-          </span>
+            {record.type == '2' && record.status == '0' && (
+              <Popconfirm
+                placement='bottom'
+                title='警告'
+                description='确定撤销该任务吗？'
+                onConfirm={() => cancelTask(record.id)}
+                okText='确定'
+                cancelText='取消'>
+                <Button type='link' style={{ paddingLeft: 0 }}>
+                  撤销
+                </Button>
+              </Popconfirm>
+            )}
+          </Space>
         </>
       ),
     },
   ]
 
   return (
-    <PageContent extClass='batchreport' xxl={1300}>
+    <PageContent extClass='batchreport' xl={'100%'} xxl={'90%'}>
       <Image src={faceImg} preview={false} width={72}></Image>
       <Flex justify='space-between' align='center'>
         <div className='fn22 fw-500'>批量任务发送报告</div>
@@ -363,7 +410,7 @@ export default function Fn() {
             label='搜索'
             name='keywords'
             style={{ marginBottom: '0px' }}>
-            <Input placeholder='请输入关键词' onPressEnter={search} />
+            <Input placeholder='任务名称/Chatbot/模版' onPressEnter={search} />
           </Form.Item>
           <Form.Item label='' className='m-b-0'>
             <Button
