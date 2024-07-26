@@ -73,7 +73,7 @@ export default function Fn(props: Props) {
     droppedRate = totaoRate.minus(deliveryedRate).toFixed(2)
   }
   const option = {
-    color: ['#1764ff', '#00a97b', '#f00011'],
+    color: ['#1764ff', '#00a97b', '#f00011', '#ffba00'],
     grid: { top: 8, right: 8, bottom: 24, left: 36 },
     xAxis: {
       type: 'category',

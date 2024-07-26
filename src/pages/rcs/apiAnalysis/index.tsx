@@ -35,8 +35,8 @@ const disabledDate: RangePickerProps['disabledDate'] = (current) => {
   return currentDate.isAfter(today)
 }
 // 预设日期
-const rangePresets = getPresets([1, 7, 15, 30, 90])
-const initTime = rangePresets[1].value
+const rangePresets = getPresets([0, 1, 3, 7, 15, 30, 90])
+const initTime = rangePresets[3].value
 
 const items = [
   {
@@ -78,8 +78,12 @@ export default function Fn() {
         keywords: '',
         status: '1',
       })
-      setChatbotLit(res.list || [])
-      setLoading(false)
+      setChatbotLit(
+        res.list.map((item) => {
+          item.name = `${item.name}(${item.id})`
+          return item
+        }),
+      )
     } catch (error) {}
   }
 
@@ -87,7 +91,7 @@ export default function Fn() {
     setLoading(true)
     try {
       const fromValues = await form.getFieldsValue()
-      setTime(time)
+      setTime(fromValues.time)
       const res = await getUnionAnalysis({
         appid: fromValues.appid || '',
         start: fromValues.time[0].format('YYYY-MM-DD'),
@@ -144,8 +148,8 @@ export default function Fn() {
           <Form.Item label='Chatbot选择' name='chatbot'>
             <Select
               allowClear
-              popupMatchSelectWidth={120}
-              style={{ width: 120 }}
+              popupMatchSelectWidth={200}
+              style={{ width: 200 }}
               placeholder='全部'
               options={chatbotList}
               fieldNames={{ label: 'name', value: 'id' }}></Select>
