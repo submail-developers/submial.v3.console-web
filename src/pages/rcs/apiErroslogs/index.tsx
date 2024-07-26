@@ -1,16 +1,27 @@
 import { useState, useEffect } from 'react'
-import { Flex, Table, Divider, Image, DatePicker, Form, Select } from 'antd'
+import { NavLink } from 'react-router-dom'
+import {
+  Flex,
+  Table,
+  Divider,
+  Image,
+  DatePicker,
+  Form,
+  Select,
+  Space,
+} from 'antd'
 import type { GetProps } from 'antd'
 import PageContent from '@/components/pageContent'
 
 import { API } from 'apis'
 import { getErrorsLogs, getChatbot } from '@/api'
 import faceImg from '@/assets/rcs/face/errors.png'
-import { useSize, usePoint } from '@/hooks'
+import { usePoint } from '@/hooks'
 import { getPresets } from '@/utils/day'
 import dayjs from 'dayjs'
 
 import './index.scss'
+import ACopy from '@/components/aCopy'
 
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>
 
@@ -26,14 +37,13 @@ const disabledDate: RangePickerProps['disabledDate'] = (current) => {
 
 export default function Fn() {
   const pointXs = usePoint('xs')
-  const size = useSize()
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
   const [page, setPage] = useState<number>(1)
   const [limit, setLimit] = useState<number>(10)
   const [total, setTotal] = useState<number>(0)
   const [getErrorList, setGetErrorList] = useState<API.GetErrorsLogsItems[]>()
-  const [chatBotList, setChatBotList] = useState<API.ChatbotItem[]>([])
+  const [chatbotList, setChatbotList] = useState<API.ChatbotItem[]>([])
 
   // 获取chatbot
   const getChatbotList = async () => {
@@ -45,7 +55,12 @@ export default function Fn() {
         keywords: '',
         status: '1',
       })
-      setChatBotList(res.list)
+      setChatbotList(
+        res.list.map((item) => {
+          item.name = `${item.name}(${item.id})`
+          return item
+        }),
+      )
     } catch (error) {}
   }
 
@@ -96,19 +111,29 @@ export default function Fn() {
 
   const columns = [
     {
-      title: 'Chatbot',
+      title: 'Chatbot名称(ID)',
       fixed: true,
-      width: size == 'small' ? 150 : 200,
-      className: size == 'small' ? 'paddingL20' : 'paddingL30',
+      width: 200,
+      className: 'paddingL20',
       render: (_, record) => (
-        <div style={{ height: 40 }} className='fx-y-center'>
-          {record.chatbot_name}
-        </div>
+        <Space size={0} align='center' wrap style={{ width: 180 }}>
+          <div style={{ position: 'relative' }}>
+            <ACopy text={record.chatbot_name} title='点击复制Chatbot名称' />
+            {record.chatbot_name}
+          </div>
+          <NavLink
+            target='__blank'
+            to={`/console/rcs/chatbot/detail/${record.appid}`}
+            className='gray-color-sub g-pointer'>
+            ({record.appid})
+          </NavLink>
+        </Space>
       ),
     },
     {
       title: 'API',
       dataIndex: 'api',
+      className: 'paddingL20',
       width: 180,
     },
     {
@@ -155,9 +180,9 @@ export default function Fn() {
             <Select
               placeholder='全部Chatbot'
               allowClear
-              popupMatchSelectWidth={140}
-              style={{ width: 140 }}
-              options={chatBotList}
+              popupMatchSelectWidth={200}
+              style={{ width: 200 }}
+              options={chatbotList}
               fieldNames={{ label: 'name', value: 'id' }}></Select>
           </Form.Item>
           <Form.Item label='时间范围' name='time' className='m-b-0'>
