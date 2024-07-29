@@ -172,8 +172,8 @@ const Dialog = (props: Props, ref: any) => {
   }, [props.open])
 
   useEffect(() => {
-    getAddressList()
-  }, [currentPage])
+    if (props.open) getAddressList()
+  }, [currentPage, props.open])
 
   return (
     <Modal
