@@ -1,5 +1,16 @@
 import { useState, forwardRef, useEffect, useRef } from 'react'
-import { Modal, Form, App, Button, Input, Select, Transfer, Flex } from 'antd'
+import {
+  Modal,
+  Form,
+  App,
+  Button,
+  Input,
+  Select,
+  Transfer,
+  Flex,
+  Pagination,
+  Space,
+} from 'antd'
 import type { TransferProps } from 'antd'
 import { getMobAddressbooks, moveAddressBook } from '@/api'
 import { uniqBy } from 'lodash'
@@ -19,24 +30,15 @@ interface Props {
 const Dialog = (props: Props, ref: any) => {
   const [form] = Form.useForm()
   const { message } = App.useApp()
-  const [currentPage, setcurrentPage] = useState<number>(1)
   const [moveLoading, setMoveLoading] = useState(false)
 
   const [dataSource, setdataSource] = useState([])
   const [targetKeys, setTargetKeys] = useState<React.Key[]>([])
   const targetItemsRef = useRef([])
-
-  useEffect(() => {
-    if (props.open) {
-      targetItemsRef.current = props.foldetAddressList
-      getAddressList()
-      let _targetKeys = []
-      props.foldetAddressList.forEach((item) => {
-        _targetKeys.push(item.id)
-      })
-      setTargetKeys(_targetKeys)
-    }
-  }, [props.open])
+  const [loading, setLoading] = useState(false)
+  const [total, setTotal] = useState(0)
+  const [currentPage, setcurrentPage] = useState<number>(1)
+  const [pageSize, setpageSize] = useState<number>(100)
 
   const onChange: TransferProps['onChange'] = (
     newTargetKeys,
@@ -75,9 +77,19 @@ const Dialog = (props: Props, ref: any) => {
     }
   }
 
-  const handleSearch = () => {
-    getAddressList()
+  const onChangePage = (page: number, pageSize: number) => {
+    setcurrentPage(page)
+    // setpageSize(pageSize)
   }
+
+  const handleSearch = () => {
+    if (currentPage == 1) {
+      getAddressList()
+    } else {
+      setcurrentPage(1)
+    }
+  }
+
   // 获取公共地址簿
   const getAddressList = async () => {
     try {
@@ -98,6 +110,7 @@ const Dialog = (props: Props, ref: any) => {
           'id',
         ),
       )
+      setTotal(res.rows)
 
       // setTotal(res.rows)
       // setLoading(false)
@@ -147,6 +160,21 @@ const Dialog = (props: Props, ref: any) => {
     }
   }
 
+  useEffect(() => {
+    if (props.open) {
+      targetItemsRef.current = props.foldetAddressList
+      let _targetKeys = []
+      props.foldetAddressList.forEach((item) => {
+        _targetKeys.push(item.id)
+      })
+      setTargetKeys(_targetKeys)
+    }
+  }, [props.open])
+
+  useEffect(() => {
+    getAddressList()
+  }, [currentPage])
+
   return (
     <Modal
       open={props.open}
@@ -157,6 +185,30 @@ const Dialog = (props: Props, ref: any) => {
       data-class='create-address'
       closable={false}
       wrapClassName='modal-create-address'
+      footer={
+        <Flex justify='space-between' align='center' wrap='wrap'>
+          <div>
+            <Pagination
+              defaultCurrent={1}
+              current={currentPage}
+              defaultPageSize={pageSize}
+              hideOnSinglePage
+              size='small'
+              total={total}
+              showSizeChanger={false}
+              showQuickJumper
+              onChange={onChangePage}
+              showTotal={(folderTotal) => `共 ${folderTotal} 条`}
+            />
+          </div>
+          <Space>
+            <Button onClick={props.onCancel}>取消</Button>
+            <Button type='primary' loading={loading} onClick={handleOk}>
+              确定
+            </Button>
+          </Space>
+        </Flex>
+      }
       title={
         <Form
           form={form}
