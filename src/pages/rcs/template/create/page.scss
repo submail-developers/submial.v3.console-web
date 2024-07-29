@@ -2,7 +2,7 @@
   width: 100%;
   height: 100%;
   display: flex;
-  overflow: scroll;
+  overflow: auto;
   // position: relative;
   .handle-buttons {
     position: absolute;
@@ -49,7 +49,7 @@
       height: 100%;
       .ant-tabs-content-holder {
         height: calc(100% - 42px);
-        overflow: scroll;
+        overflow: auto;
         padding-bottom: 40px;
       }
     }
