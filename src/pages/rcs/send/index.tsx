@@ -240,10 +240,9 @@ export default function CreateSend() {
   // 提交审核
   const submit = () => {
     if (sendNum > Number(rcsSetting?.settings.credits)) {
-            message.error('余额不足，无法创建发送任务')
+      message.error('创建失败（余额不足）')
       setOpenConfirm(false)
       return
-
     }
     if (rcsSetting.settings.message_send_confirm == '1') {
       setOpenConfirm(false)
@@ -731,7 +730,20 @@ export default function CreateSend() {
                                 }}>
                                 <Popconfirm
                                   title='此次发送任务'
-                                  description={`发送计费条数：${sendNum.toLocaleString()}，5g消息余额${Number(rcsSetting?.settings.credits || 0).toLocaleString()}`}
+                                  description={
+                                    <div>
+                                      <div>
+                                        发送计费条数：
+                                        {sendNum.toLocaleString()}
+                                      </div>
+                                      <div>
+                                        5g消息余额：
+                                        {Number(
+                                          rcsSetting?.settings.credits || 0,
+                                        ).toLocaleString()}
+                                      </div>
+                                    </div>
+                                  }
                                   open={openConfirm}
                                   onConfirm={submit}
                                   onOpenChange={getSendNum}
