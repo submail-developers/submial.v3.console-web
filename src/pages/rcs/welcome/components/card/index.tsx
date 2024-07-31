@@ -13,7 +13,7 @@ export default function MyCard(props: MyCardProps) {
     contentStyle['minHeight'] = props.minHeight
   }
   return (
-    <div className='welcome-card'>
+    <div className='rcs-welcome-card'>
       <div className='title fn16 fw-500'>{props.title}</div>
       <div className='content' style={{ ...contentStyle }}>
         {props.children}

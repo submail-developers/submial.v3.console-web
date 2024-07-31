@@ -116,7 +116,11 @@ const prodList: ProdListItem[] = [
     text: '控制台',
     link: '/console',
     extClass: 'console-icon',
-    icon: <ConsoleIcon />,
+    icon: (
+      <div style={{ fontSize: 28 }} className='w-100 h-100 fx-center-center'>
+        <ConsoleIcon />
+      </div>
+    ),
   },
   {
     text: '返回首页',

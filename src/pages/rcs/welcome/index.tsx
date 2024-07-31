@@ -323,12 +323,12 @@ export default function Fn() {
           <Card title='更多指引'>
             <Row gutter={[12, 16]}>
               <Col span={24} sm={12}>
-                <Link to={'/console/rcs/welcome'} target='_blank'>
+                <Link to={'/documents/HQwGl1'} target='_blank'>
                   计费规则
                 </Link>
               </Col>
               <Col span={24} sm={12}>
-                <Link to={'/console/rcs/welcome'} target='_blank'>
+                <Link to={'/documents/HQwGl1'} target='_blank'>
                   消息上行文档
                 </Link>
               </Col>
@@ -338,7 +338,7 @@ export default function Fn() {
                 </Link>
               </Col>
               <Col span={24} sm={12}>
-                <Link to={'/console/rcs/welcome'} target='_blank'>
+                <Link to={'/documents/HQwGl1'} target='_blank'>
                   Chatbot交互演示
                 </Link>
               </Col>

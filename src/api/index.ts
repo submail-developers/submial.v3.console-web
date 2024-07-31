@@ -46,10 +46,10 @@ export const login = () => {
     {
       // account: 'duanlangjd@126.com',
       // password: 'yanzhi2010',
-      // account: '18616200024@163.com',
-      // password: 'sumeng',
-      account: '514030829@qq.com',
-      password: 'yanzhi2010',
+      account: '18616200024@163.com',
+      password: 'sumeng',
+      // account: '514030829@qq.com',
+      // password: 'yanzhi2010',
       //
     },
   )
@@ -262,10 +262,12 @@ export const deleteChatbot = (data: API.DeleteChatbotParams) => {
 
 // 获取chatbot
 export const getChatbot = (data: API.GetChatbotParams) => {
+  // 默认menu_status=all
+  const _data: API.GetChatbotParams = { menu_status: 'all', ...data }
   return request.post<any, API.GetChatbotRes, API.GetChatbotParams>(
     '/console/api/rcs/get_chatbot',
     {
-      ...data,
+      ..._data,
     },
   )
 }
@@ -689,6 +691,15 @@ export const getHistory = (data: API.GetHistoryParams) => {
 export const getSendlists = (data: API.GetSendlistsParams) => {
   return request.post<any, API.GetSendlistsRes, API.GetSendlistsParams>(
     '/console/api/rcs/get_sendlists',
+    {
+      ...data,
+    },
+  )
+}
+// 取消任务
+export const cancelRcsTask = (data: { id: string }) => {
+  return request.post<any, any, { id: string }>(
+    '/console/api/rcs/cancel_timetosend_task',
     {
       ...data,
     },
