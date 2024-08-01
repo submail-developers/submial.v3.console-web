@@ -123,7 +123,13 @@
 
 .g-pointer {
   cursor: pointer;
-  &.color {
+  &.color,
+  &.primary-color {
+    &.disabled {
+      color: #69a5ff;
+      cursor: no-drop;
+      pointer-events: none;
+    }
     &:hover {
       color: #69a5ff;
     }
@@ -133,6 +139,16 @@
   &.gray-color-sub {
     &:hover {
       color: var(--color);
+    }
+  }
+  &.error-color {
+    &.disabled {
+      color: #ff7875;
+      cursor: no-drop;
+      pointer-events: none;
+    }
+    &:hover {
+      color: #ff7875;
     }
   }
 }

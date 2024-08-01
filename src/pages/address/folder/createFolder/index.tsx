@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useState } from 'react'
 import { Modal, Form, App, Input, Select } from 'antd'
 import { createAddressbooksFolder } from '@/api'
-import { tags_number, TagsColorEnum } from '@/pages/rcs/address/type'
+import { tags_number, TagsColorEnum } from '@/pages/address/type'
 import './index.scss'
 interface Props {
   open: boolean

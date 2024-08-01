@@ -15,7 +15,7 @@ import type { TransferProps } from 'antd'
 import { getMobAddressbooks, moveAddressBook } from '@/api'
 import { uniqBy } from 'lodash'
 import { getAddressPath } from '../../type'
-import { TagsColorEnum, tags } from '@/pages/rcs/address/type'
+import { TagsColorEnum, tags } from '@/pages/address/type'
 import './index.scss'
 
 interface Props {
@@ -111,13 +111,7 @@ const Dialog = (props: Props, ref: any) => {
         ),
       )
       setTotal(res.rows)
-
-      // setTotal(res.rows)
-      // setLoading(false)
-    } catch (error) {
-      // setLoading(false)
-      console.log(error)
-    }
+    } catch (error) {}
   }
 
   const handleOk = async () => {

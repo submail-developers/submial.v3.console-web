@@ -2,7 +2,7 @@ import { useState, forwardRef, useEffect } from 'react'
 import { Modal, Spin, App, Flex, Pagination, Button, Image } from 'antd'
 import { getAddressbooksFolder } from '@/api'
 
-import { getFolderPath } from '@/pages/rcs/address/type'
+import { getFolderPath } from '@/pages/address/type'
 import './index.scss'
 
 import { moveAddressBook } from '@/api'

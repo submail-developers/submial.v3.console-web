@@ -14,6 +14,7 @@ import {
   Flex,
   Spin,
   Space,
+  Divider,
 } from 'antd'
 import type { MenuProps } from 'antd'
 import ImportAddressDialog from './ImportDialog/index'
@@ -213,7 +214,7 @@ export default function Fn() {
       layout='vertical'
       initialValues={{ type: 'all', keyword: '' }}
       autoComplete='off'>
-      <Row gutter={6}>
+      <Row>
         <Col span={24}>
           <Row justify='space-between' align='bottom' gutter={[12, 12]}>
             <Col span={24} lg={12} xl={8}>
@@ -240,52 +241,65 @@ export default function Fn() {
           </Row>
         </Col>
 
-        <Col span={24} className='set-item fx-start-center m-t-24'>
-          <div className='fx-start-center'>
-            <Image
-              src={getAddressPath(Number(tag))}
-              width={48}
-              preview={false}
-            />
-            <span className='fn16 m-l-16'>{name}</span>
-          </div>
-          <div className='dea-set fx-between-center'>
-            {total > 0 && (
-              <>
-                <Checkbox
-                  indeterminate={indeterminate}
-                  onChange={onCheckAllChange}
-                  checked={checkAll}>
-                  全选
-                </Checkbox>
-                <div onClick={batchDel}>
-                  <span
-                    className={`batch-del-address g-pointer fx-center-center ${
-                      indeterminate || checkAll ? 'active' : ''
-                    }`}>
-                    <i className='icon iconfont icon-shanchu'></i>删除
-                  </span>
-                </div>
-                <div className='clear-address'>
-                  <Popconfirm
-                    placement='bottom'
-                    title='警告'
-                    description='确定清空地址簿吗？'
-                    onConfirm={deleteAllMob}
-                    okText='确定'
-                    cancelText='取消'>
-                    <div className='g-pointer fx-center-center'>
-                      <i className='icon iconfont icon-saozhou'></i>
-                      <span> 清空地址簿</span>
-                    </div>
-                  </Popconfirm>
-                </div>
-              </>
-            )}
-            <div onClick={toBack} style={{ paddingRight: 0 }}>
-              <i className='icon iconfont icon-fanhui primary-color fn14'></i>
-            </div>
-          </div>
+        <Col span={24}>
+          <Flex
+            justify='space-between'
+            align='center'
+            wrap='wrap'
+            className='g-radius-4 p-x-16 p-y-12 m-t-24'
+            style={{ background: 'var(--table-bg)' }}>
+            <Space align='center'>
+              <Image
+                src={getAddressPath(Number(tag))}
+                preview={false}
+                height={48}
+              />
+              <span className='fn16'>{name}</span>
+            </Space>
+            <Space align='center' size={12}>
+              {total > 0 && (
+                <>
+                  <Checkbox
+                    indeterminate={indeterminate}
+                    onChange={onCheckAllChange}
+                    checked={checkAll}>
+                    全选
+                  </Checkbox>
+                  <Divider type='vertical' style={{ height: 16 }} />
+                  <div onClick={batchDel}>
+                    <span
+                      className={`g-pointer error-color fx-center-center ${
+                        indeterminate || checkAll ? '' : 'disabled'
+                      }`}>
+                      <i className='icon iconfont icon-shanchu m-r-8'></i>删除
+                    </span>
+                  </div>
+                  <Divider type='vertical' style={{ height: 16 }} />
+                  <div className='clear-address'>
+                    <Popconfirm
+                      placement='bottom'
+                      title='警告'
+                      description='确定清空地址簿吗？'
+                      onConfirm={deleteAllMob}
+                      okText='确定'
+                      cancelText='取消'>
+                      <div className='g-pointer error-color fx-center-center'>
+                        <i className='icon iconfont icon-saozhou'></i>
+                        <span className='m-l-8'>清空地址簿</span>
+                      </div>
+                    </Popconfirm>
+                  </div>
+                  <Divider type='vertical' style={{ height: 16 }} />
+                </>
+              )}
+              <div
+                className='g-pointer'
+                onClick={toBack}
+                style={{ paddingRight: 0 }}>
+                <i className='icon iconfont icon-fanhui primary-color fn14'></i>
+              </div>
+            </Space>
+          </Flex>
         </Col>
       </Row>
 

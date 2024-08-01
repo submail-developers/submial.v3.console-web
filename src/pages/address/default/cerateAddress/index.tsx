@@ -1,7 +1,7 @@
 import { useEffect, forwardRef } from 'react'
 import { Modal, Form, App, Input, Select } from 'antd'
 import { createAddressbooks } from '@/api'
-import { tags_number, TagsColorEnum } from '@/pages/rcs/address/type'
+import { tags_number, TagsColorEnum } from '@/pages/address/type'
 import './index.scss'
 
 interface Props {
@@ -18,12 +18,13 @@ const Dialog = (props: Props, ref) => {
 
   useEffect(() => {
     form.resetFields()
-    if (props.isEdit) {
+    if (props.isEdit && props.open) {
       form.setFieldsValue({
         ...props.editData,
-        tag: props.editData.tag.includes('tag')
-          ? `${TagsColorEnum[props.editData.tag]}`
-          : `${props.editData.tag}`,
+        tag:
+          props.editData && props.editData.tag.includes('tag')
+            ? `${TagsColorEnum[props.editData.tag]}`
+            : `${props.editData?.tag}`,
       })
     }
   }, [props.open])

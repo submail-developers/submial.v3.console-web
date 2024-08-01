@@ -1,7 +1,7 @@
 import { Row, Col, Image, Space } from 'antd'
 import { NavLink } from 'react-router-dom'
 import { API } from 'apis'
-import { getAddressPath } from '@/pages/rcs/address/type'
+import { getAddressPath } from '@/pages/address/type'
 
 type Props = {
   address: API.SendAddressItem[]

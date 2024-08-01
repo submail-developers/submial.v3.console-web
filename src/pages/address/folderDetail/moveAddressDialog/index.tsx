@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import { Modal, Form, App, Flex, Pagination, Button, Spin } from 'antd'
 import { getAddressbooksFolder } from '@/api'
 import './index.scss'
-import { getFolderPath } from '@/pages/rcs/address/type'
+import { getFolderPath } from '@/pages/address/type'
 
 import { moveAddressBook } from '@/api'
 interface Props {
@@ -100,10 +100,9 @@ const Dialog = (props: Props, ref: any) => {
   }
   return (
     <Modal
-      onOk={handleOk}
       confirmLoading={loading}
       open={props.open}
-      onCancel={props.onCancel}
+      onCancel={() => props.onCancel()}
       title='移动地址簿'
       width={600}
       data-class='see-move-address'
@@ -124,7 +123,7 @@ const Dialog = (props: Props, ref: any) => {
             showTotal={(folderTotal) => `共 ${folderTotal} 条`}
           />
           <div>
-            <Button onClick={props.onCancel}>取消</Button>
+            <Button onClick={() => props.onCancel()}>取消</Button>
             <Button className='btn-ok' onClick={handleOk}>
               确定
             </Button>
