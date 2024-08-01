@@ -1,0 +1,30 @@
+.newVision-welcome-overview {
+  text-align: center;
+  .ant-col {
+    position: relative;
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: 0;
+      width: 1px;
+      height: 80%;
+      transform: translateY(-50%);
+      background-color: #eee;
+    }
+    &:nth-child(4n) {
+      &::after {
+        background-color: transparent;
+      }
+    }
+  }
+}
+@media screen and (max-width: 767px) {
+  .ant-col {
+    &:nth-child(2n) {
+      &::after {
+        background-color: transparent;
+      }
+    }
+  }
+}

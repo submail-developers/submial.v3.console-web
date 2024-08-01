@@ -1,0 +1,61 @@
+.pay-order {
+  .order-info {
+    width: 100%;
+    max-width: 440px;
+    margin: 0 auto;
+    .order-item {
+      height: 48px;
+      line-height: 48px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      transition: all 0.3s;
+      &:last-child {
+        border-bottom: none;
+      }
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.075);
+        border-bottom-color: transparent;
+      }
+      .label {
+        flex: 1;
+        border-right: 1px solid rgba(0, 0, 0, 0.05);
+        padding: 0 16px;
+      }
+      .value {
+        flex: 1;
+        padding: 0 16px;
+      }
+    }
+  }
+  .tabs {
+    display: flex;
+    align-items: center;
+    .tab-item {
+      font-size: 16px;
+      cursor: pointer;
+      padding: 8px 12px 4px;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s;
+      color: var(--color);
+      &.active {
+        border-bottom-color: var(--color);
+        color: inherit;
+      }
+    }
+  }
+  .web-pay {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 300px;
+    .link {
+      width: 100%;
+      background: #f3f3f3 linear-gradient(180deg, whitesmoke, #f3f3f3) repeat-x;
+      border-color: #f3f3f3;
+      &:hover {
+        background: #e0e0e0 linear-gradient(180deg, #e5e5e5, #e0e0e0) repeat-x;
+        border-color: #e0e0e0;
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+.page-content.welcome {
+  height: auto;
+  padding: 24px 16px 60px;
+  position: relative;
+  .loading-wrap {
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: fit-content;
+  }
+  .guide-collapse {
+    background-color: #f6f7f9;
+    border: 1px solid #eee;
+    background-image: url('@/assets/rcs/welcome/guide_bg.png');
+    background-position: top left;
+    background-repeat: no-repeat;
+    background-size: 100% cover;
+    .ant-collapse-item {
+      border-radius: 4px;
+    }
+    .ant-collapse-header {
+      background-color: transparent;
+      padding-top: 16px;
+      padding-bottom: 16px;
+    }
+    .ant-collapse-content-box {
+      padding-top: 0;
+      padding-bottom: 16px;
+    }
+  }
+  .guide-item {
+    background-color: #fff;
+    box-shadow: 0 0 20px #eee;
+    position: relative;
+    padding-left: 48px;
+    .step {
+      font-size: 36px;
+      color: #d7d7d7;
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    .des {
+      color: #666d7a;
+    }
+  }
+}
