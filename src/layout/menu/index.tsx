@@ -5,7 +5,8 @@ import {
   useMatch,
   useLocation,
 } from 'react-router-dom'
-import { menus, RouteExtParams } from '@/routes'
+import { menus } from '@/routes'
+import { RouteExtParams } from '@/routes/type'
 import { useEffect, useState } from 'react'
 
 import './index.scss'
