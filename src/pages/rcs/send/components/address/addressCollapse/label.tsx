@@ -18,7 +18,7 @@ const LabelItem = (props: LabelItemProps) => {
   let tag = ''
   if (props.item.length > 0) {
     name =
-      props.item[0].folder == '0' ? '所有地址簿' : props.item[0].folder_name
+      props.item[0].folder == '0' ? '地址簿公海' : props.item[0].folder_name
     folder = props.item[0].folder
     tag = props.item[0].folder_tag
   }
