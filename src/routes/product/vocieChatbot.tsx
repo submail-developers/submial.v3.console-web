@@ -100,6 +100,9 @@ export const voiceChatbotMenus: RouteObject[] = [
           },
           {
             path: 'create',
+            loader: loaderFn({
+              breadName: '创建任务',
+            }),
             errorElement: <Error />,
             element: (
               <LazyImportComponent
@@ -110,7 +113,10 @@ export const voiceChatbotMenus: RouteObject[] = [
             ),
           },
           {
-            path: 'detail',
+            path: 'detail/:id',
+            loader: loaderFn({
+              breadName: '任务详情',
+            }),
             errorElement: <Error />,
             element: (
               <LazyImportComponent
