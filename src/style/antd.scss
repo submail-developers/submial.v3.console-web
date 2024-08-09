@@ -1,6 +1,14 @@
 .ant-form-item label {
   margin-bottom: 0;
 }
+// 必填项 * 设置为16px
+.ant-form-item
+  .ant-form-item-label
+  > label.ant-form-item-required:not(
+    .ant-form-item-required-mark-optional
+  )::before {
+  font-size: 16px;
+}
 
 .ant-table-wrapper.theme-cell {
   .paddingL30 {
