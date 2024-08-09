@@ -1,5 +1,15 @@
 import { useState, useEffect, useRef } from 'react'
-import { Flex, Row, Col, Button, Divider, Image, Pagination, Spin } from 'antd'
+import {
+  Flex,
+  Row,
+  Col,
+  Button,
+  Divider,
+  Image,
+  Pagination,
+  Spin,
+  Empty,
+} from 'antd'
 import PageContent from '@/components/pageContent'
 import Item from './components/item'
 import CreateModal from './components/create'
@@ -86,6 +96,7 @@ export default function Fn() {
             </Col>
           ))}
         </Row>
+        {subhookList.length == 0 && <Empty />}
       </div>
 
       <Flex justify='flex-end' align='center' style={{ marginTop: '32px' }}>
