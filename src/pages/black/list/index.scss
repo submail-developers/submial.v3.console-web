@@ -1,0 +1,13 @@
+.page-content.black-list {
+  padding: 32px 16px 48px;
+  height: auto;
+  .mob-item {
+    margin-bottom: 12px;
+    padding: 18px 10px;
+    border-radius: 4px;
+    border: 1px solid #e7e7e7;
+    min-width: fit-content;
+    height: 32px;
+    box-sizing: border-box;
+  }
+}
