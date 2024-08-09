@@ -1,0 +1,30 @@
+.page-content.flow-list {
+  padding: 32px 16px 48px;
+  height: auto;
+  .send-type {
+    width: 90px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 169, 123, 0.2);
+    border-radius: 4px;
+    color: var(--success-color);
+    font-size: 13px;
+    &::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--success-color);
+      margin-right: 6px;
+    }
+    &.type2 {
+      background-color: rgb(241, 157, 37, 0.2);
+      color: var(--waiting-color);
+      &::before {
+        background-color: var(--waiting-color);
+      }
+    }
+  }
+}
