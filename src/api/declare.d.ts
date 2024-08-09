@@ -880,10 +880,12 @@ declare module 'apis' {
     // 获取地址簿参数
     interface GetMobAddressbooksParams {
       page: number
-      tag: string
-      order_by: string
-      search_type: string
-      keywords: string
+      tag?: string
+      order_by?: string
+      search_type?: string
+      keywords?: string
+      id?: string
+      address?: string
     }
     // 获取地址簿返回值
     interface GetMobAddressbooksItems {
@@ -908,7 +910,7 @@ declare module 'apis' {
     // 获取地址簿详情返回值
     interface GetMobAddressbookDetailItems {
       address: string
-      id: string
+      id?: string
     }
     interface GetAddressbookDetailRes {
       rows: number
@@ -1589,5 +1591,66 @@ declare module 'apis' {
       keyword: string
     }
     // 导出-end
+    // 语音机器人-start
+    interface GetTalkListParams {
+      name: string
+      page: number
+      limit: number
+    }
+
+    interface GetTalkListItem {
+      id: string
+      businessId: string // 企业ID
+      name: string
+      status: 3 | 4 // 3代发布4已发布
+      createPhone: string // 创建话术账户
+      createName: string // 创建话术名称
+      type: 1 | 2 // 话术类型1普通话术2动态话术
+      createTime: string
+      lastUpdateTime: string
+      contextId: string // 话术uuid
+      businessName: string // 企业名称
+      templateField: string
+      deleted: 0 | 1 // 0：未删除，1：已删除
+    }
+    interface GetTalkListRes {
+      status: string
+      message: string
+      data: GetTalkListItem[]
+      total: number
+    }
+
+    // 创建话术
+    interface CreateTalkParams {
+      name: string
+      recognitionModel: 'general' | 'address' | 'finance3.0'
+      type: 1 | 2
+    }
+    interface CreateTalkRes {
+      id: number
+    }
+    interface UsableTalkItem {
+      id: number
+      businessId: number
+      name: string
+      status: number
+      jsonFilePath: string
+      templateFilePath: string
+      createPhone: string
+      createName: string
+      type: 1 | 2 // 话术类型1普通话术2动态话术
+      createTime: string
+      lastUpdateTime: string
+      contextId: string
+      businessName: string
+      submitCheckTime: string
+      reviewFilePath: string
+      publishName: string
+      templateField: string
+      deleted: 0 | 1 // 0：未删除，1：已删除
+      avoidStatus: number
+      clearSpeechVoice: number
+    }
+    // 语音机器人-end
   }
 }

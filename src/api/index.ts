@@ -973,3 +973,64 @@ export const downLaodFile = () => {
 /**
  * 导出-end
  * */
+
+/**
+ * 语音机器人-start
+ * */
+
+export const openVoiseChatbot = () => {
+  return request.post<any, API.Response<string>, any>(
+    '/console/api/VoiceChatbot/save_configure',
+    {
+      agreement: true,
+    },
+  )
+}
+
+// 获取token
+export const getTalkToken = () => {
+  return request.post<any, API.Response<string>, any>(
+    '/console/api/VoiceChatbot/get_talk_token',
+  )
+}
+// 话术列表
+export const getTalkList = (data: API.GetTalkListParams) => {
+  return request.post<any, API.GetTalkListRes, API.GetTalkListParams>(
+    '/console/api/VoiceChatbot/get_talk_list',
+    {
+      ...data,
+    },
+  )
+}
+
+// 删除话术 话术id 支持多个， 用英文逗号隔开
+export const createTalk = (data: API.CreateTalkParams) => {
+  return request.post<
+    any,
+    API.Response<API.CreateTalkRes>,
+    API.CreateTalkParams
+  >('/console/api/VoiceChatbot/create_talk', {
+    ...data,
+  })
+}
+
+// 删除话术 话术id 支持多个， 用英文逗号隔开
+export const delTalkItem = (data: { ids: string }) => {
+  return request.post<any, any, { ids: string }>(
+    '/console/api/VoiceChatbot/delete_talk',
+    {
+      ...data,
+    },
+  )
+}
+
+// 外呼任务-话术列表
+export const getUsableTalkList = () => {
+  return request.post<any, API.Response<API.UsableTalkItem[]>, any>(
+    '/console/api/VoiceChatbot/get_usable_talk_list',
+  )
+}
+
+/**
+ * 语音机器人-end
+ * */
