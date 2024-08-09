@@ -1,52 +1,54 @@
-.contacts-tabs {
-  position: relative;
-  .tabs-item {
-    height: 32px;
+.rcs-create-send {
+  .contacts-tabs {
     position: relative;
-    cursor: pointer;
-    margin-right: 8px;
-    transition: color 0.3s;
-    word-break: keep-all;
-    word-wrap: normal;
-    &:after {
-      content: '';
+    .tabs-item {
+      height: 32px;
+      position: relative;
+      cursor: pointer;
+      margin-right: 8px;
+      transition: color 0.3s;
+      word-break: keep-all;
+      word-wrap: normal;
+      &:after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        transform: translateX(-50%);
+        width: 0;
+        height: 2px;
+        color: inherit;
+        transition: width 0.3s, background-color 0.3s;
+        background-color: transparent;
+        border-radius: 1px;
+      }
+      &:hover {
+        color: var(--black-color);
+        &:after {
+          width: 100%;
+          background-color: var(--gray-color-sub);
+        }
+      }
+      &.active {
+        color: var(--primary-color);
+        &:after {
+          width: 100%;
+          background-color: var(--primary-color);
+        }
+      }
+    }
+    .contacts-content {
+      border: 1px solid #e6e6e6;
+      border-radius: 4px;
+      max-height: 1000px;
+      min-height: 100px;
+      overflow-y: scroll;
+    }
+    .init-loading {
       position: absolute;
+      top: 30px;
       left: 50%;
-      bottom: 0;
       transform: translateX(-50%);
-      width: 0;
-      height: 2px;
-      color: inherit;
-      transition: width 0.3s, background-color 0.3s;
-      background-color: transparent;
-      border-radius: 1px;
     }
-    &:hover {
-      color: var(--black-color);
-      &:after {
-        width: 100%;
-        background-color: var(--gray-color-sub);
-      }
-    }
-    &.active {
-      color: var(--primary-color);
-      &:after {
-        width: 100%;
-        background-color: var(--primary-color);
-      }
-    }
-  }
-  .contacts-content {
-    border: 1px solid #e6e6e6;
-    border-radius: 4px;
-    max-height: 1000px;
-    min-height: 100px;
-    overflow-y: scroll;
-  }
-  .init-loading {
-    position: absolute;
-    top: 30px;
-    left: 50%;
-    transform: translateX(-50%);
   }
 }

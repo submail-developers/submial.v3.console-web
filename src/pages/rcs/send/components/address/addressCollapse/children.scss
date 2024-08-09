@@ -1,28 +1,30 @@
-.address-collapse-children-content {
-  .address-item {
-    position: relative;
-    width: 120px;
-    cursor: pointer;
-    border: 1px solid transparent;
-    background-color: transparent;
-    border-radius: 4px;
-    transition: all 0.3s;
-    .check-btn {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      border: 1px solid var(--primary-color);
-      opacity: 0;
+.rcs-create-send {
+  .address-collapse-children-content {
+    .address-item {
+      position: relative;
+      width: 120px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      background-color: transparent;
+      border-radius: 4px;
       transition: all 0.3s;
-    }
-    &.checked {
-      border-color: var(--primary-color);
-      background-color: #f6f7f8;
       .check-btn {
-        opacity: 1;
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 1px solid var(--primary-color);
+        opacity: 0;
+        transition: all 0.3s;
+      }
+      &.checked {
+        border-color: var(--primary-color);
+        background-color: #f6f7f8;
+        .check-btn {
+          opacity: 1;
+        }
       }
     }
   }

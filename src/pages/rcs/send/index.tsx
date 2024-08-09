@@ -371,7 +371,7 @@ export default function CreateSend() {
 
   return (
     <>
-      <PageContent extClass='create-send'>
+      <PageContent extClass='rcs-create-send'>
         <Image src={faceImg} preview={false} width={72}></Image>
         <Flex justify='space-between' align='center'>
           <div className='fn22 fw-500'>创建在线发送任务</div>

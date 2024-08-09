@@ -1,69 +1,71 @@
-.contacts-content.input-content {
-  // overflow-x: hidden;
-  .tabs {
-    width: fit-content;
-  }
-  .tr:first-child {
+.rcs-create-send {
+  .contacts-content.input-content {
+    // overflow-x: hidden;
+    .tabs {
+      width: fit-content;
+    }
+    .tr:first-child {
+      .tab-cell {
+        border-top: 1px solid #e6e6e6;
+      }
+    }
+    .tr {
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.075);
+      }
+      .tab-cell:first-child {
+        border-left: 1px solid #e6e6e6;
+      }
+    }
     .tab-cell {
-      border-top: 1px solid #e6e6e6;
-    }
-  }
-  .tr {
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.075);
-    }
-    .tab-cell:first-child {
-      border-left: 1px solid #e6e6e6;
-    }
-  }
-  .tab-cell {
-    padding: 12px;
-    border-right: 1px solid #e6e6e6;
-    border-bottom: 1px solid #e6e6e6;
-    .cell-title {
-      text-align: center;
-    }
+      padding: 12px;
+      border-right: 1px solid #e6e6e6;
+      border-bottom: 1px solid #e6e6e6;
+      .cell-title {
+        text-align: center;
+      }
 
-    &.var {
+      &.var {
+        .ant-form-item {
+          input,
+          .cell-title {
+            width: 120px;
+          }
+        }
+      }
       .ant-form-item {
+        margin-bottom: 0;
         input,
         .cell-title {
-          width: 120px;
+          width: 140px;
         }
       }
     }
-    .ant-form-item {
-      margin-bottom: 0;
-      input,
-      .cell-title {
-        width: 140px;
-      }
-    }
-  }
-  .handle {
-    width: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    .handle-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
+    .handle {
+      width: 60px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: transparent;
-      cursor: pointer;
-      transition: all 0.3s;
-      &:hover {
-        background: #e7e7e7 linear-gradient(180deg, #ebebeb, #e7e7e7) repeat-x;
+      .handle-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        cursor: pointer;
+        transition: all 0.3s;
+        &:hover {
+          background: #e7e7e7 linear-gradient(180deg, #ebebeb, #e7e7e7) repeat-x;
+        }
       }
     }
-  }
-  .handle-add {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    cursor: pointer;
+    .handle-add {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
   }
 }

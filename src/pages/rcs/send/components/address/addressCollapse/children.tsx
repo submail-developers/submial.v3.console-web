@@ -1,7 +1,7 @@
 import { Row, Col, Image } from 'antd'
 import { API } from 'apis'
 import './children.scss'
-import { getAddressPath } from './type'
+import { getAddressPath } from '@/pages/address/type'
 type ChangeProps = {
   folder: string
   checkeds: string[]

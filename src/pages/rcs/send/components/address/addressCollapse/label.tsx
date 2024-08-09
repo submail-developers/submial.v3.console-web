@@ -1,7 +1,7 @@
 import { Flex, Checkbox, Space, Image } from 'antd'
 import type { CheckboxProps } from 'antd'
 import { API } from 'apis'
-import { getFolderPath } from './type'
+import { getFolderPath } from '@/pages/address/type'
 type ChangeProps = {
   folder: string
   checkeds: string[]
