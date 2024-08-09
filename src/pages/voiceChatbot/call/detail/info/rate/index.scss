@@ -1,0 +1,49 @@
+.call-rate {
+  text-align: center;
+  .rate-info {
+    position: relative;
+    &::before {
+      content: '';
+      width: 1px;
+      height: 75%;
+      position: absolute;
+      top: 50%;
+      left: -6px;
+      transform: translateY(-50%);
+      background-color: #eee;
+    }
+  }
+}
+@media screen and (max-width: 767px) {
+  .call-rate {
+    & > .ant-col:nth-child(2n + 1) {
+      .rate-info {
+        &::before {
+          opacity: 0;
+        }
+      }
+    }
+  }
+}
+@media screen and (min-width: 768px) and (max-width: 1199px) {
+  .call-rate {
+    & > .ant-col:nth-child(3n + 1) {
+      .rate-info {
+        &::before {
+          opacity: 0;
+        }
+      }
+    }
+  }
+}
+@media screen and (min-width: 1200px) {
+  .call-rate {
+    & > .ant-col:nth-child(4n + 1) {
+      .rate-info {
+        &::before {
+          opacity: 0;
+        }
+      }
+    }
+  }
+}

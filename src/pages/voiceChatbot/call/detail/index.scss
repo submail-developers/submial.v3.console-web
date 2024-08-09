@@ -1,0 +1,13 @@
+.page-content.call-detail {
+  padding: 32px 16px 48px;
+  height: auto;
+  .detail-nav {
+    height: 30px;
+    line-height: 30px;
+  }
+  .nav-active {
+    background-color: var(--color);
+    color: #fff;
+    border-radius: 4px;
+  }
+}
