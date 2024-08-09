@@ -1,10 +1,23 @@
 import { Button, Space, Checkbox } from 'antd'
 import PageContent from '@/components/pageContent'
-import Card from '@/pages/voiceChatbot/welcome/components/card'
+import Card from '@/components/aCard'
 import { AimIcon } from '@/components/aIcons'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { openVoiseChatbot } from '@/api'
 export default function Fn() {
   const [checked, setChecked] = useState(false)
+  const nav = useNavigate()
+  const open = async () => {
+    try {
+      const res = await openVoiseChatbot()
+      if (res.status == 'success') {
+        nav('/console/voiceChatbot/welcome', {
+          replace: true,
+        })
+      }
+    } catch (error) {}
+  }
   return (
     <PageContent>
       <div className='m-t-40 p-t-40 m-x-12'>
@@ -32,7 +45,11 @@ export default function Fn() {
                 </span>
               </Space>
             </div>
-            <Button type='primary' className='m-t-20'>
+            <Button
+              disabled={!checked}
+              type='primary'
+              className='m-t-20'
+              onClick={open}>
               开通产品
             </Button>
           </div>
