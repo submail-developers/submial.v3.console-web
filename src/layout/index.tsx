@@ -83,7 +83,7 @@ export default function Fn() {
         <Sider
           className='layout-sider'
           width={280}
-          style={sideStyle}
+          style={isSmPoint || isRouterHideMenu ? {} : sideStyle}
           collapsed={isSmPoint || isRouterHideMenu}
           breakpoint='sm'
           collapsedWidth={0}
