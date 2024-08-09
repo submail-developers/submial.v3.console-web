@@ -2,13 +2,14 @@ import { DownOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import ASmsVerify from '@/components/aSmsVerify'
 
-import { useRef } from 'react'
+import { ReactNode, useRef } from 'react'
 import { Dropdown, Button } from 'antd'
 
 type Props = {
   useCode: boolean
   items: MenuProps['items']
   onExportEvent: (key: string) => void
+  children?: ReactNode
 }
 
 /**
@@ -39,10 +40,12 @@ export default function AExport(props: Props) {
         className='export'
         menu={{ items: props.items, selectable: true, onClick: exportEvent }}
         trigger={['click']}>
-        <Button type='primary' className='fx-y-center'>
-          <span className='m-r-8'>导 出</span>
-          <DownOutlined rev={null} />
-        </Button>
+        {props.children || (
+          <Button type='primary' className='fx-y-center'>
+            <span className='m-r-8'>导 出</span>
+            <DownOutlined rev={null} />
+          </Button>
+        )}
       </Dropdown>
       <ASmsVerify ref={ref} onSuccess={verifySuccess} />
     </>
