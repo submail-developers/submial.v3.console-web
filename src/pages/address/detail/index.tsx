@@ -34,6 +34,7 @@ import { downloadFile } from '@/utils'
 import './index.scss'
 
 const { Search } = Input
+const CheckboxGroup = Checkbox.Group
 
 const items: MenuProps['items'] = [
   { label: '导出 TXT', key: 'txt' },
@@ -53,13 +54,11 @@ export default function Fn() {
   const [currentPage, setcurrentPage] = useState<number>(1)
   const [total, setTotal] = useState<number>(0)
   const [addressDetailList, setAddressDetailList] = useState([])
-  const [checkValues, setCheckValues] = useState([])
 
   // 全选
   const [selectedList, setselectedList] = useState<string[]>([])
   const [indeterminate, setIndeterminate] = useState(false) //控制半选状态
   const [checkAll, setCheckAll] = useState(false) //控制全选状态
-  const CheckboxGroup = Checkbox.Group
 
   const { id } = useParams()
 
@@ -134,13 +133,10 @@ export default function Fn() {
 
   // 批量删除
   const batchDel = async () => {
-    if (checkValues.length == 0) return
+    if (selectedList.length == 0) return
     try {
       const res = await deleteAddressMob({
-        id:
-          checkValues.length > 0
-            ? checkValues.join(',')
-            : selectedList.join(','),
+        id: selectedList.join(','),
         addressbook: id,
       })
       if (res.status == 'success') {
@@ -184,7 +180,6 @@ export default function Fn() {
 
   // 单个checkbox点击
   const onChange = (checkedValues: string[]) => {
-    setCheckValues(checkedValues)
     setselectedList(checkedValues)
   }
   // 全选点击
