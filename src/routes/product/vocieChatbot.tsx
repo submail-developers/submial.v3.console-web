@@ -1,9 +1,21 @@
 import { lazy } from 'react'
-import { RouteObject, Navigate } from 'react-router-dom'
+import { RouteObject, Navigate, useParams } from 'react-router-dom'
 import Error from '@/pages/error'
 import LazyImportComponent from '../lazyConfig'
 import { RouteExtParams, loaderFn, handleFn } from '../type'
 import { addressChildren } from './address'
+import { blackChildren } from './black'
+
+// 重定向到已外呼任务详情
+const RedirectCalled = () => {
+  const { id } = useParams()
+  return (
+    <Navigate
+      to={`/console/voiceChatbot/call/detail/${id}/sendList/called`}
+      replace
+    />
+  )
+}
 
 // 需要重定向的路由
 export const baseRouters: RouteObject[] = [
@@ -12,12 +24,24 @@ export const baseRouters: RouteObject[] = [
     element: <Navigate to={'/console/voiceChatbot/welcome'} replace />,
   },
   {
-    path: '/console/voiceChatbot/address',
-    element: <Navigate to={'/console/voiceChatbot/address/index'} replace />,
+    path: '/console/voiceChatbot/talk',
+    element: <Navigate to={'/console/voiceChatbot/talk/index'} replace />,
   },
   {
     path: '/console/voiceChatbot/call',
     element: <Navigate to={'/console/voiceChatbot/call/index'} replace />,
+  },
+  {
+    path: '/console/voiceChatbot/address',
+    element: <Navigate to={'/console/voiceChatbot/address/index'} replace />,
+  },
+  {
+    path: '/console/voiceChatbot/black',
+    element: <Navigate to={'/console/voiceChatbot/black/index'} replace />,
+  },
+  {
+    path: '/console/voiceChatbot/call/detail/:id/sendList',
+    element: <RedirectCalled />,
   },
 ]
 
@@ -58,19 +82,48 @@ export const voiceChatbotMenus: RouteObject[] = [
         ),
       },
       {
-        path: 'chatbot',
+        path: 'talk',
         loader: loaderFn({
           groupName: '机器人管理',
           groupIcon: 'icon-jiqiren',
-          breadName: '机器人管理',
+          breadName: '话术管理',
           menuName: '创建/管理话术',
         }),
         errorElement: <Error />,
         element: (
           <LazyImportComponent
-            lazyChildren={lazy(() => import('@/pages/voiceChatbot/test'))}
+            lazyChildren={lazy(() => import('@/pages/voiceChatbot/talk'))}
           />
         ),
+        children: [
+          {
+            path: 'index',
+            errorElement: <Error />,
+            element: (
+              <LazyImportComponent
+                lazyChildren={lazy(
+                  () => import('@/pages/voiceChatbot/talk/list'),
+                )}
+              />
+            ),
+          },
+          {
+            path: 'edit/:id/:editable', // editable：0查看1编辑
+            loader: loaderFn({
+              hideMenu: true,
+              hideHeaderRight: true,
+              breadName: '话术详情',
+            }),
+            errorElement: <Error />,
+            element: (
+              <LazyImportComponent
+                lazyChildren={lazy(
+                  () => import('@/pages/voiceChatbot/talk/edit'),
+                )}
+              />
+            ),
+          },
+        ],
       },
       {
         path: 'call',
@@ -125,36 +178,84 @@ export const voiceChatbotMenus: RouteObject[] = [
                 )}
               />
             ),
+            children: [
+              {
+                path: 'info',
+                errorElement: <Error />,
+                element: (
+                  <LazyImportComponent
+                    lazyChildren={lazy(
+                      () => import('@/pages/voiceChatbot/call/detail/info'),
+                    )}
+                  />
+                ),
+              },
+              {
+                path: 'sendList',
+                loader: loaderFn({
+                  // breadName: '任务列表',
+                }),
+                errorElement: <Error />,
+                element: (
+                  <LazyImportComponent
+                    lazyChildren={lazy(
+                      () => import('@/pages/voiceChatbot/call/detail/sendList'),
+                    )}
+                  />
+                ),
+                children: [
+                  {
+                    path: 'called',
+                    loader: loaderFn({
+                      // breadName: '已呼号码',
+                    }),
+                    errorElement: <Error />,
+                    element: (
+                      <LazyImportComponent
+                        lazyChildren={lazy(
+                          () =>
+                            import(
+                              '@/pages/voiceChatbot/call/detail/sendList/called'
+                            ),
+                        )}
+                      />
+                    ),
+                  },
+                  {
+                    path: 'calling',
+                    loader: loaderFn({
+                      // breadName: '未呼号码',
+                    }),
+                    errorElement: <Error />,
+                    element: (
+                      <LazyImportComponent
+                        lazyChildren={lazy(
+                          () =>
+                            import(
+                              '@/pages/voiceChatbot/call/detail/sendList/calling'
+                            ),
+                        )}
+                      />
+                    ),
+                  },
+                ],
+              },
+            ],
           },
         ],
       },
       {
-        path: 'callApis',
+        path: 'grade',
         loader: loaderFn({
           groupName: '外呼任务管理',
           groupIcon: 'icon-xiaoxi',
-          breadName: '外呼历史任务',
-          menuName: '外呼历史任务',
+          breadName: '意向客户管理',
+          menuName: '意向客户管理',
         }),
         errorElement: <Error />,
         element: (
           <LazyImportComponent
-            lazyChildren={lazy(() => import('@/pages/voiceChatbot/test'))}
-          />
-        ),
-      },
-      {
-        path: 'callAnalysis',
-        loader: loaderFn({
-          groupName: '外呼任务管理',
-          groupIcon: 'icon-xiaoxi',
-          breadName: '外呼分析报告',
-          menuName: '外呼分析报告',
-        }),
-        errorElement: <Error />,
-        element: (
-          <LazyImportComponent
-            lazyChildren={lazy(() => import('@/pages/voiceChatbot/test'))}
+            lazyChildren={lazy(() => import('@/pages/voiceChatbot/grade'))}
           />
         ),
       },
@@ -185,9 +286,10 @@ export const voiceChatbotMenus: RouteObject[] = [
         errorElement: <Error />,
         element: (
           <LazyImportComponent
-            lazyChildren={lazy(() => import('@/pages/voiceChatbot/test'))}
+            lazyChildren={lazy(() => import('@/pages/black/index'))}
           />
         ),
+        children: blackChildren,
       },
       {
         path: 'fee',

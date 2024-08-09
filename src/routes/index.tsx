@@ -15,7 +15,7 @@ export const baseRouter: RouteObject[] = [
   {
     path: '/',
     loader: () => {
-      throw redirect('/console/rcs/welcome')
+      throw redirect('/console/voiceChatbot/welcome')
     },
   },
   ...rcsBaseRouters,
@@ -29,7 +29,7 @@ export const baseRouter: RouteObject[] = [
   {
     path: '*',
     loader: () => {
-      throw redirect('/console/rcs/welcome')
+      throw redirect('/console/voiceChatbot/welcome')
     },
   },
 ]
