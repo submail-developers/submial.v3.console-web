@@ -9,7 +9,7 @@ import { downloadFile } from '@/utils'
 import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
 
-import MyCard from './components/card'
+import MyCard from '@/components/aCard'
 import Overview from './components/overview'
 import MySuccess from './components/success'
 import MyError from './components/error'

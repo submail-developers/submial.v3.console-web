@@ -4,7 +4,7 @@ import { Row, Col, Flex, Image, Button, Divider } from 'antd'
 import { usePoint } from '@/hooks'
 
 import PageContent from '@/components/pageContent'
-import Card from './components/card'
+import Card from '@/components/aCard'
 import Template from './components/template'
 import Info from './components/info'
 import Api from './components/api'

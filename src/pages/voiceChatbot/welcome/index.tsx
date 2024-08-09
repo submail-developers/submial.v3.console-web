@@ -20,7 +20,7 @@ import {
 import type { CollapseProps, GetProps, StatisticProps } from 'antd'
 import PageContent from '@/components/pageContent'
 import MyPay from './components/pay'
-import Card from './components/card'
+import Card from '@/components/aCard'
 import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
 import { usePoint, useLocalStorage } from '@/hooks'
@@ -233,9 +233,7 @@ export default function Fn() {
         <Col span={24} sm={24} md={24} xl={12} xxl={9}>
           <Card
             title={
-              <Row
-                className='w-100'
-                style={{ textIndent: 0, padding: ' 0 1em' }}>
+              <Row className='w-100' style={{ textIndent: 0 }}>
                 <Col className='fn16 fw-500' span={14}>
                   意向客户
                 </Col>
