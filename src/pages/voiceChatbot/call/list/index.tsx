@@ -10,45 +10,21 @@ import {
   Form,
   Select,
   Input,
-  Tooltip,
   Space,
 } from 'antd'
 import type { GetProps } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { usePoint } from '@/hooks'
-import AExport from '@/components/aExport'
-import { useAppSelector } from '@/store/hook'
-import { settingRcs } from '@/store/reducers/settingRcs'
 import PageContent from '@/components/pageContent'
-import ACopy from '@/components/aCopy'
 import { getChatbot, getHistory, exportRcsHistory } from '@/api'
 import { API } from 'apis'
 import faceImg from '@/assets/rcs/face/history.png'
 import dayjs from 'dayjs'
 import { getPresets } from '@/utils/day'
 import { downloadFile } from '@/utils'
-import SeeModal from '@/pages/rcs/template/seeModal'
 import type { ColumnsType } from 'antd/es/table'
 
 import './index.scss'
-
-enum statusNum {
-  '等待',
-  '成功',
-  '失败',
-  '撤回',
-}
-enum statusStyle {
-  'gray-color',
-  'success-color',
-  'error-color',
-  'warning-color',
-}
-enum SendTypeEnum {
-  '5G消息',
-  '回落为短信',
-  '回落为彩信',
-}
 
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>
 const { RangePicker } = DatePicker
@@ -82,36 +58,25 @@ const sendOptions = [
   },
 ]
 
-interface DataType extends API.GetHistoryItems {}
+type T = {
+  id: string
+}
+
+// interface DataType extends API.GetHistoryItems {}
+interface DataType extends T {}
 
 export default function Fn() {
-  const rcsSetting = useAppSelector(settingRcs)
   const [form] = Form.useForm()
   const pointXs = usePoint('xs')
   const [loading, setLoading] = useState(false)
   const [page, setPage] = useState<number>(1)
   const [limit, setLimit] = useState<number>(10)
   const [total, setTotal] = useState<number>(0)
-  const [tableData, setTableData] = useState<DataType[]>([])
-  const [chatBotList, setChatBotList] = useState<API.ChatbotItem[]>([])
-  // 获取chatbot
-  const getChatbotList = async () => {
-    try {
-      const res = await getChatbot({
-        page: 1,
-        limit: 10000,
-        appid: '',
-        keywords: '',
-        status: '1',
-      })
-      setChatBotList(
-        res.list.map((item) => {
-          item.name = `${item.name}(${item.id})`
-          return item
-        }),
-      )
-    } catch (error) {}
-  }
+  const [tableData, setTableData] = useState<DataType[]>([
+    {
+      id: '123',
+    },
+  ])
 
   // 获取历史明细
   const getList = async () => {
@@ -134,38 +99,11 @@ export default function Fn() {
       }
 
       const res = await getHistory(params)
-      setTableData(res.history)
+      // setTableData(res.history)
       setTotal(res.row)
       setLoading(false)
     } catch (error) {
       setLoading(false)
-    }
-  }
-
-  // 导出
-  const exportEvent = async (type) => {
-    const {
-      appid = 'all',
-      status,
-      send_id,
-      to,
-      keyword,
-      time,
-    } = await form.getFieldsValue()
-    const start = time[0].format('YYYY-MM-DD')
-    const end = time[1].format('YYYY-MM-DD')
-    const res = await exportRcsHistory({
-      type,
-      start,
-      end,
-      appid,
-      status,
-      send_id,
-      to,
-      keyword,
-    })
-    if (res.status == 'success') {
-      downloadFile()
     }
   }
 
@@ -198,10 +136,6 @@ export default function Fn() {
       setPage(1)
     }
   }
-
-  useEffect(() => {
-    getChatbotList()
-  }, [])
 
   useEffect(() => {
     getList()
@@ -275,7 +209,9 @@ export default function Fn() {
       render: (_, record) => (
         <>
           <Button type='link' style={{ paddingLeft: 0 }}>
-            <NavLink to={`/console/voiceChatbot/call/detail/0`}>查看</NavLink>
+            <NavLink to={`/console/voiceChatbot/call/detail/${record.id}/info`}>
+              查看
+            </NavLink>
           </Button>
         </>
       ),
@@ -283,15 +219,17 @@ export default function Fn() {
   ]
 
   return (
-    <PageContent extClass='call-list'>
+    <PageContent extClass='call-list' xxl={'90%'} xl={'100%'}>
       <Image src={faceImg} preview={false} width={72}></Image>
       <Flex justify='space-between' align='center'>
-        <div className='fn22 fw-500'>创建管理外呼任务</div>
-        <Button
-          type='primary'
-          icon={<PlusOutlined className='fn14' rev={undefined} />}>
-          创建外呼任务
-        </Button>
+        <div className='fn22 fw-500'>创建/管理外呼任务</div>
+        <NavLink to='/console/voiceChatbot/call/create'>
+          <Button
+            type='primary'
+            icon={<PlusOutlined className='fn14' rev={undefined} />}>
+            创建外呼任务
+          </Button>
+        </NavLink>
       </Flex>
       <Divider />
       <Form
@@ -310,7 +248,7 @@ export default function Fn() {
               allowClear
               popupMatchSelectWidth={200}
               style={{ width: 200 }}
-              options={chatBotList}
+              options={[]}
               fieldNames={{ label: 'name', value: 'id' }}></Select>
           </Form.Item>
           <Form.Item label='任务状态' name='status' className='m-b-0'>
@@ -342,7 +280,7 @@ export default function Fn() {
           className='theme-cell reset-table m-t-24'
           columns={columns}
           dataSource={tableData}
-          rowKey='sendID'
+          rowKey='id'
           pagination={{
             defaultPageSize: limit,
             position: ['bottomRight'],
