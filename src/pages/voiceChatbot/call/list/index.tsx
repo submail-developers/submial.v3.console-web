@@ -11,12 +11,13 @@ import {
   Select,
   Input,
   Space,
+  Popconfirm,
 } from 'antd'
 import type { GetProps } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { usePoint } from '@/hooks'
 import PageContent from '@/components/pageContent'
-import { getChatbot, getHistory, exportRcsHistory } from '@/api'
+import { getUsableTalkList, getVCTaskList, changeVCTaskStatus } from '@/api'
 import { API } from 'apis'
 import faceImg from '@/assets/rcs/face/history.png'
 import dayjs from 'dayjs'
@@ -25,6 +26,41 @@ import { downloadFile } from '@/utils'
 import type { ColumnsType } from 'antd/es/table'
 
 import './index.scss'
+
+const StatusText = {
+  '1': '等待执行',
+  '2': '任务进行中',
+  '3': '暂停中',
+  '4': '手动取消',
+  '5': '超时结束',
+  '6': '正常完成',
+}
+const StatusOptions = [
+  {
+    label: '等待执行',
+    value: '1',
+  },
+  {
+    label: '任务进行中',
+    value: '2',
+  },
+  {
+    label: '暂停中',
+    value: '3',
+  },
+  {
+    label: '手动取消',
+    value: '4',
+  },
+  {
+    label: '超时结束',
+    value: '5',
+  },
+  {
+    label: '正常完成',
+    value: '6',
+  },
+]
 
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>
 const { RangePicker } = DatePicker
@@ -39,31 +75,7 @@ const disabledDate: RangePickerProps['disabledDate'] = (current) => {
   return currentDate.isAfter(today)
 }
 
-const sendOptions = [
-  {
-    value: 'all',
-    label: '全部状态',
-  },
-  {
-    value: 'delivered',
-    label: '发送成功',
-  },
-  {
-    value: 'dropped',
-    label: '发送失败',
-  },
-  {
-    value: 'pending',
-    label: '等待中',
-  },
-]
-
-type T = {
-  id: string
-}
-
-// interface DataType extends API.GetHistoryItems {}
-interface DataType extends T {}
+interface DataType extends API.VCTaskItem {}
 
 export default function Fn() {
   const [form] = Form.useForm()
@@ -72,11 +84,7 @@ export default function Fn() {
   const [page, setPage] = useState<number>(1)
   const [limit, setLimit] = useState<number>(10)
   const [total, setTotal] = useState<number>(0)
-  const [tableData, setTableData] = useState<DataType[]>([
-    {
-      id: '123',
-    },
-  ])
+  const [tableData, setTableData] = useState<DataType[]>([])
 
   // 获取历史明细
   const getList = async () => {
@@ -93,13 +101,12 @@ export default function Fn() {
         end,
         appid: formValues?.appid || 'all',
         status: formValues?.status || 'all',
-        send_id: formValues.send_id,
-        to: formValues.to,
-        keyword: formValues.keyword,
+        keywords: formValues.keywords,
+        talk_name: formValues.talk_name,
       }
 
-      const res = await getHistory(params)
-      // setTableData(res.history)
+      const res = await getVCTaskList(params)
+      setTableData(res.list)
       setTotal(res.row)
       setLoading(false)
     } catch (error) {
@@ -116,10 +123,20 @@ export default function Fn() {
     }
   }
 
+  // 开始执行2  暂停3  取消4
+  const updateTask = async (id, status) => {
+    try {
+      const res = await changeVCTaskStatus({ sentlist: id, status })
+      if (res.status == 'success') {
+        getList()
+      }
+    } catch (error) {}
+  }
+
   // 除搜索关键字，其他字段改变直接搜索
   const onValuesChange = (changedValues, allValues) => {
     let changeKey = Object.keys(changedValues)[0]
-    if (!['send_id', 'to', 'keyword'].includes(changeKey)) {
+    if (!['keywords', 'talk_name'].includes(changeKey)) {
       if (page == 1) {
         getList()
       } else {
@@ -147,15 +164,11 @@ export default function Fn() {
       fixed: true,
       width: 160,
       className: 'paddingL20',
-      render: (_, record) => (
-        <div style={{ height: 40 }} className='fw-500'>
-          名称
-        </div>
-      ),
+      dataIndex: 'title',
     },
     {
       title: '话术名称',
-      width: 260,
+      width: 160,
       className: 'tag-color',
       render: (_, record) => (
         <Space className='w-100' size={0}>
@@ -165,12 +178,12 @@ export default function Fn() {
     },
     {
       title: '预设开始时间',
-      dataIndex: 'send',
+      dataIndex: 'life_start',
       width: 180,
     },
     {
       title: '预设结束时间',
-      dataIndex: 'sent',
+      dataIndex: 'life_end',
       width: 180,
     },
     {
@@ -198,8 +211,9 @@ export default function Fn() {
       width: 120,
       render: (_, record) => (
         <>
-          <span className='send-type'>普通发送</span>
-          {/* <span className='send-type type2'>定时发送</span> */}
+          <span className={`send-type status-${record.status}`}>
+            {StatusText[record.status]}
+          </span>
         </>
       ),
     },
@@ -213,6 +227,42 @@ export default function Fn() {
               查看
             </NavLink>
           </Button>
+          {record.status == '2' && (
+            <Popconfirm
+              title='警告'
+              description='确定暂停该任务？'
+              onConfirm={() => updateTask(record.id, '3')}
+              okText='确定'
+              cancelText='取消'>
+              <Button type='link' style={{ paddingLeft: 0 }}>
+                暂停
+              </Button>
+            </Popconfirm>
+          )}
+          {record.status == '3' && (
+            <Popconfirm
+              title='警告'
+              description='确定开始执行该任务？'
+              onConfirm={() => updateTask(record.id, '2')}
+              okText='确定'
+              cancelText='取消'>
+              <Button type='link' style={{ paddingLeft: 0 }}>
+                开始
+              </Button>
+            </Popconfirm>
+          )}
+          {['1', '2', , '3'].includes(record.status) && (
+            <Popconfirm
+              title='警告'
+              description='确定取消该任务？'
+              onConfirm={() => updateTask(record.id, '4')}
+              okText='确定'
+              cancelText='取消'>
+              <Button type='link' style={{ paddingLeft: 0 }}>
+                取消
+              </Button>
+            </Popconfirm>
+          )}
         </>
       ),
     },
@@ -242,22 +292,13 @@ export default function Fn() {
           time: rangePresets[5].value,
         }}>
         <Flex align='flex-end' wrap='wrap' gap={16}>
-          <Form.Item label='话术名称' name='chatbot' className='m-b-0'>
-            <Select
-              placeholder='全部话术'
-              allowClear
-              popupMatchSelectWidth={200}
-              style={{ width: 200 }}
-              options={[]}
-              fieldNames={{ label: 'name', value: 'id' }}></Select>
-          </Form.Item>
           <Form.Item label='任务状态' name='status' className='m-b-0'>
             <Select
               placeholder='全部状态'
               allowClear
               popupMatchSelectWidth={120}
               style={{ width: 120 }}
-              options={sendOptions}></Select>
+              options={StatusOptions}></Select>
           </Form.Item>
           <Form.Item label='时间范围' name='time' className='m-b-0'>
             <RangePicker
@@ -265,7 +306,10 @@ export default function Fn() {
               allowClear={false}
               disabledDate={disabledDate}></RangePicker>
           </Form.Item>
-          <Form.Item label='任务名称' name='send_id' className='m-b-0'>
+          <Form.Item label='任务名称' name='keywords' className='m-b-0'>
+            <Input placeholder='请输入' onPressEnter={search} />
+          </Form.Item>
+          <Form.Item label='话术名称' name='talk_name' className='m-b-0'>
             <Input placeholder='请输入' onPressEnter={search} />
           </Form.Item>
           <Form.Item label='' className='m-b-0'>
@@ -274,27 +318,27 @@ export default function Fn() {
             </Button>
           </Form.Item>
         </Flex>
-
-        <Table
-          loading={loading}
-          className='theme-cell reset-table m-t-24'
-          columns={columns}
-          dataSource={tableData}
-          rowKey='id'
-          pagination={{
-            defaultPageSize: limit,
-            position: ['bottomRight'],
-            current: page,
-            pageSize: limit,
-            showQuickJumper: true,
-            pageSizeOptions: [10, 20, 50],
-            total: total,
-            showTotal: (total) => `共 ${total} 条`,
-            onChange: changePageInfo,
-          }}
-          scroll={{ x: 'fit-content' }}
-        />
       </Form>
+
+      <Table
+        loading={loading}
+        className='theme-cell reset-table m-t-24'
+        columns={columns}
+        dataSource={tableData}
+        rowKey='id'
+        pagination={{
+          defaultPageSize: limit,
+          position: ['bottomRight'],
+          current: page,
+          pageSize: limit,
+          showQuickJumper: true,
+          pageSizeOptions: [10, 20, 50],
+          total: total,
+          showTotal: (total) => `共 ${total} 条`,
+          onChange: changePageInfo,
+        }}
+        scroll={{ x: 'fit-content' }}
+      />
     </PageContent>
   )
 }
