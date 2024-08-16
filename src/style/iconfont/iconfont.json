@@ -6,6 +6,55 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "41426175",
+      "name": "开始任务",
+      "font_class": "task-start",
+      "unicode": "e6c5",
+      "unicode_decimal": 59077
+    },
+    {
+      "icon_id": "41426171",
+      "name": "通话时长",
+      "font_class": "say",
+      "unicode": "e6c6",
+      "unicode_decimal": 59078
+    },
+    {
+      "icon_id": "41426176",
+      "name": "取消任务",
+      "font_class": "task-cansel",
+      "unicode": "e6c7",
+      "unicode_decimal": 59079
+    },
+    {
+      "icon_id": "41426172",
+      "name": "创建任务",
+      "font_class": "task-create",
+      "unicode": "e6c9",
+      "unicode_decimal": 59081
+    },
+    {
+      "icon_id": "41426173",
+      "name": "重新呼叫",
+      "font_class": "recall",
+      "unicode": "e6cb",
+      "unicode_decimal": 59083
+    },
+    {
+      "icon_id": "41426169",
+      "name": "暂停任务",
+      "font_class": "task-stop",
+      "unicode": "e6cc",
+      "unicode_decimal": 59084
+    },
+    {
+      "icon_id": "41426177",
+      "name": "振铃时长",
+      "font_class": "calling",
+      "unicode": "e6c3",
+      "unicode_decimal": 59075
+    },
+    {
       "icon_id": "41293275",
       "name": "移出",
       "font_class": "moveout",

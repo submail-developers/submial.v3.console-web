@@ -302,7 +302,7 @@ export const voiceChatbotMenus: RouteObject[] = [
         errorElement: <Error />,
         element: (
           <LazyImportComponent
-            lazyChildren={lazy(() => import('@/pages/voiceChatbot/test'))}
+            lazyChildren={lazy(() => import('@/pages/voiceChatbot/fee'))}
           />
         ),
       },
