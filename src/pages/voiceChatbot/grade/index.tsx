@@ -198,7 +198,7 @@ export default function Fn() {
           <Row gutter={[16, 16]}>
             {grades.map((item) => (
               <Col span={24} xl={12} key={item.type}>
-                <div className='grade-item g-radius-4 p-x-16 p-y-16'>
+                <div className='grade-item g-radius-4 p-x-16 p-y-24'>
                   <Space>
                     <Image
                       src={getGradeTypePath(item.type)}
