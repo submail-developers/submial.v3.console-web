@@ -10,4 +10,38 @@
     color: #fff;
     border-radius: 4px;
   }
+
+  .send-list {
+    border-bottom: 1px solid #eee;
+    .send-nav {
+      position: relative;
+      padding-right: 24px;
+      line-height: 40px;
+      height: 40px;
+      display: inline-block;
+      color: inherit;
+      font-weight: 500;
+      &.send-nav-active {
+        color: var(--color);
+        &::after {
+          content: '';
+          height: 2px;
+          background-color: var(--color);
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          animation: widthAnimation 0.3s ease-out 1 forwards;
+        }
+      }
+    }
+  }
+
+  @keyframes widthAnimation {
+    from {
+      width: 0;
+    }
+    to {
+      width: 80%;
+    }
+  }
 }

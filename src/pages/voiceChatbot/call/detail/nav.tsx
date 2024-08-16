@@ -1,9 +1,6 @@
-import { Flex, Space, Button } from 'antd'
-import { useState, useEffect } from 'react'
+import { Flex, Space, Button, ConfigProvider } from 'antd'
 import { useParams, NavLink } from 'react-router-dom'
-import {} from '@ant-design/icons'
 
-// 00E0DF
 export default function Fn() {
   const { id } = useParams()
   return (
@@ -34,39 +31,51 @@ export default function Fn() {
         </NavLink>
       </Space>
       <Space wrap size={[12, 12]}>
-        <Button
-          type='primary'
-          size='small'
-          style={{ backgroundColor: '#00E0DF', color: 'var(--text-color)' }}>
-          <Space>
-            <span>一键重呼</span>
-            <span className='icon iconfont icon-gps fn14'></span>
-          </Space>
-        </Button>
+        <ConfigProvider
+          theme={{
+            token: {
+              colorPrimary: '#00E0DF',
+            },
+          }}>
+          <Button type='primary' size='small'>
+            <Space className='text-color'>
+              <span>一键重呼</span>
+              <span className='icon iconfont icon-recall fn14'></span>
+            </Space>
+          </Button>
+        </ConfigProvider>
         <Button type='primary' size='small'>
           <Space>
             <span>导出报表</span>
             <span className='icon iconfont icon-upload fn14'></span>
           </Space>
         </Button>
-        <Button
-          type='primary'
-          size='small'
-          style={{ backgroundColor: 'var(--waiting-color' }}>
-          <Space>
-            <span>暂停任务</span>
-            <span className='icon iconfont icon-gps fn14'></span>
-          </Space>
-        </Button>
-        <Button
-          type='primary'
-          size='small'
-          style={{ backgroundColor: 'var(--success-color' }}>
-          <Space>
-            <span>刷新状态</span>
-            <span className='icon iconfont icon-zhongzhi fn14'></span>
-          </Space>
-        </Button>
+        <ConfigProvider
+          theme={{
+            token: {
+              colorPrimary: '#f19d25',
+            },
+          }}>
+          <Button type='primary' size='small'>
+            <Space>
+              <span>暂停任务</span>
+              <span className='icon iconfont icon-task-stop fn14'></span>
+            </Space>
+          </Button>
+        </ConfigProvider>
+        <ConfigProvider
+          theme={{
+            token: {
+              colorPrimary: '#00a97b',
+            },
+          }}>
+          <Button type='primary' size='small'>
+            <Space>
+              <span>刷新状态</span>
+              <span className='icon iconfont icon-zhongzhi fn14'></span>
+            </Space>
+          </Button>
+        </ConfigProvider>
       </Space>
     </Flex>
   )
