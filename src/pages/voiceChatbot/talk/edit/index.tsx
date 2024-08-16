@@ -1,8 +1,11 @@
 import { useEffect, useState, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getTalkToken, getTalkList, delTalkItem } from '@/api'
+import { changeBreadcrumbItem } from '@/store/reducers/breadcrumb'
+import { useAppDispatch } from '@/store/hook'
 import './index.scss'
 export default function Fn() {
+  const dispatch = useAppDispatch()
   const nav = useNavigate()
   const { id, editable } = useParams()
   const ref = useRef(null)
@@ -13,6 +16,18 @@ export default function Fn() {
       setToken(res.data)
     } catch (error) {}
   }
+
+  useEffect(() => {
+    if (editable == '1') {
+      dispatch(
+        changeBreadcrumbItem({
+          index: 3,
+          title: '编辑话术',
+        }),
+      )
+    }
+  }, [editable])
+
   useEffect(() => {
     initToken()
   }, [])
