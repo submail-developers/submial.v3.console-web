@@ -5,14 +5,8 @@ import {
   Input,
   Select,
   Flex,
-  Pagination,
-  Popconfirm,
-  Dropdown,
-  Tooltip,
-  Space,
   Image,
   Divider,
-  Table,
   App,
   Row,
   Col,
@@ -20,6 +14,7 @@ import {
   Switch,
   DatePicker,
   TimePicker,
+  Popconfirm,
 } from 'antd'
 import type { GetProps } from 'antd'
 import { NavLink, useNavigate } from 'react-router-dom'
@@ -29,7 +24,7 @@ import ContactsTabs from './component/contactsTabs'
 import dayjs from 'dayjs'
 import { usePoint } from '@/hooks'
 
-import { getUsableTalkList } from '@/api'
+import { getUsableTalkList, getSendNumber, createVCTask } from '@/api'
 
 import './index.scss'
 import { API } from 'apis'
@@ -229,12 +224,18 @@ const initialValues = {
 }
 
 export default function Fn() {
+  const { message } = App.useApp()
   const pointXl = usePoint('xl')
   const [form] = Form.useForm()
   const nav = useNavigate()
   const tabsRef = useRef(null) // 添加联系人tab
   const [varsKeys, setVarsKeys] = useState<string[]>([]) // 模版的参数
   const [usableTalkList, setusableTalkList] = useState<API.UsableTalkItem[]>([]) // 话术列表
+
+  const [sendNum, setSendNum] = useState(0) // 发送数量
+  const [openConfirm, setOpenConfirm] = useState(false) // 显示数量弹框
+  const [confirmLoading, setConfirmLoading] = useState(false) // 数量弹框-确定的loading
+  const [sendNumLoading, setSendNumLoading] = useState(false) // 获取数量弹框的loading
 
   // 获取话术列表
   const initTalkOptions = async () => {
@@ -244,6 +245,105 @@ export default function Fn() {
         setusableTalkList(res.data)
       }
     } catch (error) {}
+  }
+
+  // 获取发送数量
+  const getSendNum = async (open) => {
+    if (open) {
+      try {
+        await form.validateFields()
+        setSendNumLoading(true)
+        const { address_data, addressmod } = await tabsRef.current.getValues()
+        let flag = false
+        switch (addressmod) {
+          case 'addressbook':
+          case 'parent_addressbook':
+            if (address_data.length == 0) {
+              message.warning('请选择地址簿')
+              flag = true
+            }
+            break
+          case 'file':
+            if (address_data.length == 0) {
+              message.warning('请上传文件')
+              flag = true
+            }
+            break
+          case 'input':
+          case 'paste':
+            if (address_data.length == 0) {
+              message.warning('请输入手机号')
+              flag = true
+            }
+            break
+        }
+        if (flag) {
+          setSendNumLoading(false)
+          setOpenConfirm(false)
+          return
+        }
+        const res = await getSendNumber({
+          address_data: JSON.stringify(address_data),
+          addressmod,
+        })
+        setSendNum(res.total)
+        let timer = setTimeout(() => {
+          setSendNumLoading(false)
+          clearTimeout(timer)
+        }, 500)
+        setOpenConfirm(true)
+      } catch (error) {
+        setSendNumLoading(false)
+      }
+    }
+  }
+
+  const submit = async () => {
+    try {
+      const values = await form.validateFields()
+      const { address_data, addressmod } = await tabsRef.current.getValues()
+      setConfirmLoading(true)
+      const { life_times, work_morning_times, work_afternoon_times } = values
+      const life_start = dayjs(life_times[0]).format('YYYY-MM-DD HH:mm:ss')
+      const life_end = dayjs(life_times[1]).format('YYYY-MM-DD HH:mm:ss')
+      const work_morning_start = dayjs(work_morning_times[0]).format('HH:mm:ss')
+      const work_morning_end = dayjs(work_morning_times[1]).format('HH:mm:ss')
+      const work_afternoon_start = dayjs(work_afternoon_times[0]).format(
+        'HH:mm:ss',
+      )
+      const work_afternoon_end = dayjs(work_afternoon_times[1]).format(
+        'HH:mm:ss',
+      )
+      let params = {
+        title: values.title,
+        life_start: life_start,
+        life_end: life_end,
+        work_morning_start: work_morning_start,
+        work_morning_end: work_morning_end,
+        work_afternoon_start: work_afternoon_start,
+        work_afternoon_end: work_afternoon_end,
+        speechSkillId: values.speechSkillId,
+        maxTimes: values.maxTimes,
+        interval: values.interval,
+        results: values.results?.join(',') || '',
+        skipHolidays: values.skipHolidays ? 'true' : 'false',
+        smsIntentions: values.smsIntentions?.join(',') || '',
+        smsTemplate: '1HkXG3',
+        address_data: JSON.stringify(address_data),
+        addressmod,
+      }
+      const res = await createVCTask(params)
+      if (res.status == 'success') {
+        setConfirmLoading(false)
+        message.success('创建成功')
+        nav('/console/voiceChatbot/call/index', {
+          replace: true,
+        })
+      }
+    } catch (error) {
+      setConfirmLoading(false)
+      console.error(error)
+    }
   }
 
   useEffect(() => {
@@ -261,10 +361,10 @@ export default function Fn() {
       </Flex>
       <Divider />
       <Form
-        name='setting-add-mob'
+        name='create-vc-task'
         form={form}
         layout='vertical'
-        validateTrigger='onSubmit'
+        validateTrigger='onChange'
         initialValues={initialValues}
         autoComplete='off'>
         <Row gutter={[24, 0]} className='m-t-24'>
@@ -282,7 +382,7 @@ export default function Fn() {
           <Col span={24} xl={12}>
             <Form.Item
               label='任务名称'
-              name='name'
+              name='title'
               validateTrigger='onBlur'
               rules={[
                 {
@@ -428,11 +528,27 @@ export default function Fn() {
 
         <Col span={24}>
           <Flex justify='flex-end' className='m-t-32'>
-            <Button
-              type='primary'
-              icon={<span className='icon iconfont icon-fasong'></span>}>
-              提交外呼任务
-            </Button>
+            <Popconfirm
+              title='此次外呼任务'
+              description={
+                <div>
+                  外呼号码条数：
+                  {Number(sendNum).toLocaleString()}
+                </div>
+              }
+              open={openConfirm}
+              onConfirm={submit}
+              onOpenChange={getSendNum}
+              okButtonProps={{ loading: confirmLoading }}
+              trigger='click'
+              onCancel={() => {
+                setOpenConfirm(false)
+              }}
+              overlayStyle={{ minWidth: 320 }}>
+              <Button type='primary' loading={sendNumLoading}>
+                提交外呼任务
+              </Button>
+            </Popconfirm>
           </Flex>
         </Col>
       </Row>
