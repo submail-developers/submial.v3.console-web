@@ -157,7 +157,7 @@ export default function Fn() {
     },
     {
       title: '操作',
-      width: 280,
+      width: 180,
       render: (_, record) => (
         <>
           <Button type='link' style={{ paddingLeft: 0 }}>
@@ -169,9 +169,6 @@ export default function Fn() {
             <NavLink to={`/console/voiceChatbot/talk/edit/${record.id}/1`}>
               编辑
             </NavLink>
-          </Button>
-          <Button type='link' style={{ paddingLeft: 0 }}>
-            导出
           </Button>
 
           <Popconfirm
@@ -185,12 +182,6 @@ export default function Fn() {
               删除
             </Button>
           </Popconfirm>
-          <Button type='link' style={{ paddingLeft: 0 }}>
-            复制
-          </Button>
-          <Button type='link' style={{ paddingLeft: 0 }}>
-            锁定
-          </Button>
         </>
       ),
     },
