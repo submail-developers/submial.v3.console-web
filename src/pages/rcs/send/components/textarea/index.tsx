@@ -13,7 +13,7 @@ function Fn(props: Props, ref: any) {
   const [number, setNumber] = useState(0)
   const getValues = async () => {
     const { address_data } = await form.getFieldsValue()
-    return address_data
+    return address_data.replace(/\n/g, ',')
   }
   const changeVal = (e) => {
     let value = getPhoneLineBreak(e.target.value)
