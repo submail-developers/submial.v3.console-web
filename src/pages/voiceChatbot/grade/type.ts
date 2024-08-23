@@ -1,3 +1,5 @@
+import { API } from 'apis'
+
 import AImg from '@/assets/voiceChatbot/grade/A.png'
 import BImg from '@/assets/voiceChatbot/grade/B.png'
 import CImg from '@/assets/voiceChatbot/grade/C.png'
@@ -10,7 +12,7 @@ export enum gradeImgEnum {
   DImg,
 }
 
-export type GradeType = 'A' | 'B' | 'C' | 'D'
+export type GradeType = API.GradeType
 
 // 根据枚举值选择图片路径
 /**

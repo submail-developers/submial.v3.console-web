@@ -3,7 +3,6 @@ import { Flex, Row, Col } from 'antd'
 import ReactEcharts from 'echarts-for-react'
 import { usePoint } from '@/hooks'
 import { API } from 'apis'
-import Big from 'big.js'
 
 type formatterItem = {
   color: string
@@ -14,18 +13,19 @@ type formatterItem = {
 }
 
 type Props = {
-  data?: API.SendAnalysis
+  data?: API.VCGadeRateItem[]
 }
 
 const color = ['#006BFC', '#55BBFA', '#A8CFE7', '#DBDBDB']
 export default function Fn(props: Props) {
   const point = usePoint('xxl')
-  const initData = [
-    { value: 12, name: 'A类客户' },
-    { value: 12, name: 'B类客户' },
-    { value: 21, name: 'C类客户' },
-    { value: 21, name: 'D类客户' },
-  ]
+  const initData = []
+  props.data.forEach((item) => {
+    initData.push({
+      value: Number(item.num),
+      name: item.intention + '类客户',
+    })
+  })
   const [chartData, setChartData] = useState([])
   const formatterRef = useRef<formatterItem[]>([])
   const timer = useRef(null)
@@ -117,7 +117,7 @@ export default function Fn(props: Props) {
     timer.current = setTimeout(() => {
       setChartData(formatterRef.current)
     }, 1500)
-  }, [])
+  }, [props.data])
   return (
     <Row gutter={[16, 16]}>
       <Col span={24} md={24} lg={12}>

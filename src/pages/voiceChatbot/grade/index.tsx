@@ -1,21 +1,12 @@
 import { useState, useEffect } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
 import {
   Flex,
-  Table,
-  Button,
   Divider,
   Image,
-  DatePicker,
-  Form,
-  Select,
-  Input,
-  Tooltip,
   Space,
   Popconfirm,
   Row,
   Col,
-  Collapse,
   Dropdown,
   Pagination,
   Checkbox,
@@ -24,8 +15,6 @@ import {
 } from 'antd'
 import type { MenuProps } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
-import { PlusOutlined } from '@ant-design/icons'
-import { usePoint } from '@/hooks'
 import faceImg from '@/assets/rcs/face/history.png'
 import mobImg from '@/assets/rcs/address/address_blue.png'
 import { getGradeTypePath, GradeType } from './type'
@@ -35,6 +24,13 @@ import AExport from '@/components/aExport'
 import { downloadFile } from '@/utils'
 import Card from '@/components/aCard'
 import Rate from './rate'
+import { API } from 'apis'
+import {
+  getVCGadeRate,
+  getVCGadeList,
+  delVCGadeMobile,
+  exportVCGadeMobile,
+} from '@/api'
 
 import './index.scss'
 
@@ -65,6 +61,10 @@ const grades: GradeItem[] = [
 
 const dropdownItems: MenuProps['items'] = [
   {
+    key: 'all',
+    label: <div>全部客户</div>,
+  },
+  {
     key: 'A',
     label: <div>A类客户</div>,
   },
@@ -91,26 +91,33 @@ const items: MenuProps['items'] = [
 ]
 
 export default function Fn() {
-  const [activeKey, setactiveKey] = useState<GradeType>('A')
+  const [rateLoading, setRateLoading] = useState(false)
+  const [rateInfo, setRateInfo] = useState<API.VCGadeRateItem[]>([]) // 意向客户占比
+  const [activeKey, setactiveKey] = useState<GradeType | 'all'>('all')
   const [currentPage, setcurrentPage] = useState<number>(1)
   const [pageSize, setpageSize] = useState<number>(100)
   const [total, setTotal] = useState<number>(0)
-  const [list, setList] = useState([
-    {
-      id: '1',
-      address: '13112332132',
-    },
-    {
-      id: '2',
-      address: '13112332132',
-    },
-  ])
+  const [list, setList] = useState<API.VCGadeListItem[]>([])
   const [loading, setLoading] = useState(false)
 
   // 全选
   const [selectedList, setselectedList] = useState<string[]>([])
   const [indeterminate, setIndeterminate] = useState(false) //控制半选状态
   const [checkAll, setCheckAll] = useState(false) //控制全选状态
+
+  // 获取意向客户占比
+  const getInfo = async () => {
+    setRateLoading(true)
+    try {
+      const res = await getVCGadeRate()
+      if (res.status == 'success') {
+        setRateInfo(res.list)
+      }
+      setRateLoading(false)
+    } catch (error) {
+      setRateLoading(false)
+    }
+  }
 
   // 切换客户类型
   const changeType = (e) => {
@@ -127,7 +134,7 @@ export default function Fn() {
     if (e.target.checked) {
       let _select = []
       list.forEach((item) => {
-        _select.push(item.id)
+        _select.push(item.mobile)
       })
       setselectedList(_select)
     } else {
@@ -136,23 +143,53 @@ export default function Fn() {
   }
 
   // 单个删除
-  const delEvent = async (id) => {}
+  const delEvent = async (mobile) => {
+    try {
+      const res = await delVCGadeMobile({
+        mobiles: mobile,
+      })
+      if (res.status == 'success') {
+        getList()
+        setselectedList((pre) => {
+          return pre.filter((item) => item != mobile)
+        })
+      }
+    } catch (error) {}
+  }
   // 批量删除
-  const delChecked = async () => {}
+  const delChecked = async () => {
+    try {
+      const res = await delVCGadeMobile({
+        mobiles: selectedList.join(','),
+      })
+      if (res.status == 'success') {
+        setselectedList([])
+        getList()
+      }
+    } catch (error) {}
+  }
   // 导出
   const exportEvent = async (type) => {
-    // const res = await exportAddress({
-    //   type,
-    //   id,
-    // })
-    // if (res.status == 'success') {
-    //   downloadFile()
-    // }
+    const res = await exportVCGadeMobile({
+      type,
+      intention: activeKey,
+    })
+    if (res.status == 'success') {
+      downloadFile()
+    }
   }
 
   const getList = async () => {
     try {
-      // setLoading(true)
+      setLoading(true)
+      const res = await getVCGadeList({
+        page: currentPage,
+        limit: pageSize,
+        intention: activeKey,
+      })
+      setList(res.list)
+      setTotal(res.row)
+      setLoading(false)
     } catch (error) {}
   }
 
@@ -163,6 +200,7 @@ export default function Fn() {
   }
 
   useEffect(() => {
+    setselectedList([])
     getList()
   }, [activeKey, currentPage])
 
@@ -176,7 +214,7 @@ export default function Fn() {
       return
     }
     list.forEach((item) => {
-      if (selectedList.includes(item.id)) {
+      if (selectedList.includes(item.mobile)) {
         hasChecked = true
       } else {
         checkedAll = false
@@ -185,6 +223,10 @@ export default function Fn() {
     setIndeterminate(!checkedAll && hasChecked)
     setCheckAll(checkedAll)
   }, [list, selectedList])
+
+  useEffect(() => {
+    getInfo()
+  }, [])
 
   return (
     <PageContent extClass='grade-list'>
@@ -216,8 +258,8 @@ export default function Fn() {
           </Row>
         </Col>
         <Col span={24} xl={12}>
-          <Card title='意向客户占比' loading={false} minHeight={180}>
-            <Rate />
+          <Card title='意向客户占比' loading={rateLoading} minHeight={180}>
+            {rateInfo.length > 0 && <Rate data={rateInfo} />}
           </Card>
         </Col>
       </Row>
@@ -237,7 +279,7 @@ export default function Fn() {
               onClick: changeType,
             }}>
             <div className='g-pointer'>
-              {activeKey}类客户
+              {activeKey == 'all' ? '全部客户' : `${activeKey}类客户`}
               <i
                 className='icon iconfont icon-xiangxia m-l-8 fn8 g-rotate-90'
                 style={{ transform: 'translateY(4px)' }}></i>
@@ -252,14 +294,21 @@ export default function Fn() {
             全选
           </Checkbox>
 
-          <div onClick={delChecked}>
+          <Popconfirm
+            placement='bottom'
+            title='警告'
+            description='确定删除选中的号码？'
+            onConfirm={delChecked}
+            okText='确定'
+            cancelText='取消'>
             <span
               className={`g-pointer error-color fx-center-center ${
                 indeterminate || checkAll ? '' : 'disabled'
               }`}>
               <i className='icon iconfont icon-shanchu m-r-8'></i>删除
             </span>
-          </div>
+          </Popconfirm>
+
           <Divider type='vertical' style={{ height: 16 }} />
           <AExport items={items} onExportEvent={exportEvent} useCode={false}>
             <div className='g-pointer color'>
@@ -291,14 +340,14 @@ export default function Fn() {
           {list.map((item) => (
             <Col key={item.id} span={12} lg={8} xl={6} xxl={4}>
               <div className='checkbox-item fx-between-center'>
-                <Checkbox value={item.id} className='fn16'>
-                  {item.address}
+                <Checkbox value={item.mobile} className='fn16'>
+                  {item.mobile}
                 </Checkbox>
                 <Popconfirm
-                  placement='left'
+                  placement='bottom'
                   title='警告'
-                  description='确定删除该条号码？'
-                  onConfirm={() => delEvent(item)}
+                  description='确定删除该号码？'
+                  onConfirm={() => delEvent(item.mobile)}
                   okText='确定'
                   cancelText='取消'>
                   <i className='icon iconfont icon-shanchu g-pointer'></i>
