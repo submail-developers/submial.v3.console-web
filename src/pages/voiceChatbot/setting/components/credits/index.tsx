@@ -78,7 +78,7 @@ export default function Fn() {
   return (
     <Row>
       <Col span={12} lg={6} xl={4}>
-        <span className='fw-500 fn16'>5G消息余额提醒</span>
+        <span className='fw-500 fn16'>余额提醒</span>
       </Col>
       <Col span={12} lg={18} xl={20}>
         <Flex justify={pointLg ? 'flex-start' : 'flex-end'}>

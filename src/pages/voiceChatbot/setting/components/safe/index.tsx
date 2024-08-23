@@ -18,18 +18,6 @@ export default function Fn() {
   const ref = useRef(null)
   const [list, setList] = useState<ListItem[]>([
     {
-      label: '在线批量发送时需要输入手机验证码',
-      key: 'message_send_confirm',
-      value: '0',
-      loading: false,
-    },
-    {
-      label: '在线发送完成时提醒我',
-      key: 'message_sent_reminder',
-      value: '0',
-      loading: false,
-    },
-    {
       label: '导出时需要输入手机验证码',
       key: 'export_confrim',
       value: '0',
