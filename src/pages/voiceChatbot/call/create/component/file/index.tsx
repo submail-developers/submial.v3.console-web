@@ -8,7 +8,7 @@ import {
 } from 'react'
 import { Table, Row, Col, Upload, Button, Pagination, Flex } from 'antd'
 import type { UploadFile } from 'antd'
-import { getDataFromFile } from '@/api'
+import { getVCDataFromFile } from '@/api'
 import { LoadingOutlined, UploadOutlined } from '@ant-design/icons'
 
 import './index.scss'
@@ -68,7 +68,7 @@ function Fn(props: Props, ref: any) {
   const getFileData = async (file: UploadFile) => {
     try {
       setuploadLoading(true)
-      const res = await getDataFromFile({
+      const res = await getVCDataFromFile({
         file: file,
       })
       if (res.data) {

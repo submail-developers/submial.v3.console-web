@@ -24,43 +24,9 @@ import dayjs from 'dayjs'
 import { getPresets } from '@/utils/day'
 import { downloadFile } from '@/utils'
 import type { ColumnsType } from 'antd/es/table'
+import { StatusText, StatusOptions } from '../type'
 
 import './index.scss'
-
-const StatusText = {
-  '1': '等待执行',
-  '2': '任务进行中',
-  '3': '暂停中',
-  '4': '手动取消',
-  '5': '超时结束',
-  '6': '正常完成',
-}
-const StatusOptions = [
-  {
-    label: '等待执行',
-    value: '1',
-  },
-  {
-    label: '任务进行中',
-    value: '2',
-  },
-  {
-    label: '暂停中',
-    value: '3',
-  },
-  {
-    label: '手动取消',
-    value: '4',
-  },
-  {
-    label: '超时结束',
-    value: '5',
-  },
-  {
-    label: '正常完成',
-    value: '6',
-  },
-]
 
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>
 const { RangePicker } = DatePicker
@@ -126,7 +92,7 @@ export default function Fn() {
   // 开始执行2  暂停3  取消4
   const updateTask = async (id, status) => {
     try {
-      const res = await changeVCTaskStatus({ sentlist: id, status })
+      const res = await changeVCTaskStatus({ sendlist: id, status })
       if (res.status == 'success') {
         getList()
       }
@@ -222,34 +188,29 @@ export default function Fn() {
       width: 180,
       render: (_, record) => (
         <>
-          <Button type='link' style={{ paddingLeft: 0 }}>
-            <NavLink to={`/console/voiceChatbot/call/detail/${record.id}/info`}>
-              查看
-            </NavLink>
-          </Button>
-          {record.status == '2' && (
-            <Popconfirm
-              title='警告'
-              description='确定暂停该任务？'
-              onConfirm={() => updateTask(record.id, '3')}
-              okText='确定'
-              cancelText='取消'>
-              <Button type='link' style={{ paddingLeft: 0 }}>
-                暂停
-              </Button>
-            </Popconfirm>
+          {record.status != '1' && (
+            <Button type='link' style={{ paddingLeft: 0 }}>
+              <NavLink
+                to={`/console/voiceChatbot/call/detail/${record.id}/info`}>
+                查看
+              </NavLink>
+            </Button>
           )}
-          {record.status == '3' && (
-            <Popconfirm
-              title='警告'
-              description='确定开始执行该任务？'
-              onConfirm={() => updateTask(record.id, '2')}
-              okText='确定'
-              cancelText='取消'>
-              <Button type='link' style={{ paddingLeft: 0 }}>
-                开始
-              </Button>
-            </Popconfirm>
+          {record.status == '2' && (
+            <Button
+              type='link'
+              style={{ paddingLeft: 0 }}
+              onClick={() => updateTask(record.id, '3')}>
+              暂停
+            </Button>
+          )}
+          {['1', '3'].includes(record.status) && (
+            <Button
+              type='link'
+              style={{ paddingLeft: 0 }}
+              onClick={() => updateTask(record.id, '2')}>
+              开始
+            </Button>
           )}
           {['1', '2', , '3'].includes(record.status) && (
             <Popconfirm

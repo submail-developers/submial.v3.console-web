@@ -24,157 +24,20 @@ import ContactsTabs from './component/contactsTabs'
 import dayjs from 'dayjs'
 import { usePoint } from '@/hooks'
 
-import { getUsableTalkList, getSendNumber, createVCTask } from '@/api'
+import {
+  getUsableTalkList,
+  getVCSendNumber,
+  createVCTask,
+  changeVCTaskStatus,
+} from '@/api'
+
+import { reCall } from '../type'
 
 import './index.scss'
 import { API } from 'apis'
 
 const { RangePicker } = DatePicker
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>
-
-const reCall = {
-  // 外呼结果 disabled=true不展示
-  resOptions: [
-    {
-      label: '成功',
-      value: '0',
-      disabled: true,
-    },
-    {
-      label: '无法接通',
-      value: '1',
-    },
-    {
-      label: '机器人挂机',
-      value: '2',
-      disabled: true,
-    },
-    {
-      label: '用户主动挂机',
-      value: '3',
-      disabled: true,
-    },
-    {
-      label: '呼叫失败',
-      value: '4',
-      disabled: true,
-    },
-    {
-      label: '关机',
-      value: '5',
-      disabled: true,
-    },
-    {
-      label: '空号',
-      value: '6',
-      disabled: true,
-    },
-    {
-      label: '无人接听',
-      value: '7',
-    },
-    {
-      label: '停机',
-      value: '8',
-      disabled: true,
-    },
-    {
-      label: '正在通话中',
-      value: '9',
-    },
-    {
-      label: '无法接听',
-      value: '10',
-    },
-    {
-      label: '用户拒接',
-      value: '11',
-      disabled: true,
-    },
-    {
-      label: '超时',
-      value: '12',
-    },
-    {
-      label: '线路超频',
-      value: '13',
-    },
-  ],
-  // 外呼次数
-  numOptions: [
-    {
-      label: '1次',
-      value: '1',
-    },
-    {
-      label: '2次',
-      value: '2',
-    },
-    {
-      label: '3次',
-      value: '3',
-    },
-    {
-      label: '4次',
-      value: '4',
-    },
-    {
-      label: '5次',
-      value: '5',
-    },
-    {
-      label: '6次',
-      value: '6',
-    },
-    {
-      label: '7次',
-      value: '7',
-    },
-    {
-      label: '8次',
-      value: '8',
-    },
-    {
-      label: '9次',
-      value: '9',
-    },
-    {
-      label: '10次',
-      value: '10',
-    },
-  ],
-  // 间隔时间 单位毫秒
-  timesOptions: [
-    {
-      label: '立即',
-      value: 1000,
-    },
-    {
-      label: '15分钟',
-      value: 900000,
-    },
-    {
-      label: '30分钟',
-      value: 900000 * 2,
-    },
-    {
-      label: '45分钟',
-      value: 900000 * 3,
-    },
-    {
-      label: '60分钟',
-      value: 900000 * 4,
-    },
-    {
-      label: '120分钟',
-      value: 900000 * 8,
-    },
-    {
-      label: '180分钟',
-      value: 900000 * 12,
-    },
-  ],
-}
 
 // 可选范围【无-今天】
 const disabledDate: RangePickerProps['disabledDate'] = (current) => {
@@ -271,7 +134,7 @@ export default function Fn() {
             break
           case 'input':
           case 'paste':
-            if (address_data.length == 0) {
+            if (!address_data || address_data.length == 0) {
               message.warning('请输入手机号')
               flag = true
             }
@@ -282,7 +145,7 @@ export default function Fn() {
           setOpenConfirm(false)
           return
         }
-        const res = await getSendNumber({
+        const res = await getVCSendNumber({
           address_data: JSON.stringify(address_data),
           addressmod,
         })
@@ -333,12 +196,19 @@ export default function Fn() {
         addressmod,
       }
       const res = await createVCTask(params)
+      // 创建成功，直接将状态改为正在执行
       if (res.status == 'success') {
-        setConfirmLoading(false)
-        message.success('创建成功')
-        nav('/console/voiceChatbot/call/index', {
-          replace: true,
+        const changeStatusRes = await changeVCTaskStatus({
+          sendlist: res.id,
+          status: '2',
         })
+        if (changeStatusRes.status == 'success') {
+          setConfirmLoading(false)
+          message.success('创建成功')
+          nav('/console/voiceChatbot/call/index', {
+            replace: true,
+          })
+        }
       }
     } catch (error) {
       setConfirmLoading(false)
