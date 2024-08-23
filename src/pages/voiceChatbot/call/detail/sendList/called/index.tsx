@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import {
   Flex,
   Table,
@@ -12,7 +13,7 @@ import {
 import type { GetProps } from 'antd'
 import { EyeOutlined } from '@ant-design/icons'
 import { usePoint } from '@/hooks'
-import { getChatbot, getHistory, exportRcsHistory } from '@/api'
+import { getChatbot, getHistory, getVCTaskCalledList } from '@/api'
 import { API } from 'apis'
 import dayjs from 'dayjs'
 import { getPresets } from '@/utils/day'
@@ -42,6 +43,7 @@ const disabledDate: RangePickerProps['disabledDate'] = (current) => {
 }
 
 export default function Fn() {
+  const { id } = useParams()
   const [form] = Form.useForm()
   const pointXs = usePoint('xs')
   const [loading, setLoading] = useState(false)
@@ -54,7 +56,13 @@ export default function Fn() {
     },
   ])
 
-  const getList = async () => {}
+  const getList = async () => {
+    try {
+      const res = await getVCTaskCalledList({
+        sendlist: id,
+      })
+    } catch (error) {}
+  }
 
   // 除搜索关键字，其他字段改变直接搜索
   const onValuesChange = (changedValues, allValues) => {
