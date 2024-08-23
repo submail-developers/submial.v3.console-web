@@ -1629,6 +1629,7 @@ declare module 'apis' {
     interface CreateTalkRes {
       id: number
     }
+    // 可使用话术
     interface UsableTalkItem {
       id: number
       businessId: number
@@ -1650,6 +1651,157 @@ declare module 'apis' {
       deleted: 0 | 1 // 0：未删除，1：已删除
       avoidStatus: number
       clearSpeechVoice: number
+    }
+    interface GetVCTaskListParams {
+      talk_name?: string
+      status?: string //  新建1  开始执行2  暂停3  取消4   已过期5   已完成6    默认全部all
+      start: string
+      end: string
+      keywords?: string
+      page: number
+      limit: number
+    }
+    interface GetVCTaskListRes {
+      status: string
+      message: string
+      page: number
+      limit: number
+      list: VCTaskItem[]
+    }
+    type VCTaskItem = {
+      id: string
+      title: string
+      account: string
+      status: '1' | '2' | '3' | '4' | '5' | '6' // 新建1  开始执行2  暂停3  取消4   已过期5   已完成6
+      life_start: string
+      life_end: string
+      work_morning_start: string
+      work_morning_end: string
+      work_afternoon_start: string
+      work_afternoon_end: string
+      speechSkillId: string
+      maxTimes: string
+      interval: string
+      results: string
+      skipHolidays: string
+      smsIntentions: string
+      smsTemplate: string
+      addressmod: string
+      address: string
+      ip_address: string
+      addressbook: string
+      addressfile_oss_path: string
+      send: string
+      sent: string
+      update_time: string
+    }
+    interface ChangeVCTaskStatusParams {
+      sendlist: string // 任务id
+      status: '2' | '3' | '4' // 任务状态：开始执行2  暂停3  取消4
+    }
+    // 任务详情
+    interface GetVCTaskDetailRes {
+      title: string
+      speechskill_name: string
+      life_start: string
+      life_end: string
+      work_morning_start: string
+      work_morning_end: string
+      work_afternoon_start: string
+      work_afternoon_end: string
+      address: string
+      status: string //  新建1  开始执行2  暂停3  取消4   已过期5   已完成6
+      skipHolidays: 'false' | 'true'
+      addressbook: GetMobAddressbooksItems[]
+      addressfile_oss_path: string
+      send: string
+      sent: string
+      maxTimes: string
+      interval: string
+      results: string
+      smsIntentions: string
+      smsTemplate: string
+    }
+
+    // 任务进度
+    interface GetVCTaskScheduleRes {
+      address: number // 号码量
+      artificial_num: number // 转人工次数
+      call_duration: number // 通话总时长
+      call_num: number // 呼叫量
+      connect_num: number // 接通量
+      hangup_num: number // 发送短信数
+      recall_num: number // 重呼次数
+    }
+
+    // 通话概览
+    type VCTaskTalk = {
+      less_than_6_seconds: number
+      between_6_and_20_seconds: number
+      between_20_and_60_seconds: number
+      between_1_and_2_minutes: number
+      more_than_2_minutes: number
+    }
+    // 对话轮次
+    type VCTaskTraces = {
+      less_than_2_times: number
+      between_2_and_5_times: number
+      between_5_and_8_times: number
+      more_than_9_times: number
+    }
+    interface GetVCTaskTalkRes {
+      talk: VCTaskTalk
+      traces: VCTaskTraces
+    }
+    type VCTaskGradeItem = {
+      intention: string
+      num: number
+    }
+    interface GetVCTaskGradeRes {
+      list: VCTaskGradeItem[]
+      message: string
+      status: string
+    }
+    interface GetVCTaskCityRes {
+      city: AnalysisCityItem[]
+      province: AnalysisProvinceItem[]
+    }
+
+    //意向客户信息
+
+    interface GetVCGadeRateRes {
+      status: string
+      message: string
+      list: VCGadeRateItem[]
+    }
+    type VCGadeRateItem = {
+      intention: GradeType
+      num: string | number
+    }
+    type GradeType = 'A' | 'B' | 'C' | 'D'
+    interface GetVCGadeListParams {
+      page: number
+      limit: number
+      intention: 'all' | GradeType
+    }
+    interface GetVCGadeListRes {
+      status: string
+      message: string
+      page: number | string
+      row: number
+      list: VCGadeListItem[]
+    }
+    type VCGadeListItem = {
+      id: string
+      mobile: string
+      account: string
+      intention: GradeType
+      intent_esc: string
+      date: string
+    }
+    interface ExportVCGadeListParams {
+      type: string
+      intention: 'all' | GradeType
     }
     // 语音机器人-end
   }

@@ -44,10 +44,10 @@ export const login = () => {
   return request.post<any, API.Response<any>, any>(
     'console/api/account/login',
     {
-      // account: 'duanlangjd@126.com',
-      // password: 'yanzhi2010',
-      account: '18616200024@163.com',
-      password: 'sumeng',
+      account: 'duanlangjd@126.com',
+      password: 'yanzhi2010',
+      // account: '18616200024@163.com',
+      // password: 'sumeng',
       // account: '514030829@qq.com',
       // password: 'yanzhi2010',
       //
@@ -1028,6 +1028,174 @@ export const delTalkItem = (data: { ids: string }) => {
 export const getUsableTalkList = () => {
   return request.post<any, API.Response<API.UsableTalkItem[]>, any>(
     '/console/api/VoiceChatbot/get_usable_talk_list',
+  )
+}
+// 外呼任务列表
+export const getVCTaskList = (data: API.GetVCTaskListParams) => {
+  return request.post<any, any, API.GetVCTaskListParams>(
+    '/console/api/VoiceChatbot/get_task_list',
+    {
+      ...data,
+    },
+  )
+}
+// 发送条数
+export const getVCSendNumber = (data: API.getSendNumberParams) => {
+  return request.post<any, API.getSendNumberRes, API.getSendNumberParams>(
+    'console/api/VoiceChatbot/statistical_billing',
+    { ...data },
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    },
+  )
+}
+// 创建外呼任务
+export const createVCTask = (data: any) => {
+  return request.post<any, any, any>('/console/api/VoiceChatbot/create_task', {
+    ...data,
+  })
+}
+// 通过文件获取号码数据
+export const getVCDataFromFile = (data: API.GetDataFromFileParams) => {
+  return request.post<any, API.GetDataFromFileRes, API.GetDataFromFileParams>(
+    'console/api/voiceChatbot/import_data_from_file',
+    {
+      ...data,
+    },
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    },
+  )
+}
+// 修改外呼任务状态
+export const changeVCTaskStatus = (data: API.ChangeVCTaskStatusParams) => {
+  return request.post<any, any, API.ChangeVCTaskStatusParams>(
+    '/console/api/VoiceChatbot/update_task_status',
+    {
+      ...data,
+    },
+  )
+}
+// 外呼任务详情
+export const getVCTaskDetail = (data: {
+  sendlist: string // 任务id
+}) => {
+  return request.post<
+    any,
+    API.Response<API.GetVCTaskDetailRes>,
+    {
+      sendlist: string // 任务id
+    }
+  >('/console/api/VoiceChatbot/get_task_detail', {
+    ...data,
+  })
+}
+// 外呼任务进度
+export const getVCTaskSchedule = (data: {
+  sendlist: string // 任务id
+}) => {
+  return request.post<
+    any,
+    API.Response<API.GetVCTaskScheduleRes>,
+    {
+      sendlist: string // 任务id
+    }
+  >('/console/api/VoiceChatbot/get_task_schedule', {
+    ...data,
+  })
+}
+// 外呼任务详情-获取通话概览+对话轮次概览
+export const getVCTaskTalkInfo = (data: {
+  sendlist: string // 任务id
+}) => {
+  return request.post<
+    any,
+    API.Response<API.GetVCTaskTalkRes>,
+    {
+      sendlist: string // 任务id
+    }
+  >('/console/api/VoiceChatbot/get_talk_analysis_report', {
+    ...data,
+  })
+}
+// 外呼任务详情-意向客户
+export const getVCTaskGradeInfo = (data: {
+  sendlist: string // 任务id
+}) => {
+  return request.post<
+    any,
+    API.GetVCTaskGradeRes,
+    {
+      sendlist: string // 任务id
+    }
+  >('/console/api/VoiceChatbot/get_task_customer_proportion', {
+    ...data,
+  })
+}
+// 外呼任务详情-城市/省份信息
+export const getVCTaskCityInfo = (data: {
+  sendlist: string // 任务id
+}) => {
+  return request.post<
+    any,
+    API.Response<API.GetVCTaskCityRes>,
+    {
+      sendlist: string // 任务id
+    }
+  >('/console/api/VoiceChatbot/get_city_analysis_report', {
+    ...data,
+  })
+}
+// 外呼任务详情-已外呼号码
+export const getVCTaskCalledList = (data: {
+  sendlist: string // 任务id
+}) => {
+  return request.post<
+    any,
+    API.Response<API.GetVCTaskCityRes>,
+    {
+      sendlist: string // 任务id
+    }
+  >('/console/api/VoiceChatbot/get_task_history', {
+    ...data,
+  })
+}
+
+// 意向客户列表
+export const getVCGadeRate = () => {
+  return request.post<any, API.GetVCGadeRateRes, any>(
+    '/console/api/VoiceChatbot/get_customer_proportion',
+  )
+}
+// 意向客户列表
+export const getVCGadeList = (data: API.GetVCGadeListParams) => {
+  return request.post<any, API.GetVCGadeListRes, API.GetVCGadeListParams>(
+    '/console/api/VoiceChatbot/get_customer_list',
+    {
+      ...data,
+    },
+  )
+}
+// 删除意向客户
+export const delVCGadeMobile = (data: { mobiles: string }) => {
+  return request.post<any, any, { mobiles: string }>(
+    '/console/api/VoiceChatbot/delete_customer_list',
+    {
+      ...data,
+    },
+  )
+}
+// 导出意向客户
+export const exportVCGadeMobile = (data: API.ExportVCGadeListParams) => {
+  return request.post<any, any, API.ExportVCGadeListParams>(
+    '/console/api/VoiceChatbot/export_customer_list',
+    {
+      ...data,
+    },
   )
 }
 
