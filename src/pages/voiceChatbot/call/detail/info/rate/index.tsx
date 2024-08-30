@@ -28,19 +28,19 @@ export default function Fn(props: Props) {
     <Row className='call-rate' gutter={[12, 24]}>
       <Col span={12} md={8} xl={6}>
         <div className='rate-info'>
-          <div className='color fn20 fw-500'>{props.address_total || '-'}</div>
+          <div className='color fn22 fw-500'>{props.address_total || '-'}</div>
           <div className='gray-color m-t-8'>号码量</div>
         </div>
       </Col>
       <Col span={12} md={8} xl={6}>
         <div className='rate-info'>
-          <div className='color fn20 fw-500'>{props.data.call_num || '-'}</div>
+          <div className='color fn22 fw-500'>{props.data.call_num || '-'}</div>
           <div className='gray-color m-t-8'>呼较量</div>
         </div>
       </Col>
       <Col span={12} md={8} xl={6}>
         <div className='rate-info'>
-          <div className='color fn20 fw-500'>
+          <div className='color fn22 fw-500'>
             {props.data.connect_num || '-'}
           </div>
           <div className='gray-color m-t-8'>接通量</div>
@@ -48,7 +48,7 @@ export default function Fn(props: Props) {
       </Col>
       <Col span={12} md={8} xl={6}>
         <div className='rate-info'>
-          <div className='color fn20 fw-500'>
+          <div className='color fn22 fw-500'>
             {Number(props.data.call_num) > 0 &&
             Number(props.data.connect_num) > 0
               ? (
@@ -69,7 +69,7 @@ export default function Fn(props: Props) {
       </Col>
       <Col span={12} md={8} xl={6}>
         <div className='rate-info'>
-          <div className='color fn20 fw-500'>
+          <div className='color fn22 fw-500'>
             {Number(props.data.call_duration) > 0 &&
             Number(props.data.call_num) > 0
               ? (
@@ -82,7 +82,7 @@ export default function Fn(props: Props) {
       </Col>
       <Col span={12} md={8} xl={6}>
         <div className='rate-info'>
-          <div className='color fn20 fw-500'>
+          <div className='color fn22 fw-500'>
             {props.data.recall_num || '-'}
           </div>
           <div className='gray-color m-t-8'>重呼次数</div>
@@ -90,7 +90,7 @@ export default function Fn(props: Props) {
       </Col>
       <Col span={12} md={8} xl={6}>
         <div className='rate-info'>
-          <div className='color fn20 fw-500'>
+          <div className='color fn22 fw-500'>
             {props.data.artificial_num || '-'}
           </div>
           <div className='gray-color m-t-8'>转人工次数</div>
@@ -98,7 +98,7 @@ export default function Fn(props: Props) {
       </Col>
       <Col span={12} md={8} xl={6}>
         <div className='rate-info'>
-          <div className='color fn20 fw-500'>
+          <div className='color fn22 fw-500'>
             {props.data.hangup_num || '-'}
           </div>
           <div className='gray-color m-t-8'>发送短信数</div>

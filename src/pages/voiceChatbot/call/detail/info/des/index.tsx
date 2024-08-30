@@ -18,14 +18,14 @@ export default function Fn(props: Props) {
     const results = props.data.results.split(',')
     resultsTextArr = results.map((item) => {
       let _item = reCall.resOptions.find((im) => im.value == item)
-      return _item.label || ''
+      return _item?.label || ''
     })
   }
   if (props.data?.interval) {
     let obj = reCall.timesOptions.find(
       (item) => item.value == Number(props.data.interval),
     )
-    interval = obj.label || ''
+    interval = obj?.label || ''
   }
 
   // 未接通再次外呼
@@ -82,15 +82,15 @@ export default function Fn(props: Props) {
       span: 2,
       children: props.data?.title || '-',
     },
-    {
-      label: '任务状态',
-      span: 2,
-      children: (
-        <span className={`send-type status-${props.data?.status}`}>
-          {StatusText[props.data?.status]}
-        </span>
-      ),
-    },
+    // {
+    //   label: '任务状态',
+    //   span: 2,
+    //   children: (
+    //     <span className={`send-type status-${props.data?.status}`}>
+    //       {StatusText[props.data?.status]}
+    //     </span>
+    //   ),
+    // },
     {
       label: '话术名称',
       span: 2,

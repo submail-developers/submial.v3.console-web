@@ -1,6 +1,5 @@
-import { useParams, useLocation, NavLink } from 'react-router-dom'
+import { useParams, NavLink } from 'react-router-dom'
 export default function Fn() {
-  const loc = useLocation()
   const { id } = useParams()
 
   return (

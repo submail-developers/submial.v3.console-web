@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Row, Col, Space, Divider, Button, Image, Descriptions } from 'antd'
-import type { DescriptionsProps } from 'antd'
-import Nav from '../nav'
+import { Row, Col, Space } from 'antd'
 import ACard from '@/components/aCard'
 import Des from './des'
 import Rate from './rate'
@@ -13,41 +11,27 @@ import Address from './address'
 import Hot from './hot'
 import { API } from 'apis'
 import {
-  getVCTaskDetail,
   getVCTaskSchedule,
   getVCTaskTalkInfo,
   getVCTaskGradeInfo,
   getVCTaskCityInfo,
 } from '@/api'
+import { StatusText } from '../../type'
+import { useStateStore } from '../reducer'
+
 import './index.scss'
+
 export default function Fn() {
+  const store = useStateStore()
   const { id } = useParams()
-  const [loading, setLoading] = useState(false)
   const [speedLoading, setspeedLoading] = useState(false)
   const [talkLoading, settalkLoading] = useState(false)
   const [gradeLoading, setgradeLoading] = useState(false)
   const [cityLoading, setcityLoading] = useState(false)
-  const [data, setData] = useState<API.GetVCTaskDetailRes>() // 任务详情
   const [speedData, setspeedData] = useState<API.GetVCTaskScheduleRes>() // 任务进度
   const [talkData, settalkData] = useState<API.GetVCTaskTalkRes>() // 对话轮次
   const [gradeData, setgradeData] = useState<API.VCTaskGradeItem[]>([]) // 意向客户
   const [cityData, setcityData] = useState<API.GetVCTaskCityRes>() // 城市分析
-
-  // 获取详情
-  const getDetail = async () => {
-    setLoading(true)
-    try {
-      const res = await getVCTaskDetail({
-        sendlist: id,
-      })
-      if (res.status == 'success') {
-        setData(res.data)
-      }
-      setLoading(false)
-    } catch (error) {
-      setLoading(false)
-    }
-  }
 
   // 获取进度
   const getSchedule = async () => {
@@ -111,28 +95,40 @@ export default function Fn() {
     }
   }
 
-  const init = () => {
-    getDetail()
-    getSchedule()
-    getTalk()
-    getGrade()
-    getCity()
-  }
-
   useEffect(() => {
-    init()
-  }, [])
+    if (store.loading) {
+      getSchedule()
+      getTalk()
+      getGrade()
+      getCity()
+    }
+  }, [store.loading])
   return (
     <div className='call-detail-info'>
-      <Nav onRefresh={init} />
       <Row gutter={[16, 16]} className='m-t-16'>
         <Col span={24} xl={12}>
-          <Des data={data} />
+          <Des data={store.detail} />
         </Col>
+
         <Col span={24} xl={12}>
-          <ACard title='任务进度' minHeight={240} loading={speedLoading}>
+          <ACard
+            title={
+              <Space size={0}>
+                <span>任务进度</span>
+                {store.detail && (
+                  <span className={`send-type status-${store.detail?.status}`}>
+                    （{StatusText[store.detail?.status]}）
+                  </span>
+                )}
+              </Space>
+            }
+            minHeight={240}
+            loading={speedLoading}>
             {speedData && (
-              <Rate address_total={data?.address || '0'} data={speedData} />
+              <Rate
+                address_total={store.detail?.address || '0'}
+                data={speedData}
+              />
             )}
           </ACard>
         </Col>
@@ -170,9 +166,13 @@ export default function Fn() {
           <ACard
             title='外呼号码'
             minHeight={240}
-            loading={loading}
+            loading={store.loading}
             contentStyle={{ maxHeight: '240px', overflow: 'auto' }}>
-            <Address address={data?.addressbook || []} />
+            <Address
+              loading={store.loading}
+              address={store.detail?.addressbook || []}
+              addressfile_oss_path={store.detail?.addressfile_oss_path || ''}
+            />
           </ACard>
         </Col>
       </Row>

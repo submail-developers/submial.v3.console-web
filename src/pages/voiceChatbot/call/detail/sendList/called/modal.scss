@@ -1,0 +1,14 @@
+.modal-called {
+  .detail-list {
+    background-color: #f1f2f4;
+    .chat-info {
+      &.jiqiren {
+        background-color: #fff;
+      }
+      &.user {
+        background-color: var(--color);
+        color: #fff;
+      }
+    }
+  }
+}

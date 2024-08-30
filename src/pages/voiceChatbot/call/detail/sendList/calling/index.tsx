@@ -1,50 +1,71 @@
 import { useState, useEffect } from 'react'
-import { Flex, Table, Button, Form, Select, Space } from 'antd'
+import {
+  Flex,
+  Table,
+  Button,
+  Form,
+  Select,
+  Pagination,
+  Row,
+  Col,
+  Empty,
+} from 'antd'
+import type { GetProps, MenuProps } from 'antd'
 import { PlusOutlined, EyeOutlined } from '@ant-design/icons'
-import { getChatbot, getHistory, exportRcsHistory } from '@/api'
+import { exportVCTaskCallingList, getVCTaskCallingList } from '@/api'
 import { API } from 'apis'
 import { downloadFile } from '@/utils'
 import type { ColumnsType } from 'antd/es/table'
+import { useParams } from 'react-router-dom'
+import AExport from '@/components/aExport'
 
-import Nav from '../../nav'
-import SendNav from '../nav'
+import './index.scss'
 
-type T = {
-  id: string
-}
+interface DataType extends API.GetVCTaskCallingListItem {}
 
-// interface DataType extends API.GetHistoryItems {}
-interface DataType extends T {}
+const items: MenuProps['items'] = [
+  { label: '导出 TXT', key: 'txt' },
+  { label: '导出 CSV', key: 'csv' },
+  { label: '导出 EXCEL', key: 'excel' },
+  { label: '导出 JSON', key: 'json' },
+  { label: '导出 XML', key: 'xml' },
+]
 
 export default function Fn() {
-  const [form] = Form.useForm()
-  const [loading, setLoading] = useState(false)
+  const { id } = useParams()
   const [page, setPage] = useState<number>(1)
-  const [limit, setLimit] = useState<number>(10)
+  const [limit, setLimit] = useState<number>(100)
   const [total, setTotal] = useState<number>(0)
-  const [tableData, setTableData] = useState<DataType[]>([
-    {
-      id: '123',
-    },
-  ])
+  const [list, setList] = useState<DataType[]>([])
 
-  const getList = async () => {}
-
-  // 除搜索关键字，其他字段改变直接搜索
-  const onValuesChange = (changedValues, allValues) => {
-    if (page == 1) {
-      getList()
-    } else {
-      setPage(1)
-    }
+  const getList = async () => {
+    try {
+      const res = await getVCTaskCallingList({
+        sendlist: id,
+        page,
+        limit,
+      })
+      if (res.status == 'success') {
+        setList(res.list)
+        setTotal(res.row)
+      }
+    } catch (error) {}
   }
 
-  const search = () => {
-    setLoading(true)
-    if (page == 1) {
-      getList()
-    } else {
-      setPage(1)
+  // 切换页码
+  const onChangeCurrentPage = (page: number, pageSize: number) => {
+    setPage(page)
+    setLimit(pageSize)
+  }
+
+  // 导出
+  const exportEvent = async (file_type) => {
+    const res = await exportVCTaskCallingList({
+      type: file_type,
+      sendlist: id,
+    })
+    if (res.status == 'success') {
+      downloadFile()
     }
   }
 
@@ -52,77 +73,40 @@ export default function Fn() {
     getList()
   }, [limit, page])
 
-  const columns: ColumnsType<DataType> = [
-    {
-      title: '手机号',
-      fixed: true,
-      width: 160,
-      className: 'paddingL20',
-      render: (_, record) => <div className='fw-500'>13112312332</div>,
-    },
-    {
-      title: '未外呼原因',
-      width: 140,
-      render: (_, record) => (
-        <Space className='w-100' size={0}>
-          原因
-        </Space>
-      ),
-    },
-    {
-      title: '外呼次数',
-      width: 100,
-      render: (_, record) => <div>20</div>,
-    },
-  ]
   return (
-    <div>
-      <Nav />
-      <SendNav />
-      <Form
-        form={form}
+    <div className='vc-calling'>
+      <Flex
+        justify='flex-end'
+        align='flex-end'
         className='m-t-24'
-        name='calling-form'
-        layout='vertical'
-        autoComplete='off'
-        onValuesChange={onValuesChange}>
-        <Flex justify='space-between' align='flex-end' wrap='wrap' gap={16}>
-          <Form.Item label='未外呼原因' name='chatbot' className='m-b-0'>
-            <Select
-              placeholder='全部类型'
-              allowClear
-              popupMatchSelectWidth={200}
-              style={{ width: 200 }}
-              options={[]}
-              fieldNames={{ label: 'name', value: 'id' }}></Select>
-          </Form.Item>
-          <Form.Item label='' className='m-b-0'>
-            <Button type='primary' htmlType='submit' onClick={search}>
-              导出未外呼号码
-            </Button>
-          </Form.Item>
-        </Flex>
-      </Form>
+        wrap='wrap'
+        gap={16}>
+        <AExport items={items} onExportEvent={exportEvent} useCode={false} />
+      </Flex>
 
-      <Table
-        loading={loading}
-        className='theme-cell reset-table m-t-24'
-        columns={columns}
-        dataSource={tableData}
-        rowKey='id'
-        pagination={{
-          defaultPageSize: limit,
-          position: ['bottomRight'],
-          current: page,
-          pageSize: limit,
-          showQuickJumper: true,
-          pageSizeOptions: [10, 20, 50],
-          total: total,
-          showTotal: (total) => `共 ${total} 条`,
-          onChange: () => {},
-        }}
-        scroll={{ x: 'fit-content' }}
-      />
+      <Row wrap gutter={8} className='m-t-24'>
+        {list.map((item) => (
+          <Col key={item.to} span={8} lg={6} xl={4} xxl={3}>
+            <div className='checkbox-item fx-between-center'>{item.to}</div>
+          </Col>
+        ))}
+        {list.length == 0 && (
+          <Empty className='m-t-40' style={{ margin: '0 auto' }} />
+        )}
+      </Row>
+      <Flex justify='flex-end' align='center' className='m-t-24'>
+        <Pagination
+          defaultCurrent={1}
+          current={page}
+          defaultPageSize={limit}
+          pageSizeOptions={[]}
+          total={total}
+          showSizeChanger={false}
+          showQuickJumper
+          onChange={onChangeCurrentPage}
+          showTotal={(folderTotal) => `共 ${folderTotal} 条`}
+        />
+      </Flex>
     </div>
   )
 }
