@@ -1695,6 +1695,16 @@ declare module 'apis' {
       sent: string
       update_time: string
     }
+
+    interface getSendPriceParams {
+      addressmod: Addressmod
+      address_data: AddressData
+    }
+    interface getSendPriceRes {
+      price: number
+      status: string
+      message?: string
+    }
     interface ChangeVCTaskStatusParams {
       sendlist: string // 任务id
       status: '2' | '3' | '4' // 任务状态：开始执行2  暂停3  取消4
@@ -1765,6 +1775,93 @@ declare module 'apis' {
     interface GetVCTaskCityRes {
       city: AnalysisCityItem[]
       province: AnalysisProvinceItem[]
+    }
+    // 已外呼号码
+    interface GetVCTaskCalledListParams {}
+    type GetVCTaskCalledTracesItem = {
+      nodeGroupId?: string
+      nodeGroupName?: string
+      id?: string
+      name?: string
+      type?: string
+      tags?: {
+        tagGroupContextId: string
+        tagId: string
+      }[]
+      index?: number
+      command?: {
+        type: string
+        description: string
+      }
+      event?: string
+      content?: string
+      contentId?: string
+      contentMode?: string
+      playBeginTime?: number
+      playEndTime?: number
+      speakBeginTime?: number
+      speakEndTime?: number
+      interrupt?: boolean
+      traceType?: string
+
+      customJump?: boolean
+      judge?: boolean
+      traceType: 'LinkTrace' | 'NodeTrace'
+    }
+
+    //     参数描述
+    // "sendID": 发送记录 uuid
+    // "send": 发送时间
+    // "sent": 收到记录回执时间（已请求外呼，回执信息未返回，此字段为空）
+    // "sendlist": 外呼任务uuid
+    // "to": 号码
+    // "call_result": 外呼结果code（已请求外呼，回执信息未返回，此字段为空）
+    // "call_result_desc": "外呼结果描述（已请求外呼，回执信息未返回，此字段为空）
+    // "line": 线路外显号码
+    // "ring_duration": 震铃时长（已请求外呼，回执信息未返回，此字段为空）
+    // "call_duration": 通过时长,（已请求外呼，回执信息未返回，此字段为空）
+    // "intention": 意向度（已请求外呼，回执信息未返回，此字段为空）
+    // "media_path": 录音地址（已请求外呼，回执信息未返回，此字段为空）
+    // "call_index": 外呼次数（代表此号码是第几次外呼）（已请求外呼，回执信息未返回，此字段为空）
+    // "hangup_sms": 是否下发挂机短信 1是  0否（已请求外呼，回执信息未返回，此字段为空）
+    // "traces_num": 交互次数（已请求外呼，回执信息未返回，此字段为空）
+    // "traces": 交互信息数据（已请求外呼，回执信息未返回，此字段为空）
+    type GetVCTaskCalledListItem = {
+      sendID: string
+      send: string
+      sent: string
+      sendlist: string
+      to: string
+      call_result: string
+      call_result_desc: string
+      line: string
+      ring_duration: string
+      call_duration: string
+      intention: 'A' | 'B' | 'C' | 'D'
+      media_path: string
+      call_index: string
+      hangup_sms: string
+      traces_num: string
+      traces: GetVCTaskCalledTracesItem[]
+    }
+    interface GetVCTaskCalledListRes {
+      list: GetVCTaskCalledListItem[]
+      message: string
+      page: number
+      row: number
+      status: string
+    }
+    interface GetVCTaskCallingListParams {}
+
+    type GetVCTaskCallingListItem = {
+      to: string
+    }
+    interface GetVCTaskCallingListRes {
+      list: GetVCTaskCallingListItem[]
+      message: string
+      page: number
+      row: number
+      status: string
     }
 
     //意向客户信息

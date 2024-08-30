@@ -16,6 +16,7 @@ import {
   TimePicker,
   Popconfirm,
 } from 'antd'
+import { ProFormDependency } from '@ant-design/pro-components'
 import type { GetProps } from 'antd'
 import { NavLink, useNavigate } from 'react-router-dom'
 import faceImg from '@/assets/rcs/face/history.png'
@@ -43,7 +44,7 @@ type RangePickerProps = GetProps<typeof DatePicker.RangePicker>
 const disabledDate: RangePickerProps['disabledDate'] = (current) => {
   const today = dayjs().subtract(1, 'day')
   // const fifteenDaysAgo = today.subtract(90, 'day')
-  const currentDate = dayjs(current)
+  const currentDate = dayjs(current).subtract(1, 'hour')
   // return currentDate.isBefore(fifteenDaysAgo) || currentDate.isAfter(today)
   return currentDate.isBefore(today)
 }
@@ -69,6 +70,20 @@ const disabledEndTime = () => {
     disabledMinutes: () => [],
     disabledSeconds: () => [],
   }
+}
+
+// 只能选择当前时间1-72小时以内的时间
+const validateRange = (_, value) => {
+  const startTime = value[0]
+  if (startTime) {
+    if (
+      startTime.valueOf() >= dayjs().add(72, 'hour').valueOf() ||
+      startTime.valueOf() <= dayjs().add(50, 'minute').valueOf()
+    ) {
+      return Promise.reject(new Error('预设开始时间范围：当前时间1-72小时以内'))
+    }
+  }
+  return Promise.resolve()
 }
 
 // 获取当前日期
@@ -116,7 +131,8 @@ export default function Fn() {
       try {
         await form.validateFields()
         setSendNumLoading(true)
-        const { address_data, addressmod } = await tabsRef.current.getValues()
+        const { address_data, addressmod, addressfile_oss_path } =
+          await tabsRef.current.getValues()
         let flag = false
         switch (addressmod) {
           case 'addressbook':
@@ -149,13 +165,14 @@ export default function Fn() {
           address_data: JSON.stringify(address_data),
           addressmod,
         })
-        setSendNum(res.total)
+        setSendNum(Number(res.price || 0))
         let timer = setTimeout(() => {
           setSendNumLoading(false)
           clearTimeout(timer)
         }, 500)
         setOpenConfirm(true)
       } catch (error) {
+        console.log(error)
         setSendNumLoading(false)
       }
     }
@@ -164,11 +181,15 @@ export default function Fn() {
   const submit = async () => {
     try {
       const values = await form.validateFields()
-      const { address_data, addressmod } = await tabsRef.current.getValues()
+      const {
+        address_data,
+        addressmod,
+        addressfile_oss_path = '',
+      } = await tabsRef.current.getValues()
       setConfirmLoading(true)
       const { life_times, work_morning_times, work_afternoon_times } = values
-      const life_start = dayjs(life_times[0]).format('YYYY-MM-DD HH:mm:ss')
-      const life_end = dayjs(life_times[1]).format('YYYY-MM-DD HH:mm:ss')
+      const life_start = dayjs(life_times[0]).format('YYYY-MM-DD HH:mm')
+      const life_end = dayjs(life_times[1]).format('YYYY-MM-DD HH:mm')
       const work_morning_start = dayjs(work_morning_times[0]).format('HH:mm:ss')
       const work_morning_end = dayjs(work_morning_times[1]).format('HH:mm:ss')
       const work_afternoon_start = dayjs(work_afternoon_times[0]).format(
@@ -194,21 +215,16 @@ export default function Fn() {
         smsTemplate: '1HkXG3',
         address_data: JSON.stringify(address_data),
         addressmod,
+        addressfile_oss_path,
       }
       const res = await createVCTask(params)
       // 创建成功，直接将状态改为正在执行
       if (res.status == 'success') {
-        const changeStatusRes = await changeVCTaskStatus({
-          sendlist: res.id,
-          status: '2',
+        setConfirmLoading(false)
+        message.success('创建成功')
+        nav('/console/voiceChatbot/call/index', {
+          replace: true,
         })
-        if (changeStatusRes.status == 'success') {
-          setConfirmLoading(false)
-          message.success('创建成功')
-          nav('/console/voiceChatbot/call/index', {
-            replace: true,
-          })
-        }
       }
     } catch (error) {
       setConfirmLoading(false)
@@ -329,11 +345,21 @@ export default function Fn() {
               />
             </Form.Item>
           </Col>
-          <Col span={24} xl={12} xxl={6}>
-            <Form.Item name='smsTemplate' label='挂机短信模版'>
-              <Select placeholder='请选择' options={[]}></Select>
-            </Form.Item>
-          </Col>
+
+          <ProFormDependency name={['smsIntentions']}>
+            {({ smsIntentions }) => {
+              return (
+                <Col span={24} xl={12} xxl={6}>
+                  <Form.Item name='smsTemplate' label='挂机短信模版'>
+                    <Select
+                      disabled={!(smsIntentions && smsIntentions.length > 0)}
+                      placeholder='请选择'
+                      options={[]}></Select>
+                  </Form.Item>
+                </Col>
+              )
+            }}
+          </ProFormDependency>
           <Col span={24} xl={12}>
             <Form.Item
               name='life_times'
@@ -341,6 +367,9 @@ export default function Fn() {
               rules={[
                 {
                   required: true,
+                },
+                {
+                  validator: validateRange,
                 },
               ]}>
               <RangePicker
@@ -402,8 +431,8 @@ export default function Fn() {
               title='此次外呼任务'
               description={
                 <div>
-                  外呼号码条数：
-                  {Number(sendNum).toLocaleString()}
+                  预扣费：
+                  {Number(sendNum).toLocaleString()}元
                 </div>
               }
               open={openConfirm}

@@ -188,14 +188,11 @@ export default function Fn() {
       width: 180,
       render: (_, record) => (
         <>
-          {record.status != '1' && (
-            <Button type='link' style={{ paddingLeft: 0 }}>
-              <NavLink
-                to={`/console/voiceChatbot/call/detail/${record.id}/info`}>
-                查看
-              </NavLink>
-            </Button>
-          )}
+          <Button type='link' style={{ paddingLeft: 0 }}>
+            <NavLink to={`/console/voiceChatbot/call/detail/${record.id}/info`}>
+              查看
+            </NavLink>
+          </Button>
           {record.status == '2' && (
             <Button
               type='link'

@@ -61,10 +61,6 @@ const grades: GradeItem[] = [
 
 const dropdownItems: MenuProps['items'] = [
   {
-    key: 'all',
-    label: <div>全部客户</div>,
-  },
-  {
     key: 'A',
     label: <div>A类客户</div>,
   },
@@ -93,7 +89,7 @@ const items: MenuProps['items'] = [
 export default function Fn() {
   const [rateLoading, setRateLoading] = useState(false)
   const [rateInfo, setRateInfo] = useState<API.VCGadeRateItem[]>([]) // 意向客户占比
-  const [activeKey, setactiveKey] = useState<GradeType | 'all'>('all')
+  const [activeKey, setactiveKey] = useState<GradeType>('A')
   const [currentPage, setcurrentPage] = useState<number>(1)
   const [pageSize, setpageSize] = useState<number>(100)
   const [total, setTotal] = useState<number>(0)
@@ -270,7 +266,10 @@ export default function Fn() {
         wrap='wrap'
         gap={12}>
         <Space align='center'>
-          <Image src={mobImg} preview={false} height={48}></Image>
+          <Image
+            src={getGradeTypePath(activeKey)}
+            preview={false}
+            height={40}></Image>
           <Dropdown
             trigger={['click']}
             menu={{
@@ -279,7 +278,7 @@ export default function Fn() {
               onClick: changeType,
             }}>
             <div className='g-pointer'>
-              {activeKey == 'all' ? '全部客户' : `${activeKey}类客户`}
+              {`${activeKey}类客户`}
               <i
                 className='icon iconfont icon-xiangxia m-l-8 fn8 g-rotate-90'
                 style={{ transform: 'translateY(4px)' }}></i>

@@ -1040,8 +1040,8 @@ export const getVCTaskList = (data: API.GetVCTaskListParams) => {
   )
 }
 // 发送条数
-export const getVCSendNumber = (data: API.getSendNumberParams) => {
-  return request.post<any, API.getSendNumberRes, API.getSendNumberParams>(
+export const getVCSendNumber = (data: API.getSendPriceParams) => {
+  return request.post<any, API.getSendPriceRes, API.getSendPriceParams>(
     'console/api/VoiceChatbot/statistical_billing',
     { ...data },
     {
@@ -1151,18 +1151,42 @@ export const getVCTaskCityInfo = (data: {
   })
 }
 // 外呼任务详情-已外呼号码
-export const getVCTaskCalledList = (data: {
-  sendlist: string // 任务id
-}) => {
+export const getVCTaskCalledList = (data: API.GetVCTaskCalledListParams) => {
   return request.post<
     any,
-    API.Response<API.GetVCTaskCityRes>,
-    {
-      sendlist: string // 任务id
-    }
+    API.GetVCTaskCalledListRes,
+    API.GetVCTaskCalledListParams
   >('/console/api/VoiceChatbot/get_task_history', {
     ...data,
   })
+}
+// 外呼任务详情-未外呼号码
+export const getVCTaskCallingList = (data: API.GetVCTaskCallingListParams) => {
+  return request.post<
+    any,
+    API.GetVCTaskCallingListRes,
+    API.GetVCTaskCallingListParams
+  >('/console/api/VoiceChatbot/get_outbound_history', {
+    ...data,
+  })
+}
+// 外呼任务详情-导出已外呼号码
+export const exportVCTaskCalledList = (data: any) => {
+  return request.post<any, any, any>(
+    '/console/api/VoiceChatbot/export_task_history',
+    {
+      ...data,
+    },
+  )
+}
+// 外呼任务详情-导出未外呼号码
+export const exportVCTaskCallingList = (data: any) => {
+  return request.post<any, any, any>(
+    '/console/api/VoiceChatbot/export_outbound_history',
+    {
+      ...data,
+    },
+  )
 }
 
 // 意向客户列表
