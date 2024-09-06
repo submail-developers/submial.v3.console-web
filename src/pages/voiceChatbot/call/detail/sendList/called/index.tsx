@@ -236,7 +236,7 @@ export default function Fn() {
   // 除搜索关键字，其他字段改变直接搜索
   const onValuesChange = (changedValues, allValues) => {
     let changeKey = Object.keys(changedValues)[0]
-    if (!['send_id', 'to', 'keyword'].includes(changeKey)) {
+    if (!['keywords'].includes(changeKey)) {
       if (page == 1) {
         getList()
       } else {
@@ -349,7 +349,7 @@ export default function Fn() {
           )}
         </div>
       ),
-      width: 120,
+      width: 140,
       render: (_, record) => (
         <div>
           {store.detail?.smsTemplate ? (
@@ -363,20 +363,24 @@ export default function Fn() {
     {
       title: '意向度',
       width: 100,
-      render: (_, record) => <div>{record.intention}</div>,
+      render: (_, record) => <div>{record.intention || '-'}</div>,
     },
     {
       title: '对话详情',
       width: 180,
       render: (_, record) => (
         <>
-          <Button
-            type='link'
-            style={{ paddingLeft: 0 }}
-            onClick={() => onShow(record)}
-            icon={<span className='icon iconfont icon-xianshi fn13'></span>}>
-            <span>查看</span>
-          </Button>
+          {Number(record.traces_num) > 0 ? (
+            <Button
+              type='link'
+              style={{ paddingLeft: 0 }}
+              onClick={() => onShow(record)}
+              icon={<span className='icon iconfont icon-xianshi fn13'></span>}>
+              <span>查看</span>
+            </Button>
+          ) : (
+            '-'
+          )}
         </>
       ),
     },
@@ -423,13 +427,18 @@ export default function Fn() {
               </Button>
             </Form.Item>
           </Flex>
-          <Form.Item label='' className='m-b-0'>
-            <AExport
-              items={items}
-              onExportEvent={exportEvent}
-              useCode={false}
-            />
-          </Form.Item>
+
+          {/* 5超时结束，6正常结束，可以导出 */}
+          {store.detail && ['5', '6'].includes(store.detail.status) && (
+            <Form.Item label='' className='m-b-0'>
+              <AExport
+                items={items}
+                onExportEvent={exportEvent}
+                useCode={false}
+                // useCode={rcsSetting?.settings?.export_confrim == '1'}
+              />
+            </Form.Item>
+          )}
         </Flex>
       </Form>
 

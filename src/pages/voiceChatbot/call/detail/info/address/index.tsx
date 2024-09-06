@@ -58,7 +58,7 @@ export default function Fn(props: Props) {
         !props.loading && (
           <Col span={24}>
             <div className='gray-color'>
-              手动粘贴的号码请查看
+              手动粘贴/重呼的号码请查看
               <NavLink
                 to={`/console/voiceChatbot/call/detail/${id}/sendList/called`}>
                 外呼明细

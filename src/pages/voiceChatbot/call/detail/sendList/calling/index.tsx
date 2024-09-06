@@ -18,6 +18,7 @@ import { downloadFile } from '@/utils'
 import type { ColumnsType } from 'antd/es/table'
 import { useParams } from 'react-router-dom'
 import AExport from '@/components/aExport'
+import { useStateStore } from '../../reducer'
 
 import './index.scss'
 
@@ -32,6 +33,7 @@ const items: MenuProps['items'] = [
 ]
 
 export default function Fn() {
+  const store = useStateStore()
   const { id } = useParams()
   const [page, setPage] = useState<number>(1)
   const [limit, setLimit] = useState<number>(100)
@@ -73,16 +75,23 @@ export default function Fn() {
     getList()
   }, [limit, page])
 
+  useEffect(() => {
+    if (store.loading) getList()
+  }, [store.loading])
+
   return (
     <div className='vc-calling'>
-      <Flex
-        justify='flex-end'
-        align='flex-end'
-        className='m-t-24'
-        wrap='wrap'
-        gap={16}>
-        <AExport items={items} onExportEvent={exportEvent} useCode={false} />
-      </Flex>
+      {/* 5超时结束，6正常结束，可以导出 */}
+      {store.detail && ['5', '6'].includes(store.detail.status) && (
+        <Flex
+          justify='flex-end'
+          align='flex-end'
+          className='m-t-24'
+          wrap='wrap'
+          gap={16}>
+          <AExport items={items} onExportEvent={exportEvent} useCode={false} />
+        </Flex>
+      )}
 
       <Row wrap gutter={8} className='m-t-24'>
         {list.map((item) => (

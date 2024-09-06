@@ -133,6 +133,11 @@ export default function Fn() {
       dataIndex: 'title',
     },
     {
+      title: '创建时间',
+      dataIndex: 'send',
+      width: 180,
+    },
+    {
       title: '话术名称',
       width: 160,
       className: 'tag-color',

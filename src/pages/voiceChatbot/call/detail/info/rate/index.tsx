@@ -28,20 +28,20 @@ export default function Fn(props: Props) {
     <Row className='call-rate' gutter={[12, 24]}>
       <Col span={12} md={8} xl={6}>
         <div className='rate-info'>
-          <div className='color fn22 fw-500'>{props.address_total || '-'}</div>
+          <div className='color fn22 fw-500'>{props.address_total || '0'}</div>
           <div className='gray-color m-t-8'>号码量</div>
         </div>
       </Col>
       <Col span={12} md={8} xl={6}>
         <div className='rate-info'>
-          <div className='color fn22 fw-500'>{props.data.call_num || '-'}</div>
+          <div className='color fn22 fw-500'>{props.data.call_num || '0'}</div>
           <div className='gray-color m-t-8'>呼较量</div>
         </div>
       </Col>
       <Col span={12} md={8} xl={6}>
         <div className='rate-info'>
           <div className='color fn22 fw-500'>
-            {props.data.connect_num || '-'}
+            {props.data.connect_num || '0'}
           </div>
           <div className='gray-color m-t-8'>接通量</div>
         </div>
@@ -63,7 +63,12 @@ export default function Fn(props: Props) {
       </Col>
       <Col span={12} md={8} xl={6}>
         <div className='rate-info'>
-          <div className='color fn16 fw-500'>{call_duration}</div>
+          <div
+            className={`color  fw-500 ${
+              call_duration.includes('小时') ? 'fn16' : 'fn22'
+            }`}>
+            {call_duration}
+          </div>
           <div className='gray-color m-t-8'>通话总时长</div>
         </div>
       </Col>
@@ -83,7 +88,7 @@ export default function Fn(props: Props) {
       <Col span={12} md={8} xl={6}>
         <div className='rate-info'>
           <div className='color fn22 fw-500'>
-            {props.data.recall_num || '-'}
+            {props.data.recall_num || '0'}
           </div>
           <div className='gray-color m-t-8'>重呼次数</div>
         </div>
@@ -91,7 +96,7 @@ export default function Fn(props: Props) {
       <Col span={12} md={8} xl={6}>
         <div className='rate-info'>
           <div className='color fn22 fw-500'>
-            {props.data.artificial_num || '-'}
+            {props.data.artificial_num || '0'}
           </div>
           <div className='gray-color m-t-8'>转人工次数</div>
         </div>
@@ -99,7 +104,7 @@ export default function Fn(props: Props) {
       <Col span={12} md={8} xl={6}>
         <div className='rate-info'>
           <div className='color fn22 fw-500'>
-            {props.data.hangup_num || '-'}
+            {props.data.hangup_num || '0'}
           </div>
           <div className='gray-color m-t-8'>发送短信数</div>
         </div>

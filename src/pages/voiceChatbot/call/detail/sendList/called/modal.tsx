@@ -1,5 +1,5 @@
-import { useEffect, forwardRef, useState, Fragment } from 'react'
-import { Modal, Form, App, Input, Tag, Button, Flex } from 'antd'
+import { Fragment } from 'react'
+import { Modal, Tag, Flex } from 'antd'
 import { DownloadOutlined } from '@ant-design/icons'
 import { API } from 'apis'
 import './modal.scss'
@@ -12,30 +12,25 @@ interface Props {
 }
 
 export default function Fn(props: Props) {
-  let showAudio = false
+  let showAudio = false // 录音是否已过有效期时间
+  let audioEndTime = '' // 录音有效时间
   if (props.open) {
     let time = dayjs()
-    let endTime = dayjs(props.item.send).add(7, 'day')
+    let endTime = dayjs(props.item.sent).add(7, 'day')
+    audioEndTime = endTime.format('YYYY-MM-DD HH:mm:ss')
     showAudio = time.isBefore(endTime)
   }
   return (
     <Modal
       open={props.open}
       onCancel={props.onCancel}
-      footer={
-        <Flex justify='flex-end' align='center'>
-          <Button type='default' onClick={props.onCancel}>
-            关闭
-          </Button>
-        </Flex>
-      }
+      footer={null}
       title='对话详情'
       width={600}
-      closable={false}
       wrapClassName='modal-called'>
-      <Flex justify='flex-end' align='center' gap={16}>
-        {showAudio ? (
-          <>
+      {showAudio ? (
+        <>
+          <Flex justify='flex-end' align='center' gap={16}>
             <audio controls preload='auto' src={props.item.media_path}></audio>
             <a
               href={props.item.media_path}
@@ -43,13 +38,21 @@ export default function Fn(props: Props) {
               title='下载录音'>
               <DownloadOutlined rev={null} className='fn20' />
             </a>
-          </>
-        ) : (
-          <div className='warning-color'>录音已过期(有效期7天)</div>
-        )}
-      </Flex>
+          </Flex>
+          <Flex justify='flex-end' className='gray-color m-t-16'>
+            录音有效期至：{audioEndTime}
+          </Flex>
+        </>
+      ) : (
+        <Flex justify='flex-end' align='center' gap={16}>
+          <div className='warning-color'>
+            录音已过期(有效期至：{audioEndTime})
+          </div>
+        </Flex>
+      )}
       <div className='m-t-24 p-x-12 p-y-24 g-radius-8 detail-list'>
         {props.open &&
+          props.item.traces &&
           props.item.traces.map((item, index) => (
             <Fragment key={index}>
               {item.traceType == 'NodeTrace' ? (
