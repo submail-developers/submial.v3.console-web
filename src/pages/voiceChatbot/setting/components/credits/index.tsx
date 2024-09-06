@@ -11,9 +11,9 @@ import {
   ConfigProvider,
 } from 'antd'
 import type { StatisticProps } from 'antd'
-import { settingRcs, initSetting } from '@/store/reducers/settingRcs'
+import { settingVC, initSetting } from '@/store/reducers/settingVC'
 import { useAppSelector, useAppDispatch } from '@/store/hook'
-import { changeRcsSetting, changeRcsSettingLess } from '@/api'
+import { changeVCSetting, changeVCSettingLess } from '@/api'
 import { API } from 'apis'
 
 import CountUp from 'react-countup'
@@ -26,20 +26,20 @@ const formatter: StatisticProps['formatter'] = (value) => (
 export default function Fn() {
   const dispatch = useAppDispatch()
   const pointLg = usePoint('lg')
-  const rcsSetting = useAppSelector(settingRcs)
+  const vcSetting = useAppSelector(settingVC)
   const [editing, setEditing] = useState(false)
   const [lessNumber, setLessNumber] = useState(0)
   const [saveLessLoading, setSaveLessLoading] = useState(false)
   const [switchLoading, setSwitchLoading] = useState(false)
   const [switchVal, setSwitchVal] = useState(false)
 
-  const changeRcsSettings = async (
-    item: API.ChangeRcsSettingSwitchType,
+  const changeVCSettings = async (
+    item: API.ChangeVCSettingSwitchType,
     value: API.SettingStatus,
   ) => {
     try {
       setSwitchLoading(true)
-      const res = await changeRcsSetting({ item, value })
+      const res = await changeVCSetting({ item, value })
       if (res.status == 'success') {
         setSwitchLoading(false)
         setSwitchVal(value == '1')
@@ -54,8 +54,8 @@ export default function Fn() {
   const changeLess = async () => {
     setSaveLessLoading(true)
     try {
-      const res = await changeRcsSettingLess({
-        item: 'reminder_less',
+      const res = await changeVCSettingLess({
+        item: 'money_account_less',
         value: lessNumber,
       })
       if (res.status == 'success') {
@@ -70,11 +70,11 @@ export default function Fn() {
     }
   }
   useEffect(() => {
-    if (rcsSetting) {
-      setLessNumber(Number(rcsSetting.settings?.reminder_less || 0))
-      setSwitchVal(rcsSetting?.settings.credits_reminder == '1')
+    if (vcSetting) {
+      setLessNumber(Number(vcSetting.settings?.money_account_less || 0))
+      setSwitchVal(vcSetting?.settings.money_account_reminder == '1')
     }
-  }, [editing, rcsSetting])
+  }, [editing, vcSetting])
   return (
     <Row>
       <Col span={12} lg={6} xl={4}>
@@ -86,7 +86,7 @@ export default function Fn() {
             size='small'
             checked={switchVal}
             onChange={(flag) =>
-              changeRcsSettings('credits_reminder', flag ? '1' : '0')
+              changeVCSettings('money_account_reminder', flag ? '1' : '0')
             }
             loading={switchLoading}></Switch>
         </Flex>
@@ -95,23 +95,7 @@ export default function Fn() {
       <Col span={24} lg={18} xl={20}>
         <Space className='gray-color m-t-12'>
           当前余额
-          <ConfigProvider
-            theme={{
-              components: {
-                Statistic: {
-                  contentFontSize: 14,
-                },
-              },
-            }}>
-            <Statistic
-              title=''
-              value={
-                rcsSetting ? Number(rcsSetting?.settings?.credits || 0) : 0
-              }
-              formatter={formatter}
-            />
-          </ConfigProvider>
-          条
+          {vcSetting?.settings?.money_account}元
         </Space>
         <div className='gray-color m-t-4' style={{ height: 30 }}>
           <Space align='center' className='h-100'>
@@ -124,7 +108,7 @@ export default function Fn() {
                   onChange={(value) => setLessNumber(value)}
                   min={0}
                 />
-                <span>条</span>
+                <span>元</span>
                 <Button
                   loading={saveLessLoading}
                   type='primary'
@@ -140,8 +124,8 @@ export default function Fn() {
               </>
             ) : (
               <>
-                <span>{rcsSetting && lessNumber.toLocaleString()}</span>
-                <span>条</span>
+                <span>{lessNumber}</span>
+                <span>元</span>
                 <div
                   className='color g-pointer'
                   onClick={() => setEditing(true)}>

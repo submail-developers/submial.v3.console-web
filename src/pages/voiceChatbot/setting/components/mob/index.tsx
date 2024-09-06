@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { Flex, Row, Col, Space, Switch, Popconfirm } from 'antd'
-import { settingRcs, initSetting } from '@/store/reducers/settingRcs'
+import { settingVC, initSetting } from '@/store/reducers/settingVC'
 import { useAppSelector, useAppDispatch } from '@/store/hook'
-import { changeRcsSetting, delRcsSettingMobEmail } from '@/api'
+import { changeVCSetting, delVCSettingMobEmail } from '@/api'
 import AddMob from '../addMob'
 import { uniqBy } from 'lodash'
 import { API } from 'apis'
@@ -13,18 +13,18 @@ export default function Fn() {
   const dispatch = useAppDispatch()
   const pointLg = usePoint('lg')
   const ref = useRef(null)
-  const rcsSetting = useAppSelector(settingRcs)
+  const vcSetting = useAppSelector(settingVC)
   const [switchLoading, setSwitchLoading] = useState(false)
   const [switchVal, setSwitchVal] = useState(false)
   const [list, setList] = useState<API.SettingReminderItem[]>([])
 
-  const changeRcsSettings = async (
-    item: API.ChangeRcsSettingSwitchType,
+  const changeVCSettings = async (
+    item: API.ChangeVCSettingSwitchType,
     value: API.SettingStatus,
   ) => {
     setSwitchLoading(true)
     try {
-      const res = await changeRcsSetting({ item, value })
+      const res = await changeVCSetting({ item, value })
       if (res.status == 'success') {
         setSwitchVal(value == '1')
         dispatch(initSetting())
@@ -36,7 +36,7 @@ export default function Fn() {
   }
   const delEvent = async (id: string) => {
     try {
-      const res = await delRcsSettingMobEmail({
+      const res = await delVCSettingMobEmail({
         id,
       })
       if (res.status == 'success') {
@@ -45,22 +45,22 @@ export default function Fn() {
     } catch (error) {}
   }
   useEffect(() => {
-    if (rcsSetting) {
+    if (vcSetting) {
       let default_list: API.SettingReminderItem[] = [
         {
           id: '-1',
           type: '1',
-          address: rcsSetting.settings.mob,
+          address: vcSetting.settings.mob,
           status: '0',
         },
       ]
-      const _list = rcsSetting.settings.reminder_list.filter(
+      const _list = vcSetting.settings.reminder_list.filter(
         (item) => item.type == '1',
       )
       setList(uniqBy([...default_list, ..._list], 'address'))
-      setSwitchVal(rcsSetting.settings.reminder_message == '1')
+      setSwitchVal(vcSetting.settings.reminder_message == '1')
     }
-  }, [rcsSetting])
+  }, [vcSetting])
   return (
     <>
       <Row>
@@ -73,7 +73,7 @@ export default function Fn() {
               size='small'
               checked={switchVal}
               onChange={(flag) =>
-                changeRcsSettings('reminder_message', flag ? '1' : '0')
+                changeVCSettings('reminder_message', flag ? '1' : '0')
               }
               loading={switchLoading}></Switch>
           </Flex>
@@ -83,7 +83,7 @@ export default function Fn() {
           <Row className='gray-color m-t-12' gutter={[16, 12]}>
             {list.map((item) => (
               <Col span={24} key={item.id}>
-                {rcsSetting?.settings.mob == item.address ? (
+                {vcSetting?.settings.mob == item.address ? (
                   <Space size={24}>
                     <span className='gray-color-sub'>
                       {item.address}（账户手机号不可更改）

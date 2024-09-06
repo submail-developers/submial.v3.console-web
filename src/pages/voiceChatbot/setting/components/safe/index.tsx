@@ -1,20 +1,20 @@
 import { useState, useEffect, useRef } from 'react'
 import { Row, Col, Space, Switch } from 'antd'
-import { settingRcs, initSetting } from '@/store/reducers/settingRcs'
+import { settingVC, initSetting } from '@/store/reducers/settingVC'
 import { useAppSelector, useAppDispatch } from '@/store/hook'
-import { changeRcsSettingSafe } from '@/api'
+import { changeVCSettingSafe } from '@/api'
 import { API } from 'apis'
 import ASmsVerify from '@/components/aSmsVerify'
 type ListItem = {
   label: string
-  key: API.ChangeRcsSettingSafeSwitchType
+  key: API.ChangeVCSettingSafeSwitchType
   value: '0' | '1'
   loading: boolean
 }
 
 export default function Fn() {
   const dispatch = useAppDispatch()
-  const rcsSetting = useAppSelector(settingRcs)
+  const vcSetting = useAppSelector(settingVC)
   const ref = useRef(null)
   const [list, setList] = useState<ListItem[]>([
     {
@@ -52,7 +52,7 @@ export default function Fn() {
     const info = list.find((item) => item.loading)
     if (info) {
       try {
-        const res = await changeRcsSettingSafe({
+        const res = await changeVCSettingSafe({
           item: info.key,
           value: info.value == '1' ? '0' : '1',
         })
@@ -86,15 +86,15 @@ export default function Fn() {
   }
 
   useEffect(() => {
-    if (rcsSetting) {
+    if (vcSetting) {
       setList((prev) => {
         return prev.map((item) => {
-          item.value = rcsSetting.settings[item.key]
+          item.value = vcSetting.settings[item.key]
           return item
         })
       })
     }
-  }, [rcsSetting])
+  }, [vcSetting])
 
   return (
     <>

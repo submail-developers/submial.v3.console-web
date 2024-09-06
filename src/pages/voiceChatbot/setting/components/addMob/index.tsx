@@ -1,9 +1,9 @@
 import { useState, useImperativeHandle, forwardRef, useRef } from 'react'
 import { Modal, Form, Input, Space, Statistic, App } from 'antd'
 import type { CountdownProps } from 'antd'
-import { getMobCode, saveRcsSetting } from '@/api'
+import { getMobCode, saveVCSetting } from '@/api'
 import { useAppDispatch } from '@/store/hook'
-import { initSetting } from '@/store/reducers/settingRcs'
+import { initSetting } from '@/store/reducers/settingVC'
 import formRules from '@/utils/formRules'
 
 type Props = {}
@@ -88,7 +88,7 @@ function Fn(props: Props, ref) {
         setLoading(false)
         return
       }
-      const res = await saveRcsSetting({
+      const res = await saveVCSetting({
         type: 'sms',
         address,
         code,

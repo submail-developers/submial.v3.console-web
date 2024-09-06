@@ -1592,6 +1592,51 @@ declare module 'apis' {
     }
     // 导出-end
     // 语音机器人-start
+
+    interface GetVCOverviewRes {
+      status: string
+      message: string
+      task_info: {
+        all: number
+        new: number
+        start: number
+        pause: number
+        cancel: number
+        expired: number
+        completed: number
+      }
+      addressbook: {
+        addressbooks: number
+        folder: number
+      }
+      unsubscribe_addressbook: {
+        rows: number
+      }
+      money_account: number
+    }
+    type IntentionList = {
+      A: number
+      B: number
+      C: number
+      D: number
+    }
+    type ScheduleList = {
+      call_num: number
+      connect_num: number
+      call_duration: number
+      recall_num: number
+      artificial_num: number
+      hangup_num: number // 短信
+    }
+    interface GetVCAnalysisOverviewRes {
+      status: string
+      message: string
+      mob_total_num: number
+      intention_list: IntentionList
+      talk: VCTaskTalk
+      traces: VCTaskTraces
+      schedule_list: ScheduleList
+    }
     interface GetTalkListParams {
       name: string
       page: number
@@ -1704,6 +1749,16 @@ declare module 'apis' {
       price: number
       status: string
       message?: string
+    }
+    type GetRecallMobileNumberItem = {
+      call_result: string
+      cnt: number
+    }
+    interface GetRecallMobileNumberRes {
+      data: GetRecallMobileNumberItem[]
+      outband_num: number // 未外呼数量
+      status: string
+      message: string
     }
     interface ChangeVCTaskStatusParams {
       sendlist: string // 任务id
@@ -1899,6 +1954,90 @@ declare module 'apis' {
     interface ExportVCGadeListParams {
       type: string
       intention: 'all' | GradeType
+    }
+    type GetVCFeeListitem = {
+      sendID: string
+      send: string
+      sendlist: string
+      sent: string
+      to: string
+      SpeechSkillId: string
+      fee: string
+      count: string
+      status: string // "0=无状态，1=成功，2=失败，3=已撤回    3费用已退回，2未计费， 其他数据均为已计费"
+      line: string
+      call_result: string
+      call_result_desc: string
+      call_duration: string
+      SpeechSkill_name: string
+      task_title: string
+    }
+    interface GetVCFeeListRes {
+      message: string
+      page: number
+      row: number
+      status: string
+      list: GetVCFeeListitem[]
+    }
+    // 配置
+    interface VCSettingRes {
+      status: string
+      settings: {
+        account: string // 默认账户-邮箱
+        mob: string // 默认账户-手机号
+        reminder_mail: SettingStatus
+        reminder_message: SettingStatus
+        export_confrim: SettingStatus
+        message_send_confirm: SettingStatus
+        message_sent_reminder: SettingStatus
+        account_verify_code_display: SettingStatus
+        account_mob_display: SettingStatus
+        address_mob_display: SettingStatus
+        reminder_list: SettingReminderItem[]
+        money_account: string // 剩余条数
+        money_account_less: string // 余额提醒当条数
+        money_account_reminder: SettingStatus // 是否开启余额提醒
+      }
+      mob: string
+    }
+    // 修改提醒上限
+    interface ChangeVCSettingLessParams {
+      item: 'money_account_less'
+      value: number
+    }
+
+    // 修改VC偏好配置:reminder_mail 邮件提醒，reminder_message 短信提醒，money_account_reminder 提醒上限
+    type ChangeVCSettingSwitchType =
+      | 'money_account_reminder'
+      | 'reminder_mail'
+      | 'reminder_message'
+    interface ChangeVCSettingSwitchParams {
+      item: ChangeVCSettingSwitchType
+      value: SettingStatus
+    }
+
+    // message_send_confirm 在线批量发送时需要输入手机验证码
+    // message_sent_reminder 在线发送完成时提醒我
+    // export_confrim 导出时需要输入手机验证码
+    // account_verify_code_display  在历史明细查询或导出时隐藏验证码
+    // account_mob_display  在历史明细查询或导出时隐藏手机号码
+    // address_mob_display  地址簿加密
+    type ChangeVCSettingSafeSwitchType =
+      | 'message_send_confirm'
+      | 'message_sent_reminder'
+      | 'export_confrim'
+      | 'account_verify_code_display'
+      | 'account_mob_display'
+      | 'address_mob_display'
+    interface ChangeVCSettingSafeSwitchParams {
+      item: ChangeVCSettingSafeSwitchType
+      value: SettingStatus
+    }
+    // VC偏好配置-保存邮箱
+    interface SaveVCSettingParams {
+      type: 'mail' | 'sms'
+      address: string
+      code: string
     }
     // 语音机器人-end
   }

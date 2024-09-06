@@ -1,9 +1,9 @@
 import { useState, useImperativeHandle, forwardRef, useRef } from 'react'
 import { Modal, Form, Input, Space, Statistic, App } from 'antd'
 import type { CountdownProps } from 'antd'
-import { getEmailCode, saveRcsSetting } from '@/api'
+import { getEmailCode, saveVCSetting } from '@/api'
 import { useAppDispatch } from '@/store/hook'
-import { initSetting } from '@/store/reducers/settingRcs'
+import { initSetting } from '@/store/reducers/settingVC'
 
 type Props = {}
 
@@ -87,7 +87,7 @@ function Fn(props: Props, ref) {
         setLoading(false)
         return
       }
-      const res = await saveRcsSetting({
+      const res = await saveVCSetting({
         type: 'mail',
         address,
         code,

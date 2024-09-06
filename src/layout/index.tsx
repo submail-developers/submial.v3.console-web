@@ -4,7 +4,14 @@ import { Layout } from 'antd'
 import { Outlet, useMatches } from 'react-router-dom'
 import Menu from './menu'
 import { useLocalStorage } from '@/hooks'
-import { settingRcs, initSetting } from '@/store/reducers/settingRcs'
+import {
+  settingRcs,
+  initSetting as initSettingRcs,
+} from '@/store/reducers/settingRcs'
+import {
+  settingVC,
+  initSetting as initSettingVC,
+} from '@/store/reducers/settingVC'
 import { useAppDispatch, useAppSelector } from '@/store/hook'
 import { getRcsSetting } from '@/api'
 
@@ -19,6 +26,7 @@ const sideStyle: React.CSSProperties = {
 
 export default function Fn() {
   const rcsSetting = useAppSelector(settingRcs)
+  const vcSetting = useAppSelector(settingVC)
   const dispatch = useAppDispatch()
   const [isRouterHideMenu, setisRouterHideMenu] = useLocalStorage(
     'isRouterHideMenu',
@@ -37,9 +45,16 @@ export default function Fn() {
   }
 
   // 初始化Rcs偏好设置
-  const initSettings = async () => {
-    if (!rcsSetting) {
-      dispatch(initSetting())
+  const initSettings = async (type) => {
+    switch (type) {
+      case 'rcs':
+        if (!rcsSetting) {
+          dispatch(initSettingRcs())
+        }
+      case 'vc':
+        if (!vcSetting) {
+          dispatch(initSettingVC())
+        }
     }
   }
 
@@ -62,8 +77,11 @@ export default function Fn() {
             .hideHeaderRight,
         )
       }
-      if (pathname == '/console/rcs') {
-        initSettings()
+      switch (pathname) {
+        case '/console/rcs':
+          initSettings('rcs')
+        case '/console/voiceChatbot':
+          initSettings('vc')
       }
     })
     setisRouterHideMenu(hideMenu)
