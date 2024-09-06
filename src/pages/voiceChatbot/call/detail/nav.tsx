@@ -109,14 +109,12 @@ export default function Fn() {
                 colorPrimary: '#00E0DF',
               },
             }}>
-            <Tooltip title='重呼未外呼号码' placement='bottom'>
-              <Button type='primary' size='small' onClick={() => setOpen(true)}>
-                <Space className='text-color'>
-                  <span>一键重呼</span>
-                  <span className='icon iconfont icon-recall fn14'></span>
-                </Space>
-              </Button>
-            </Tooltip>
+            <Button type='primary' size='small' onClick={() => setOpen(true)}>
+              <Space className='text-color'>
+                <span>一键重呼</span>
+                <span className='icon iconfont icon-recall fn14'></span>
+              </Space>
+            </Button>
           </ConfigProvider>
         )}
 
