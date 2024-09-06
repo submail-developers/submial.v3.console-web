@@ -977,6 +977,19 @@ export const downLaodFile = () => {
 /**
  * 语音机器人-start
  * */
+// 账户概览
+export const getVCOverview = () => {
+  return request.post<any, API.GetVCOverviewRes, any>(
+    '/console/api/VoiceChatbot/get_info',
+  )
+}
+// 账户概览-图表
+export const getVCAnalysisOverview = () => {
+  return request.post<any, API.GetVCAnalysisOverviewRes, any>(
+    '/console/api/VoiceChatbot/get_info_analysis',
+    {},
+  )
+}
 
 export const openVoiseChatbot = () => {
   return request.post<any, API.Response<string>, any>(
@@ -984,6 +997,13 @@ export const openVoiseChatbot = () => {
     {
       agreement: true,
     },
+  )
+}
+// 账户概览-获取语音机器人资源包
+export const getVCPackages = () => {
+  return request.post<any, API.GetRcsPackagesRes, any>(
+    '/console/api/store/get_balance_packages',
+    {},
   )
 }
 
@@ -1051,9 +1071,46 @@ export const getVCSendNumber = (data: API.getSendPriceParams) => {
     },
   )
 }
+// 创建外呼任务-挂机短信列表
+export const getSmsTempList = (data: any) => {
+  return request.post<any, any, any>(
+    '/console/api/sms/get_templates',
+    {
+      ...data,
+    },
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    },
+  )
+}
 // 创建外呼任务
 export const createVCTask = (data: any) => {
   return request.post<any, any, any>('/console/api/VoiceChatbot/create_task', {
+    ...data,
+  })
+}
+// 一键重呼-创建外呼任务
+export const reCreateVCTask = (data: any) => {
+  return request.post<any, any, any>(
+    '/console/api/VoiceChatbot/one_touch_recall',
+    {
+      ...data,
+    },
+  )
+}
+// 一键重呼-各状态获取手机号码数量
+export const getRecallMobileNumber = (data: {
+  sendlist: string // 任务id
+}) => {
+  return request.post<
+    any,
+    API.GetRecallMobileNumberRes,
+    {
+      sendlist: string // 任务id
+    }
+  >('/console/api/VoiceChatbot/one_touch_recall_mob_num', {
     ...data,
   })
 }
@@ -1221,6 +1278,68 @@ export const exportVCGadeMobile = (data: API.ExportVCGadeListParams) => {
       ...data,
     },
   )
+}
+// 计费日志
+export const getVCFeeList = (data: any) => {
+  return request.post<any, API.GetVCFeeListRes, any>(
+    '/console/api/VoiceChatbot/get_feelogs',
+    {
+      ...data,
+    },
+  )
+}
+
+// 获取智能语音机器人偏好配置
+export const getVCSetting = () => {
+  return request.post<any, API.VCSettingRes, any>(
+    '/console/api/VoiceChatbot/get_settings',
+    {},
+  )
+}
+// 修改提醒上限
+export const changeVCSettingLess = (data: API.ChangeVCSettingLessParams) => {
+  return request.post<any, any, API.ChangeVCSettingLessParams>(
+    '/console/api/VoiceChatbot/save_settings',
+    { ...data },
+  )
+}
+// 修改偏好配置:reminder_mail 邮件提醒，reminder_message 短信提醒，credits_reminder 提醒上限
+export const changeVCSetting = (data: API.ChangeVCSettingSwitchParams) => {
+  return request.post<any, any, API.ChangeVCSettingSwitchParams>(
+    '/console/api/VoiceChatbot/save_settings_switch',
+    { ...data },
+  )
+}
+// message_send_confirm 在线批量发送时需要输入手机验证码
+// message_sent_reminder 在线发送完成时提醒我
+// export_confrim 导出时需要输入手机验证码
+// account_verify_code_display  在历史明细查询或导出时隐藏验证码
+// account_mob_display  在历史明细查询或导出时隐藏手机号码
+// address_mob_display  地址簿加密
+export const changeVCSettingSafe = (
+  data: API.ChangeVCSettingSafeSwitchParams,
+) => {
+  return request.post<any, any, API.ChangeVCSettingSafeSwitchParams>(
+    '/console/api/VoiceChatbot/save_settings_switch_confirm',
+    { ...data },
+  )
+}
+// Rcs偏好配置-保存邮箱
+export const saveVCSetting = (data: API.SaveSettingParams) => {
+  return request.post<any, any, API.SaveSettingParams>(
+    '/console/api/rcs/save_reminder_list',
+    { ...data },
+  )
+}
+// Rcs偏好配置-删除邮箱/手机号
+export const delVCSettingMobEmail = (data: { id: string }) => {
+  return request.post<
+    any,
+    any,
+    {
+      id: string
+    }
+  >('/console/api/rcs/delete_reminder_list', { ...data })
 }
 
 /**
