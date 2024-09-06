@@ -25,10 +25,11 @@ import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
 import { usePoint, useLocalStorage } from '@/hooks'
 import { useAppDispatch } from '@/store/hook'
-import { initSetting } from '@/store/reducers/settingRcs'
+import { initSetting } from '@/store/reducers/settingVC'
 import OverView from './components/overView'
 import TimeChat from './components/timeChat'
 import TimesChat from './components/timesChat'
+import Grade from './components/grade'
 
 import {
   getRcsOverview,
@@ -36,6 +37,8 @@ import {
   getUseTourStatus,
   hideUseTour,
   getDicConfig,
+  getVCOverview,
+  getVCAnalysisOverview,
 } from '@/api'
 import { StorePage } from './components/pay/reducer'
 
@@ -71,25 +74,11 @@ export default function Fn() {
   const [loading, setLoading] = useState(false)
   const [echartsLoading, setEchartsLoading] = useState(false)
   const [time, setTime] = useState<[Dayjs, Dayjs]>(rangePresets[3].value)
-  const [data, setData] = useState<API.GetRcsOverviewRes>()
-  const [echartsData, setEchartsData] = useState<API.RcsAnalysis>()
-  const [accountInfo, setAccountInfo] = useState<API.GetDicConfigItems>()
+  const [data, setData] = useState<API.GetVCOverviewRes>()
+  const [echartsData, setEchartsData] = useState<API.GetVCAnalysisOverviewRes>()
 
   const showPay = () => {
-    if (!accountInfo) return
-    switch (accountInfo.status) {
-      case '0':
-      case '2':
-        message.warning('请完善客户资料，审核通过后购买资源包', 5)
-        break
-      case '1':
-        payRef.current && payRef.current.open()
-        break
-      case '3':
-      case '9':
-        message.warning('客户资料正在审核，请审核通过后购买资源包', 5)
-        break
-    }
+    payRef.current && payRef.current.open()
   }
 
   const onRangeChange = (value: [Dayjs, Dayjs]) => {
@@ -100,8 +89,8 @@ export default function Fn() {
   const getData = async () => {
     setLoading(true)
     try {
-      const res = await getRcsOverview()
-      setData(res.data)
+      const res = await getVCOverview()
+      setData(res)
       setLoading(false)
     } catch (error) {
       if (error.message.includes('无产品使用权限')) {
@@ -114,33 +103,20 @@ export default function Fn() {
   const getEchartsData = async () => {
     try {
       setEchartsLoading(true)
-      const res = await getRcsAnalysisOverview({
-        start: dayjs(time[0]).format('YYYY-MM-DD'),
-        end: dayjs(time[1]).format('YYYY-MM-DD'),
-      })
+      const res = await getVCAnalysisOverview()
+      // ({
+      //   start: dayjs(time[0]).format('YYYY-MM-DD'),
+      //   end: dayjs(time[1]).format('YYYY-MM-DD'),
+      // })
       setEchartsLoading(false)
-      setEchartsData(res.analysis)
+      setEchartsData(res)
     } catch (error) {
       setEchartsLoading(false)
     }
   }
 
-  const reGetInfo = () => {
-    getData()
-    getEchartsData()
-    dispatch(initSetting())
-  }
-
-  const getAccountInfo = async () => {
-    try {
-      const res = await getDicConfig()
-      setAccountInfo(res.data)
-    } catch (error) {}
-  }
-
   useEffect(() => {
     getData()
-    getAccountInfo()
   }, [])
 
   useEffect(() => {
@@ -166,7 +142,11 @@ export default function Fn() {
                     },
                   },
                 }}>
-                <Statistic title='' value={123432.6} precision={1} />
+                <Statistic
+                  title=''
+                  value={data?.money_account || '0'}
+                  precision={3}
+                />
               </ConfigProvider>
             </div>
             <Button type='primary' className='m-t-16' onClick={showPay}>
@@ -201,7 +181,7 @@ export default function Fn() {
           </Card>
         </Col>
 
-        <Col span={24}>
+        {/* <Col span={24}>
           <Divider
             style={{ margin: 0 }}
             orientation='right'
@@ -223,11 +203,14 @@ export default function Fn() {
               </div>
             }
           />
-        </Col>
+        </Col> */}
 
         <Col span={24} sm={24} md={24} xl={12} xxl={15}>
           <Card title='数据概览' loading={echartsLoading} minHeight={200}>
-            <OverView />
+            <OverView
+              data={echartsData?.schedule_list || null}
+              mob_total_num={echartsData?.mob_total_num || 0}
+            />
           </Card>
         </Col>
         <Col span={24} sm={24} md={24} xl={12} xxl={9}>
@@ -247,58 +230,17 @@ export default function Fn() {
             }
             loading={echartsLoading}
             minHeight={200}>
-            <Row gutter={[0, 20]}>
-              <Col span={14}>
-                <Flex align='center' wrap='wrap' gap={12}>
-                  <div>A类客户</div>
-                  <div style={{ width: 100 }}>
-                    <Progress percent={20} showInfo={false} size={'small'} />
-                  </div>
-                </Flex>
-              </Col>
-              <Col span={5}>200</Col>
-              <Col span={5}>20%</Col>
-              <Col span={14}>
-                <Flex align='center' wrap='wrap' gap={12}>
-                  <div>A类客户</div>
-                  <div style={{ width: 100 }}>
-                    <Progress percent={20} showInfo={false} size={'small'} />
-                  </div>
-                </Flex>
-              </Col>
-              <Col span={5}>200</Col>
-              <Col span={5}>20%</Col>
-              <Col span={14}>
-                <Flex align='center' wrap='wrap' gap={12}>
-                  <div>A类客户</div>
-                  <div style={{ width: 100 }}>
-                    <Progress percent={20} showInfo={false} size={'small'} />
-                  </div>
-                </Flex>
-              </Col>
-              <Col span={5}>200</Col>
-              <Col span={5}>20%</Col>
-              <Col span={14}>
-                <Flex align='center' wrap='wrap' gap={12}>
-                  <div>A类客户</div>
-                  <div style={{ width: 100 }}>
-                    <Progress percent={20} showInfo={false} size={'small'} />
-                  </div>
-                </Flex>
-              </Col>
-              <Col span={5}>200</Col>
-              <Col span={5}>20%</Col>
-            </Row>
+            <Grade data={echartsData?.intention_list || null} />
           </Card>
         </Col>
         <Col span={24} sm={24} md={24} xl={12} xxl={12}>
           <Card title='通话概览' loading={echartsLoading} minHeight={284}>
-            <TimeChat />
+            <TimeChat data={echartsData?.talk || null} />
           </Card>
         </Col>
         <Col span={24} sm={24} md={24} xl={12} xxl={12}>
           <Card title='对话轮次概览' loading={echartsLoading} minHeight={284}>
-            <TimesChat />
+            <TimesChat data={echartsData?.traces || null} />
           </Card>
         </Col>
 
@@ -314,30 +256,30 @@ export default function Fn() {
                   <Col span={12}>
                     <Flex justify='space-between' align='center'>
                       <span className='gray-color'>已创建任务</span>
-                      <span>{data && data.template.all}</span>
+                      <span>{data && data.task_info.all}</span>
                     </Flex>
                   </Col>
                   <Col span={12}>
                     <Flex justify='space-between' align='center'>
-                      <span className='gray-color'>已发送完成任务</span>
-                      <span>{data && data.template.pass}</span>
+                      <span className='gray-color'>已完成任务</span>
+                      <span>{data && data.task_info.completed}</span>
                     </Flex>
                   </Col>
                   <Col span={12}>
                     <Flex justify='space-between' align='center'>
-                      <span className='gray-color'>待发送任务</span>
-                      <span>{data && data.template.all}</span>
+                      <span className='gray-color'>待执行任务</span>
+                      <span>{data && data.task_info.new}</span>
                     </Flex>
                   </Col>
                   <Col span={12}>
                     <Flex justify='space-between' align='center'>
-                      <span className='gray-color'>已终止任务</span>
-                      <span>{data && data.template.pass}</span>
+                      <span className='gray-color'>已取消任务</span>
+                      <span>{data && data.task_info.cancel}</span>
                     </Flex>
                   </Col>
                   <Col span={24} className='p-t-8'>
                     <NavLink
-                      to='/console/rcs/template/index'
+                      to='/console/voiceChatbot/call/index'
                       className={'hover-link'}>
                       <Space align='center' size={2}>
                         <span>管理外呼任务</span>
@@ -355,19 +297,20 @@ export default function Fn() {
                 <Row gutter={[12, 16]}>
                   <Col span={24}>
                     <Flex justify='space-between' align='center'>
-                      <span className='gray-color'>已创建黑名单</span>
-                      <span>{data && data.task.all}</span>
+                      <span className='gray-color'>黑名单号码数</span>
+                      <span>{data && data.unsubscribe_addressbook.rows}</span>
                     </Flex>
                   </Col>
                   <Col span={24}>
                     <Flex justify='space-between' align='center'>
-                      <span className='gray-color'>黑名单号码数</span>
-                      <span>{data && data.task.timetosend}</span>
+                      <span
+                        className='gray-color'
+                        style={{ height: 22 }}></span>
                     </Flex>
                   </Col>
                   <Col span={24} className='p-t-8'>
                     <NavLink
-                      to='/console/rcs/batchreport/index'
+                      to='/console/voiceChatbot/black/index'
                       className={'hover-link'}>
                       <Space align='center' size={2}>
                         <span>管理黑名单</span>
@@ -396,7 +339,9 @@ export default function Fn() {
                     </Flex>
                   </Col>
                   <Col span={24} className='p-t-8'>
-                    <NavLink to='/console/rcs/address' className={'hover-link'}>
+                    <NavLink
+                      to='/console/voiceChatbot/address/index'
+                      className={'hover-link'}>
                       <Space align='center' size={2}>
                         <span>地址簿管理</span>
                         <span

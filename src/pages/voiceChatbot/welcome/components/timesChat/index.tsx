@@ -1,16 +1,37 @@
 import { Row, Col, Flex, Space } from 'antd'
 import ReactEcharts from 'echarts-for-react'
 import { API } from 'apis'
-import Big from 'big.js'
 
-type Props = {}
+type Props = {
+  data: API.VCTaskTraces
+}
 const color = ['#9DF3FF', '#47D1CB', '#0698EC', '#ffba00', '#FF4D4F']
 const names = ['小于2次', '2-5次', '5-8次', '9次以上']
 
 export default function Fn(props: Props) {
-  let data: (string | number)[] = ['10', '20', '20', '10'] // 数量
-  let dataRate: (string | number)[] = ['10', '20', '20', '10'] // 比例
+  let data: number[] = [0, 0, 0, 0] // 数量
+  let dataRate: (string | number)[] = [0, 0, 0, 0] // 比例
   let total: number = 0 // 总数
+  if (props.data) {
+    data = [
+      props.data.less_than_2_times,
+      props.data.between_2_and_5_times,
+      props.data.between_5_and_8_times,
+      props.data.more_than_9_times,
+    ].map((item) => Number(item))
+    total = data.reduce(
+      (accumulator, currentValue) => accumulator + Number(currentValue),
+      0,
+    )
+    if (total > 0) {
+      dataRate = [
+        ((data[0] / total) * 100).toFixed(2),
+        ((data[1] / total) * 100).toFixed(2),
+        ((data[2] / total) * 100).toFixed(2),
+        ((data[3] / total) * 100).toFixed(2),
+      ]
+    }
+  }
 
   const option = {
     color: color,

@@ -3,15 +3,38 @@ import ReactEcharts from 'echarts-for-react'
 import { API } from 'apis'
 import Big from 'big.js'
 
-type Props = {}
+type Props = {
+  data: API.VCTaskTalk
+}
 const color = ['#9DF3FF', '#47D1CB', '#0698EC', '#ffba00', '#FF4D4F']
 const names = ['小于6秒', '6-20秒', '20-60秒', '1-2分钟', '2分钟以上']
 
 export default function Fn(props: Props) {
-  let data: (string | number)[] = ['10', '20', '20', '10', '20'] // 数量
-  let dataRate: (string | number)[] = ['10', '20', '20', '10', '20'] // 比例
+  let data: number[] = [0, 0, 0, 0, 0] // 数量
+  let dataRate: (string | number)[] = [0, 0, 0, 0, 0] // 比例
   let total: number = 0 // 总数
-
+  if (props.data) {
+    data = [
+      props.data.less_than_6_seconds,
+      props.data.between_6_and_20_seconds,
+      props.data.between_20_and_60_seconds,
+      props.data.between_1_and_2_minutes,
+      props.data.more_than_2_minutes,
+    ].map((item) => Number(item))
+    total = data.reduce(
+      (accumulator, currentValue) => accumulator + Number(currentValue),
+      0,
+    )
+    if (total > 0) {
+      dataRate = [
+        ((data[0] / total) * 100).toFixed(2),
+        ((data[1] / total) * 100).toFixed(2),
+        ((data[2] / total) * 100).toFixed(2),
+        ((data[3] / total) * 100).toFixed(2),
+        ((data[4] / total) * 100).toFixed(2),
+      ]
+    }
+  }
   const option = {
     color: color,
     tooltip: {
