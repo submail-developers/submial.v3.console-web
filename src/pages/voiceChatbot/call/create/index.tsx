@@ -245,7 +245,7 @@ export default function Fn() {
         results: values.results?.join(',') || '',
         skipHolidays: values.skipHolidays ? 'true' : 'false',
         smsIntentions: values.smsIntentions?.join(',') || '',
-        smsTemplate: '1HkXG3',
+        smsTemplate: values.smsTemplate,
         address_data: JSON.stringify(address_data),
         addressmod,
         addressfile_oss_path,
