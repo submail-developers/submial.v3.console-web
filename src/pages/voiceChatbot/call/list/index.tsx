@@ -142,9 +142,12 @@ export default function Fn() {
       width: 160,
       className: 'tag-color',
       render: (_, record) => (
-        <Space className='w-100' size={0}>
-          话术名称
-        </Space>
+        <a
+          href={`/console/voiceChatbot/talk/edit/${record.speechSkillId}/0`}
+          className='tag-color g-pointer'
+          target='_blank'>
+          {record.speechskill_name}
+        </a>
       ),
     },
     {
@@ -160,22 +163,22 @@ export default function Fn() {
     {
       title: '号码量',
       width: 100,
-      render: (_, record) => <div>200</div>,
+      render: (_, record) => <div>{record.address || '0'}</div>,
     },
     {
       title: '呼叫量',
       width: 100,
-      render: (_, record) => <div>200</div>,
+      render: (_, record) => <div>{record.call_num || '0'}</div>,
     },
     {
       title: '接通量',
       width: 100,
-      render: (_, record) => <div>200</div>,
+      render: (_, record) => <div>{record.connect_num || '0'}</div>,
     },
     {
       title: '接通率',
       width: 100,
-      render: (_, record) => <div>90%</div>,
+      render: (_, record) => <div>{record.call_rate * 100}%</div>,
     },
     {
       title: '任务状态',

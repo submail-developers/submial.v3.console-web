@@ -1725,6 +1725,7 @@ declare module 'apis' {
       work_afternoon_start: string
       work_afternoon_end: string
       speechSkillId: string
+      speechskill_name: string
       maxTimes: string
       interval: string
       results: string
@@ -1732,13 +1733,16 @@ declare module 'apis' {
       smsIntentions: string
       smsTemplate: string
       addressmod: string
-      address: string
       ip_address: string
       addressbook: string
       addressfile_oss_path: string
       send: string
       sent: string
       update_time: string
+      address: number // 号码量
+      call_num: number // 呼较量
+      connect_num: number // 接通量
+      call_rate: number // 接通率
     }
 
     interface getSendPriceParams {
