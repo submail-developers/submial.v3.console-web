@@ -377,7 +377,7 @@ function Fn(props: Props, ref) {
       maskClosable={false}
       closable={false}
       classNames={{ header: 'modal-header', body: 'modal-body' }}
-      wrapClassName='welcome-pay-modal'
+      wrapClassName='rcs-welcome-pay-modal'
       destroyOnClose>
       {state.step == -1 && (
         <div className='fx-center-center m-y-40'>

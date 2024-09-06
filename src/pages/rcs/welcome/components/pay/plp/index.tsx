@@ -4,8 +4,6 @@ import { API } from 'apis'
 import { useStateDispatch, useStateStore } from '../reducer'
 import { TinyColor } from '@ctrl/tinycolor'
 
-import './index.scss'
-
 const colors = ['#ff6062', '#ff4446']
 const getHoverColors = (colors: string[]) =>
   colors.map((color) => new TinyColor(color).lighten(5).toString())

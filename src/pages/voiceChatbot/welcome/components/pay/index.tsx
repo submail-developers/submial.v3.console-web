@@ -27,7 +27,7 @@ import PaySuccess from './success'
 
 import './index.scss'
 import {
-  getRcsPackages,
+  getVCPackages,
   getInvoices,
   cancalOrder,
   getPayStatus,
@@ -290,7 +290,7 @@ function Fn(props: Props, ref) {
   // 获取资源包
   const getPackages = async () => {
     try {
-      const res = await getRcsPackages()
+      const res = await getVCPackages()
       dispatch({
         type: 'initPackages',
         payload: res.packages,
@@ -377,7 +377,7 @@ function Fn(props: Props, ref) {
       maskClosable={false}
       closable={false}
       classNames={{ header: 'modal-header', body: 'modal-body' }}
-      wrapClassName='welcome-pay-modal'
+      wrapClassName='vc-welcome-pay-modal'
       destroyOnClose>
       {state.step == -1 && (
         <div className='fx-center-center m-y-40'>

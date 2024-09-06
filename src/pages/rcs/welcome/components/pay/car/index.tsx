@@ -6,7 +6,6 @@ import { useStateDispatch, useStateStore } from '../reducer'
 import type { ColumnsType } from 'antd/es/table'
 import { getInvoices } from '@/api'
 
-import './index.scss'
 import { SyncOutlined } from '@ant-design/icons'
 
 interface DataType extends API.RcsPackagesItem {}
@@ -145,7 +144,7 @@ export default function Fn(props: Props) {
   }, [state.car, state.packages, state.carsId])
 
   return (
-    <div className='rcs-pay-car'>
+    <div className='pay-car'>
       <Flex className='total fn16' justify='space-between' align='center'>
         <Space>
           <span className='icon iconfont icon-car'></span>

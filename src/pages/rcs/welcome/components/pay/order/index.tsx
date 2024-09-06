@@ -8,7 +8,6 @@ import dayjs from 'dayjs'
 import alipayimg from '@/assets/rcs/welcome/alipay.svg'
 import wechatpayimg from '@/assets/rcs/welcome/wechatpay.svg'
 
-import './index.scss'
 import { API } from 'apis'
 
 const QRCodePay = ({ orderId }: { orderId: string }) => {

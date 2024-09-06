@@ -4,8 +4,6 @@ import { API } from 'apis'
 import { useStateDispatch, useStateStore } from '../reducer'
 import { TinyColor } from '@ctrl/tinycolor'
 
-import './index.scss'
-
 const colors = ['#ff6062', '#ff4446']
 const getHoverColors = (colors: string[]) =>
   colors.map((color) => new TinyColor(color).lighten(5).toString())
@@ -50,7 +48,7 @@ export default function Fn() {
             }`}
             onClick={() => setCheckedItem(item)}
             key={item.id}>
-            {Number(item.credit) / 10000}万条
+            ¥{Number(item.credit).toLocaleString()}
           </div>
         ))}
       </Flex>
@@ -87,13 +85,6 @@ export default function Fn() {
                 <div className='fn16'>
                   {(Number(checkedItem?.price || 0) * number).toLocaleString()}{' '}
                   元
-                </div>
-                <div className='m-t-8 gray-color'>
-                  {(
-                    Number(checkedItem?.price || 0) /
-                    Number(checkedItem?.credit || 1)
-                  ).toFixed(4)}{' '}
-                  元/条
                 </div>
               </div>
             </Space>
