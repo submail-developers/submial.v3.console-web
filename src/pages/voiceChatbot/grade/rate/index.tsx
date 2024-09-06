@@ -1,62 +1,35 @@
-import { useRef, useState, useEffect } from 'react'
 import { Flex, Row, Col } from 'antd'
 import ReactEcharts from 'echarts-for-react'
 import { usePoint } from '@/hooks'
 import { API } from 'apis'
-
-type formatterItem = {
-  color: string
-  dataIndex: number
-  name: string
-  percent: number
-  value: number
-}
 
 type Props = {
   data?: API.VCGadeRateItem[]
 }
 
 const color = ['#006BFC', '#55BBFA', '#A8CFE7', '#DBDBDB']
+const names = ['A', 'B', 'C', 'D']
+
 export default function Fn(props: Props) {
   const point = usePoint('xxl')
-  const initData = []
-  props.data.forEach((item) => {
-    initData.push({
-      value: Number(item.num),
-      name: item.intention + '类客户',
+  let data: number[] = [0, 0, 0, 0] // 数量
+  let dataRate: (string | number)[] = [0, 0, 0, 0] // 比例
+  let total: number = 0 // 总数
+  if (props.data) {
+    props.data.forEach((item) => {
+      let index = names.findIndex((im) => item.intention == im)
+      data[index] = Number(item.num)
     })
-  })
-  const [chartData, setChartData] = useState([])
-  const formatterRef = useRef<formatterItem[]>([])
-  const timer = useRef(null)
-
-  const updataFormMatter = (params) => {
-    if (
-      formatterRef.current.find((item) => item.dataIndex == params.dataIndex)
-    ) {
-      formatterRef.current = formatterRef.current.map((item) => {
-        if (item.dataIndex == params.dataIndex) {
-          item = {
-            color: params.color,
-            dataIndex: params.dataIndex,
-            name: params.name,
-            percent: params.percent,
-            value: params.value,
-          }
-          return item
-        }
-        return item
-      })
-    } else {
-      formatterRef.current = [
-        ...formatterRef.current,
-        {
-          color: params.color,
-          dataIndex: params.dataIndex,
-          name: params.name,
-          percent: params.percent,
-          value: params.value,
-        },
+    total = data.reduce(
+      (accumulator, currentValue) => accumulator + Number(currentValue),
+      0,
+    )
+    if (total > 0) {
+      dataRate = [
+        ((data[0] / total) * 100).toFixed(2),
+        ((data[1] / total) * 100).toFixed(2),
+        ((data[2] / total) * 100).toFixed(2),
+        ((data[3] / total) * 100).toFixed(2),
       ]
     }
   }
@@ -65,16 +38,7 @@ export default function Fn(props: Props) {
     color,
     tooltip: {
       trigger: 'item',
-      formatter: function (params) {
-        return (
-          params.name +
-          ': ' +
-          params.value.toLocaleString() +
-          ' (' +
-          params.percent +
-          '%)'
-        )
-      },
+      formatter: '{b}: {c} ({d}%)',
     },
     legend: {
       show: false,
@@ -94,10 +58,6 @@ export default function Fn(props: Props) {
         label: {
           position: 'inner',
           fontSize: 12,
-          formatter: function (params) {
-            updataFormMatter(params)
-            return params.percent + '%'
-          },
           color: '#282b31',
         },
         emphasis: {
@@ -108,16 +68,15 @@ export default function Fn(props: Props) {
         labelLine: {
           show: false,
         },
-        data: initData,
+        data: [
+          { name: names[0], value: data[0] },
+          { name: names[1], value: data[1] },
+          { name: names[2], value: data[2] },
+          { name: names[3], value: data[3] },
+        ],
       },
     ],
   }
-  useEffect(() => {
-    if (timer.current) clearTimeout(timer.current)
-    timer.current = setTimeout(() => {
-      setChartData(formatterRef.current)
-    }, 1500)
-  }, [props.data])
   return (
     <Row gutter={[16, 16]}>
       <Col span={24} md={24} lg={12}>
@@ -131,16 +90,12 @@ export default function Fn(props: Props) {
       <Col span={24} md={24} lg={12}>
         <Flex justify='center' align='center' className='h-100'>
           <div className='w-100 p-x-12' style={{ maxWidth: 360 }}>
-            {chartData.map((item, index) => (
-              <Flex
-                gap={12}
-                className='w-100 p-y-4'
-                align='center'
-                key={item.name}>
+            {data.map((item, index) => (
+              <Flex gap={12} className='w-100 p-y-4' align='center' key={index}>
                 <div
                   className='icon g-radius-50'
                   style={{
-                    backgroundColor: item.color,
+                    backgroundColor: color[index],
                     width: 12,
                     height: 12,
                   }}></div>
@@ -148,9 +103,12 @@ export default function Fn(props: Props) {
                   justify='space-between'
                   align='center'
                   className='fx-auto'>
-                  <span className='gray-color'>{item.name}</span>
+                  <span className='gray-color'>{names[index]}类客户</span>
                   <span>
-                    {item.value.toLocaleString()}（{item.percent}%）
+                    {Number(item).toLocaleString()}
+                    <span className='gray-color-sub'>
+                      （{dataRate[index]}%）
+                    </span>
                   </span>
                 </Flex>
               </Flex>
