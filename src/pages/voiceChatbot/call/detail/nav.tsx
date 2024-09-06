@@ -1,4 +1,4 @@
-import { Flex, Space, Button, ConfigProvider, Popconfirm } from 'antd'
+import { Flex, Space, Button, ConfigProvider, Popconfirm, Tooltip } from 'antd'
 import { SyncOutlined } from '@ant-design/icons'
 import { useParams, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { changeVCTaskStatus, getVCTaskDetail } from '@/api'
@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useStateDispatch } from './reducer'
 import { API } from 'apis'
 import { useStateStore } from './reducer'
+import RecallModal from './recall'
 
 export default function Fn() {
   const store = useStateStore()
@@ -17,6 +18,7 @@ export default function Fn() {
   const [status, setstatus] = useState('')
   const detailRef = useRef<API.GetVCTaskDetailRes>(null)
   const [index, setIndex] = useState(0)
+  const [open, setOpen] = useState(false)
   // 获取详情
   const getDetail = async () => {
     try {
@@ -100,19 +102,21 @@ export default function Fn() {
         </div>
       </Space>
       <Space wrap size={[12, 12]}>
-        {status == '6' && (
+        {['5', '6'].includes(status) && (
           <ConfigProvider
             theme={{
               token: {
                 colorPrimary: '#00E0DF',
               },
             }}>
-            <Button type='primary' size='small'>
-              <Space className='text-color'>
-                <span>一键重呼</span>
-                <span className='icon iconfont icon-recall fn14'></span>
-              </Space>
-            </Button>
+            <Tooltip title='重呼未外呼号码' placement='bottom'>
+              <Button type='primary' size='small' onClick={() => setOpen(true)}>
+                <Space className='text-color'>
+                  <span>一键重呼</span>
+                  <span className='icon iconfont icon-recall fn14'></span>
+                </Space>
+              </Button>
+            </Tooltip>
           </ConfigProvider>
         )}
 
@@ -183,6 +187,7 @@ export default function Fn() {
           </Button>
         </ConfigProvider>
       </Space>
+      <RecallModal open={open} onCancel={() => setOpen(false)} />
     </Flex>
   )
 }
