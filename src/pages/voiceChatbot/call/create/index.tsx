@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useMemo } from 'react'
 import {
   Button,
   Form,
@@ -15,6 +15,7 @@ import {
   DatePicker,
   TimePicker,
   Popconfirm,
+  Spin,
 } from 'antd'
 import { ProFormDependency } from '@ant-design/pro-components'
 import type { GetProps } from 'antd'
@@ -24,12 +25,13 @@ import PageContent from '@/components/pageContent'
 import ContactsTabs from './component/contactsTabs'
 import dayjs from 'dayjs'
 import { usePoint } from '@/hooks'
+import { debounce } from 'lodash'
 
 import {
   getUsableTalkList,
   getVCSendNumber,
   createVCTask,
-  changeVCTaskStatus,
+  getSmsTempList,
 } from '@/api'
 
 import { reCall } from '../type'
@@ -38,6 +40,7 @@ import './index.scss'
 import { API } from 'apis'
 
 const { RangePicker } = DatePicker
+const Option = Select.Option
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>
 
 // 可选范围【无-今天】
@@ -114,6 +117,36 @@ export default function Fn() {
   const [openConfirm, setOpenConfirm] = useState(false) // 显示数量弹框
   const [confirmLoading, setConfirmLoading] = useState(false) // 数量弹框-确定的loading
   const [sendNumLoading, setSendNumLoading] = useState(false) // 获取数量弹框的loading
+  const [tempLoading, settempLoading] = useState(false)
+  const [tempList, setTempList] = useState([])
+
+  const changeSearchKeys = (val) => {
+    setTempList([])
+    settempLoading(true)
+    debounceGetTemp(val)
+  }
+  const debounceGetTemp = useMemo(() => {
+    const getList = (val: string) => {
+      getTempList(val)
+    }
+    return debounce(getList, 800)
+  }, [])
+
+  const getTempList = async (keywords = '') => {
+    try {
+      const res = await getSmsTempList({
+        page: 1,
+        tag: 'all',
+        status: '1',
+        order_by: 'update',
+        search_type: 'all',
+        keywords: keywords,
+      })
+      if (res.status == 'success') {
+        setTempList(res.templates)
+      }
+    } catch (error) {}
+  }
 
   // 获取话术列表
   const initTalkOptions = async () => {
@@ -188,8 +221,8 @@ export default function Fn() {
       } = await tabsRef.current.getValues()
       setConfirmLoading(true)
       const { life_times, work_morning_times, work_afternoon_times } = values
-      const life_start = dayjs(life_times[0]).format('YYYY-MM-DD HH:mm')
-      const life_end = dayjs(life_times[1]).format('YYYY-MM-DD HH:mm')
+      const life_start = dayjs(life_times[0]).format('YYYY-MM-DD HH:mm') + ':00'
+      const life_end = dayjs(life_times[1]).format('YYYY-MM-DD HH:mm') + ':00'
       const work_morning_start = dayjs(work_morning_times[0]).format('HH:mm:ss')
       const work_morning_end = dayjs(work_morning_times[1]).format('HH:mm:ss')
       const work_afternoon_start = dayjs(work_afternoon_times[0]).format(
@@ -334,7 +367,7 @@ export default function Fn() {
             </Form.Item>
           </Col>
           <Col span={24} xl={12} xxl={6}>
-            <Form.Item name='smsIntentions' label='挂机短信'>
+            <Form.Item name='smsIntentions' label='挂机短信（意向客户）'>
               <Checkbox.Group
                 options={[
                   { label: 'A', value: 'A' },
@@ -353,8 +386,24 @@ export default function Fn() {
                   <Form.Item name='smsTemplate' label='挂机短信模版'>
                     <Select
                       disabled={!(smsIntentions && smsIntentions.length > 0)}
-                      placeholder='请选择'
-                      options={[]}></Select>
+                      placeholder='请输入关键词搜索短信模版'
+                      filterOption={false}
+                      showSearch
+                      onSearch={changeSearchKeys}
+                      notFoundContent={
+                        tempLoading ? <Spin size='small' /> : null
+                      }>
+                      {tempList.map((item) => (
+                        <Option
+                          key={item.sign}
+                          value={item.sign}
+                          title={`模版内容：${item.signature}${item.message}`}>
+                          {item.title || ''}
+                          {item.signature}
+                          {item.message}
+                        </Option>
+                      ))}
+                    </Select>
                   </Form.Item>
                 </Col>
               )
