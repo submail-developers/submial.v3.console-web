@@ -31,15 +31,7 @@ import TimeChat from './components/timeChat'
 import TimesChat from './components/timesChat'
 import Grade from './components/grade'
 
-import {
-  getRcsOverview,
-  getRcsAnalysisOverview,
-  getUseTourStatus,
-  hideUseTour,
-  getDicConfig,
-  getVCOverview,
-  getVCAnalysisOverview,
-} from '@/api'
+import { getVCOverview, getVCAnalysisOverview } from '@/api'
 import { StorePage } from './components/pay/reducer'
 
 import faceImg from '@/assets/rcs/face/welcome.png'
@@ -358,7 +350,7 @@ export default function Fn() {
       </Row>
 
       <StorePage>
-        <MyPay ref={payRef} />
+        <MyPay ref={payRef} onPaySuccess={getData} />
       </StorePage>
     </PageContent>
   )

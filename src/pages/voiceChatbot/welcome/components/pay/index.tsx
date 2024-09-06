@@ -35,12 +35,15 @@ import {
 } from '@/api'
 type Step = -1 | 0 | 1 | 2 | 3
 
-type Props = {}
+type Props = {
+  onPaySuccess: () => void
+}
 
 type FooterProps = {
   step: Step
   onCancel: () => void
   onChangeStep: (step: Step) => void
+  onPaySuccess: () => void
 }
 
 const colors = ['#30dd8a', '#2bb673']
@@ -135,6 +138,7 @@ const Footer = (props: FooterProps) => {
       const res = await getPayStatus({
         ordernumber: state.orderInfo.ordernumber,
       })
+
       // 轮询查询订单状态
       if (res.order == 'pending') {
         timerRef.current = setTimeout(() => {
@@ -150,6 +154,7 @@ const Footer = (props: FooterProps) => {
           type: 'changeStep',
           payload: 3,
         })
+        props.onPaySuccess()
         // 取消订单
       } else {
         setPayLoading(false)
@@ -372,6 +377,7 @@ function Fn(props: Props, ref) {
           step={state.step}
           onCancel={onCancel}
           onChangeStep={onChangeStep}
+          onPaySuccess={() => props.onPaySuccess()}
         />
       }
       maskClosable={false}

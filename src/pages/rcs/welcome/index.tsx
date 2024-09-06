@@ -519,7 +519,7 @@ export default function Fn() {
       <MyTour ref={tourRef} openEvent={reGetInfo} />
 
       <StorePage>
-        <MyPay ref={payRef} />
+        <MyPay ref={payRef} onPaySuccess={getData} />
       </StorePage>
     </PageContent>
   )
