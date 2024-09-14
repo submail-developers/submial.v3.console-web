@@ -195,7 +195,10 @@ export default function Fn() {
           return
         }
         const res = await getVCSendNumber({
-          address_data: JSON.stringify(address_data),
+          address_data:
+            typeof address_data == 'string'
+              ? address_data
+              : JSON.stringify(address_data),
           addressmod,
         })
         setSendNum(Number(res.price || 0))
@@ -246,7 +249,10 @@ export default function Fn() {
         skipHolidays: values.skipHolidays ? 'true' : 'false',
         smsIntentions: values.smsIntentions?.join(',') || '',
         smsTemplate: values.smsTemplate,
-        address_data: JSON.stringify(address_data),
+        address_data:
+          typeof address_data == 'string'
+            ? address_data
+            : JSON.stringify(address_data),
         addressmod,
         addressfile_oss_path,
       }

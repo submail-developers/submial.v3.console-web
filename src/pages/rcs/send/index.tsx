@@ -177,7 +177,10 @@ export default function CreateSend() {
           return
         }
         const res = await getSendNumber({
-          address_data: JSON.stringify(address_data),
+          address_data:
+            typeof address_data == 'string'
+              ? address_data
+              : JSON.stringify(address_data),
           addressmod,
         })
         setSendNum(res.total)
@@ -205,7 +208,10 @@ export default function CreateSend() {
 
       let params = {
         ...value1,
-        address_data,
+        address_data:
+          typeof address_data == 'string'
+            ? address_data
+            : JSON.stringify(address_data),
         addressmod,
         template_id: sign,
         mms: cb.includes('mms') ? 'true' : 'false',

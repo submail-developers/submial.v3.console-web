@@ -219,7 +219,7 @@ export default function Fn() {
               暂停
             </Button>
           )}
-          {['1', '3'].includes(record.status) && (
+          {['3'].includes(record.status) && (
             <Button
               type='link'
               style={{ paddingLeft: 0 }}
