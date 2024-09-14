@@ -20,7 +20,7 @@ import {
 import { ProFormDependency } from '@ant-design/pro-components'
 import type { GetProps } from 'antd'
 import { NavLink, useNavigate } from 'react-router-dom'
-import faceImg from '@/assets/rcs/face/history.png'
+import faceImg from '@/assets/voiceChatbot/face/call.png'
 import PageContent from '@/components/pageContent'
 import ContactsTabs from './component/contactsTabs'
 import dayjs from 'dayjs'

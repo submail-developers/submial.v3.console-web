@@ -7,30 +7,49 @@ export const StatusText = {
   '6': '正常完成',
 }
 
+// new新建、start开始执行、pause暂停、cancel取消、expired取消、completed完成
 export const StatusOptions = [
+  {
+    label: '全部状态',
+    value: 'all',
+    key: 'all',
+    num: 0,
+  },
   {
     label: '等待执行',
     value: '1',
+    key: 'new',
+    num: 0,
   },
   {
     label: '任务进行中',
     value: '2',
+    key: 'start',
+    num: 0,
   },
   {
     label: '暂停中',
     value: '3',
+    key: 'pause',
+    num: 0,
   },
   {
     label: '手动取消',
     value: '4',
+    key: 'cancel',
+    num: 0,
   },
   {
     label: '超时结束',
     value: '5',
+    key: 'expired',
+    num: 0,
   },
   {
     label: '正常完成',
     value: '6',
+    key: 'completed',
+    num: 0,
   },
 ]
 

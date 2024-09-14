@@ -69,7 +69,7 @@ export default function Fn(props: Props) {
                 Number(props.data.call_duration / 1000) /
                 Number(props.data.connect_num)
               ).toFixed(0) + '秒'
-            : '0'}
+            : '0秒'}
         </div>
         <div className='gray-color fn12 m-t-8'>平均通话时长</div>
       </Col>

@@ -1052,7 +1052,7 @@ export const getUsableTalkList = () => {
 }
 // 外呼任务列表
 export const getVCTaskList = (data: API.GetVCTaskListParams) => {
-  return request.post<any, any, API.GetVCTaskListParams>(
+  return request.post<any, API.GetVCTaskListRes, API.GetVCTaskListParams>(
     '/console/api/VoiceChatbot/get_task_list',
     {
       ...data,

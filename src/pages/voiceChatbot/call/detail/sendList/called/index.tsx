@@ -301,7 +301,7 @@ export default function Fn() {
     {
       title: '振铃时长',
       width: 100,
-      className: 'success-color',
+      className: 'tag-color',
       render: (_, record) => (
         <Space>
           <span className='icon iconfont icon-calling fn14'></span>
@@ -312,7 +312,7 @@ export default function Fn() {
     {
       title: '通话时长',
       width: 100,
-      className: 'color',
+      className: 'tag-color',
       render: (_, record) => (
         <Space>
           <span className='icon iconfont icon-say fn14'></span>

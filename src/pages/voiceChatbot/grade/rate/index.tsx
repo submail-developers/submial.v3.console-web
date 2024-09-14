@@ -15,7 +15,7 @@ export default function Fn(props: Props) {
   let data: number[] = [0, 0, 0, 0] // 数量
   let dataRate: (string | number)[] = [0, 0, 0, 0] // 比例
   let total: number = 0 // 总数
-  if (props.data) {
+  if (props.data && props.data.length > 0) {
     props.data.forEach((item) => {
       let index = names.findIndex((im) => item.intention == im)
       data[index] = Number(item.num)

@@ -1706,12 +1706,23 @@ declare module 'apis' {
       page: number
       limit: number
     }
+    type VCTaskListTaskInfo = {
+      all: number
+      new: number
+      start: number
+      pause: number
+      cancel: number
+      expired: number
+      completed: number
+    }
     interface GetVCTaskListRes {
       status: string
       message: string
       page: number
       limit: number
       list: VCTaskItem[]
+      row: number
+      task_info: VCTaskListTaskInfo
     }
     type VCTaskItem = {
       id: string
