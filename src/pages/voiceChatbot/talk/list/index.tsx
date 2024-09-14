@@ -20,7 +20,7 @@ import PageContent from '@/components/pageContent'
 import CreateModal from './createModal'
 import { getTalkToken, getTalkList, delTalkItem } from '@/api'
 import { API } from 'apis'
-import faceImg from '@/assets/rcs/face/history.png'
+import faceImg from '@/assets/voiceChatbot/face/talk.png'
 import { downloadFile } from '@/utils'
 import type { ColumnsType } from 'antd/es/table'
 
@@ -148,9 +148,9 @@ export default function Fn() {
       render: (_, record) => (
         <>
           {record.status == 3 ? (
-            <span className='gray-color-sub'>待发布</span>
+            <span className='gray-color-sub'>未提交审核</span>
           ) : (
-            <span className='success-color'>已发布</span>
+            <span className='success-color'>审核通过</span>
           )}
         </>
       ),

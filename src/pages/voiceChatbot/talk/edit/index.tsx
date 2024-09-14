@@ -4,6 +4,8 @@ import { getTalkToken, getTalkList, delTalkItem } from '@/api'
 import { changeBreadcrumbItem } from '@/store/reducers/breadcrumb'
 import { useAppDispatch } from '@/store/hook'
 import './index.scss'
+
+const baseURI = 'https://bot.mysubmail.com'
 export default function Fn() {
   const dispatch = useAppDispatch()
   const nav = useNavigate()
@@ -34,7 +36,7 @@ export default function Fn() {
 
   useEffect(() => {
     const handleMessage = (event) => {
-      if (event.origin === 'http://112.27.72.233:10000') {
+      if (event.origin === baseURI) {
         try {
           console.log('讯飞推送的内容:', JSON.parse(event.data))
           let cbData = JSON.parse(event.data)
@@ -61,7 +63,7 @@ export default function Fn() {
             name='chatIframe'
             width='100%'
             height='100%'
-            src={`http://112.27.72.233:10000/qetesh-openapi-page/#/flow/${id}${
+            src={`${baseURI}/qetesh-openapi-page/#/flow/${id}${
               editable == '1' ? '/1' : ''
             }?${editable == '1' ? 'editable=1&' : ''}token=${token}`}
             style={{ border: 'none' }}></iframe>
