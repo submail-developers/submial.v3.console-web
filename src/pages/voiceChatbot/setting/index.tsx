@@ -5,7 +5,7 @@ import Mob from './components/mob'
 import Mail from './components/email'
 import Safe from './components/safe'
 
-import faceImg from '@/assets/rcs/face/settings.png'
+import faceImg from '@/assets/voiceChatbot/face/settings.png'
 
 import './index.scss'
 

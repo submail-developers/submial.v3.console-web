@@ -22,7 +22,7 @@ import { getPresets } from '@/utils/day'
 import { downloadFile } from '@/utils'
 import type { ColumnsType } from 'antd/es/table'
 import PageContent from '@/components/pageContent'
-import faceImg from '@/assets/rcs/face/history.png'
+import faceImg from '@/assets/voiceChatbot/face/fee.png'
 import './index.scss'
 
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>
@@ -142,7 +142,7 @@ export default function Fn() {
       render: (_, record) => (
         <a
           href={`/console/voiceChatbot/call/detail/${record.sendlist}/info`}
-          className='tag-color g-pointer'
+          className='color g-pointer'
           target='_blank'>
           {record.task_title}
         </a>
@@ -155,7 +155,7 @@ export default function Fn() {
       render: (_, record) => (
         <a
           href={`/console/voiceChatbot/talk/edit/${record.SpeechSkillId}/0`}
-          className='tag-color g-pointer'
+          className='color g-pointer'
           target='_blank'>
           {record.SpeechSkill_name}
         </a>
@@ -169,7 +169,7 @@ export default function Fn() {
     {
       title: '通话时长',
       width: 100,
-      className: 'color',
+      className: 'tag-color',
       render: (_, record) => (
         <Space>
           <span className='icon iconfont icon-say fn14'></span>
@@ -212,7 +212,7 @@ export default function Fn() {
         autoComplete='off'
         onValuesChange={onValuesChange}
         initialValues={{
-          time: rangePresets[5].value,
+          time: rangePresets[0].value,
         }}>
         <Flex align='flex-end' wrap='wrap' gap={16}>
           <Form.Item label='时间范围' name='time' className='m-b-0'>

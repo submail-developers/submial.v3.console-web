@@ -14,7 +14,7 @@ import {
   Empty,
   Pagination,
 } from 'antd'
-import faceImg from '@/assets/rcs/face/address.png'
+import faceImg from '@/assets/voiceChatbot/face/black.png'
 import AExport from '@/components/aExport'
 import { downloadFile } from '@/utils'
 

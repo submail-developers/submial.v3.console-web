@@ -34,7 +34,7 @@ import Grade from './components/grade'
 import { getVCOverview, getVCAnalysisOverview } from '@/api'
 import { StorePage } from './components/pay/reducer'
 
-import faceImg from '@/assets/rcs/face/welcome.png'
+import faceImg from '@/assets/voiceChatbot/face/welcome.png'
 import { getPresets } from '@/utils/day'
 
 import './index.scss'
@@ -259,8 +259,8 @@ export default function Fn() {
                   </Col>
                   <Col span={12}>
                     <Flex justify='space-between' align='center'>
-                      <span className='gray-color'>待执行任务</span>
-                      <span>{data && data.task_info.new}</span>
+                      <span className='gray-color'>执行中任务</span>
+                      <span>{data && data.task_info.start}</span>
                     </Flex>
                   </Col>
                   <Col span={12}>

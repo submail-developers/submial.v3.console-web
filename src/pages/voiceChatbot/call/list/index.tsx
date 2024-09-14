@@ -19,7 +19,7 @@ import { usePoint } from '@/hooks'
 import PageContent from '@/components/pageContent'
 import { getUsableTalkList, getVCTaskList, changeVCTaskStatus } from '@/api'
 import { API } from 'apis'
-import faceImg from '@/assets/rcs/face/history.png'
+import faceImg from '@/assets/voiceChatbot/face/call.png'
 import dayjs from 'dayjs'
 import { getPresets } from '@/utils/day'
 import { downloadFile } from '@/utils'
@@ -51,6 +51,7 @@ export default function Fn() {
   const [limit, setLimit] = useState<number>(10)
   const [total, setTotal] = useState<number>(0)
   const [tableData, setTableData] = useState<DataType[]>([])
+  const [statusOptionsList, setstatusOptionsList] = useState(StatusOptions)
 
   // 获取历史明细
   const getList = async () => {
@@ -72,8 +73,18 @@ export default function Fn() {
       }
 
       const res = await getVCTaskList(params)
-      setTableData(res.list)
-      setTotal(res.row)
+      if (res.status == 'success') {
+        setTableData(res.list)
+        setTotal(res.row)
+        if (res.task_info) {
+          setstatusOptionsList((prev) => {
+            return prev.map((item) => {
+              item.num = res.task_info[item.key] || 0
+              return item
+            })
+          })
+        }
+      }
       setLoading(false)
     } catch (error) {
       setLoading(false)
@@ -128,7 +139,7 @@ export default function Fn() {
     {
       title: '任务名称',
       fixed: true,
-      width: 160,
+      width: 240,
       className: 'paddingL20',
       dataIndex: 'title',
     },
@@ -144,21 +155,20 @@ export default function Fn() {
       render: (_, record) => (
         <a
           href={`/console/voiceChatbot/talk/edit/${record.speechSkillId}/0`}
-          className='tag-color g-pointer'
+          className='color g-pointer'
           target='_blank'>
           {record.speechskill_name}
         </a>
       ),
     },
     {
-      title: '预设开始时间',
-      dataIndex: 'life_start',
-      width: 180,
-    },
-    {
-      title: '预设结束时间',
-      dataIndex: 'life_end',
-      width: 180,
+      title: '预设开始/结束时间',
+      width: 360,
+      render: (_, record) => (
+        <div>
+          {record.life_start} - {record.life_end}
+        </div>
+      ),
     },
     {
       title: '号码量',
@@ -256,15 +266,20 @@ export default function Fn() {
         onValuesChange={onValuesChange}
         initialValues={{
           time: rangePresets[5].value,
+          status: 'all',
         }}>
         <Flex align='flex-end' wrap='wrap' gap={16}>
           <Form.Item label='任务状态' name='status' className='m-b-0'>
             <Select
               placeholder='全部状态'
-              allowClear
-              popupMatchSelectWidth={120}
-              style={{ width: 120 }}
-              options={StatusOptions}></Select>
+              popupMatchSelectWidth={160}
+              style={{ width: 160 }}>
+              {statusOptionsList.map((item) => (
+                <Select.Option key={item.value} value={item.value}>
+                  {item.label}({item.num})
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
           <Form.Item label='时间范围' name='time' className='m-b-0'>
             <RangePicker

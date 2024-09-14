@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from 'react-router-dom'
 import { Flex, Divider, Image, Button } from 'antd'
 import PageContent from '@/components/pageContent'
-import faceImg from '@/assets/rcs/face/history.png'
+import faceImg from '@/assets/voiceChatbot/face/call.png'
 import Nav from './nav'
 import { StorePage } from './reducer'
 

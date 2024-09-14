@@ -15,7 +15,7 @@ import {
 } from 'antd'
 import type { MenuProps } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
-import faceImg from '@/assets/rcs/face/history.png'
+import faceImg from '@/assets/voiceChatbot/face/grade.png'
 import mobImg from '@/assets/rcs/address/address_blue.png'
 import { getGradeTypePath, GradeType } from './type'
 
@@ -255,7 +255,7 @@ export default function Fn() {
         </Col>
         <Col span={24} xl={12}>
           <Card title='意向客户占比' loading={rateLoading} minHeight={180}>
-            {rateInfo.length > 0 && <Rate data={rateInfo} />}
+            <Rate data={rateInfo} />
           </Card>
         </Col>
       </Row>
@@ -269,7 +269,7 @@ export default function Fn() {
           <Image
             src={getGradeTypePath(activeKey)}
             preview={false}
-            height={40}></Image>
+            height={32}></Image>
           <Dropdown
             trigger={['click']}
             menu={{
