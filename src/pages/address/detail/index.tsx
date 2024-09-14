@@ -247,7 +247,7 @@ export default function Fn() {
               <Image
                 src={getAddressPath(Number(tag))}
                 preview={false}
-                height={48}
+                height={40}
               />
               <span className='fn16'>{name}</span>
             </Space>

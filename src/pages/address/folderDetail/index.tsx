@@ -376,7 +376,7 @@ export default function Fn() {
         gap={12}
         style={{ background: 'var(--table-bg)' }}>
         <Space align='center'>
-          <Image src={getFolderPath(Number(tag))} preview={false} height={48} />
+          <Image src={getFolderPath(Number(tag))} preview={false} height={40} />
           <span className='fn16'>{title}</span>
         </Space>
         <Space align='center' size={12} wrap>

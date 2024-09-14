@@ -314,7 +314,7 @@ export default function Fn() {
           <Image
             src={getAddressPath(Number('4'))}
             preview={false}
-            height={48}
+            height={40}
           />
           <span className='fn16'>地址簿</span>
         </Space>
