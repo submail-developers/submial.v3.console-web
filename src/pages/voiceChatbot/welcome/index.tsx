@@ -150,23 +150,18 @@ export default function Fn() {
           <Card title='更多指引'>
             <Row gutter={[12, 16]}>
               <Col span={24} sm={12}>
-                <Link to={'/console/rcs/welcome'} target='_blank'>
+                <Link to={'/documents/NbGZ42'} target='_blank'>
                   计费规则
                 </Link>
               </Col>
               <Col span={24} sm={12}>
-                <Link to={'/console/rcs/welcome'} target='_blank'>
-                  消息上行文档
-                </Link>
-              </Col>
-              <Col span={24} sm={12}>
-                <Link to={'/documents/tAhPk'} target='_blank'>
+                <Link to={'/documents/PopwU2'} target='_blank'>
                   API开发文档
                 </Link>
               </Col>
               <Col span={24} sm={12}>
-                <Link to={'/console/rcs/welcome'} target='_blank'>
-                  Chatbot交互演示
+                <Link to={'/documents/ZhImY'} target='_blank'>
+                  常见疑问
                 </Link>
               </Col>
             </Row>
