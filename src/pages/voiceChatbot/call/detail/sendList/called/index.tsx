@@ -220,7 +220,7 @@ export default function Fn() {
             )
             item.call_duration = formatMilliseconds(
               Number(item.call_duration || 0),
-              's',
+              'S',
             )
             return item
           }),

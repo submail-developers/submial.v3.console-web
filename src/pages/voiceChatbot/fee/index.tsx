@@ -5,21 +5,17 @@ import {
   Button,
   DatePicker,
   Form,
-  Select,
   Input,
   Space,
   Divider,
   Image,
 } from 'antd'
 import type { GetProps } from 'antd'
-import { useNavigate } from 'react-router-dom'
-import { EyeOutlined } from '@ant-design/icons'
 import { usePoint } from '@/hooks'
-import { getChatbot, getHistory, getVCFeeList } from '@/api'
+import { getVCFeeList } from '@/api'
 import { API } from 'apis'
 import dayjs from 'dayjs'
 import { getPresets } from '@/utils/day'
-import { downloadFile } from '@/utils'
 import type { ColumnsType } from 'antd/es/table'
 import PageContent from '@/components/pageContent'
 import faceImg from '@/assets/voiceChatbot/face/fee.png'
@@ -75,10 +71,11 @@ export default function Fn() {
         keywords,
       })
       setTableData(
-        res.list.map((item) => {
+        res.list.map((item, index) => {
+          item.index = page * limit + index
           item.call_duration = formatMilliseconds(
             Number(item.call_duration),
-            's',
+            'S',
           )
           return item
         }),
@@ -180,14 +177,21 @@ export default function Fn() {
     {
       title: '类型',
       width: 100,
-      render: (_, record) => <div>{record.call_result_desc || '-'}</div>,
+      render: (_, record) => (
+        <div title={record.call_result_desc}>
+          {(record.status == '0' || record.status == null) && '-'}
+          {record.status == '1' && `扣费`}
+          {record.status == '2' && `未计费`}
+          {record.status == '3' && `失败返还`}
+        </div>
+      ),
     },
     {
       title: '余额变动',
       width: 100,
       render: (_, record) => (
         <div>
-          {record.status == '0' || (record.status == null && '-')}
+          {(record.status == '0' || record.status == null) && '-'}
           {record.status == '1' &&
             `-${(Number(record.fee) * Number(record.count)).toFixed(4)}`}
           {record.status == '2' && `0`}
@@ -237,7 +241,7 @@ export default function Fn() {
         className='theme-cell reset-table m-t-24'
         columns={columns}
         dataSource={tableData}
-        rowKey='sendID'
+        rowKey='index'
         pagination={{
           defaultPageSize: limit,
           position: ['bottomRight'],

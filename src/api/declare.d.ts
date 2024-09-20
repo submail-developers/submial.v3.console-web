@@ -1971,6 +1971,7 @@ declare module 'apis' {
       intention: 'all' | GradeType
     }
     type GetVCFeeListitem = {
+      index?: number
       sendID: string
       send: string
       sendlist: string
@@ -1979,7 +1980,7 @@ declare module 'apis' {
       SpeechSkillId: string
       fee: string
       count: string
-      status: string // "0=无状态，1=成功，2=失败，3=已撤回    3费用已退回，2未计费， 其他数据均为已计费"
+      status: '0' | '1' | '2' | '3' // "0=无状态，1=成功，2=失败，3=已撤回    3费用已退回，2未计费， 其他数据均为已计费"
       line: string
       call_result: string
       call_result_desc: string

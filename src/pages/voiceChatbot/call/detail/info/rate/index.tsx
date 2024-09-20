@@ -23,7 +23,9 @@ function formatSeconds(seconds) {
 }
 
 export default function Fn(props: Props) {
-  const call_duration = formatSeconds(Number(props.data.call_duration))
+  const call_duration = formatSeconds(
+    (Number(props.data.call_duration) / 1000).toFixed(0),
+  )
   return (
     <Row className='call-rate' gutter={[12, 24]}>
       <Col span={12} md={8} xl={6}>
@@ -78,7 +80,9 @@ export default function Fn(props: Props) {
             {Number(props.data.call_duration) > 0 &&
             Number(props.data.call_num) > 0
               ? (
-                  Number(props.data.call_duration) / Number(props.data.call_num)
+                  Number(props.data.call_duration) /
+                  1000 /
+                  Number(props.data.call_num)
                 ).toFixed(0) + '秒'
               : '0秒'}
           </div>
