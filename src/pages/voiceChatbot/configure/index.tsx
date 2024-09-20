@@ -1,7 +1,7 @@
 import { Button, Space, Checkbox } from 'antd'
 import PageContent from '@/components/pageContent'
 import Card from '@/components/aCard'
-import { AimIcon } from '@/components/aIcons'
+import Logo from '@/assets/voiceChatbot/logo.svg'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { openVoiseChatbot } from '@/api'
@@ -23,10 +23,8 @@ export default function Fn() {
       <div className='m-t-40 p-t-40 m-x-12'>
         <Card title='开通产品'>
           <div className='p-x-12'>
-            <div style={{ fontSize: 54 }}>
-              <AimIcon />
-            </div>
-            <div className='fn18 fw-500'>智能语音机器人</div>
+            <img src={Logo} width={80} alt='' />
+            <div className='fn18 fw-500 m-t-12'>智能语音机器人</div>
             <div className='m-t-24'>
               <Space align='start' className='fn13'>
                 <Checkbox
