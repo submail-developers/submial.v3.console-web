@@ -275,22 +275,22 @@ export const voiceChatbotMenus: RouteObject[] = [
         ),
         children: addressChildren,
       },
-      {
-        path: 'black',
-        loader: loaderFn({
-          groupName: '外呼任务管理',
-          groupIcon: 'icon-xiaoxi',
-          breadName: '黑名单管理',
-          menuName: '黑名单管理',
-        }),
-        errorElement: <Error />,
-        element: (
-          <LazyImportComponent
-            lazyChildren={lazy(() => import('@/pages/black/index'))}
-          />
-        ),
-        children: blackChildren,
-      },
+      // {
+      //   path: 'black',
+      //   loader: loaderFn({
+      //     groupName: '外呼任务管理',
+      //     groupIcon: 'icon-xiaoxi',
+      //     breadName: '黑名单管理',
+      //     menuName: '黑名单管理',
+      //   }),
+      //   errorElement: <Error />,
+      //   element: (
+      //     <LazyImportComponent
+      //       lazyChildren={lazy(() => import('@/pages/black/index'))}
+      //     />
+      //   ),
+      //   children: blackChildren,
+      // },
       {
         path: 'fee',
         loader: loaderFn({

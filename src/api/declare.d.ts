@@ -1647,7 +1647,8 @@ declare module 'apis' {
       id: string
       businessId: string // 企业ID
       name: string
-      status: 3 | 4 // 3代发布4已发布
+      status: '0' | '1' | '2' | '3' // 0未提审1通过2驳回3审核中
+      desc: string // 驳回原因
       createPhone: string // 创建话术账户
       createName: string // 创建话术名称
       type: 1 | 2 // 话术类型1普通话术2动态话术

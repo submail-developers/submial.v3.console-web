@@ -18,6 +18,7 @@ import { PlusOutlined } from '@ant-design/icons'
 import { usePoint } from '@/hooks'
 import PageContent from '@/components/pageContent'
 import CreateModal from './createModal'
+import TestModal from './testModal'
 import { getTalkToken, getTalkList, delTalkItem } from '@/api'
 import { API } from 'apis'
 import faceImg from '@/assets/voiceChatbot/face/talk.png'
@@ -38,6 +39,8 @@ export default function Fn() {
   const [total, setTotal] = useState<number>(0)
   const [tableData, setTableData] = useState<DataType[]>([])
   const [open, setopen] = useState(false)
+  const [testOpen, setTestOpen] = useState(false) // 测试话术
+  const [testId, setTestId] = useState('')
 
   const getList = async () => {
     setLoading(true)
@@ -147,17 +150,26 @@ export default function Fn() {
       width: 120,
       render: (_, record) => (
         <>
-          {record.status == 3 ? (
+          {record.status == '0' && (
             <span className='gray-color-sub'>未提交审核</span>
-          ) : (
+          )}
+          {record.status == '1' && (
             <span className='success-color'>审核通过</span>
+          )}
+          {record.status == '2' && (
+            <Tooltip title={record.desc} placement='bottom'>
+              <span className='error-color'>审核驳回</span>
+            </Tooltip>
+          )}
+          {record.status == '3' && (
+            <span className='waiting-color'>审核中</span>
           )}
         </>
       ),
     },
     {
       title: '操作',
-      width: 180,
+      width: 220,
       render: (_, record) => (
         <>
           <Button type='link' style={{ paddingLeft: 0 }}>
@@ -182,6 +194,17 @@ export default function Fn() {
               删除
             </Button>
           </Popconfirm>
+          {record.status == '1' && (
+            <Button
+              className='p-l-0'
+              type='link'
+              onClick={() => {
+                setTestOpen(true)
+                setTestId(record.id)
+              }}>
+              测试
+            </Button>
+          )}
         </>
       ),
     },
@@ -241,6 +264,11 @@ export default function Fn() {
         open={open}
         onCancel={() => setopen(false)}
         onConfirm={onConfirm}
+      />
+      <TestModal
+        id={testId}
+        open={testOpen}
+        onCancel={() => setTestOpen(false)}
       />
     </PageContent>
   )

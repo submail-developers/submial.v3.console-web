@@ -1043,6 +1043,24 @@ export const delTalkItem = (data: { ids: string }) => {
     },
   )
 }
+// 提审话术
+export const submitTalk = (data: { id: string; name: string }) => {
+  return request.post<any, any, { id: string; name: string }>(
+    '/console/api/VoiceChatbot/save_audit_speechskill',
+    {
+      ...data,
+    },
+  )
+}
+// 测试话术
+export const testTalk = (data: { id: string; mob: string }) => {
+  return request.post<any, any, { id: string; mob: string }>(
+    '/console/api/VoiceChatbot/test_speechskill',
+    {
+      ...data,
+    },
+  )
+}
 
 // 外呼任务-话术列表
 export const getUsableTalkList = () => {

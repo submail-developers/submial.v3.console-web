@@ -1,11 +1,13 @@
 import { useEffect, useState, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { getTalkToken, getTalkList, delTalkItem } from '@/api'
+import { getTalkToken, submitTalk } from '@/api'
 import { changeBreadcrumbItem } from '@/store/reducers/breadcrumb'
 import { useAppDispatch } from '@/store/hook'
 import './index.scss'
 
+// 代理讯飞的地址
 const baseURI = 'https://bot.mysubmail.com'
+
 export default function Fn() {
   const dispatch = useAppDispatch()
   const nav = useNavigate()
@@ -35,13 +37,16 @@ export default function Fn() {
   }, [])
 
   useEffect(() => {
-    const handleMessage = (event) => {
+    const handleMessage = async (event) => {
       if (event.origin === baseURI) {
         try {
           console.log('讯飞推送的内容:', JSON.parse(event.data))
           let cbData = JSON.parse(event.data)
           // 退出/提审
           if (['close', 'submit'].includes(cbData.cmdId)) {
+            if (cbData.cmdId == 'submit') {
+              await submitTalk({ id: cbData.data.id, name: cbData.data.name })
+            }
             nav('/console/voiceChatbot/talk/index', { replace: true })
           }
         } catch (error) {}
