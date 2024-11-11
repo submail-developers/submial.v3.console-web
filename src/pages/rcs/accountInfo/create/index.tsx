@@ -235,7 +235,7 @@ export default function Fn() {
   }
 
   const props: UploadProps = {
-    accept: '.jpg, .jpeg, .png',
+    accept: '.jpg, .jpeg',
     onRemove: (file) => {
       const index = fileList.indexOf(file)
       const newFileList = fileList.slice()
@@ -255,7 +255,7 @@ export default function Fn() {
     fileList,
   }
   const props2: UploadProps = {
-    accept: '.pdf, .doc, .docx, .jpg, .jpeg, .gif, .rar, .zip',
+    accept: '.zip',
     onRemove: (file) => {
       const index = fileList2.indexOf(file)
       const newFileList = fileList2.slice()
@@ -512,7 +512,7 @@ export default function Fn() {
                   name='companyLogo'
                   extra={
                     <Extra>
-                      您可上传的文件类型：png、jpg、jpeg，单个附件大小限50kb，限上传1个文件
+                      您可上传的文件类型：jpg、jpeg，单个附件大小限50kb，限上传1个文件
                     </Extra>
                   }>
                   <Upload {...props}>
@@ -603,7 +603,7 @@ export default function Fn() {
                   ]}
                   extra={
                     <Extra>
-                      您可上传的文件类型：pdf、doc、docx、jpg、jpeg、gif、rar、zip，单个附件大小限10M，限上传1个文件
+                      您可上传的文件类型：zip，单个附件大小限10M，限上传1个文件
                     </Extra>
                   }>
                   <Upload {...props2}>
