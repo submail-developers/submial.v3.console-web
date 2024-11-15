@@ -51,10 +51,12 @@ export default function Fn() {
         if (!rcsSetting) {
           dispatch(initSettingRcs())
         }
+        break
       case 'vc':
         if (!vcSetting) {
           dispatch(initSettingVC())
         }
+        break
     }
   }
 
@@ -80,8 +82,10 @@ export default function Fn() {
       switch (pathname) {
         case '/console/rcs':
           initSettings('rcs')
+          break
         case '/console/voiceChatbot':
           initSettings('vc')
+          break
       }
     })
     setisRouterHideMenu(hideMenu)
