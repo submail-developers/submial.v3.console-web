@@ -150,19 +150,11 @@ export default function Fn() {
       width: 120,
       render: (_, record) => (
         <>
-          {record.status == '0' && (
-            <span className='gray-color-sub'>未提交审核</span>
-          )}
-          {record.status == '1' && (
-            <span className='success-color'>审核通过</span>
-          )}
-          {record.status == '2' && (
-            <Tooltip title={record.desc} placement='bottom'>
-              <span className='error-color'>审核驳回</span>
-            </Tooltip>
-          )}
           {record.status == '3' && (
-            <span className='waiting-color'>审核中</span>
+            <span className='waiting-color'>待审核</span>
+          )}
+          {record.status == '4' && (
+            <span className='success-color'>审核成功</span>
           )}
         </>
       ),
@@ -194,7 +186,7 @@ export default function Fn() {
               删除
             </Button>
           </Popconfirm>
-          {record.status == '1' && (
+          {record.status == '4' && (
             <Button
               className='p-l-0'
               type='link'
