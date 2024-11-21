@@ -245,6 +245,16 @@ export default function Fn() {
         life_start = dayjs(life_start).format('YYYY-MM-DD HH:mm:ss')
       }
       life_end = life_end.format('YYYY-MM-DD') + ' 23:59:59'
+      if (dayjs(life_end).isBefore(dayjs(life_start))) {
+        setConfirmLoading(false)
+        form.setFields([
+          {
+            name: 'life_end',
+            errors: ['预设结束时间应在预设开始时间之后'],
+          },
+        ])
+        return
+      }
       const work_morning_start = dayjs(work_morning_times[0]).format('HH:mm:ss')
       const work_morning_end = dayjs(work_morning_times[1]).format('HH:mm:ss')
       const work_afternoon_start = dayjs(work_afternoon_times[0]).format(
@@ -490,6 +500,7 @@ export default function Fn() {
                 },
               ]}>
               <DatePicker
+                style={{ width: 180 }}
                 placeholder='预设结束时间'
                 disabledDate={disabledDate}
               />

@@ -1,9 +1,14 @@
 import React, { useEffect, forwardRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Modal, Form, App, Input, DatePicker, Select } from 'antd'
+import { Modal, Form, App, Input, DatePicker, Select, Radio, Flex } from 'antd'
+import { ProFormDependency } from '@ant-design/pro-components'
 import type { GetProps } from 'antd'
 import dayjs from 'dayjs'
-import { reCreateVCTask, getRecallMobileNumber } from '@/api'
+import {
+  reCreateVCTask,
+  getRecallMobileNumber,
+  changeVCTaskStatus,
+} from '@/api'
 import { useStateStore } from '../reducer'
 import { reCall } from '../../type'
 import { cloneDeep } from 'lodash'
@@ -101,9 +106,29 @@ export default function Fn(props: Props) {
   const handleOk = async () => {
     setLoading(true)
     try {
-      const { title, life_times, call_results } = await form.validateFields()
-      const life_start = dayjs(life_times[0]).format('YYYY-MM-DD HH:mm') + ':00'
-      const life_end = dayjs(life_times[1]).format('YYYY-MM-DD HH:mm') + ':00'
+      let { title, life_start_type, life_start, life_end, call_results } =
+        await form.validateFields()
+      let ifCurrentStart = true // 判断是否立即启动任务，默认立即启动
+      if (life_start_type == 1) {
+        life_start = dayjs().format('YYYY-MM-DD HH:mm:ss')
+      } else {
+        // 非当天的任务
+        if (dayjs().format('YYYY-MM-DD') != life_start.format('YYYY-MM-DD')) {
+          ifCurrentStart = false
+        }
+        life_start = dayjs(life_start).format('YYYY-MM-DD HH:mm:ss')
+      }
+      life_end = life_end.format('YYYY-MM-DD') + ' 23:59:59'
+      if (dayjs(life_end).isBefore(dayjs(life_start))) {
+        setLoading(false)
+        form.setFields([
+          {
+            name: 'life_end',
+            errors: ['预设重呼结束时间应在预设重呼开始时间之后'],
+          },
+        ])
+        return
+      }
       const res = await reCreateVCTask({
         title,
         life_start,
@@ -113,6 +138,9 @@ export default function Fn(props: Props) {
       })
       setLoading(false)
       if (res.status == 'success') {
+        if (ifCurrentStart) {
+          await changeVCTaskStatus({ sendlist: res.id, status: '2' })
+        }
         message.success({
           content: (
             <span>
@@ -148,10 +176,14 @@ export default function Fn(props: Props) {
       <Form
         name='form-create-recall'
         form={form}
-        labelCol={{ span: 8 }}
+        labelCol={{ span: 24 }}
         wrapperCol={{ span: 24 }}
         layout='vertical'
-        initialValues={{ recognitionModel: 'general', type: 1 }}
+        initialValues={{
+          recognitionModel: 'general',
+          type: 1,
+          life_start_type: 1,
+        }}
         validateTrigger='onSubmit'
         autoComplete='off'>
         <Form.Item
@@ -168,8 +200,62 @@ export default function Fn(props: Props) {
           ]}>
           <Input placeholder='请输入' autoFocus />
         </Form.Item>
-
+        <Flex align='flex-end' wrap>
+          <Form.Item
+            name='life_start_type'
+            label='预设重呼开始时间'
+            rules={[
+              {
+                required: true,
+              },
+            ]}>
+            <Radio.Group>
+              <Radio value={1}>立即开始</Radio>
+              <Radio value={2}>自定义时间</Radio>
+            </Radio.Group>
+          </Form.Item>
+          <ProFormDependency name={['life_start_type']}>
+            {({ life_start_type }) => {
+              return (
+                <>
+                  {life_start_type == 1 ? (
+                    <></>
+                  ) : (
+                    <Form.Item
+                      name='life_start'
+                      label=''
+                      rules={[
+                        {
+                          required: true,
+                        },
+                      ]}>
+                      <DatePicker
+                        style={{ width: 180 }}
+                        placeholder='预设重呼开始时间'
+                        disabledDate={disabledDate}
+                      />
+                    </Form.Item>
+                  )}
+                </>
+              )
+            }}
+          </ProFormDependency>
+        </Flex>
         <Form.Item
+          name='life_end'
+          label='预设重呼结束时间'
+          rules={[
+            {
+              required: true,
+            },
+          ]}>
+          <DatePicker
+            style={{ width: 180 }}
+            placeholder='预设重呼结束时间'
+            disabledDate={disabledDate}
+          />
+        </Form.Item>
+        {/* <Form.Item
           name='life_times'
           label='预设时间'
           rules={[
@@ -188,7 +274,7 @@ export default function Fn(props: Props) {
             showNow
             disabledDate={disabledDate}
           />
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item
           name='call_results'
           label='重呼类型'

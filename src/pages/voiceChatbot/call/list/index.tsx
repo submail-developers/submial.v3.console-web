@@ -139,7 +139,7 @@ export default function Fn() {
     {
       title: '任务名称',
       fixed: true,
-      width: 240,
+      width: pointXs ? 160 : 240,
       className: 'paddingL20',
       dataIndex: 'title',
     },
