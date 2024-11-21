@@ -16,6 +16,8 @@ import {
   TimePicker,
   Popconfirm,
   Spin,
+  Space,
+  Radio,
 } from 'antd'
 import { ProFormDependency } from '@ant-design/pro-components'
 import type { GetProps } from 'antd'
@@ -32,6 +34,7 @@ import {
   getVCSendNumber,
   createVCTask,
   getSmsTempList,
+  changeVCTaskStatus,
 } from '@/api'
 
 import { reCall } from '../type'
@@ -102,6 +105,7 @@ const work_end_1 = today.set('hour', 17).set('minute', 0).set('second', 0)
 const initialValues = {
   work_morning_times: [work_start_0, work_start_1],
   work_afternoon_times: [work_end_0, work_end_1],
+  life_start_type: 1,
 }
 
 export default function Fn() {
@@ -223,9 +227,24 @@ export default function Fn() {
         addressfile_oss_path = '',
       } = await tabsRef.current.getValues()
       setConfirmLoading(true)
-      const { life_times, work_morning_times, work_afternoon_times } = values
-      const life_start = dayjs(life_times[0]).format('YYYY-MM-DD HH:mm') + ':00'
-      const life_end = dayjs(life_times[1]).format('YYYY-MM-DD HH:mm') + ':00'
+      let {
+        life_start,
+        life_start_type,
+        life_end,
+        work_morning_times,
+        work_afternoon_times,
+      } = values
+      let ifCurrentStart = true // 判断是否立即启动任务，默认立即启动
+      if (life_start_type == 1) {
+        life_start = dayjs().format('YYYY-MM-DD HH:mm:ss')
+      } else {
+        // 非当天的任务
+        if (dayjs().format('YYYY-MM-DD') != life_start.format('YYYY-MM-DD')) {
+          ifCurrentStart = false
+        }
+        life_start = dayjs(life_start).format('YYYY-MM-DD HH:mm:ss')
+      }
+      life_end = life_end.format('YYYY-MM-DD') + ' 23:59:59'
       const work_morning_start = dayjs(work_morning_times[0]).format('HH:mm:ss')
       const work_morning_end = dayjs(work_morning_times[1]).format('HH:mm:ss')
       const work_afternoon_start = dayjs(work_afternoon_times[0]).format(
@@ -259,6 +278,9 @@ export default function Fn() {
       const res = await createVCTask(params)
       // 创建成功，直接将状态改为正在执行
       if (res.status == 'success') {
+        if (ifCurrentStart) {
+          await changeVCTaskStatus({ sendlist: res.data.id, status: '2' })
+        }
         setConfirmLoading(false)
         message.success('创建成功')
         nav('/console/voiceChatbot/call/index', {
@@ -372,7 +394,7 @@ export default function Fn() {
                 options={reCall.timesOptions}></Select>
             </Form.Item>
           </Col>
-          <Col span={24} xl={12} xxl={6}>
+          <Col span={24}>
             <Form.Item name='smsIntentions' label='挂机短信（意向客户）'>
               <Checkbox.Group
                 options={[
@@ -415,24 +437,60 @@ export default function Fn() {
               )
             }}
           </ProFormDependency>
-          <Col span={24} xl={12}>
+          <Col span={24}>
+            <Flex align='flex-end' wrap>
+              <Form.Item
+                name='life_start_type'
+                label='预设开始时间'
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}>
+                <Radio.Group>
+                  <Radio value={1}>立即开始</Radio>
+                  <Radio value={2}>自定义时间</Radio>
+                </Radio.Group>
+              </Form.Item>
+              <ProFormDependency name={['life_start_type']}>
+                {({ life_start_type }) => {
+                  return (
+                    <>
+                      {life_start_type == 1 ? (
+                        <></>
+                      ) : (
+                        <Form.Item
+                          name='life_start'
+                          label=''
+                          rules={[
+                            {
+                              required: true,
+                            },
+                          ]}>
+                          <DatePicker
+                            style={{ width: 180 }}
+                            placeholder='预设开始时间'
+                            disabledDate={disabledDate}
+                          />
+                        </Form.Item>
+                      )}
+                    </>
+                  )
+                }}
+              </ProFormDependency>
+            </Flex>
+          </Col>
+          <Col span={24}>
             <Form.Item
-              name='life_times'
-              label='预设时间'
+              name='life_end'
+              label='预设结束时间'
               rules={[
                 {
                   required: true,
                 },
-                {
-                  validator: validateRange,
-                },
               ]}>
-              <RangePicker
-                allowClear={false}
-                className='w-100'
-                placeholder={['预设开始时间', '预设结束时间']}
-                showTime
-                showNow
+              <DatePicker
+                placeholder='预设结束时间'
                 disabledDate={disabledDate}
               />
             </Form.Item>
@@ -457,7 +515,7 @@ export default function Fn() {
               />
             </Form.Item>
           </Col>
-          <Col span={24} xl={12}>
+          <Col span={24}>
             <Form.Item name='skipHolidays' label='是否跳过节假日'>
               <Switch />
             </Form.Item>
@@ -496,6 +554,7 @@ export default function Fn() {
               okButtonProps={{ loading: confirmLoading }}
               trigger='click'
               onCancel={() => {
+                setConfirmLoading(false)
                 setOpenConfirm(false)
               }}
               overlayStyle={{ minWidth: 320 }}>
