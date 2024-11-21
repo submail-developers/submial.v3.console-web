@@ -279,7 +279,7 @@ export default function Fn() {
       // 创建成功，直接将状态改为正在执行
       if (res.status == 'success') {
         if (ifCurrentStart) {
-          await changeVCTaskStatus({ sendlist: res.data.id, status: '2' })
+          await changeVCTaskStatus({ sendlist: res.id, status: '2' })
         }
         setConfirmLoading(false)
         message.success('创建成功')
