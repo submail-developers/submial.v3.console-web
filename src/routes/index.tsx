@@ -29,7 +29,10 @@ export const baseRouter: RouteObject[] = [
   {
     path: '*',
     loader: () => {
-      throw redirect('/console/voiceChatbot/welcome')
+      const path = window.location.pathname
+      const parts = path.split('/')
+      const prod = parts[2]
+      throw redirect(`/console/${prod}/welcome`)
     },
   },
 ]

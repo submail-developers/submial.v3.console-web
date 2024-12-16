@@ -160,7 +160,7 @@ export default function Fn() {
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
   const [page, setPage] = useState<number>(1)
-  const [limit, setLimit] = useState<number>(10)
+  const [limit, setLimit] = useState<number>(20)
   const [total, setTotal] = useState<number>(0)
   const [tableData, setTableData] = useState<DataType[]>([])
   const [lifeTime, setLifeTime] = useState<[Dayjs, Dayjs]>([null, null]) // 暂存时间范围
@@ -242,6 +242,15 @@ export default function Fn() {
       } else {
         setPage(1)
       }
+    }
+  }
+
+  const changePageInfo = (page, pageSize) => {
+    if (pageSize != limit) {
+      setPage(1)
+      setLimit(pageSize)
+    } else {
+      setPage(page)
     }
   }
 
@@ -373,7 +382,7 @@ export default function Fn() {
           {Number(record.traces_num) > 0 ? (
             <Button
               type='link'
-              style={{ paddingLeft: 0 }}
+              style={{ padding: 0, height: 22 }}
               onClick={() => onShow(record)}
               icon={<span className='icon iconfont icon-xianshi fn13'></span>}>
               <span>查看</span>
@@ -393,6 +402,7 @@ export default function Fn() {
         name='called-form'
         layout='vertical'
         autoComplete='off'
+        initialValues={{ result: 'all', intention: 'all' }}
         onValuesChange={onValuesChange}>
         <Flex justify='space-between' align='flex-end' wrap='wrap' gap={16}>
           <Flex align='flex-end' wrap='wrap' gap={16}>
@@ -457,7 +467,7 @@ export default function Fn() {
           pageSizeOptions: [10, 20, 50],
           total: total,
           showTotal: (total) => `共 ${total} 条`,
-          onChange: () => {},
+          onChange: changePageInfo,
         }}
         scroll={{ x: 'fit-content' }}
       />

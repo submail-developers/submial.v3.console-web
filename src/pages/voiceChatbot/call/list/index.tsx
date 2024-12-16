@@ -188,7 +188,7 @@ export default function Fn() {
     {
       title: '接通率',
       width: 100,
-      render: (_, record) => <div>{record.call_rate * 100}%</div>,
+      render: (_, record) => <div>{record.call_rate || 0}%</div>,
     },
     {
       title: '任务状态',

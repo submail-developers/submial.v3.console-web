@@ -47,7 +47,7 @@ export const login = () => {
       account: 'duanlangjd@126.com',
       password: 'yanzhi2010',
       // account: '18616200024@163.com',
-      // password: 'sumeng',
+      // password: 'sumeng+123',
       // account: '514030829@qq.com',
       // password: 'yanzhi2010',
       //

@@ -295,7 +295,7 @@ export default function Fn() {
 
       if (attachmentFileInfo.length > 0) {
         res3 = await uploadCustomerFile({
-          file: bgFile,
+          file: attachmentFileInfo[0],
           type: '4',
         })
       } else {
@@ -414,11 +414,6 @@ export default function Fn() {
                     label: 'label',
                     value: 'value',
                   }}
-                  filterOption={(input, option) =>
-                    (option?.label + option.value ?? '')
-                      .toLowerCase()
-                      .includes(input.toLowerCase())
-                  }
                   options={actualIssueIndustryOptions}
                 />
               </Form.Item>
