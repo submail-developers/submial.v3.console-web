@@ -78,8 +78,10 @@
     font-size: 14px;
   }
   @media screen and (max-width: 992px) {
-    .ant-image {
-      display: none;
+    .form-header {
+      .ant-image {
+        display: none;
+      }
     }
     .form-con {
       width: 100%;

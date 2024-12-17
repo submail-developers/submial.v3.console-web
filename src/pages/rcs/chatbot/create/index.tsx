@@ -14,6 +14,7 @@ import {
   ConfigProvider,
 } from 'antd'
 import type { UploadFile } from 'antd'
+import { debounce } from 'lodash'
 
 import { useState, useRef, useEffect } from 'react'
 import { useParams, NavLink, useNavigate } from 'react-router-dom'
@@ -172,10 +173,10 @@ export default function Fn() {
   }
 
   // 颜色
-  const handleColorChange = (value) => {
+  const handleColorChange = debounce((value) => {
     let color = value.toHexString()
     setColor(color)
-  }
+  }, 100)
   useEffect(() => {
     getIndustryList()
   }, [])
@@ -205,9 +206,9 @@ export default function Fn() {
         res2: FilePath = {}, //背景图
         res3: FilePath = {} //营业执照
       if (logoFile) {
-        delCustomerFile({
-          path: logoPathRef.current,
-        })
+        // delCustomerFile({
+        //   path: logoPathRef.current,
+        // })
         res1 = await uploadCustomerFile({
           file: logoFile,
           type: '2',
@@ -217,9 +218,9 @@ export default function Fn() {
       }
 
       if (bgFile) {
-        delCustomerFile({
-          path: backgroundImagePathRef.current,
-        })
+        // delCustomerFile({
+        //   path: backgroundImagePathRef.current,
+        // })
         res2 = await uploadCustomerFile({
           file: bgFile,
           type: '3',
@@ -232,12 +233,12 @@ export default function Fn() {
         attachmentFileInfo.length > 0 &&
         attachmentFileInfo[0]?.url != attachmentPathRef.current
       ) {
-        delCustomerFile({
-          path: attachmentPathRef.current,
-        })
+        // delCustomerFile({
+        //   path: attachmentPathRef.current,
+        // })
         res3 = await uploadCustomerFile({
           file: attachmentFileInfo[0],
-          type: '4',
+          type: '5',
         })
       } else {
         res3['path'] = attachmentPathRef.current
@@ -296,7 +297,7 @@ export default function Fn() {
       if (attachmentFileInfo.length > 0) {
         res3 = await uploadCustomerFile({
           file: attachmentFileInfo[0],
-          type: '4',
+          type: '5',
         })
       } else {
         res3['path'] = ''
@@ -349,11 +350,11 @@ export default function Fn() {
           <Row style={{ marginTop: '16px' }} gutter={24}>
             <Col span={24} xl={12}>
               <Form.Item
-                label='Chatbot 名称(该名称会被用做【签名】使用，请谨慎填写)'
-                required
+                label='Chatbot 名称'
+                extra='该名称会被用做【签名】使用，建议使用公司名、商标名或关联公司名称'
                 name='name'
                 rules={[
-                  { required: true, message: '请输入' },
+                  { required: true, message: '请输入Chatbot 名称' },
                   { max: 20, message: '最多20个字符' },
                   {
                     validator: utils.validateEmoji,

@@ -85,9 +85,9 @@ export default function Fn() {
 
       if (companyLogoPathRef.current) {
         if (fileList[0]?.url != companyLogoPathRef.current) {
-          delCustomerFile({
-            path: companyLogoPathRef.current,
-          })
+          // delCustomerFile({
+          //   path: companyLogoPathRef.current,
+          // })
           if (fileList[0]) {
             res1 = await uploadCustomerFile({
               file: fileList[0],
@@ -108,9 +108,9 @@ export default function Fn() {
 
       if (contractAccessoryPathRef.current) {
         if (fileList2[0]?.url != contractAccessoryPathRef.current) {
-          delCustomerFile({
-            path: contractAccessoryPathRef.current,
-          })
+          // delCustomerFile({
+          //   path: contractAccessoryPathRef.current,
+          // })
           if (fileList2[0]) {
             res2 = await uploadCustomerFile({
               file: fileList2[0],
@@ -161,9 +161,9 @@ export default function Fn() {
         res2: FilePath = {}
       if (companyLogoPathRef.current) {
         if (fileList[0]?.url != companyLogoPathRef.current) {
-          delCustomerFile({
-            path: companyLogoPathRef.current,
-          })
+          // delCustomerFile({
+          //   path: companyLogoPathRef.current,
+          // })
           if (fileList[0]) {
             res1 = await uploadCustomerFile({
               file: fileList[0],
@@ -184,9 +184,9 @@ export default function Fn() {
 
       if (contractAccessoryPathRef.current) {
         if (fileList2[0]?.url != contractAccessoryPathRef.current) {
-          delCustomerFile({
-            path: contractAccessoryPathRef.current,
-          })
+          // delCustomerFile({
+          //   path: contractAccessoryPathRef.current,
+          // })
           if (fileList2[0]) {
             res2 = await uploadCustomerFile({
               file: fileList2[0],
