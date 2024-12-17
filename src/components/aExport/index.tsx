@@ -1,5 +1,5 @@
 import { DownOutlined } from '@ant-design/icons'
-import type { MenuProps } from 'antd'
+import type { MenuProps, DropDownProps } from 'antd'
 import ASmsVerify from '@/components/aSmsVerify'
 
 import { ReactNode, useRef } from 'react'
@@ -9,6 +9,7 @@ type Props = {
   useCode: boolean
   items: MenuProps['items']
   onExportEvent: (key: string) => void
+  dropDownProps?: DropDownProps
   children?: ReactNode
 }
 
@@ -39,7 +40,8 @@ export default function AExport(props: Props) {
       <Dropdown
         className='export'
         menu={{ items: props.items, selectable: true, onClick: exportEvent }}
-        trigger={['click']}>
+        trigger={['click']}
+        {...props.dropDownProps}>
         {props.children || (
           <Button type='primary' className='fx-y-center'>
             <span className='m-r-8'>导 出</span>
