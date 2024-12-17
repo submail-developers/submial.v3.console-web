@@ -21,7 +21,7 @@ interface OpenParams {}
 const logoWidth = 400
 const logoHeight = 400
 const maxFileSize = 50 // 50k
-const accept = '.png,.jpg,.jpeg'
+const accept = '.jpg,.jpeg'
 
 const Dialog = (props: Props, ref: any) => {
   const [form] = Form.useForm()
@@ -152,8 +152,7 @@ const Dialog = (props: Props, ref: any) => {
             </Button>
           </Upload>
           <p className='upload-p' style={{ marginTop: '8px' }}>
-            您可上传的文件类型：png、jpg、jpeg,单个附件大小限2M，限上传
-            1个文件。
+            您可上传的文件类型：jpg、jpeg,单个附件大小限2M，限上传 1个文件。
           </p>
         </Form.Item>
       </Form>
