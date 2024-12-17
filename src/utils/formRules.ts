@@ -21,6 +21,9 @@ const validateBackslash = (_, value) => {
 
 // 禁止输入空格
 const validateNoSpace = (_, value) => {
+  if (!value) {
+    return Promise.resolve()
+  }
   if (value.match(/\s/g) !== null) {
     return Promise.reject(new Error('不可包含空格'))
   }

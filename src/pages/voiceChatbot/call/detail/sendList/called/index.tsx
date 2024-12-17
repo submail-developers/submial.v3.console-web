@@ -145,6 +145,32 @@ const gradeOtions = [
     value: 'D',
   },
 ]
+const timeOptions = [
+  {
+    label: '全部',
+    value: 'all',
+  },
+  {
+    label: '小于6秒',
+    value: '1',
+  },
+  {
+    label: '6-20秒',
+    value: '2',
+  },
+  {
+    label: '20-60秒',
+    value: '3',
+  },
+  {
+    label: '1-2分钟',
+    value: '4',
+  },
+  {
+    label: '2分钟以上',
+    value: '5',
+  },
+]
 
 const items: MenuProps['items'] = [
   { label: '导出 TXT', key: 'txt' },
@@ -194,10 +220,11 @@ export default function Fn() {
     setLoading(true)
     try {
       const {
-        result = '',
-        intention = '',
-        times = [],
+        result,
+        intention,
         keywords,
+        times = [],
+        time_flg,
       } = await form.getFieldsValue()
       const start = times[0]?.format('YYYY-MM-DD') || ''
       const end = times[1]?.format('YYYY-MM-DD') || ''
@@ -206,6 +233,7 @@ export default function Fn() {
         end,
         result,
         intention,
+        time_flg,
         keywords,
         page,
         limit,
@@ -265,7 +293,8 @@ export default function Fn() {
 
   // 导出
   const exportEvent = async (file_type) => {
-    const { times, result, intention, keywords } = await form.getFieldsValue()
+    const { times, result, intention, time_flg, keywords } =
+      await form.getFieldsValue()
     const start = times[0].format('YYYY-MM-DD')
     const end = times[1].format('YYYY-MM-DD')
     const res = await exportVCTaskCalledList({
@@ -273,6 +302,7 @@ export default function Fn() {
       sendlist: id,
       result,
       intention,
+      time_flg,
       keywords,
       start,
       end,
@@ -402,7 +432,7 @@ export default function Fn() {
         name='called-form'
         layout='vertical'
         autoComplete='off'
-        initialValues={{ result: 'all', intention: 'all' }}
+        initialValues={{ result: 'all', intention: 'all', time_flg: 'all' }}
         onValuesChange={onValuesChange}>
         <Flex justify='space-between' align='flex-end' wrap='wrap' gap={16}>
           <Flex align='flex-end' wrap='wrap' gap={16}>
@@ -421,6 +451,14 @@ export default function Fn() {
                 popupMatchSelectWidth={200}
                 style={{ width: 200 }}
                 options={gradeOtions}></Select>
+            </Form.Item>
+            <Form.Item label='通话时长' name='time_flg' className='m-b-0'>
+              <Select
+                placeholder='全部'
+                allowClear
+                popupMatchSelectWidth={200}
+                options={timeOptions}
+                style={{ width: 200 }}></Select>
             </Form.Item>
             <Form.Item label='时间范围' name='times' className='m-b-0'>
               <RangePicker

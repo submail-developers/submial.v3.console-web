@@ -309,7 +309,11 @@ export default function Fn() {
           </Popconfirm>
 
           <Divider type='vertical' style={{ height: 16 }} />
-          <AExport items={items} onExportEvent={exportEvent} useCode={true}>
+          <AExport
+            items={items}
+            onExportEvent={exportEvent}
+            useCode={true}
+            dropDownProps={{ placement: 'bottomRight' }}>
             <div className='g-pointer color'>
               导出
               <i
