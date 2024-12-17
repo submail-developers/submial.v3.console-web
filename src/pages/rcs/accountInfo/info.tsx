@@ -139,7 +139,12 @@ export default function Fn({ customerData }: Props) {
     {
       label: '合同是否续签',
       span: span,
-      children: customerData.contractRenewStatus == '1' ? '是' :customerData.contractRenewStatus == '0' ?'否': '-',
+      children:
+        customerData.contractRenewStatus == '1'
+          ? '是'
+          : customerData.contractRenewStatus == '0'
+          ? '否'
+          : '-',
     },
     {
       label: '自动续签日期',
@@ -158,7 +163,7 @@ export default function Fn({ customerData }: Props) {
                 className='fn14 fw-400'
                 style={{ textDecoration: 'underline' }}
                 href={customerData.contractAccessory}
-                target='blank'>
+                download={customerData.contractAccessory}>
                 查看文件
               </a>
             </>

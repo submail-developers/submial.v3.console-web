@@ -50,4 +50,26 @@
     height: 40px;
     font-size: 15px;
   }
+  .em-wrap {
+    .em-item {
+      width: 90px;
+      overflow: hidden;
+      position: relative;
+      .em-tips {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 20px;
+        line-height: 20px;
+        width: 100%;
+        text-align: center;
+        color: #fff;
+        background-color: var(--color);
+        font-size: 12px;
+      }
+      img {
+        object-fit: cover;
+      }
+    }
+  }
 }

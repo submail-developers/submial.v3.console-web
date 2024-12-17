@@ -403,8 +403,8 @@ declare module 'apis' {
     }
     // 上传文件  合同、logo等  单个文件上传
     interface UploadCustomerFileParams {
-      // 1合同   2logo  3联系人身份证正面  4联系人身份证反面  5法人身份证正面  6法人身份证反面  7营业执照
-      type: '1' | '2' | '3' | '4' | '5' | '6' | '7'
+      // 1合同   2logo  3企业背景图片  4营业执照 5证明材料
+      type: '1' | '2' | '3' | '4' | '5'
       file: any
     }
     interface UploadCustomerFileRes {

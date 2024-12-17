@@ -145,6 +145,28 @@ export default function Fn({ detail, reloadEvent }: Props) {
       ),
     },
     {
+      label: '证明材料',
+      span: 2,
+      children: (
+        <>
+          {detail.attachment ? (
+            <>
+              <span className='icon iconfont icon-lianjie fn12 m-r-4 gray-color'></span>
+              <a
+                className='fn14 fw-400'
+                style={{ textDecoration: 'underline' }}
+                href={detail.attachment}
+                download={detail.attachment}>
+                查看文件
+              </a>
+            </>
+          ) : (
+            '-'
+          )}
+        </>
+      ),
+    },
+    {
       label: 'Chatbot调试白名单',
       span: 2,
       children: detail.debugWhiteAddress,
