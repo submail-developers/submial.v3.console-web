@@ -259,6 +259,7 @@ export default function UploadModal(props: Props) {
   useEffect(() => {
     return () => {
       setSatus(0)
+      listRef.current = []
       setFileList([])
     }
   }, [props.show])

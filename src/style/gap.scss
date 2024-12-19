@@ -7,7 +7,7 @@
 */
 @mixin create-margin-padding($number) {
   $value: $number + px;
-  .m-#{$number} {
+  .m-#{$number}:not(mdi-notif, mdi-notif *, mdi-feedback, mdi-feedback *) {
     margin: $value !important;
   }
   .m-x-#{$number} {
@@ -21,16 +21,16 @@
   .m-t-#{$number} {
     margin-top: $value;
   }
-  .m-r-#{$number} {
+  .m-r-#{$number}:not(mdi-notif, mdi-notif *, mdi-feedback, mdi-feedback *) {
     margin-right: $value !important;
   }
   .m-b-#{$number} {
     margin-bottom: $value;
   }
-  .m-l-#{$number} {
+  .m-l-#{$number}:not(mdi-notif, mdi-notif *, mdi-feedback, mdi-feedback *) {
     margin-left: $value !important;
   }
-  .p-#{$number} {
+  .p-#{$number}:not(mdi-notif, mdi-notif *, mdi-feedback, mdi-feedback *) {
     padding: $value !important;
   }
   .p-x-#{$number} {
@@ -50,7 +50,7 @@
   .p-b-#{$number} {
     padding-bottom: $value;
   }
-  .p-l-#{$number} {
+  .p-l-#{$number}:not(mdi-notif, mdi-notif *, mdi-feedback, mdi-feedback *) {
     padding-left: $value !important;
   }
 }

@@ -200,7 +200,7 @@ export default function MeteialItem(props: ItemProps) {
             overlayInnerStyle={{ fontSize: '12px', minHeight: '24px' }}
             trigger={['click', 'hover']}
             destroyTooltipOnHide>
-            <div className='uploading fx fn14 p-l-4 p-t-4'>
+            <div className='uploading fx fn14'>
               <Spin size='small' />
             </div>
           </Tooltip>
