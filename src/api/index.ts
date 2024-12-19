@@ -44,13 +44,14 @@ export const login = () => {
   return request.post<any, API.Response<any>, any>(
     'console/api/account/login',
     {
-      account: 'duanlangjd@126.com',
-      password: 'yanzhi2010',
+      // account: 'duanlangjd@126.com',
+      // password: 'yanzhi2010',
       // account: '18616200024@163.com',
       // password: 'sumeng+123',
       // account: '514030829@qq.com',
       // password: 'yanzhi2010',
-      //
+      account: '627321363@qq.com',
+      password: 'Zjh514523',
     },
   )
 }
@@ -194,7 +195,7 @@ export const uploadCustomerFile = (data: API.UploadCustomerFileParams) => {
     },
   })
 }
-// 删除文件 合同、logo等
+// 删除文件 合同、logo等。不删了
 export const delCustomerFile = (data: API.DeleteCustomerFileParams) => {
   return request.post<any, any, API.DeleteCustomerFileParams>(
     '/console/api/rcs/delete_customer_file',
@@ -1182,6 +1183,15 @@ export const getVCTaskSchedule = (data: {
   >('/console/api/VoiceChatbot/get_task_schedule', {
     ...data,
   })
+}
+// 外呼任务进度-导出
+export const exportVCTaskSchedule = (data: any) => {
+  return request.post<any, any, any>(
+    '/console/api/VoiceChatbot/export_task_schedule',
+    {
+      ...data,
+    },
+  )
 }
 // 外呼任务详情-获取通话概览+对话轮次概览
 export const getVCTaskTalkInfo = (data: {

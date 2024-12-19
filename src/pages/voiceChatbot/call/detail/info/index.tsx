@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Row, Col, Space } from 'antd'
+import { Row, Col, Space, Flex } from 'antd'
+import type { MenuProps } from 'antd'
 import ACard from '@/components/aCard'
+import AExport from '@/components/aExport'
+import { downloadFile } from '@/utils'
 import Des from './des'
 import Rate from './rate'
 import TimeChat from './timeChat'
@@ -15,11 +18,18 @@ import {
   getVCTaskTalkInfo,
   getVCTaskGradeInfo,
   getVCTaskCityInfo,
+  exportVCTaskSchedule,
 } from '@/api'
 import { StatusText } from '../../type'
 import { useStateStore } from '../reducer'
 
 import './index.scss'
+const items: MenuProps['items'] = [
+  { label: '导出 CSV', key: 'csv' },
+  { label: '导出 EXCEL', key: 'excel' },
+  { label: '导出 JSON', key: 'json' },
+  { label: '导出 XML', key: 'xml' },
+]
 
 export default function Fn() {
   const store = useStateStore()
@@ -94,6 +104,16 @@ export default function Fn() {
       setcityLoading(false)
     }
   }
+  // 导出
+  const exportEvent = async (file_type) => {
+    const res = await exportVCTaskSchedule({
+      sendlist: id,
+      type: file_type,
+    })
+    if (res.status == 'success') {
+      downloadFile()
+    }
+  }
 
   useEffect(() => {
     if (store.loading) {
@@ -113,14 +133,31 @@ export default function Fn() {
         <Col span={24} xl={12}>
           <ACard
             title={
-              <Space size={0}>
-                <span>任务进度</span>
-                {store.detail && (
-                  <span className={`send-type status-${store.detail?.status}`}>
-                    （{StatusText[store.detail?.status]}）
-                  </span>
-                )}
-              </Space>
+              <Flex justify='space-between' align='center' className='w-100'>
+                <Space size={0}>
+                  <span>任务进度</span>
+                  {store.detail && (
+                    <span
+                      className={`send-type status-${store.detail?.status}`}>
+                      （{StatusText[store.detail?.status]}）
+                    </span>
+                  )}
+                </Space>
+                <AExport
+                  items={items}
+                  onExportEvent={exportEvent}
+                  useCode={false}
+                  dropDownProps={{ placement: 'bottomRight' }}
+                  // useCode={rcsSetting?.settings?.export_confrim == '1'}
+                >
+                  <div className='g-pointer color fn14 fw-400'>
+                    导出
+                    <i
+                      className='icon iconfont icon-xiangxia m-l-8 fn8 g-rotate-90'
+                      style={{ transform: 'translateY(4px)' }}></i>
+                  </div>
+                </AExport>
+              </Flex>
             }
             minHeight={240}
             loading={speedLoading}>

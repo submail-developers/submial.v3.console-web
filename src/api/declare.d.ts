@@ -141,6 +141,7 @@ declare module 'apis' {
       account: string
       name: string
       appkey: string
+      auditOpinion?: string // 驳回原因
       enable: '1' | '0'
       bind: string
       datetime: string
