@@ -66,7 +66,7 @@ export default function Fn() {
       {detail && detail.status == '2' && (
         <div className='color-warning-red g-radius-4 p-x-16 p-y-8 fn13 m-b-24'>
           <span className='icon iconfont icon-dengpao fn12 m-r-2'></span>
-          未通过原因：
+          未通过原因：{detail.auditOpinion.split('驳回，')[1] || ''}
         </div>
       )}
 
