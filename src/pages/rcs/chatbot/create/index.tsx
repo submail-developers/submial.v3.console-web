@@ -15,8 +15,7 @@ import {
 } from 'antd'
 import type { UploadFile } from 'antd'
 import { debounce } from 'lodash'
-
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, NavLink, useNavigate } from 'react-router-dom'
 import { changeBreadcrumbItem } from '@/store/reducers/breadcrumb'
 import { useAppDispatch } from '@/store/hook'
@@ -24,7 +23,6 @@ import utils from '@/utils/formRules'
 import {
   getChatbot,
   getIndustry,
-  delCustomerFile,
   uploadCustomerFile,
   saveChatbot,
   temporarySaveChatbot,
@@ -34,15 +32,14 @@ import PageContent from '@/components/pageContent'
 import UploadLogo from './logo'
 import UploadBg from './bg'
 import UploadAttachment from './attachment'
-import { actualIssueIndustryOptions } from '@/pages/rcs/chatbot/type'
-
+import {
+  actualIssueIndustryOptions,
+  defaultAvatarSrc,
+} from '@/pages/rcs/chatbot/type'
 import bannerImg from '@/assets/rcs/account/banner.png'
 
 import './index.scss'
 
-type FilePath = {
-  path?: string
-}
 const { TextArea } = Input
 
 const Extra = (props) => {
@@ -61,15 +58,14 @@ export default function Fn() {
   const [logoSrc, setLogoSrc] = useState<string>('')
   const [bgFile, setBgFile] = useState<UploadFile>(null)
   const [bgSrc, setBgSrc] = useState<string>('')
-  const [attachmentFileInfo, setAttachmentFileInfo] = useState<UploadFile[]>([])
+  const [attachmentFile, setAttachmentFile] = useState<UploadFile>()
+  const [attachmentSrc, setattachmentSrc] = useState<string>('')
   const [loading, setloading] = useState(false)
+  const [saveLoading, setSaveLoading] = useState(false)
   const [industryList, setIndustryList] = useState([])
   const [color, setColor] = useState('#ffffff')
   const navigate = useNavigate()
   const [status, setStatus] = useState('0')
-  const logoPathRef = useRef('')
-  const backgroundImagePathRef = useRef('')
-  const attachmentPathRef = useRef('')
 
   // 获取chtbot
   const getDetail = async () => {
@@ -80,10 +76,11 @@ export default function Fn() {
         appid: chatbotId,
         status: 'all',
       })
+      let detail: API.ChatbotItem = res.list[0]
 
-      if (res.list.length == 1) {
+      if (detail) {
         // 审核中禁止编辑
-        if (['3', '4'].includes(res.list[0].status)) {
+        if (['3', '4'].includes(detail.status)) {
           message.error({
             content: 'Chatbot审核中，禁止编辑',
             duration: 4,
@@ -93,33 +90,38 @@ export default function Fn() {
           })
           return
         }
-        setStatus(res.list[0].status)
+        setStatus(detail.status)
         form.resetFields()
         form.setFieldsValue({
-          ...res.list[0],
-          category: res.list[0].category ? res.list[0].category.split(',') : [],
-          logo: setLogoSrc(res.list[0].logo),
-          backgroundImage: setBgSrc(res.list[0].backgroundImage),
+          ...detail,
+          category: detail.category ? detail.category.split(',') : [],
+          actualIssueIndustry: detail.actualIssueIndustry || undefined,
+          attachment: detail.attachment
+            ? {
+                file: null,
+                fileList: [
+                  {
+                    uid: '0',
+                    name: '证明材料',
+                    status: 'done',
+                    url: detail.attachment,
+                  },
+                ],
+              }
+            : undefined,
         })
         // logo
-        if (res.list[0].logo) {
-          logoPathRef.current = res.list[0].logo
+        if (detail.logo) {
+          setLogoSrc(detail.logo)
         }
         // bg
-        if (res.list[0].backgroundImage) {
-          backgroundImagePathRef.current = res.list[0].backgroundImage
+        if (detail.backgroundImage) {
+          setBgSrc(detail.backgroundImage)
         }
 
         // 证明材料回显
-        if (res.list[0].attachment) {
-          attachmentPathRef.current = res.list[0].attachment
-          setAttachmentFileInfo([
-            {
-              uid: '',
-              name: '证明材料',
-              url: res.list[0].attachment,
-            },
-          ])
+        if (detail.attachment) {
+          setattachmentSrc(detail.attachment)
         }
       }
     } catch (error) {
@@ -146,17 +148,8 @@ export default function Fn() {
   }
   const onDelLogoFile = () => {
     setLogoFile(null)
-    setLogoSrc('')
+    setLogoSrc(defaultAvatarSrc)
   }
-
-  // 修改证明材料文件
-  const onChangeAttachmentFile = (files: UploadFile[]) => {
-    setAttachmentFileInfo(files)
-  }
-  const onDelAttachmentFile = () => {
-    setAttachmentFileInfo([])
-  }
-
   // 修改背景文件
   const onChangeBgFile = (file: UploadFile, src: string) => {
     setBgFile(file)
@@ -165,6 +158,16 @@ export default function Fn() {
   const onDelBgFile = () => {
     setBgFile(null)
     setBgSrc('')
+  }
+  // 修改证明材料文件
+  const onChangeAttachmentFile = (file: UploadFile) => {
+    setAttachmentFile(file)
+    form.setFieldValue('attachment', file)
+  }
+  const onDelAttachmentFile = () => {
+    setAttachmentFile(null)
+    setattachmentSrc('')
+    form.setFieldValue('attachment', undefined)
   }
 
   const changeName = (e) => {
@@ -199,71 +202,76 @@ export default function Fn() {
     }
   }, [chatbotId])
 
+  // 上传头像、背景图、证明材料
+  const uploadFiles = async () => {
+    try {
+      let proms = []
+      if (logoFile) {
+        proms.push(
+          uploadCustomerFile({
+            file: logoFile,
+            type: '2',
+          }),
+        )
+      } else {
+        proms.push(Promise.resolve({ path: logoSrc || defaultAvatarSrc }))
+      }
+      if (bgFile) {
+        proms.push(
+          uploadCustomerFile({
+            file: bgFile,
+            type: '3',
+          }),
+        )
+      } else {
+        proms.push(Promise.resolve({ path: bgSrc }))
+      }
+      if (attachmentFile) {
+        proms.push(
+          uploadCustomerFile({
+            file: attachmentFile,
+            type: '5',
+          }),
+        )
+      } else {
+        proms.push(Promise.resolve({ path: attachmentSrc }))
+      }
+      let [{ path: logoPath }, { path: bgPath }, { path: attachmentPath }] =
+        await Promise.all(proms)
+      return {
+        logoPath,
+        bgPath,
+        attachmentPath,
+      }
+    } catch (error) {}
+  }
+
   // 保存
   const save = async () => {
+    setSaveLoading(true)
     try {
-      let res1: FilePath = {}, //头像
-        res2: FilePath = {}, //背景图
-        res3: FilePath = {} //营业执照
-      if (logoFile) {
-        // delCustomerFile({
-        //   path: logoPathRef.current,
-        // })
-        res1 = await uploadCustomerFile({
-          file: logoFile,
-          type: '2',
-        })
-      } else {
-        res1['path'] = logoPathRef.current
-      }
-
-      if (bgFile) {
-        // delCustomerFile({
-        //   path: backgroundImagePathRef.current,
-        // })
-        res2 = await uploadCustomerFile({
-          file: bgFile,
-          type: '3',
-        })
-      } else {
-        res2['path'] = ''
-      }
-
-      if (
-        attachmentFileInfo.length > 0 &&
-        attachmentFileInfo[0]?.url != attachmentPathRef.current
-      ) {
-        // delCustomerFile({
-        //   path: attachmentPathRef.current,
-        // })
-        res3 = await uploadCustomerFile({
-          file: attachmentFileInfo[0],
-          type: '5',
-        })
-      } else {
-        res3['path'] = attachmentPathRef.current
-      }
-
       const formvalues = await form.getFieldsValue()
+      const { logoPath, bgPath, attachmentPath } = await uploadFiles()
+
       let params = {
         ...formvalues,
         appid: chatbotId,
-        logo: (res1 && res1.path) || '',
-        backgroundImage: (res2 && res2.path) || '',
-        attachment: (res3 && res3.path) || '',
+        logo: logoPath,
+        backgroundImage: bgPath,
+        attachment: attachmentPath,
         colour: color,
-        category: formvalues.category.join(','),
+        category: formvalues.category?.join(',') || '',
       }
 
       const res = await temporarySaveChatbot(params)
-      if (res) {
+      setSaveLoading(false)
+      if (res.status == 'success') {
         message.success('保存成功！')
         navigate('/console/rcs/chatbot/index', { replace: true })
       }
-
-      setloading(false)
     } catch (error) {
-      setloading(false)
+      console.log(error, 'eee')
+      setSaveLoading(false)
     }
   }
   // 提交
@@ -271,49 +279,19 @@ export default function Fn() {
     try {
       setloading(true)
       const formvalues = await form.validateFields()
-      let res1: FilePath = {}, //头像
-        res2: FilePath = {}, //背景图
-        res3: FilePath = {} //营业执照
-
-      if (logoFile) {
-        res1 = await uploadCustomerFile({
-          file: logoFile,
-          type: '2',
-        })
-      } else {
-        res1['path'] =
-          'https://libraries.mysubmail.com/public/7405f1e8b0b2be6bccf68741d74dc339/images/07ff77d1325f947e27c1fd62ef468813.png'
-      }
-
-      if (bgFile) {
-        res2 = await uploadCustomerFile({
-          file: bgFile,
-          type: '3',
-        })
-      } else {
-        res2['path'] = ''
-      }
-
-      if (attachmentFileInfo.length > 0) {
-        res3 = await uploadCustomerFile({
-          file: attachmentFileInfo[0],
-          type: '5',
-        })
-      } else {
-        res3['path'] = ''
-      }
+      const { logoPath, bgPath, attachmentPath } = await uploadFiles()
 
       let params = {
         ...formvalues,
         appid: chatbotId,
-        logo: res1 && res1.path,
-        backgroundImage: (res2 && res2.path) || '',
-        attachment: (res3 && res3.path) || '',
+        logo: logoPath,
+        backgroundImage: bgPath,
+        attachment: attachmentPath,
         colour: color,
         category: formvalues.category.join(','),
       }
       const res = await saveChatbot(params)
-      if (res) {
+      if (res.status == 'success') {
         message.success('保存成功！')
         navigate('/console/rcs/chatbot/index', { replace: true })
       }
@@ -332,9 +310,10 @@ export default function Fn() {
         name='craete-chatbot'
         layout='vertical'
         autoComplete='off'
-        validateTrigger='onBlur'
+        validateTrigger='onChange'
         initialValues={{
           providerSwitchCode: '0',
+          colour: '#ffffff',
         }}>
         <div className='form-header'>
           <Image src={bannerImg} preview={false}></Image>
@@ -523,7 +502,7 @@ export default function Fn() {
             </Col>
             <Col span={24}>
               <UploadAttachment
-                fileList={attachmentFileInfo}
+                attachmentSrc={attachmentSrc}
                 onChangeFile={onChangeAttachmentFile}
                 onDelFile={onDelAttachmentFile}
               />
@@ -547,7 +526,7 @@ export default function Fn() {
               </Form.Item>
             </Col>
             <Col span={24}>
-              <Form.Item label='IP限制' name='bind'>
+              <Form.Item label='IP限制（0.0.0.0表示无限制）' name='bind'>
                 <TextArea
                   placeholder='默认无限制，多个IP地址以英文逗号拼接'
                   autoSize={{ minRows: 3, maxRows: 3 }}
@@ -579,6 +558,7 @@ export default function Fn() {
                   className='color-status-waiting'
                   type='primary'
                   size='large'
+                  loading={saveLoading}
                   style={{ width: 120 }}
                   onClick={save}>
                   保存

@@ -126,6 +126,14 @@ const byteLength = (str) => {
   }
   return len
 }
+// 判断是否有文件
+const validateHasFile = (_, value) => {
+  if (value && value.fileList?.length > 0) {
+    return Promise.resolve()
+  } else {
+    return Promise.reject(new Error('请上传文件'))
+  }
+}
 
 export default {
   validateEmoji,
@@ -139,4 +147,5 @@ export default {
   validateNoBrackets,
   validateByteLength,
   byteLength,
+  validateHasFile,
 }

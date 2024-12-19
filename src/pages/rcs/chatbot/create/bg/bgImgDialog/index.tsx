@@ -1,13 +1,14 @@
-import { useState, useImperativeHandle, forwardRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Modal, Form, App, Upload, Button, Image as AImage } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
-import type { RadioChangeEvent, UploadFile, UploadProps } from 'antd'
+import type { UploadFile, UploadProps } from 'antd'
 import ModelFooter from '../../antd/modelFooter/modelFooter'
 
-import { API } from 'apis'
 import './index.scss'
 
-interface OpenParams {}
+// 限制图片的宽高和大小
+const maxFileSize = 20 * 1024 // 20k
+const accept = '.png,.jpg,.jpeg'
 interface Props {
   onOk: (file: UploadFile, src: string) => void
   open: boolean
@@ -17,47 +18,27 @@ const Dialog = (props: Props, ref: any) => {
   const [form] = Form.useForm()
   const { message } = App.useApp()
   const [imgSrc, setimgSrc] = useState('')
-  const [fileList, setFilseList] = useState<any[]>([])
-  useImperativeHandle(ref, () => {
-    return {
-      open,
-    }
-  })
-  const [isModalOpen, setIsModalOpen] = useState(false)
-
-  const onChange = (e: RadioChangeEvent) => {
-    console.log('checked = ', e)
-  }
-
-  const open = (params: OpenParams) => {}
+  const [fileList, setFilseList] = useState<UploadFile[]>([])
 
   const handleOk = async () => {
     props.onOk(fileList[0], imgSrc)
-    props.onCancel()
   }
 
   const handleCancel = () => {
     props.onCancel()
   }
 
-  const onFinish = () => {}
-  const onFinishFailed = () => {}
-
   const handelImg = () => {
     setimgSrc('')
+    setFilseList([])
   }
 
-  // 限制图片的宽高和大小
-  // const logoWidth = 400
-  // const logoHeight = 400
-  const maxFileSize = 20 // 50k
-  const accept = '.png,.jpg,.jpeg'
   // 选择上传文件
   const uploadProps: UploadProps = {
     accept: accept,
     beforeUpload: (file) => {
       let img_w: number, img_h: number
-      const isLt20k = file.size < maxFileSize * 1024
+      const isLt20k = file.size < maxFileSize
       try {
         const reader = new FileReader()
         reader.onload = (e) => {
@@ -70,8 +51,6 @@ const Dialog = (props: Props, ref: any) => {
               message.error('请上传最大20k的图片', 4)
               return false
             }
-            // props.onChangeFile(file, e.target.result as string)
-            // console.log(e.target.result as string, '///////////')
             setimgSrc(e.target.result as string)
             setFilseList([file])
           }
@@ -83,6 +62,11 @@ const Dialog = (props: Props, ref: any) => {
     fileList: [],
     maxCount: 1,
   }
+
+  useEffect(() => {
+    if (props.open) {
+    }
+  }, [props.open])
 
   return (
     <Modal
@@ -101,9 +85,6 @@ const Dialog = (props: Props, ref: any) => {
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 24 }}
         layout='vertical'
-        initialValues={{ enabled: '1' }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         autoComplete='off'>
         <Form.Item label='默认背景图' name='' validateTrigger='onSubmit'>
           <div>
@@ -129,11 +110,11 @@ const Dialog = (props: Props, ref: any) => {
           </Upload>
 
           <p className='upload-p' style={{ marginTop: '8px' }}>
-            您可上传的文件类型：png、jpg、jpeg,单个附件大小限2M，限上传
+            您可上传的文件类型：png、jpg、jpeg，单个附件大小限20kb，限上传1个文件
           </p>
         </Form.Item>
       </Form>
     </Modal>
   )
 }
-export default forwardRef(Dialog)
+export default Dialog

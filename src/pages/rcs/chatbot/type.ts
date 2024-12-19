@@ -84,3 +84,7 @@ export const ChatbotColor = {
   '3': 'waiting-color',
   '4': 'waiting-color',
 }
+
+// chatbot默认头像
+export const defaultAvatarSrc =
+  'https://libraries.mysubmail.com/public/7405f1e8b0b2be6bccf68741d74dc339/images/07ff77d1325f947e27c1fd62ef468813.png'
