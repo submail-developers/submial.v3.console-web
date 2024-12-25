@@ -100,6 +100,7 @@ export default defineConfig((mode: ConfigEnv): UserConfig => {
         // external: [/node_modules/],
       },
     },
+
     server: {
       host: '0.0.0.0', // 服务器主机名，如果允许外部访问，可设置为"0.0.0.0"
       port: viteEnv.VITE_PORT, // 默认端口号

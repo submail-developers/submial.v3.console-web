@@ -125,6 +125,25 @@ export const voiceChatbotMenus: RouteObject[] = [
           },
         ],
       },
+
+      {
+        path: 'change',
+        loader: loaderFn({
+          groupName: '机器人管理',
+          groupIcon: 'icon-jiqiren',
+          breadName: '格式转换',
+          menuName: '格式转换工具',
+        }),
+        errorElement: <Error />,
+        element: (
+          <LazyImportComponent
+            lazyChildren={lazy(
+              () => import('@/pages/voiceChatbot/changeFormat'),
+            )}
+          />
+        ),
+      },
+
       {
         path: 'call',
         loader: loaderFn({
