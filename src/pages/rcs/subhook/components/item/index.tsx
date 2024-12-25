@@ -200,7 +200,7 @@ export default function Fn(props: Props) {
                 <Space size={24}>
                   <span>{props.item.request_method}</span>
                   <Space className='color g-pointer' onClick={testSubhook}>
-                    {testLoading && <LoadingOutlined rev={false} />}
+                    {testLoading && <LoadingOutlined rev={undefined} />}
                     <span>测试推送</span>
                   </Space>
                 </Space>
