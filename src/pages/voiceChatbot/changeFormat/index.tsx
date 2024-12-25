@@ -241,7 +241,9 @@ const Change = () => {
           onChange={handleFileChange}
           style={{ display: 'none' }}
         />
-        <label htmlFor='audioFileInput' className='custom-file-input m-t-10'>
+        <label
+          htmlFor='audioFileInput'
+          className='custom-file-input-change m-t-10'>
           选择文件
         </label>
       </div>

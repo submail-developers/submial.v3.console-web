@@ -14,7 +14,7 @@
     position: relative;
     display: inline-block;
     margin-bottom: 20px;
-    .custom-file-input {
+    .custom-file-input-change {
       display: inline-block;
       padding: 10px 20px;
       background: #1764ff;
@@ -25,7 +25,7 @@
       transition: background 0.3s ease;
     }
 
-    .custom-file-input:hover {
+    .custom-file-input-change:hover {
       background: #286efa;
     }
   }
