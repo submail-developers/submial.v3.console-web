@@ -106,32 +106,32 @@ function Fn(props, ref: any) {
   ]
 
   // 获取交互详情-刷新页面时重新dispatch
-  useEffect(() => {
-    if (type == 'chatbot') {
-      if ((!state.chatbot && id != '0') || state.chatbot?.id != id) {
-        getInfo()
-      }
-    }
-  }, [id, state.chatbot, type])
-  const getInfo = async () => {
-    try {
-      const res = await getChatbot({
-        page: 1,
-        limit: 10,
-        appid: id,
-        keywords: '',
-        status: '1', // 默认all   0=未提交，1=我方通过，2=我们驳回，3=我方审核中
-      })
-      if (res.list.length == 1) {
-        dispatch({
-          type: 'changeChatbot',
-          payload: {
-            ...res.list[0],
-          },
-        })
-      }
-    } catch (error) {}
-  }
+  // useEffect(() => {
+  //   if (type == 'chatbot') {
+  //     if ((!state.chatbot && id != '0') || state.chatbot?.id != id) {
+  //       getInfo()
+  //     }
+  //   }
+  // }, [id, state.chatbot, type])
+  // const getInfo = async () => {
+  //   try {
+  //     const res = await getChatbot({
+  //       page: 1,
+  //       limit: 10,
+  //       appid: id,
+  //       keywords: '',
+  //       status: '1', // 默认all   0=未提交，1=我方通过，2=我们驳回，3=我方审核中
+  //     })
+  //     if (res.list.length == 1) {
+  //       dispatch({
+  //         type: 'changeChatbot',
+  //         payload: {
+  //           ...res.list[0],
+  //         },
+  //       })
+  //     }
+  //   } catch (error) {}
+  // }
 
   return (
     <Table
